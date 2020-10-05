@@ -30,9 +30,11 @@
 
 [링크](https://www.5gxcloudgame.com/main)
 
-2. 차세대 콘솔의 등장 https://www.xbox.com/ko-KR/consoles/xbox-series-x
+2. 차세대 콘솔의 등장 
 
-   3. NVIDIA 차세대 RTX 3000 시리즈 발표. 가격 동결, 성능 대폭 상승
+[링크](https://www.xbox.com/ko-KR/consoles/xbox-series-x)
+
+3. NVIDIA 차세대 RTX 3000 시리즈 발표. 가격 동결, 성능 대폭 상승
 
 [링크](https://www.nvidia.com/ko-kr/geforce/graphics-cards/30-series/)
 
