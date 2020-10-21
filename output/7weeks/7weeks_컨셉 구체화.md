@@ -1,6 +1,6 @@
 **1.** **Pre-production –** **컨셉 구체화 단계** 
 
-![image-20201021190345104](C:\Users\채영문\AppData\Roaming\Typora\typora-user-images\image-20201021190345104.png)
+![pre-production](https://user-images.githubusercontent.com/71045957/96707329-b2dfbf80-13d2-11eb-833d-112a3d876724.png)
 
    
 
@@ -12,7 +12,7 @@
 
 플레이어는 맵을 탐험하며 갖가지 위협요소로부터 생존한다.    
 
-![탐험 gif](C:\Users\채영문\Desktop\2학기\종합설계기획\컨셉 이미지\탐험 gif.gif)
+![탐험 gif](https://user-images.githubusercontent.com/71045957/96707113-6a280680-13d2-11eb-9b79-45b0e0f2567c.gif)
 
 1-1.     게임플레이 : 일상, 상호작용
 
@@ -20,17 +20,17 @@
 
 식사
 
-![식사 상호작용 gif](C:\Users\채영문\Desktop\2학기\종합설계기획\컨셉 이미지\식사 상호작용 gif.gif)
+![식사 상호작용 gif](https://user-images.githubusercontent.com/71045957/96707162-79a74f80-13d2-11eb-9f07-f45842d36cce.gif)
 
 ​    
 
 전투
 
-![전투 gif](C:\Users\채영문\Desktop\2학기\종합설계기획\컨셉 이미지\전투 gif.gif)
+![전투 gif](https://user-images.githubusercontent.com/71045957/96707194-83c94e00-13d2-11eb-8efd-60d31f6631c0.gif)
 
 
 
-![전투 상호작용 gif](C:\Users\채영문\Desktop\2학기\종합설계기획\컨셉 이미지\전투 상호작용 gif.gif)
+![전투 상호작용 gif](https://user-images.githubusercontent.com/71045957/96707219-8af05c00-13d2-11eb-93ad-b6197da56f07.gif)
 
 
 
@@ -44,14 +44,14 @@ Fall guys(2020), 동물의 숲(2020), Among us(2018)와 같은 판타지 캐릭�
 
 캐릭터 디자인(예시) : 플레이어
 
-![image-20201021191545689](C:\Users\채영문\AppData\Roaming\Typora\typora-user-images\image-20201021191545689.png)
+![주인공 선택지](https://user-images.githubusercontent.com/71045957/96707243-93489700-13d2-11eb-8d8d-9352f828f8f0.png)
 
 
 
 몬스터
 
-![image-20201021191600106](C:\Users\채영문\AppData\Roaming\Typora\typora-user-images\image-20201021191600106.png)
+![몬스터 용](https://user-images.githubusercontent.com/71045957/96707260-98a5e180-13d2-11eb-9eea-274897779806.png)
 
 
 
-![image-20201021191605811](C:\Users\채영문\AppData\Roaming\Typora\typora-user-images\image-20201021191605811.png)
+![몬스터](https://user-images.githubusercontent.com/71045957/96707273-9e032c00-13d2-11eb-9252-c7790821e732.png)
