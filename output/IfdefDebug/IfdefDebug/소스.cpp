@@ -2,8 +2,6 @@
 
 using namespace std;
 
-void youngmun();
-
 int main()
 {
 #ifdef _DEBUG
@@ -12,7 +10,3 @@ int main()
 	cout << "¾È µÇ³×" << endl;
 }
 
-void youngmun()
-{
-	cout << "youngmun" << endl;
-}
