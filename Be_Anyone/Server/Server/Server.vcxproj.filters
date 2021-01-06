@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99Etc">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="00Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="01CGameObject">
+      <UniqueIdentifier>{1f8268cf-eff4-461f-96e8-d27aa2c8203e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98DataBase">
+      <UniqueIdentifier>{e34b5076-33c3-47dd-b9aa-df2d3c0c7a16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject\01CClient">
+      <UniqueIdentifier>{8fcdf7e7-ca5d-44f0-8c15-9d9b05b60b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject\02CMonster">
+      <UniqueIdentifier>{2244b04b-30fe-4218-b29e-c04ea77f792a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject\03NPC">
+      <UniqueIdentifier>{457ba210-0511-45e6-8e34-21f5b3534f8f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ServerMain.cpp">
+      <Filter>00Main</Filter>
+    </ClCompile>
+    <ClCompile Include="CDataBase.cpp">
+      <Filter>98DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameObject.cpp">
+      <Filter>01CGameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CClient.cpp">
+      <Filter>01CGameObject\01CClient</Filter>
+    </ClCompile>
+    <ClCompile Include="CMonster.cpp">
+      <Filter>01CGameObject\02CMonster</Filter>
+    </ClCompile>
+    <ClCompile Include="CNPC.cpp">
+      <Filter>01CGameObject\03NPC</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CDataBase.h">
+      <Filter>98DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="CGameObject.h">
+      <Filter>01CGameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Struct.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="CClient.h">
+      <Filter>01CGameObject\01CClient</Filter>
+    </ClInclude>
+    <ClInclude Include="CMonster.h">
+      <Filter>01CGameObject\02CMonster</Filter>
+    </ClInclude>
+    <ClInclude Include="CNPC.h">
+      <Filter>01CGameObject\03NPC</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
