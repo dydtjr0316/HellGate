@@ -10,8 +10,6 @@
 #define PHONE_LEN 60
 //
   
-
-
 // constexpr
 constexpr auto MAX_PACKET_SIZE = 255;
 constexpr auto MAX_BUF_SIZE = 1024;
@@ -67,7 +65,7 @@ struct sc_packet_login_ok {
 	char size;
 	char type;
 	int  id;
-	short x, y;
+	short x, y, z;
 	short hp;
 	short level;
 	int   exp;
@@ -81,7 +79,7 @@ struct sc_packet_move {
 	char size;
 	char type;
 	int id;
-	short x, y;
+	short x, y, z;
 	int move_time;
 };
 

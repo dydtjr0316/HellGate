@@ -29,7 +29,7 @@ public:
 	void ChangeBisLevelUP() { m_bisLevelUp ? m_bisLevelUp = false : m_bisLevelUp = true; }
 	void ChangeBisDead() { m_bisDead ? m_bisDead = false : m_bisDead = true; }
 
-protected:
+private:
 	// 전부 값 수정
 	// 필수 
 	int		m_id;	// id
@@ -42,15 +42,6 @@ protected:
 	int		m_iMaxHP = 100;  // 체력
 	int		m_ilevel = 1;	// 레벨
 	bool	m_bisLevelUp = false;	// 레벨업
-
-
-	// 변경 및 삭제
-	//short		m_iFirstX;
-	//short		m_iFirstY;
-	//short	m_iHP_Regen = (m_iHP / 10); // 체젠
-	//short	m_monster_exp = 2;
-	//short	m_Monster_level = 0;
-	//bool	m_isFighter = false;
 public:
 
 	// 최적화 할때 필요없는거 전부 삭제 하기 
