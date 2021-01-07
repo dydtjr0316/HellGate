@@ -8,23 +8,23 @@ public:
 	~CClient() {};
 public:
 	// GET
-	int GetID() { return m_id; }
-	short GetMaxEXP() { return m_iMax_exp; }
-	short GetEXP() { return m_iExp; }
-	short GetAttackDamage() { return m_iAttack_Damage; }
-	short GetHP() { return m_iHP; }
-	short GetMaxHP() { return m_iMaxHP; }
-	short GetLevel() { return m_ilevel; }
-	bool GetBisLevelUP() { return m_bisLevelUp; }
+	const int& GetID() { return m_id; }
+	const int& GetMaxEXP() { return m_iMax_exp; }
+	const int& GetEXP() { return m_iExp; }
+	const int& GetAttackDamage() { return m_iAttack_Damage; }
+	const int& GetHP() { return m_iHP; }
+	const int& GetMaxHP() { return m_iMaxHP; }
+	const int& GetLevel() { return m_ilevel; }
+	const bool GetBisLevelUP() { return m_bisLevelUp; }
 
 	// SET
 	void SetID(const int &id) { m_id = id; }
-	void SetMaxEXP(const short &mexp) { m_iMax_exp = mexp; }
-	void SetEXP(const short & exp) { m_iExp = exp; }
-	void SetAttackDamage(const short& attackdamage) { m_iAttack_Damage = attackdamage; }
-	void SetHP(const short& hp) { m_iHP = hp; }
-	void SetMaxHP(const short& maxhp) { m_iMaxHP = maxhp; }
-	void SetLevel(const short& level) { m_ilevel = level; }
+	void SetMaxEXP(const int &mexp) { m_iMax_exp = mexp; }
+	void SetEXP(const int& exp) { m_iExp = exp; }
+	void SetAttackDamage(const int& attackdamage) { m_iAttack_Damage = attackdamage; }
+	void SetHP(const int& hp) { m_iHP = hp; }
+	void SetMaxHP(const int& maxhp) { m_iMaxHP = maxhp; }
+	void SetLevel(const int& level) { m_ilevel = level; }
 
 	// bool 변수를 true에서 fasle로 false에서 true로 바꿔주는 함수
 	void ChangeBisLevelUP() { m_bisLevelUp ? m_bisLevelUp = false : m_bisLevelUp = true; }
