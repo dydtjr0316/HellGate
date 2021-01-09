@@ -15,7 +15,7 @@ public:
 	const int& GetHP() { return m_iHP; }
 	const int& GetMaxHP() { return m_iMaxHP; }
 	const int& GetLevel() { return m_ilevel; }
-	const bool GetBisLevelUP() { return m_bisLevelUp; }
+	const bool& GetBisLevelUP() { return m_bisLevelUp; }
 
 	// SET
 	void SetID(const int &id) { m_id = id; }
@@ -29,7 +29,13 @@ public:
 	// bool 변수를 true에서 fasle로 false에서 true로 바꿔주는 함수
 	void ChangeBisLevelUP() { m_bisLevelUp ? m_bisLevelUp = false : m_bisLevelUp = true; }
 	void ChangeBisDead() { m_bisDead ? m_bisDead = false : m_bisDead = true; }
-	
+
+public:
+	// 시야처리
+	void Insert_Sector();
+	void Change_Sector();
+	vector<unordered_set<int>>& Search_Sector();
+
 private:
 	// 전부 값 수정
 	// 필수 
@@ -43,7 +49,6 @@ private:
 	int		m_iMaxHP = 100;  // 체력
 	int		m_ilevel = 1;	// 레벨
 	bool	m_bisLevelUp = false;	// 레벨업
-public:
 	// server
 	SOCKET	m_s;
 	mutex	m_cl;
@@ -64,7 +69,7 @@ public:
 	// struct
 	EXOVER  m_recv_over;
 	PLAYER_STATUS m_status;
-	CURRENT_SECTOR m_iCSector;	// sector 수정
+	_tSector m_tCector;	// sector 수정
 
 	// 스크립트 추가 구현
 	//lua_State* L;

@@ -30,8 +30,15 @@ struct event_type
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // 현재 섹터 판별 좌표 .. 추후 수정
-struct CURRENT_SECTOR
+struct _tSector
 {
 	int x;
 	int y;
+	int z;
+	_tSector() {}
+	_tSector(const int& _x, const int& _z)
+	{
+		x = _x;
+		z = _z;
+	}
 };

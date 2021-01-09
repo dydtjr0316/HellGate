@@ -1,27 +1,18 @@
 #include "stdafx.h"
 // 클라이언트 추가 후 
 //#include "CClient.h"
-#include "Global.h"
 #include "CDataBase.h"
 
-// simd 작업하던거 시간남으면 해보기
-/*//__m128i add;
-//__m128i add2;
-//__m128i mul;
-//__m128i x;
-//__m128i y;
-//
-//__m128i resultadd;
-//__m128i resultx;
-//__m128i resulty;
-//
-//
-//__declspec(align(16)) int pointX[2];
-//__declspec(align(16)) int pointY[2];
-//__declspec(align(16)) int result[2];
-//__declspec(align(16)) int finalresult;*/
-
 //CDataBase g_DataBase;
+SOCKET l_socket;
+HANDLE g_iocp;
+
+// mutex
+mutex timer_lock;
+
+// sector 수정
+unordered_set<int>				g_Sector[SECTOR_ROW][SECTOR_COL];
+priority_queue<event_type>		timer_queue;
 
 void show_error() {     // 에러 출력
     printf("error\n");
@@ -45,6 +36,11 @@ void error_display(const char* msg, int err_no)     // 에러 출력
 bool CAS(int* addr, int exp, int update)        // cas 
 {
     return atomic_compare_exchange_strong(reinterpret_cast<atomic_int*>(addr), &exp, update);
+}
+
+void is_near()
+{
+    // 깃 prac - simd 파일에 대충 구현해놓은 getlength 파일 있으니까 다듬어서 사용해보기 
 }
 
 int main()

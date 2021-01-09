@@ -2,12 +2,11 @@
 #pragma once
 
 // 섹터 디파인 값
-#define SECTOR_ROW 20
-#define SECTOR_COL 20
+
 
 // 추후  수정
-#define NAME_LEN 50  
-#define PHONE_LEN 60
+constexpr int NAME_LEN = 50;
+constexpr int PHONE_LEN = 60;
 //
   
 // constexpr
@@ -22,13 +21,18 @@ constexpr int MAX_STR_LEN = 100;
 // 동접, 몬스터 , NPC 관리
 constexpr int MAX_USER = 3000;
 constexpr int MAX_MONSTER = 5000;
-constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
 constexpr int NUM_NPC = 3000;
 constexpr int VIEW_LIMIT = 7;				// 시야 반지름
 
 // 화면 // 추후 수정
 constexpr int WORLD_WIDTH = 800;
 constexpr int WORLD_HEIGHT = 800;
+
+constexpr int SECTOR_COL = 20;
+constexpr int SECTOR_ROW = 20;
+
+constexpr int SECTOR_COL_Length = WORLD_WIDTH / SECTOR_COL;
+constexpr int SECTOR_ROW_Length = WORLD_HEIGHT/ SECTOR_ROW;
 
 #pragma pack (push, 1)
 

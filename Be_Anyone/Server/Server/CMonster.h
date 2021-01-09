@@ -64,7 +64,7 @@ public:
 	// struct
 	EXOVER  m_recv_over;
 	PLAYER_STATUS m_status;
-	CURRENT_SECTOR m_iCSector;	// sector 수정
+	_tSector m_iCSector;	// sector 수정
 
 	// 스크립트 추가 구현
 	//lua_State* L;

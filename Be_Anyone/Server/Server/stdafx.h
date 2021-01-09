@@ -9,7 +9,7 @@ using namespace std;
 using namespace chrono;
 
 // server
-#define UNICODE
+
 #include <WS2tcpip.h>
 #include <MSWSock.h>
 #include <thread>
@@ -42,4 +42,4 @@ using namespace chrono;
 #include "protocol.h"
 #include "enum.h"
 #include "struct.h"
-//#include "Global.h"
+#include "Global.h"
