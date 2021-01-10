@@ -143,6 +143,7 @@
     <ClCompile Include="CDataBase.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CMonster.cpp" />
+    <ClCompile Include="CNetMgr.cpp" />
     <ClCompile Include="CNPC.cpp" />
     <ClCompile Include="ServerMain.cpp" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     <ClInclude Include="CDataBase.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CMonster.h" />
+    <ClInclude Include="CNetMgr.h" />
     <ClInclude Include="CNPC.h" />
     <ClInclude Include="Enum.h" />
     <ClInclude Include="Global.h" />

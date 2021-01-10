@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "CGameObject.h"
 #include "CClient.h"
 
+extern CClient g_clients[MAX_USER];
 
 // CClient g_clients[MAX_USER + NUM_NPC + MAX_MONSTER];
 

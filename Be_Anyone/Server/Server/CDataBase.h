@@ -3,11 +3,11 @@ class CClient;
 class CDataBase
 {
 public:
-	void UpSert_DB(CClient& c);
-	void Update_DB(CClient& c);
-	void Import_DB(CClient& c);
-	void Export_DB();
-	void HandleDiagnosticRecord(SQLSMALLINT hType, RETCODE RetCode);
+	//void UpSert_DB(CClient& c);
+	//void Update_DB(CClient& c);
+	//void Import_DB(CClient& c);
+	//void Export_DB();
+	//void HandleDiagnosticRecord(SQLSMALLINT hType, RETCODE RetCode);
 private:
 	SQLHENV henv;
 	SQLHDBC hdbc;

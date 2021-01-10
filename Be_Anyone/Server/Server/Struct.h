@@ -5,7 +5,7 @@
 struct EXOVER
 {
 	WSAOVERLAPPED	over;
-	ENUMOPER		op;
+	ENUMOP		op;
 	char			io_buf[MAX_BUF_SIZE];
 	union {
 		WSABUF			wsabuf;

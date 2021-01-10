@@ -32,6 +32,7 @@ using namespace chrono;
 
 // lib
 #pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "MSWSock.lib")
 
 /* 스크립트
 #pragma comment(lib, "MSWSock.lib")
@@ -42,4 +43,4 @@ using namespace chrono;
 #include "protocol.h"
 #include "enum.h"
 #include "struct.h"
-#include "Global.h"
+#include "Global.h" 

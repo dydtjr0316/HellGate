@@ -20,8 +20,8 @@ constexpr int MAX_STR_LEN = 100;
 
 // 동접, 몬스터 , NPC 관리
 constexpr int MAX_USER = 3000;
-constexpr int MAX_MONSTER = 5000;
-constexpr int NUM_NPC = 3000;
+constexpr int MAX_MONSTER = 10000;
+constexpr int MAX_NPC = 100;
 constexpr int VIEW_LIMIT = 7;				// 시야 반지름
 
 // 화면 // 추후 수정
@@ -68,22 +68,22 @@ constexpr unsigned char O_NPC = 1;
 struct sc_packet_login_ok {
 	char size;
 	char type;
+
 	int  id;
-	short x, y, z;
-	short hp;
-	short level;
+	int x, y, z;
+	int hp;
+	int level;
 	int   exp;
 
 	int	  iMax_exp;
-	short	  sHp_Regen;
-	short Attack_Damage;
+	int Attack_Damage;
 };
 
 struct sc_packet_move {
 	char size;
 	char type;
 	int id;
-	short x, y, z;
+	int x, y, z;
 	int move_time;
 };
 
@@ -93,7 +93,7 @@ struct sc_packet_enter {
 	int  id;
 	char name[MAX_ID_LEN];
 	char o_type;
-	short x, y;
+	int x, y;
 };
 
 struct sc_packet_leave {
@@ -107,7 +107,7 @@ struct sc_packet_attack {
 	char type;
 	int  id;
 
-	short hp;
+	int hp;
 };
 
 struct sc_packet_level_up {
@@ -115,11 +115,12 @@ struct sc_packet_level_up {
 	char type;
 	int  id;
 
-	short hp;
-	short level;
+	int hp;
+	int max_hp;
+	int level;
 	int   exp;
 	int max_exp;
-	short attack_damage;
+	int attack_damage;
 };
 
 struct sc_packet_chat {
@@ -140,8 +141,8 @@ struct sc_packet_stat_change {
 	char size;
 	char type;
 	int  id;
-	short hp;
-	short level;
+	int hp;
+	int level;
 	int   exp;
 };
 
@@ -180,7 +181,7 @@ struct cs_packet_logout {
 struct cs_packet_teleport {
 	char size;
 	char type;
-	short x, y;
+	int x, y;
 };
 
 #pragma pack (pop)
