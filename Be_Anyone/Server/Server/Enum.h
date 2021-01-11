@@ -7,6 +7,8 @@ enum class KEYINPUT { UP, DOWN, LEFT, RIGHT, JUMP, /* + 조작키 */ };
 
 enum class PLAYER_TYPE { WARRIOR, SNIPER };	// 캐릭터 타입 근접 : 원거리
 
+enum class SECTOR_SEARCH{ DEFAULT, UP, DOWN, LEFT, RIGHT, JUMP };
+
 // 수정 후 삭제
 enum class ENUM_STATUS { ST_FREE, ST_ALLOC, ST_ACTIVE, ST_SLEEP };
 

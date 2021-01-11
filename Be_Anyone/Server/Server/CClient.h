@@ -7,7 +7,7 @@ public:
 	CClient() {}
 	~CClient() {}
 public:
-
+	bool Is_SameStatus(ENUM_STATUS status);
 public:
 	// 시야처리
 	void Insert_Sector();

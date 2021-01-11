@@ -127,11 +127,10 @@ void CNetMgr::Send_Move_Packet(const int& user_id, const int& mover_id)
 
 void CNetMgr::Random_Move_NPC(const int& npc_id)
 {
-    unordered_set <int> old_viewList;
-    for (int i = 0; i < MAX_USER; ++i) {
-        if (ENUM_STATUS::ST_ACTIVE != g_clients[i].GetStatus()) continue;
-        if (true == is_near(npc_id, i)) old_viewList.insert(i);
-    }
+    // 수정
+    //_tSector old_sector(g_npcs[npc_id].GetX() / SECTOR_ROW_Length, g_npcs[npc_id].GetZ() / SECTOR_COL_Length);
+    
+
 
     int x = g_npcs[npc_id].GetX();
     int z = g_npcs[npc_id].GetZ();
@@ -147,38 +146,156 @@ void CNetMgr::Random_Move_NPC(const int& npc_id)
     g_npcs[npc_id].SetX(x);
     g_npcs[npc_id].SetZ(z);
 
-    unordered_set<int> new_viewList;
-    for (int i = 0; i < MAX_USER; ++i)
-    {
-        if (npc_id == i) continue;
-        if (g_clients[i].GetStatus() !=ENUM_STATUS::ST_ACTIVE) continue;
-
-        if (true == is_near(i, npc_id))
-        {
-            new_viewList.insert(i);
-            g_clients[i].GetClientLock().lock();
-            if (0 != g_clients[i].GetViewList().count(npc_id))
-            {
-                g_clients[i].GetClientLock().unlock();
-                Send_Move_Packet(i, npc_id);
-            }
-            else {
-                g_clients[i].GetClientLock().unlock();
-                Send_Enter_Packet(i, npc_id);
-            }
-        }
-        else {
-            g_clients[i].GetClientLock().lock();
-            if (0 != g_clients[i].GetViewList().count(npc_id))
-            {
-                g_clients[i].GetClientLock().unlock();
-                Send_Leave_Packet(i, npc_id);
-            }
-            else g_clients[i].GetClientLock().unlock();
-        }
-
-    }
-
+    //_tSector new_sector(g_npcs[npc_id].GetX() / SECTOR_ROW_Length, g_npcs[npc_id].GetZ() / SECTOR_COL_Length);
 }
 
-bool is_near(int i, int ii) {};
+//void CNetMgr::Do_Move(const int& user_id, const int& dir)
+//{
+//    vector<unordered_set<int>> vSectors;
+//
+//    int x1 = (g_clients[user_id].GetX()- VIEW_LIMIT) / SECTOR_COL_Length;
+//    int z1 = (g_clients[user_id].GetZ() - VIEW_LIMIT) / SECTOR_ROW_Length;
+//
+//    int x2 = (g_clients[user_id].GetX() + VIEW_LIMIT) / SECTOR_COL_Length;
+//    int z2 = (g_clients[user_id].GetZ() + VIEW_LIMIT) / SECTOR_ROW_Length;
+//
+//    if (x1 == x2 && z1 == z2) // 섹터 하나 검색
+//    {
+//        vSectors.push_back(g_Sector[x1][z1]);
+//    }
+//    else if (x1 == x2) // 상*하 검색
+//    {
+//        vSectors.push_back(g_Sector[x1][z1]);
+//        vSectors.push_back(g_Sector[x1][z2]);
+//    }
+//    else if (z1 == z2) // 좌*우 검색
+//    {
+//        vSectors.push_back(g_Sector[x1][z1]);
+//        vSectors.push_back(g_Sector[x2][z1]);
+//    }
+//    else // 사방향 검색
+//    {
+//        vSectors.push_back(g_Sector[x1][z2]);
+//        vSectors.push_back(g_Sector[x2][z2]);
+//        vSectors.push_back(g_Sector[x1][z1]);
+//        vSectors.push_back(g_Sector[x2][z1]);
+//    }
+//
+//    g_clients[user_id].Change_Sector();
+//
+//    Send_Move_Packet(user_id, user_id);
+//
+//    //시야 처리 구현중
+//    unordered_set<int> new_viewList;
+//
+//    for (auto& vSec : vSectors)
+//    {
+//        if (vSec.size() != 0)
+//        {
+//            for (auto& i : vSec)
+//            {
+//                if (user_id == i) continue;
+//                if (g_clients[i].Is_SameStatus(ENUM_STATUS::ST_SLEEP))
+//                {
+//                    // 이부분 왜 해놓은거지 슈발
+//                    wake_up_npc(g_clients[i].m_id);
+//                    wake_up_monster(g_clients[i].m_id);
+//                }
+//                if (g_clients[i].m_status != ST_ACTIVE) continue;
+//
+//                if (true == is_near(user_id, i))
+//                {
+//                    new_viewList.insert(i);
+//                }
+//            }
+//        }
+//    }
+//
+//    for (int i = MAX_USER; i < MAX_USER + NUM_NPC; ++i)
+//    {
+//        if (true == is_near(user_id, i))
+//        {
+//            new_viewList.insert(i);
+//            wake_up_npc(i);
+//        }
+//    }
+//    for (int i = MAX_USER + NUM_NPC; i < MAX_USER + NUM_NPC + DIVIDE_MONNSTER * 4; ++i)
+//    {
+//        if (true == is_near(user_id, i))
+//        {
+//            new_viewList.insert(i);
+//            wake_up_monster(i);
+//        }
+//    }
+//
+//    //시야에 들어온 객체 처리
+//    for (int ob : new_viewList)
+//    {
+//        //시야에 새로 들어온 객체 구분
+//        if (0 == old_viewList.count(ob))
+//        {
+//            g_clients[user_id].view_list.insert(ob);
+//            send_enter_packet(user_id, ob);
+//
+//            if (false == is_npc(ob)) // npc라면 검사안해도되는 부분
+//            {
+//                //상대방 viewlist에 내가 없으면
+//                if (0 == g_clients[ob].view_list.count(user_id))
+//                {
+//                    //상대방에 view_list에도 내가 있어야 함.
+//                    g_clients[ob].view_list.insert(user_id);
+//                    send_enter_packet(ob, user_id);
+//                }
+//                else
+//                {
+//                    // 있다면 이동 사실만 보내자
+//                    send_move_packet(ob, user_id);
+//                }
+//            }
+//        }
+//        //이전에도 시야에 있었고 이동 후에도 시야에 있는 객체
+//        else
+//        {
+//            //// 나한테 보낼 필요는 없음 (내가 이동한 것이기 때문임)
+//            // 내가 이동을 한 것이기 때문에 다른 사람에게는 알려야 한다.
+//            // 단, 멀티쓰레드로 돌리는 것이기 때문에 상대방이 그 사이에 시야에서 사라져버릴 수도 있음.
+//
+//
+//            if (false == is_npc(ob)) // npc라면 검사안해도되는 부분
+//            {
+//                if (0 != g_clients[ob].view_list.count(user_id))
+//                {
+//                    send_move_packet(ob, user_id);
+//                }
+//                else
+//                {
+//                    g_clients[ob].view_list.insert(user_id);
+//                    send_enter_packet(ob, user_id);
+//                }
+//            }
+//        }
+//    }
+//    //전에는 있었는데 지금은 없는 객체 처리
+//    for (int ob : old_viewList)
+//    {
+//
+//        if (0 == new_viewList.count(ob))
+//        {
+//            g_clients[user_id].view_list.erase(ob);
+//            send_leave_packet(user_id, ob);
+//
+//            if (false == is_npc(ob)) // npc라면 검사안해도되는 부분
+//            {
+//                if (0 != g_clients[ob].view_list.count(user_id))
+//                {
+//                    g_clients[ob].view_list.erase(user_id);
+//                    send_leave_packet(ob, user_id);
+//                }
+//            }
+//        }
+//
+//    }
+//}
+
+bool CheckNearObject_Default(const CGameObject* client, const int client_id, const CGameObject* other, const int other_id) {};
+bool CheckNearObject_NPC(const CGameObject* client, const int client_id, const CNPC* npc, const int npc_id) {};

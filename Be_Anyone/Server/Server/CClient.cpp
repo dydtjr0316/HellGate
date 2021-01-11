@@ -5,10 +5,16 @@ extern CClient g_clients[MAX_USER];
 
 // CClient g_clients[MAX_USER + NUM_NPC + MAX_MONSTER];
 
+bool CClient::Is_SameStatus(ENUM_STATUS status)
+{
+    if (m_status == status)return true;
+    else return false;
+}
+
 void CClient::Insert_Sector()
 {
-	m_tCector.x = m_iX / (WORLD_WIDTH / SECTOR_COL);
-	m_tCector.z = m_iZ / (WORLD_WIDTH / SECTOR_COL);
+	m_tCector.x = m_iX / SECTOR_ROW_Length;
+	m_tCector.z = m_iZ / SECTOR_COL_Length;
 
 	g_Sector[m_tCector.x][m_tCector.z].emplace(m_id);
 }
@@ -16,8 +22,8 @@ void CClient::Insert_Sector()
 void CClient::Change_Sector()
 {
 	_tSector old_Sector(m_tCector.x, m_tCector.z);
-	m_tCector.x = m_iX / (WORLD_WIDTH / SECTOR_COL);
-	m_tCector.z = m_iZ / (WORLD_WIDTH / SECTOR_COL);
+	m_tCector.x = m_iX / SECTOR_ROW_Length;
+	m_tCector.z = m_iZ / SECTOR_COL_Length;
 
 	if (old_Sector.x != m_tCector.x || old_Sector.z != m_tCector.z)
 	{
@@ -26,57 +32,39 @@ void CClient::Change_Sector()
 	}
 }
 
+
+
 vector<unordered_set<int>>& CClient::Search_Sector()
 {
-    int x1;
-    int x2;
-    int y1;
-    int y2;
     vector<unordered_set<int>> vSectors;
 
-    if (m_iX<VIEW_LIMIT || m_iX>WORLD_WIDTH - VIEW_LIMIT)
-    {
-        x1 = m_iX / SECTOR_COL_Length;
-        x2 = m_iX / SECTOR_COL_Length;
-    }
-    else
-    {
-        x1 = (m_iX - VIEW_LIMIT) / SECTOR_COL_Length;
-        x2 = (m_iX + VIEW_LIMIT) / SECTOR_COL_Length;
-    }
+    int x1 = (m_iX - VIEW_LIMIT) / SECTOR_COL_Length;
+    int z1 = (m_iZ - VIEW_LIMIT) / SECTOR_ROW_Length;
 
-    if (m_iY<VIEW_LIMIT || m_iY>WORLD_WIDTH - VIEW_LIMIT)
-    {
-        y1 = m_iY / SECTOR_ROW_Length;
-        y2 = m_iY / SECTOR_ROW_Length;
-    }
-    else
-    {
-        y1 = (m_iY - VIEW_LIMIT) / SECTOR_ROW_Length;
-        y2 = (m_iY + VIEW_LIMIT) / SECTOR_ROW_Length;
-    }
+    int x2 = (m_iX + VIEW_LIMIT) / SECTOR_COL_Length;
+    int z2 = (m_iZ + VIEW_LIMIT) / SECTOR_ROW_Length; 
 
-    if (x1 == x2 && y1 == y2) // 섹터 하나 검색
+    if (x1 == x2 && z1 == z2) // 섹터 하나 검색
     {
-        vSectors.push_back(g_Sector[x1][y1]);
+        vSectors.push_back(g_Sector[x1][z1]);
     }
     else if (x1 == x2) // 상*하 검색
     {
-        vSectors.push_back(g_Sector[x1][y1]);
-        vSectors.push_back(g_Sector[x1][y2]);
+        vSectors.push_back(g_Sector[x1][z1]);
+        vSectors.push_back(g_Sector[x1][z2]);
     }
-    else if (y1 == y2) // 좌*우 검색
+    else if (z1 == z2) // 좌*우 검색
     {
-        vSectors.push_back(g_Sector[x1][y1]);
-        vSectors.push_back(g_Sector[x2][y1]);
+        vSectors.push_back(g_Sector[x1][z1]);
+        vSectors.push_back(g_Sector[x2][z1]);
     }
     else // 사방향 검색
     {
-        vSectors.push_back(g_Sector[x1][y2]);
-        vSectors.push_back(g_Sector[x2][y2]);
-        vSectors.push_back(g_Sector[x1][y1]);
-        vSectors.push_back(g_Sector[x2][y1]);
+        vSectors.push_back(g_Sector[x1][z2]);
+        vSectors.push_back(g_Sector[x2][z2]);
+        vSectors.push_back(g_Sector[x1][z1]);
+        vSectors.push_back(g_Sector[x2][z1]);
     }
-    
+
     return vSectors;
 }
