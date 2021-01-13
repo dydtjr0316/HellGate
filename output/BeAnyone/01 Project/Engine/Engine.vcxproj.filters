@@ -13,9 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
 <<<<<<< HEAD
+<<<<<<< HEAD
     </Filter>
     <Filter Include="Device">
       <UniqueIdentifier>{693116b0-20be-4b87-a47c-f81f20ebf57b}</UniqueIdentifier>
+=======
+>>>>>>> parent of da4c6d5... KeyManger update
 =======
 >>>>>>> parent of da4c6d5... KeyManger update
     </Filter>
@@ -30,12 +33,15 @@
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
 <<<<<<< HEAD
+<<<<<<< HEAD
     </ClInclude>
     <ClInclude Include="Device.h">
       <Filter>Device</Filter>
     </ClInclude>
     <ClInclude Include="struct.h">
       <Filter>Header</Filter>
+=======
+>>>>>>> parent of da4c6d5... KeyManger update
 =======
 >>>>>>> parent of da4c6d5... KeyManger update
     </ClInclude>
@@ -50,9 +56,12 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
 <<<<<<< HEAD
+<<<<<<< HEAD
     </ClCompile>
     <ClCompile Include="Device.cpp">
       <Filter>Device</Filter>
+=======
+>>>>>>> parent of da4c6d5... KeyManger update
 =======
 >>>>>>> parent of da4c6d5... KeyManger update
     </ClCompile>
