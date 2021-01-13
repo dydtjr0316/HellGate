@@ -10,6 +10,9 @@
     <Filter Include="Header">
       <UniqueIdentifier>{1950b6b6-9b94-4e0c-8dd7-4cdd11985700}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{693116b0-20be-4b87-a47c-f81f20ebf57b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyManager.h">
@@ -27,6 +30,12 @@
     <ClInclude Include="framework.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="struct.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyManager.cpp">
@@ -34,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>Device</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
