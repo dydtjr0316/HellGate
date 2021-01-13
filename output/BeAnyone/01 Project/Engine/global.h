@@ -40,3 +40,5 @@ using std::map;
 using std::string;
 using std::wstring;
 using std::make_pair;
+
+#include "struct.h"
