@@ -12,9 +12,12 @@
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+<<<<<<< HEAD
     </Filter>
     <Filter Include="Device">
       <UniqueIdentifier>{693116b0-20be-4b87-a47c-f81f20ebf57b}</UniqueIdentifier>
+=======
+>>>>>>> parent of da4c6d5... KeyManger update
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -26,12 +29,15 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
+<<<<<<< HEAD
     </ClInclude>
     <ClInclude Include="Device.h">
       <Filter>Device</Filter>
     </ClInclude>
     <ClInclude Include="struct.h">
       <Filter>Header</Filter>
+=======
+>>>>>>> parent of da4c6d5... KeyManger update
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -43,9 +49,12 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
+<<<<<<< HEAD
     </ClCompile>
     <ClCompile Include="Device.cpp">
       <Filter>Device</Filter>
+=======
+>>>>>>> parent of da4c6d5... KeyManger update
     </ClCompile>
   </ItemGroup>
 </Project>

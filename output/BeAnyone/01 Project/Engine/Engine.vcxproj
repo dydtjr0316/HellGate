@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
 <<<<<<< HEAD
+<<<<<<< HEAD
   <ItemGroup>
     <ClInclude Include="Device.h" />
     <ClInclude Include="framework.h" />
@@ -35,6 +36,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
+=======
+>>>>>>> parent of da4c6d5... KeyManger update
 =======
 >>>>>>> parent of da4c6d5... KeyManger update
   <PropertyGroup Label="Globals">
