@@ -1,4 +1,5 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(453,5): warning MSB8004: Output 디렉터리가 슬래시로 끝나지 않습니다. Output 디렉터리의 적절한 평가를 허용하는 데 필요하므로 이 빌드 인스턴스에서 슬래시를 추가합니다.
+<<<<<<< HEAD
   Device.cpp
 C:\Users\erppp\OneDrive\문서\GitHub\HellGate\output\BeAnyone\01 Project\Engine\Device.h(6,14): error C3646: 'mhWnd': 알 수 없는 재정의 지정자입니다.
 C:\Users\erppp\OneDrive\문서\GitHub\HellGate\output\BeAnyone\01 Project\Engine\Device.h(6,14): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
@@ -152,3 +153,7 @@ C:\Users\erppp\OneDrive\문서\GitHub\HellGate\output\BeAnyone\01 Project\Engine
   pch.cpp
 C:\Users\erppp\OneDrive\문서\GitHub\HellGate\output\BeAnyone\01 Project\Engine\pch.cpp(3,1): fatal error C1854: 미리 컴파일된 헤더를 개체 파일 'C:\Users\erppp\OneDrive\문서\GitHub\HellGate\output\BeAnyone\01 Project\Engine\Debug\pch.obj'에 만드는 동안 구성된 정보를 덮어쓸 수 없습니다.
   코드를 생성하고 있습니다...
+=======
+  Engine.vcxproj -> C:\Users\erppp\OneDrive\문서\GitHub\HellGate\output\BeAnyone\01 Project\Engine\..\..\03 External\Library\Engine\Engine.lib
+  0개 파일이 복사되었습니다.
+>>>>>>> parent of da4c6d5... KeyManger update
