@@ -7,31 +7,33 @@
     <Filter Include="Core">
       <UniqueIdentifier>{22a0fde8-15aa-43e2-9237-9f3b744c7850}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header">
-      <UniqueIdentifier>{1950b6b6-9b94-4e0c-8dd7-4cdd11985700}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Device">
       <UniqueIdentifier>{1026a325-8458-4ee0-bb91-74371f2e5fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{857d3332-93f1-4dcc-a505-d90166a4a655}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="global.h">
+    <ClInclude Include="Device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="global.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="struct.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="Device.h" />
-    <ClInclude Include="struct.h">
+    <ClInclude Include="targetver.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
@@ -39,9 +41,11 @@
     <ClCompile Include="KeyManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Header</Filter>
     </ClCompile>
-    <ClCompile Include="Device.cpp" />
   </ItemGroup>
 </Project>
