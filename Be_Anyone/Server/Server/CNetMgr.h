@@ -19,5 +19,6 @@ public:
 	void Random_Move_NPC(const int& id);
 	void Do_Attack() {/*충돌체크 생각하고 구현*/};
 	void Do_Move(const int& user_id, const int& dir);
+	void Disconnect(const OBJID& eID,const int& id);
 };
 

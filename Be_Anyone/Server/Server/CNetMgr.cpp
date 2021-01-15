@@ -149,6 +149,43 @@ void CNetMgr::Random_Move_NPC(const int& npc_id)
     //_tSector new_sector(g_npcs[npc_id].GetX() / SECTOR_ROW_Length, g_npcs[npc_id].GetZ() / SECTOR_COL_Length);
 }
 
+//void CNetMgr::Disconnect(const OBJID& eID, const int& id)
+//{
+//    
+//    g_clients[user_id].m_status = ST_ALLOC;
+//
+//    send_leave_packet(user_id, user_id);
+//
+//    g_clients[user_id].m_cl.lock();
+//    for (int i = 0; i < MAX_USER; ++i)
+//    {
+//
+//        if (g_clients[i].m_status == ST_ACTIVE)
+//        {
+//            if (i != user_id)
+//            {
+//                // 시야처리 용도
+//                if (0 != g_clients[i].view_list.count(user_id))
+//                {
+//                    g_clients[i].view_list.erase(user_id);
+//                    send_leave_packet(i, user_id);
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    g_clients[user_id].m_status = ST_FREE;
+//    g_clients[user_id].view_list.clear();
+//
+//    g_clients[user_id].m_cl.unlock();
+//
+//    closesocket(g_clients[user_id].m_s);
+//    g_clients[user_id].m_s = 0;
+//
+//    g_DataBase.UpSert_DB(g_clients[user_id]);
+//}
+
 //void CNetMgr::Do_Move(const int& user_id, const int& dir)
 //{
 //    vector<unordered_set<int>> vSectors;

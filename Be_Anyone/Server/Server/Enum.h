@@ -1,6 +1,8 @@
 #pragma once
 
 // 확정
+enum OBJID { CLIENT, MONSTER, NPC, END };
+
 enum class MONSTER_TYPE { MONSTER1, MONSTER2, MONSTER3, MONSTER4, BOSS_MONSTER };
 
 enum class KEYINPUT { UP, DOWN, LEFT, RIGHT, JUMP, /* + 조작키 */ };

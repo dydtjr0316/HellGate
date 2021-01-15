@@ -2,6 +2,7 @@
 // c++
 #include <iostream>
 #include <chrono>
+#include<algorithm>
 #include <stdio.h>  
 
 // namespcae
@@ -20,6 +21,7 @@ using namespace chrono;
 #include <vector>
 #include <queue>
 #include <unordered_set>
+#include <unordered_map>
 
 // lua 파일 추가 고려 < 스크립트 >
 //#include "include/lua.hpp"
@@ -44,3 +46,4 @@ using namespace chrono;
 #include "enum.h"
 #include "struct.h"
 #include "Global.h" 
+#include "Template.h"

@@ -9,23 +9,26 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="01CGameObject">
-      <UniqueIdentifier>{1f8268cf-eff4-461f-96e8-d27aa2c8203e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98DataBase">
       <UniqueIdentifier>{e34b5076-33c3-47dd-b9aa-df2d3c0c7a16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01CGameObject\01CClient">
-      <UniqueIdentifier>{8fcdf7e7-ca5d-44f0-8c15-9d9b05b60b52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01CGameObject\02CMonster">
-      <UniqueIdentifier>{2244b04b-30fe-4218-b29e-c04ea77f792a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01CGameObject\03NPC">
-      <UniqueIdentifier>{457ba210-0511-45e6-8e34-21f5b3534f8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00Main\00NetGame">
       <UniqueIdentifier>{c7ed21cc-2192-4611-b5f6-8b959cf7d0ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02CGameObject">
+      <UniqueIdentifier>{1f8268cf-eff4-461f-96e8-d27aa2c8203e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02CGameObject\01CClient">
+      <UniqueIdentifier>{8fcdf7e7-ca5d-44f0-8c15-9d9b05b60b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02CGameObject\02CMonster">
+      <UniqueIdentifier>{2244b04b-30fe-4218-b29e-c04ea77f792a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02CGameObject\03NPC">
+      <UniqueIdentifier>{457ba210-0511-45e6-8e34-21f5b3534f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CMediatorMgr">
+      <UniqueIdentifier>{8c4d722e-d897-4c15-81ed-81605034db06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,19 +39,22 @@
       <Filter>98DataBase</Filter>
     </ClCompile>
     <ClCompile Include="CGameObject.cpp">
-      <Filter>01CGameObject</Filter>
+      <Filter>02CGameObject</Filter>
     </ClCompile>
     <ClCompile Include="CClient.cpp">
-      <Filter>01CGameObject\01CClient</Filter>
+      <Filter>02CGameObject\01CClient</Filter>
     </ClCompile>
     <ClCompile Include="CMonster.cpp">
-      <Filter>01CGameObject\02CMonster</Filter>
+      <Filter>02CGameObject\02CMonster</Filter>
     </ClCompile>
     <ClCompile Include="CNPC.cpp">
-      <Filter>01CGameObject\03NPC</Filter>
+      <Filter>02CGameObject\03NPC</Filter>
     </ClCompile>
     <ClCompile Include="CNetMgr.cpp">
       <Filter>00Main\00NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="CMediatorMgr.cpp">
+      <Filter>01CMediatorMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,7 +62,7 @@
       <Filter>98DataBase</Filter>
     </ClInclude>
     <ClInclude Include="CGameObject.h">
-      <Filter>01CGameObject</Filter>
+      <Filter>02CGameObject</Filter>
     </ClInclude>
     <ClInclude Include="Struct.h">
       <Filter>99Etc</Filter>
@@ -74,16 +80,22 @@
       <Filter>99Etc</Filter>
     </ClInclude>
     <ClInclude Include="CClient.h">
-      <Filter>01CGameObject\01CClient</Filter>
+      <Filter>02CGameObject\01CClient</Filter>
     </ClInclude>
     <ClInclude Include="CMonster.h">
-      <Filter>01CGameObject\02CMonster</Filter>
+      <Filter>02CGameObject\02CMonster</Filter>
     </ClInclude>
     <ClInclude Include="CNPC.h">
-      <Filter>01CGameObject\03NPC</Filter>
+      <Filter>02CGameObject\03NPC</Filter>
     </ClInclude>
     <ClInclude Include="CNetMgr.h">
       <Filter>00Main\00NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="CMediatorMgr.h">
+      <Filter>01CMediatorMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Template.h">
+      <Filter>99Etc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

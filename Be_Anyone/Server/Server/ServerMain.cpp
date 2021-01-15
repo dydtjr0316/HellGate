@@ -1,5 +1,5 @@
 #include "stdafx.h"
-
+#include "CMediatorMgr.h"
 #include "CClient.h"
 #include "CMonster.h"
 #include "CNPC.h"
@@ -18,6 +18,8 @@ mutex timer_lock;
 // sector 수정
 unordered_set<int>				g_Sector[SECTOR_ROW][SECTOR_COL];
 priority_queue<event_type>		timer_queue;
+
+CMediatorMgr Mediator;
 
 void show_error() {     // 에러 출력
     printf("error\n");
@@ -49,35 +51,74 @@ void is_near()
 }
 void initialize_clients()
 {
+    CGameObject* pObj = nullptr;
     for (int i = 0; i < MAX_USER; ++i) {
-        g_clients[i].SetID(i);
-        g_clients[i].SetStatus(ENUM_STATUS::ST_FREE);
+        pObj = new CClient;
+        Mediator.Add(pObj, OBJID::CLIENT, i);
+        Mediator.Find(OBJID::CLIENT, i)->SetID(i);
+        Mediator.Find(OBJID::CLIENT, i)->SetStatus(ENUM_STATUS::ST_FREE);
     }
 }
 void initialize_Monster()
 {
+    CGameObject* pObj = nullptr;
+
     for (int i = 0; i < MAX_MONSTER; ++i) {
         // 좌표 어캐할지 생각
-        g_monsters[i].SetX(rand() % WORLD_WIDTH);
-        g_monsters[i].SetY(rand() % WORLD_HEIGHT);
-        g_monsters[i].SetZ(rand() % WORLD_HEIGHT);
-        g_monsters[i].SetID(i);
-        g_monsters[i].SetStatus(ENUM_STATUS::ST_SLEEP);
+        Mediator.Add(pObj, OBJID::CLIENT, i);
+
+        Mediator.Find(OBJID::CLIENT, i)->SetX(rand() % WORLD_WIDTH);
+        Mediator.Find(OBJID::CLIENT, i)->SetY(rand() % WORLD_HEIGHT);
+        Mediator.Find(OBJID::CLIENT, i)->SetZ(rand() % WORLD_HEIGHT);
+        Mediator.Find(OBJID::CLIENT, i)->SetID(i);
+        Mediator.Find(OBJID::CLIENT, i)->SetStatus(ENUM_STATUS::ST_SLEEP);
     }
 }
 void initialize_NPC()
 {
+    CGameObject* pObj = nullptr;
+
     for (int i = 0; i < MAX_NPC; ++i)
     {
         // 좌표 어캐 할지 생각
-        g_npcs[i].SetX(rand() % WORLD_WIDTH);
-        g_npcs[i].SetY(rand() % WORLD_HEIGHT);
-        g_npcs[i].SetZ(rand() % WORLD_HEIGHT);
+        Mediator.Add(pObj, OBJID::NPC, i);
+        Mediator.Find(OBJID::NPC, i)->SetX(rand() % WORLD_WIDTH);
+        Mediator.Find(OBJID::NPC, i)->SetX(rand() % WORLD_WIDTH);
+        Mediator.Find(OBJID::NPC, i)->SetY(rand() % WORLD_HEIGHT);
+        Mediator.Find(OBJID::NPC, i)->SetZ(rand() % WORLD_HEIGHT);
 
         char npc_name[50];
         sprintf_s(npc_name, "N%d", i);
-        g_npcs[i].SetName(npc_name);
-        g_clients[i].SetStatus(ENUM_STATUS::ST_SLEEP);
+        dynamic_cast<CNPC*>(Mediator.Find(OBJID::NPC, i))->SetName(npc_name);
+        Mediator.Find(OBJID::NPC, i)->SetStatus(ENUM_STATUS::ST_SLEEP);
+    }
+}
+
+
+
+void worker_thread()
+{
+    while (true) {
+        DWORD io_byte;
+        ULONG_PTR key;
+        WSAOVERLAPPED* over;
+        GetQueuedCompletionStatus(g_iocp, &io_byte, &key, &over, INFINITE);
+
+        EXOVER* exover = reinterpret_cast<EXOVER*>(over);
+        int user_id = static_cast<int>(key);
+        CClient& cl = g_clients[user_id];
+
+        switch (exover->op) {
+        case ENUMOP::OP_RECV:
+            if (0 == io_byte) disconnect(user_id);
+            else {
+                recv_packet_construct(user_id, io_byte);
+                ZeroMemory(&cl.m_recv_over.over, sizeof(cl.m_recv_over.over));
+                DWORD flags = 0;
+                WSARecv(cl.m_s, &cl.m_recv_over.wsabuf, 1, NULL, &flags, &cl.m_recv_over.over, NULL);
+            }
+            break;
+
     }
 }
 
@@ -114,12 +155,13 @@ int main()
     initialize_Monster();
     cout << "Initializing Finish" << endl;
 
-  /*  thread time_thread{ timer_worker };
+    //thread time_thread{ timer_worker };
 
     vector <thread> worker_threads;
     for (int i = 0; i < 4; ++i) worker_threads.emplace_back(worker_thread);
     for (auto& th : worker_threads) th.join();
-    time_thread.join();*/
+    
+    //time_thread.join();
 
     closesocket(l_socket);
     WSACleanup();
