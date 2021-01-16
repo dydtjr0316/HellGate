@@ -22,7 +22,7 @@ using namespace chrono;
 #include <queue>
 #include <unordered_set>
 #include <unordered_map>
-
+#include <functional>
 // lua 파일 추가 고려 < 스크립트 >
 //#include "include/lua.hpp"
 //#include "include/luaconf.h"

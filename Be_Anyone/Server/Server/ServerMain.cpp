@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "CMediatorMgr.h"
+#include "CNetMgr.h"
 #include "CClient.h"
 #include "CMonster.h"
 #include "CNPC.h"
@@ -16,10 +16,13 @@ HANDLE g_iocp;
 mutex timer_lock;
 
 // sector 수정
-unordered_set<int>				g_Sector[SECTOR_ROW][SECTOR_COL];
+unordered_set<int> g_Sec[SECTOR_ROW][SECTOR_COL];
+
+
+unordered_multiset<int>				g_Sector[OBJID::END][SECTOR_ROW][SECTOR_COL];
 priority_queue<event_type>		timer_queue;
 
-CMediatorMgr Mediator;
+CNetMgr Mediator;
 
 void show_error() {     // 에러 출력
     printf("error\n");
@@ -119,6 +122,7 @@ void worker_thread()
             }
             break;
 
+        }
     }
 }
 

@@ -142,7 +142,6 @@
     <ClCompile Include="CClient.cpp" />
     <ClCompile Include="CDataBase.cpp" />
     <ClCompile Include="CGameObject.cpp" />
-    <ClCompile Include="CMediatorMgr.cpp" />
     <ClCompile Include="CMonster.cpp" />
     <ClCompile Include="CNetMgr.cpp" />
     <ClCompile Include="CNPC.cpp" />
@@ -152,7 +151,6 @@
     <ClInclude Include="CClient.h" />
     <ClInclude Include="CDataBase.h" />
     <ClInclude Include="CGameObject.h" />
-    <ClInclude Include="CMediatorMgr.h" />
     <ClInclude Include="CMonster.h" />
     <ClInclude Include="CNetMgr.h" />
     <ClInclude Include="CNPC.h" />

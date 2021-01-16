@@ -36,10 +36,10 @@ private:
 	_tSector m_tCector;	// sector 수정
 	
 	// server
-	SOCKET	m_s;
+
 	mutex	m_cl;
 	mutex   vl;
-	unordered_set<int> view_list;
+	unordered_set<int> view_list[OBJID::END];
 
 	// 스크립트 추가 구현
 	//lua_State* L;
@@ -51,10 +51,10 @@ public:
 	const int& GetClientTime() { return m_iclinet_time; }
 	const bool& GetBisLevelUP() { return m_bisLevelUp; }
 
-	const unordered_set<int>& GetViewList() { return view_list; }
+	unordered_set<int>& GetViewList(const OBJID& eID) { return view_list[eID]; }
+	
 
 	mutex& GetClientLock() { return m_cl; }
-	const SOCKET& GetSocket() { return m_s; }
 
 	// SET
 	void SetMaxEXP(const int& mexp) { m_iMax_exp = mexp; }

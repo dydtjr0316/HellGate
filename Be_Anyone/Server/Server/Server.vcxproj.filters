@@ -27,9 +27,6 @@
     <Filter Include="02CGameObject\03NPC">
       <UniqueIdentifier>{457ba210-0511-45e6-8e34-21f5b3534f8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01CMediatorMgr">
-      <UniqueIdentifier>{8c4d722e-d897-4c15-81ed-81605034db06}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ServerMain.cpp">
@@ -52,9 +49,6 @@
     </ClCompile>
     <ClCompile Include="CNetMgr.cpp">
       <Filter>00Main\00NetGame</Filter>
-    </ClCompile>
-    <ClCompile Include="CMediatorMgr.cpp">
-      <Filter>01CMediatorMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,9 +84,6 @@
     </ClInclude>
     <ClInclude Include="CNetMgr.h">
       <Filter>00Main\00NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="CMediatorMgr.h">
-      <Filter>01CMediatorMgr</Filter>
     </ClInclude>
     <ClInclude Include="Template.h">
       <Filter>99Etc</Filter>
