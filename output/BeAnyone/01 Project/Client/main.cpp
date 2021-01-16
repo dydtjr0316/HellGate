@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "main.h"
 
-
 #define MAX_LOADSTRING 100
 
 
