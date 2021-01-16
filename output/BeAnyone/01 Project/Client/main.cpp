@@ -4,8 +4,16 @@
 #include "stdafx.h"
 #include "main.h"
 
-#define MAX_LOADSTRING 100
+#include "Engine/global.h"
+#include "Engine/Device.h"
 
+#ifdef _DEBUG
+#pragma comment(lib, "Engine/Engine_debug.lib")
+#else
+#pragma comment(lib, "Engine/Engine.lib")
+#endif
+
+#define MAX_LOADSTRING 100
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
