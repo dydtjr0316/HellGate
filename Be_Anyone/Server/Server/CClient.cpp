@@ -32,41 +32,41 @@ bool CClient::Is_SameStatus(ENUM_STATUS status)
 //	}
 //}
 
-
-
-vector<unordered_set<int>>& CClient::Search_Sector()
-{
-    vector<unordered_set<int>> vSectors;
-
-    int x1 = (m_iX - VIEW_LIMIT) / SECTOR_COL_Length;
-    int z1 = (m_iZ - VIEW_LIMIT) / SECTOR_ROW_Length;
-
-    int x2 = (m_iX + VIEW_LIMIT) / SECTOR_COL_Length;
-    int z2 = (m_iZ + VIEW_LIMIT) / SECTOR_ROW_Length; 
-
-    // 여기 int 형 으로 그냥 맵 반환해서 int 형 변수로 섹터 검샋해도될거같은대ㅔ?
-
-    if (x1 == x2 && z1 == z2) // 섹터 하나 검색
-    {
-        vSectors.push_back(g_Sector[x1][z1]);
-    }
-    else if (x1 == x2) // 상*하 검색
-    {
-        vSectors.push_back(g_Sector[x1][z1]);
-        vSectors.push_back(g_Sector[x1][z2]);
-    }
-    else if (z1 == z2) // 좌*우 검색
-    {
-        vSectors.push_back(g_Sector[x1][z1]);
-        vSectors.push_back(g_Sector[x2][z1]);
-    }
-    else // 사방향 검색
-    {
-        vSectors.push_back(g_Sector[x1][z2]);
-        vSectors.push_back(g_Sector[x2][z2]);
-        vSectors.push_back(g_Sector[x1][z1]);
-        vSectors.push_back(g_Sector[x2][z1]);
-    }
-
-    return vSectors;
-}
+//
+//
+//vector<unordered_set<int>>& CClient::Search_Sector()
+//{
+//    vector<unordered_set<int>> vSectors;
+//
+//    int x1 = (m_iX - VIEW_LIMIT) / SECTOR_COL_Length;
+//    int z1 = (m_iZ - VIEW_LIMIT) / SECTOR_ROW_Length;
+//
+//    int x2 = (m_iX + VIEW_LIMIT) / SECTOR_COL_Length;
+//    int z2 = (m_iZ + VIEW_LIMIT) / SECTOR_ROW_Length; 
+//
+//    // 여기 int 형 으로 그냥 맵 반환해서 int 형 변수로 섹터 검샋해도될거같은대ㅔ?
+//
+//    if (x1 == x2 && z1 == z2) // 섹터 하나 검색
+//    {
+//        vSectors.push_back(g_Sector[x1][z1]);
+//    }
+//    else if (x1 == x2) // 상*하 검색
+//    {
+//        vSectors.push_back(g_Sector[x1][z1]);
+//        vSectors.push_back(g_Sector[x1][z2]);
+//    }
+//    else if (z1 == z2) // 좌*우 검색
+//    {
+//        vSectors.push_back(g_Sector[x1][z1]);
+//        vSectors.push_back(g_Sector[x2][z1]);
+//    }
+//    else // 사방향 검색
+//    {
+//        vSectors.push_back(g_Sector[x1][z2]);
+//        vSectors.push_back(g_Sector[x2][z2]);
+//        vSectors.push_back(g_Sector[x1][z1]);
+//        vSectors.push_back(g_Sector[x2][z1]);
+//    }
+//
+//    return vSectors;
+//}

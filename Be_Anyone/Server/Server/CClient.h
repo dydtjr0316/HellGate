@@ -12,13 +12,22 @@ public:
 	// 시야처리
 	void Insert_Sector();
 	void Change_Sector();
+	void ZeroMemory_recv_over() { ZeroMemory(&m_recv_over.over, sizeof(m_recv_over.over)); }
+
+	void SetPrev_Size(const int& size) { m_prev_size = size; }
+	EXOVER& GetExover() { return m_recv_over; }
+	int Get_Prev_Size() { return m_prev_size; }
+	char* Get_Packet_buf() { return m_packet_buf; }
 	vector<unordered_set<int>>& Search_Sector();
+	void SetFirstXY(const int& x, const int& y) { m_iFirstX = x; m_iFirstY = y; }
 
 private:
 	// 전부 값 수정
 	// 필수 
 
 	// int
+	int		m_iFirstX = 0;
+	int		m_iFirstY = 0;
 	int		m_iMax_exp = 100; // 최대 경험치
 	int		m_iExp = 0; // 경험치
 	int		m_ilevel = 1;	// 레벨
@@ -29,7 +38,7 @@ private:
 	bool	m_bisLevelUp = false;	// 레벨업
 
 	// char
-	char  m_packe_buf[MAX_PACKET_SIZE];
+	char  m_packet_buf[MAX_PACKET_SIZE];
 
 	// struct
 	EXOVER  m_recv_over;

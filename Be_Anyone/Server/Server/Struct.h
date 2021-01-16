@@ -19,7 +19,7 @@ struct event_type
 {
 	int obj_id;
 	system_clock::time_point wakeup_time;
-	int event_id;
+	ENUMOP event_id;
 	int target_id;
 	constexpr bool operator < (const event_type& _Left) const
 	{

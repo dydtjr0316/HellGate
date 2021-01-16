@@ -17,6 +17,7 @@ extern HANDLE g_iocp;
 
 // mutex
 extern mutex timer_lock;
+extern mutex wakeup_lock;
 
 // sector ¼öÁ¤
 extern unordered_multiset<int>				g_Sector[OBJID::END][SECTOR_ROW][SECTOR_COL];

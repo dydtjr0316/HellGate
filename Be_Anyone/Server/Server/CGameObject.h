@@ -32,9 +32,11 @@ public: // 상속 ,, 함수
 	void SetMaxHP(const int& maxhp) { m_iMaxHP = maxhp; }
 	void SetName(char* name) { strcpy_s(m_name, name); }
 	void SetSector(const int& x, const int& y) { m_tSector.x = x; m_tSector.y = y; }
+	void SetTime(const int& t) { m_iclinet_time = t; }
 
 	void ChangeBisDead() { m_bisDead ? m_bisDead = false : m_bisDead = true; }
 	void SetSocket_Zero() { m_s = 0; }
+	void SetSocket(const SOCKET& s) { m_s = s; }
 
 public:
 	void Insert_Sector();

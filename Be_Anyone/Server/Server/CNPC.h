@@ -1,5 +1,5 @@
 #pragma once
-class CNPC
+class CNPC : public CGameObject
 {
 public:
 	CNPC() {}

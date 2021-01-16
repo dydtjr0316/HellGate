@@ -14,6 +14,7 @@ HANDLE g_iocp;
 
 // mutex
 mutex timer_lock;
+mutex wakeup_lock;
 
 // sector 수정
 unordered_set<int> g_Sec[SECTOR_ROW][SECTOR_COL];
@@ -22,109 +23,10 @@ unordered_set<int> g_Sec[SECTOR_ROW][SECTOR_COL];
 unordered_multiset<int>				g_Sector[OBJID::END][SECTOR_ROW][SECTOR_COL];
 priority_queue<event_type>		timer_queue;
 
-CNetMgr Mediator;
-
-void show_error() {     // 에러 출력
-    printf("error\n");
-}
-
-void error_display(const char* msg, int err_no)     // 에러 출력
-{
-    WCHAR* lpMsgBuf;
-    FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER |
-        FORMAT_MESSAGE_FROM_SYSTEM,
-        NULL, err_no,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        (LPTSTR)&lpMsgBuf, 0, NULL);
-    std::cout << msg;
-    std::wcout << L"에러 " << lpMsgBuf << std::endl;
-    while (true);
-    LocalFree(lpMsgBuf);
-}
-
-bool CAS(int* addr, int exp, int update)        // cas 
-{
-    return atomic_compare_exchange_strong(reinterpret_cast<atomic_int*>(addr), &exp, update);
-}
-
-void is_near()
-{
-    // 깃 prac - simd 파일에 대충 구현해놓은 getlength 파일 있으니까 다듬어서 사용해보기 
-}
-void initialize_clients()
-{
-    CGameObject* pObj = nullptr;
-    for (int i = 0; i < MAX_USER; ++i) {
-        pObj = new CClient;
-        Mediator.Add(pObj, OBJID::CLIENT, i);
-        Mediator.Find(OBJID::CLIENT, i)->SetID(i);
-        Mediator.Find(OBJID::CLIENT, i)->SetStatus(ENUM_STATUS::ST_FREE);
-    }
-}
-void initialize_Monster()
-{
-    CGameObject* pObj = nullptr;
-
-    for (int i = 0; i < MAX_MONSTER; ++i) {
-        // 좌표 어캐할지 생각
-        Mediator.Add(pObj, OBJID::CLIENT, i);
-
-        Mediator.Find(OBJID::CLIENT, i)->SetX(rand() % WORLD_WIDTH);
-        Mediator.Find(OBJID::CLIENT, i)->SetY(rand() % WORLD_HEIGHT);
-        Mediator.Find(OBJID::CLIENT, i)->SetZ(rand() % WORLD_HEIGHT);
-        Mediator.Find(OBJID::CLIENT, i)->SetID(i);
-        Mediator.Find(OBJID::CLIENT, i)->SetStatus(ENUM_STATUS::ST_SLEEP);
-    }
-}
-void initialize_NPC()
-{
-    CGameObject* pObj = nullptr;
-
-    for (int i = 0; i < MAX_NPC; ++i)
-    {
-        // 좌표 어캐 할지 생각
-        Mediator.Add(pObj, OBJID::NPC, i);
-        Mediator.Find(OBJID::NPC, i)->SetX(rand() % WORLD_WIDTH);
-        Mediator.Find(OBJID::NPC, i)->SetX(rand() % WORLD_WIDTH);
-        Mediator.Find(OBJID::NPC, i)->SetY(rand() % WORLD_HEIGHT);
-        Mediator.Find(OBJID::NPC, i)->SetZ(rand() % WORLD_HEIGHT);
-
-        char npc_name[50];
-        sprintf_s(npc_name, "N%d", i);
-        dynamic_cast<CNPC*>(Mediator.Find(OBJID::NPC, i))->SetName(npc_name);
-        Mediator.Find(OBJID::NPC, i)->SetStatus(ENUM_STATUS::ST_SLEEP);
-    }
-}
+CNetMgr Netmgr;
 
 
 
-void worker_thread()
-{
-    while (true) {
-        DWORD io_byte;
-        ULONG_PTR key;
-        WSAOVERLAPPED* over;
-        GetQueuedCompletionStatus(g_iocp, &io_byte, &key, &over, INFINITE);
-
-        EXOVER* exover = reinterpret_cast<EXOVER*>(over);
-        int user_id = static_cast<int>(key);
-        CClient& cl = g_clients[user_id];
-
-        switch (exover->op) {
-        case ENUMOP::OP_RECV:
-            if (0 == io_byte) disconnect(user_id);
-            else {
-                recv_packet_construct(user_id, io_byte);
-                ZeroMemory(&cl.m_recv_over.over, sizeof(cl.m_recv_over.over));
-                DWORD flags = 0;
-                WSARecv(cl.m_s, &cl.m_recv_over.wsabuf, 1, NULL, &flags, &cl.m_recv_over.over, NULL);
-            }
-            break;
-
-        }
-    }
-}
 
 int main()
 {
@@ -154,18 +56,18 @@ int main()
     AcceptEx(l_socket, c_socket, accept_over.io_buf, 0, 32, 32, NULL, &accept_over.over);
 
     cout << "Initializing" << endl;
-    initialize_clients();
-    initialize_NPC();
-    initialize_Monster();
+    Netmgr.Init_Client();
+    Netmgr.Init_Monster();
+    Netmgr.Init_NPC();
     cout << "Initializing Finish" << endl;
 
-    //thread time_thread{ timer_worker };
+    thread time_thread(&CNetMgr::Timer_Worker, &Netmgr);
 
     vector <thread> worker_threads;
-    for (int i = 0; i < 4; ++i) worker_threads.emplace_back(worker_thread);
+    for (int i = 0; i < 4; ++i) worker_threads.emplace_back(thread(&CNetMgr::Worker_Thread, &Netmgr));
     for (auto& th : worker_threads) th.join();
     
-    //time_thread.join();
+    time_thread.join();
 
     closesocket(l_socket);
     WSACleanup();

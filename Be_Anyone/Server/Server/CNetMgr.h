@@ -26,12 +26,31 @@ public:
 	void Random_Move_Monster(const int& id);
 	void Do_Attack(const int& user_id);
 	void Do_Move(const int& user_id, const int& dir);
-	void Disconnect(const OBJID& eID,const int& id);
+	void Disconnect(const int& user_id);
 	void Enter_Game(const int& user_id, char name[]);
+	void Process_Packet(const int& user_id, char* buf);
+	void Recv_Packet_Construct(const int& user_id, const int& io_byte);
 
 	bool IS_Near_Client(const OBJID& other_eID,const int& other_id, const OBJID& user_eID, const int& user_id);
-
+public:
+	vector<unordered_multiset<int>> Search_Sector(const int& user_id);
 	bool is_near(const OBJID& p1eID, const int& p1, const OBJID& p2eID, const int& p2);
+	void Insert_Sector(const OBJID& eID, const int& id);
+
+public:
+	void Init_Client();
+	void Init_Monster();
+	void Init_NPC();
+	void error_display(const char* msg, int err_no);
+
+
+	void Add_Timer(const int& obj_id, const ENUMOP& status, system_clock::time_point t);
+public:
+	void Worker_Thread();
+	void Timer_Worker();
+
+	void WakeUp_NPC(const int& id);
+	void WakeUp_Monster(const int& id);
 public:
 	// Áß°³ÀÚ
 	OBJLIST* GetObjlist(const OBJID& eID) { return &(m_ObjLst[eID]); }
