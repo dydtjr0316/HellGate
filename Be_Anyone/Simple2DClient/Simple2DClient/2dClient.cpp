@@ -212,20 +212,21 @@ void ProcessPacket(char* ptr)
 		else {
 			if (id < MAX_USER)
 				npcs[id] = OBJECT{ *pieces, 64 * 2, 0, 64, 64 };
-			else if (id >= MAX_USER && id < MAX_USER + MAX_NPC)
-				npcs[id] = OBJECT{ *pieces, 0, 0, 64, 64 };
-			else if ((id >= MAX_USER + MAX_NPC && id < MAX_USER + MAX_NPC + MAX_MONSTER))
+			
+			else if ((id >= START_MONSTER && id < END_MONSTER))
 			{
 		
 				for (int i = 0; i < 4; ++i)
 				{
 					//cout << "ID -> " << id << endl;
-					if (id < MAX_USER + MAX_NPC +MAX_MONSTER * (i+1)
-						&& id>= MAX_USER + MAX_NPC + MAX_MONSTER * i
+					if (id < START_MONSTER + DIVIDE_MONNSTER * (i+1)
+						&& id>= START_MONSTER + DIVIDE_MONNSTER * i
 						)
 						npcs[id] = OBJECT{ *pieces, 64*i, 64, 64, 64 };
 				}
 			}
+			else if (id >= START_NPC && id < END_NPC)
+				npcs[id] = OBJECT{ *pieces, 0, 0, 64, 64 };
 
 			strcpy_s(npcs[id].name, my_packet->name);
 			npcs[id].set_name(my_packet->name);

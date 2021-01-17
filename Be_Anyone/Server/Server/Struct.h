@@ -19,7 +19,7 @@ struct event_type
 {
 	int obj_id;
 	system_clock::time_point wakeup_time;
-	ENUMOP event_id;
+	int event_id;
 	int target_id;
 	constexpr bool operator < (const event_type& _Left) const
 	{
@@ -36,9 +36,14 @@ struct _tSector
 	int y;
 	int z;
 	_tSector() {}
-	_tSector(const int& _x, const int& _z)
+	_tSector(const int& _x, const int& _y)
 	{
 		x = _x;
-		z = _z;
+		y = _y;
+	}
+	void SetSector(const int& _x, const int& _y)
+	{
+		x = _x;
+		y = _y;
 	}
 };

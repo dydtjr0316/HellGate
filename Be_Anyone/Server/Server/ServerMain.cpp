@@ -5,10 +5,7 @@
 #include "CNPC.h"
 #include "CDataBase.h"
 
-CClient g_clients[MAX_USER];
-CMonster g_monsters[MAX_MONSTER];
-CNPC g_npcs[MAX_NPC];
-//CDataBase g_DataBase;
+OBJLIST g_Object;
 SOCKET l_socket;
 HANDLE g_iocp;
 
@@ -17,10 +14,8 @@ mutex timer_lock;
 mutex wakeup_lock;
 
 // sector ¼öÁ¤
-unordered_set<int> g_Sec[SECTOR_ROW][SECTOR_COL];
+unordered_set<int> g_Sector[SECTOR_ROW][SECTOR_COL];
 
-
-unordered_multiset<int>				g_Sector[OBJID::END][SECTOR_ROW][SECTOR_COL];
 priority_queue<event_type>		timer_queue;
 
 CNetMgr Netmgr;

@@ -18,10 +18,20 @@ constexpr int SERVER_PORT = 3500;
 constexpr int MAX_ID_LEN = 10;
 constexpr int MAX_STR_LEN = 100;
 
-// 동접, 몬스터 , NPC 관리
-constexpr int MAX_USER = 3000;
-constexpr int MAX_MONSTER = 10000;
+// 동접, 몬스터 ,  관리
+constexpr int MAX_USER = 1000;
+constexpr int END_USER = MAX_USER;
+
+constexpr int START_MONSTER = MAX_USER;
+constexpr int MAX_MONSTER = 3000;
+constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
+constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
+
+
+constexpr int START_NPC = END_MONSTER;
 constexpr int MAX_NPC = 100;
+constexpr int END_NPC = START_NPC + MAX_NPC;
+
 constexpr int VIEW_LIMIT = 7;				// 시야 반지름
 
 // 화면 // 추후 수정
