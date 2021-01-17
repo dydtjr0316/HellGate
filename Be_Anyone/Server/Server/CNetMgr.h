@@ -20,7 +20,7 @@ public:
 	void Send_Enter_Packet(const OBJID& user_eID, const int& user_id, const OBJID& other_eID, const int& other_id );
 	void Send_Leave_Packet(const OBJID& user_eID, const int& user_id, const int& other_id);
 	void Send_Move_Packet(const OBJID& user_eID, const int& user_id, const OBJID& mover_eID, const int& mover_id);
-
+	//
 public:
 	void Random_Move_NPC(const int& id);
 	void Random_Move_Monster(const int& id);
