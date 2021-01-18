@@ -346,27 +346,34 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
     Send_Move_Packet(user_id, user_id);
 
     vector<unordered_set<int>> vSectors = pClient->Search_Sector();
-
+    
     for (auto& vSec : vSectors)
     {
         if (vSec.size() != 0)
         {
             for (auto& user : vSec)
             {
-                if (!IsClient(user))
-                {
-                    if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
-                    {
-                        if (IsMonster(user))
-                            WakeUp_Monster(user);
-                        else if (IsNpc(user))
-                            WakeUp_NPC(user);
-                    }
-                }
-
                 if (is_near(user_id, user))
                 {
-                    new_viewList.insert(user);
+                    if (!IsClient(user))
+                    {
+                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                        {
+                            if (IsMonster(user))
+                                WakeUp_Monster(user);
+                            else if (IsNpc(user))
+                            {
+                                cout << "do move 함수 호출" << endl;
+                                cout << Find(user)->GetStatus() << endl;
+                                WakeUp_NPC(user);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //if (Find(user)->GetStatus() != ST_ACTIVE)continue;
+                    }
+                        new_viewList.insert(user);
                 }
             }
         }
@@ -803,7 +810,7 @@ void CNetMgr::Timer_Worker()
                 timer_queue.pop();
                 timer_lock.unlock();
 
-                cout << "timer worker -> objid -> " << ev.obj_id << endl;
+               // cout << "timer worker -> objid -> " << ev.obj_id << endl;
 
                 if (ev.event_id == ENUMOP::OP_RAMDON_MOVE_NPC)
                 {
@@ -829,19 +836,21 @@ bool CAS(int* addr, int exp, int update)        // cas
 }
 void CNetMgr::WakeUp_NPC(const int& id)
 {
-    OBJSTATUS status = OBJSTATUS::ST_SLEEP;
+    int status = OBJSTATUS::ST_SLEEP;
     cout << "wakeup npc-> " << id << endl;
-    if (CAS((int*)(&Find(id)->GetStatus()), status, OBJSTATUS::ST_ACTIVE))
+    cout << Find(id)->GetX() << " , " << Find(id)->GetY() << endl;
+    if (CAS((int*)(&(Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
     }
+    cout<<Find(id)->GetStatus()<<endl;
 }
 
 void CNetMgr::WakeUp_Monster(const int& id)
 {
-    OBJSTATUS status = OBJSTATUS::ST_SLEEP;
-    cout << "wakeup monster-> " << id << endl;
-    if (CAS((int*)(&Find(id)->GetStatus()), status, OBJSTATUS::ST_ACTIVE))
+    int status = OBJSTATUS::ST_SLEEP;
+   // cout << "wakeup monster-> " << id << endl;
+    if (CAS((int*)(&(Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
     }
