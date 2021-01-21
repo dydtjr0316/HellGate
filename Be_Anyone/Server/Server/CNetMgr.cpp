@@ -74,6 +74,7 @@ void CNetMgr::Send_Packet(const int& id, void* packet)
     exover->wsabuf.len = buf[0];
     ZeroMemory(&exover->over, sizeof(exover->over));
 
+    // ?????왜 터지노
     Find(id)->GetLock().lock();
     WSASend(Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
         &exover->over, NULL);
@@ -215,13 +216,16 @@ void CNetMgr::Random_Move_NPC(const int& id)
                 ClientObj->GetLock().lock();
                 if (0 == dynamic_cast<CClient*>(ClientObj)->GetViewList().count(id))  // map으로 바꾸기
                 {
-                    Send_Enter_Packet(clientID, id);
+                    //cout << "뷰리스트에 몬스터 없어" << endl;
                     ClientObj->GetLock().unlock();
+                    dynamic_cast<CClient*>(ClientObj)->GetViewList().insert(id);
+                    Send_Enter_Packet(clientID, id);
                 }
                 else
                 {
-                    Send_Move_Packet(clientID, id);
+                    //cout << "뷰리스트에 npc 있어" << endl;
                     ClientObj->GetLock().unlock();
+                    Send_Move_Packet(clientID, id);
                 }
             }
             else
@@ -234,6 +238,7 @@ void CNetMgr::Random_Move_NPC(const int& id)
                 else
                 {
                     ClientObj->GetLock().unlock();
+                    dynamic_cast<CClient*>(ClientObj)->GetViewList().erase(id);
                     Send_Leave_Packet(clientID, id);
                 }
 
@@ -270,20 +275,21 @@ void CNetMgr::Random_Move_Monster(const int& id)
             if (!IsClient(sec))continue;
 
             CClient* pClient = dynamic_cast<CClient*>(Find(sec));
-
             if (pClient->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
+
             if (is_near(sec, id))    // is near이 필요한가?
             {
                 pClient->GetLock().lock();
-                if (0 == pClient->GetViewList().count(id))  // map으로 바꾸기
+                if (0 == pClient->GetViewList().count(id))  // 뷰리스트에 몬스터가 없다면 엔터 패킷
                 {
+                    pClient->GetLock().unlock();
+                    pClient->GetViewList().insert(id);
                     Send_Enter_Packet(sec, id);
-                    pClient->GetLock().unlock();
                 }
-                else
+                else                                        // 뷰리스트에 몬스터가 있으면 무브 패킷
                 {
-                    Send_Move_Packet(sec, id);
                     pClient->GetLock().unlock();
+                    Send_Move_Packet(sec, id);
                 }
             }
             else
@@ -292,11 +298,13 @@ void CNetMgr::Random_Move_Monster(const int& id)
                 if (0 == pClient->GetViewList().count(id))
                 {
                     pClient->GetLock().unlock();
+                    
                 }
                 else
                 {
-                    Send_Leave_Packet(sec, id);
                     pClient->GetLock().unlock();
+                    pClient->GetViewList().erase(id);
+                    Send_Leave_Packet(sec, id);
                 }
             }
         }
@@ -361,10 +369,10 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
                         {
                             if (IsMonster(user))
                                 WakeUp_Monster(user);
-                            else if (IsNpc(user))
+                            else 
                             {
-                                cout << "do move 함수 호출" << endl;
-                                cout << Find(user)->GetStatus() << endl;
+                                //cout << "do move 함수 호출" << endl;
+                                //cout << Find(user)->GetStatus() << endl;
                                 WakeUp_NPC(user);
                             }
                         }
@@ -467,8 +475,8 @@ void CNetMgr::Disconnect(const int& user_id)
 void CNetMgr::Enter_Game(const int& user_id, char name[])
 {
     CClient* pUser = dynamic_cast<CClient*>(Find(user_id));
-
     pUser->GetLock().lock();
+
     pUser->SetName(name);
     pUser->GetLock().unlock();
     pUser->GetName()[MAX_ID_LEN] = NULL;
@@ -578,6 +586,7 @@ void CNetMgr::Init_Client()
         pObj = new CClient;
         pObj->SetID(i);
         pObj->SetStatus(OBJSTATUS::ST_FREE);
+        //pObj->Insert_Sector(); 엔터 게임에서 넣어줌
         Add(pObj,  i);
     }
 }
@@ -593,6 +602,7 @@ void CNetMgr::Init_Monster()
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->Insert_Sector();
         Add(pObj, i);
+  
     }
 }
 void CNetMgr::Init_NPC()
@@ -612,12 +622,13 @@ void CNetMgr::Init_NPC()
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->Insert_Sector();
         Add(pObj, i);
+
     }
 }
 
 bool CNetMgr::IsClient(const int& id)
 {
-    if (id > 0 && id < MAX_USER)
+    if (id >= 0 && id < MAX_USER)
         return true;
     else
         return false;
@@ -625,7 +636,7 @@ bool CNetMgr::IsClient(const int& id)
 
 bool CNetMgr::IsMonster(const int& id)
 {
-    if (id > START_MONSTER && id < END_MONSTER)
+    if (id >= START_MONSTER && id < END_MONSTER)
         return true;
     else
         return false;
@@ -633,7 +644,7 @@ bool CNetMgr::IsMonster(const int& id)
 
 bool CNetMgr::IsNpc(const int& id)
 {
-    if (id > START_NPC && id < END_NPC)
+    if (id >= START_NPC && id < END_NPC)
         return true;
     else
         return false;
@@ -837,8 +848,8 @@ bool CAS(int* addr, int exp, int update)        // cas
 void CNetMgr::WakeUp_NPC(const int& id)
 {
     int status = OBJSTATUS::ST_SLEEP;
-    cout << "wakeup npc-> " << id << endl;
-    cout << Find(id)->GetX() << " , " << Find(id)->GetY() << endl;
+   // cout << "wakeup npc-> " << id << endl;
+    //cout << Find(id)->GetX() << " , " << Find(id)->GetY() << endl;
     if (CAS((int*)(&(Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);

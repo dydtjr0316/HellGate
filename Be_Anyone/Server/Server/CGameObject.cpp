@@ -9,7 +9,7 @@ void CGameObject::Insert_Sector()
 
 void CGameObject::Change_Sector(const _tSector& old_sector)
 {
-    m_tSector.SetSector(m_iX / SECTOR_COL_Length, m_iY / SECTOR_ROW_Length);
+    SetSector(m_iX / SECTOR_COL_Length, m_iY / SECTOR_ROW_Length);
 
     if (old_sector.x != m_tSector.x || old_sector.y != m_tSector.y)
     {

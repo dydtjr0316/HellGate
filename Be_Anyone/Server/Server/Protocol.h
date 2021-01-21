@@ -27,7 +27,7 @@ constexpr int MAX_MONSTER = 3000;
 constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
 constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
 
-
+	
 constexpr int START_NPC = END_MONSTER;
 constexpr int MAX_NPC = 2000;
 constexpr int END_NPC = START_NPC + MAX_NPC;
