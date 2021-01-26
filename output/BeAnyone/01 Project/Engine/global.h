@@ -1,13 +1,5 @@
 #pragma once
 
-#define SINGLE(type) private: type(); ~type();\
-public:\
-static type* GetInst()\
-{\
-	static type mgr;\
-	return &mgr;\
-}
-
 // simd 사용 안함
 #define _XM_NO_INTRINSICS_
 
@@ -41,4 +33,5 @@ using std::string;
 using std::wstring;
 using std::make_pair;
 
-#include "struct.h"
+#include "define.h" // 매크로, enum
+#include "struct.h" // 구조체 설계

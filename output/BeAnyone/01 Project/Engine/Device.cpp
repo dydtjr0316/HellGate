@@ -131,7 +131,7 @@ void CDevice::CreateView()
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle = mRtvHeap->GetCPUDescriptorHandleForHeapStart();
 
 	// Create a RTV for each frame.
-	for (UINT i = 0; i < SwapChainBufferCount; i++)
+	for (UINT i = 0; i < SwapChainBufferCount; ++i)
 	{
 		// 생성된 SwapChain 에서 버퍼를 가져옴
 		mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i]));
@@ -228,18 +228,19 @@ void CDevice::FlushCommandQueue()
 
 	if (mFence->GetCompletedValue() < mCurrentFence)
 	{
-		HANDLE eventHandle = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
+		// init에 만듦
+		/*HANDLE eventHandle = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
 		if (eventHandle == nullptr)
 		{
 			assert(nullptr);
-		}
+		}*/
 
 		// Fire event when GPU hits current fence.  
-		mFence->SetEventOnCompletion(mCurrentFence, eventHandle);
+		mFence->SetEventOnCompletion(mCurrentFence, m_hFenceEvent);
 
 		// Wait until the GPU hits current fence event is fired.
-		WaitForSingleObject(eventHandle, INFINITE);
-		CloseHandle(eventHandle);
+		WaitForSingleObject(m_hFenceEvent, INFINITE);
+		CloseHandle(m_hFenceEvent);
 	}
 }
 
@@ -265,9 +266,12 @@ void CDevice::render_start(float(&_arrFloat)[4])
 
 	mCommandList->ResourceBarrier(1, &barrier);
 
+	// const float color[4] = { 1.0, 0.7, 0.1, 0.0 };
+	// mCommandList->ClearRenderTargetView(CurrentBackBufferView(), color, 0, nullptr);
+
 	// Clear the back buffer and depth buffer.
 	// directxcolors.h 없음
-	// mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
+	// mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Honeydew, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to. => 파이프라인에 묶기?

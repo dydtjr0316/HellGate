@@ -2,10 +2,7 @@
 
 class CDevice
 {
-
-private:
-	CDevice();
-	virtual ~CDevice();
+	SINGLE(CDevice);
 
 public:
 	HWND			mhWnd;
@@ -65,5 +62,9 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView()const;
+
+public:
+	ComPtr<ID3D12GraphicsCommandList> GetCmdList() { return mCommandList; }
+	ComPtr<ID3D12Device> GetDevice() { return md3dDevice; }
 };
 
