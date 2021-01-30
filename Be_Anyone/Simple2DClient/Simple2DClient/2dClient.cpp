@@ -511,8 +511,6 @@ int main()
 
 	client_initialize();
 
-
-
 	cs_packet_login l_packet;
 	l_packet.size = sizeof(l_packet);
 	l_packet.type = CS_LOGIN;
