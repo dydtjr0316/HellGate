@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "Device.h"
 
+#include "ConstantBuffer.h"
+
 
 CDevice::CDevice()
 {
-
 }
 
 CDevice::~CDevice()
@@ -324,4 +325,36 @@ void CDevice::CreateViewPort()
 {
 	mScreenViewport = D3D12_VIEWPORT{ 0.f, 0.f, mtResolution.fWidth, mtResolution.fHeight, 0.f, 1.f };
 	mScissorRect = D3D12_RECT{ 0, 0, (LONG)mtResolution.fWidth, (LONG)mtResolution.fHeight };
+}
+
+void CDevice::CreateRootSignature()
+{
+	D3D12_DESCRIPTOR_RANGE range[2] = {};
+	D3D12_ROOT_PARAMETER sigParam[2] = {};
+
+	range[0].BaseShaderRegister = 0;
+	range[0].NumDescriptors = 2;
+	range[0].OffsetInDescriptorsFromTableStart = -1;
+	range[0].RegisterSpace = 0;
+	range[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV; // b
+
+	sigParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	sigParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	sigParam[0].DescriptorTable.NumDescriptorRanges = 1;
+	sigParam[0].DescriptorTable.pDescriptorRanges = range;
+
+	//루트 서명
+	D3D12_ROOT_SIGNATURE_DESC sigDesc = {};
+	sigDesc.NumParameters = 1;
+	sigDesc.pParameters = sigParam;	// Descriptor Table 0번 슬롯 설명
+	sigDesc.NumStaticSamplers = 0;
+	sigDesc.pStaticSamplers = nullptr; // 사용될 Sampler 정보
+	sigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT; // 입력 조립기 단계
+
+	ComPtr<ID3DBlob> pSignature;
+	ComPtr<ID3DBlob> pError;
+	HRESULT hr = D3D12SerializeRootSignature(&sigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &pSignature, &pError);
+	md3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&m_arrSig[(UINT)ROOT_SIG_TYPE::INPUT_ASSEM]));
+
+	// 더미용 DescriptorHeap 만들기
 }

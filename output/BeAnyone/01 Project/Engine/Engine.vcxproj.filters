@@ -54,6 +54,12 @@
     <ClInclude Include="Entity.h">
       <Filter>0. Default</Filter>
     </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>02. Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>03. Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyManager.cpp">
@@ -73,6 +79,12 @@
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>0. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>02. Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>03. Device</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

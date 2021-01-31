@@ -41,7 +41,9 @@ void CMesh::Create(UINT _iBufferSize, BYTE* _pVtxSysMem)
 	tResDesc.Height = 1;
 	tResDesc.DepthOrArraySize = 1;
 	tResDesc.MipLevels = 1;
+
 	tResDesc.Format = DXGI_FORMAT_UNKNOWN;
+
 	tResDesc.SampleDesc.Count = 1;
 	tResDesc.SampleDesc.Quality = 0;
 	tResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
@@ -62,7 +64,7 @@ void CMesh::Create(UINT _iBufferSize, BYTE* _pVtxSysMem)
 	D3D12_RANGE readRange{ 0,0 };	// We do not intend to read from this resource on the CPU.	
 	m_pVertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
 	memcpy(pVertexDataBegin, _pVtxSysMem, _iBufferSize);
-	m_pVertexBuffer->Unmap(0, nullptr);
+	m_pVertexBuffer->Unmap(0, nullptr);	// ¸ÊÇÎÀ» ³¡³Â´Ù´Â °Ç°¡? ¤Ì
 	
 	// Initialize the vertex buffer view
 	m_tVtxView.BufferLocation = m_pVertexBuffer->GetGPUVirtualAddress();
