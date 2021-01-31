@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Device.h"
 
+
 CDevice::CDevice()
 {
 
