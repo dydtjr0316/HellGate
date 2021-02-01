@@ -71,10 +71,12 @@ void CMesh::Create(UINT _iBufferSize, BYTE* _pVtxSysMem)
 	m_tVtxView.StrideInBytes = sizeof(VTX);
 	m_tVtxView.SizeInBytes = _iBufferSize;
 
-
+	CDevice::GetInst()->FlushCommandQueue();
 }
 
 void CMesh::render()
 {
-
+	CMDLIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	CMDLIST->IASetVertexBuffers(0, 1, &m_tVtxView);
+	CMDLIST->DrawInstanced(3, 1, 0, 0);
 }

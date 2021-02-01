@@ -12,3 +12,8 @@ struct VTX
 	XMFLOAT3 vPos;
 	XMFLOAT4 vColor;
 };
+
+struct tTransform
+{
+	XMFLOAT4 vOffset;
+};

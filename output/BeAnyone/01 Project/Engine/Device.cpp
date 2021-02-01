@@ -52,6 +52,7 @@ int CDevice::initDirect3D(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	CreateRtvAndDsvDescriptorHeaps();
 	CreateView();
 	CreateViewPort();
+	CreateRootSignature();
 
 	// 루트 서명 해야 함
 
@@ -357,4 +358,51 @@ void CDevice::CreateRootSignature()
 	md3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&m_arrSig[(UINT)ROOT_SIG_TYPE::INPUT_ASSEM]));
 
 	// 더미용 DescriptorHeap 만들기
+	D3D12_DESCRIPTOR_HEAP_DESC dummyCbvHeapDesc = {};
+	dummyCbvHeapDesc.NumDescriptors = 2;
+	dummyCbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	dummyCbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	md3dDevice->CreateDescriptorHeap(&dummyCbvHeapDesc, IID_PPV_ARGS(&m_pDummyCbvHeap));
+
+	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_pDummyCbvHeap->GetCPUDescriptorHandleForHeapStart();
+	md3dDevice->CreateConstantBufferView(&cbvDesc, handle);
 }
+
+void CDevice::SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset)
+{
+	UINT iDestRange = 1;
+	UINT iSrcRange = 1;
+
+	// 0번 슬롯이 상수 버퍼 데이터
+
+	D3D12_CPU_DESCRIPTOR_HANDLE hDummyHandle = m_pDummyCbvHeap->GetCPUDescriptorHandleForHeapStart();
+	hDummyHandle.ptr += _pCB->GetRegisterNum() * mCbvSrvUavDescriptorSize;
+
+	// 상수 버퍼 512개 중 어떤 걸 넣을 거냐
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pCB->GetCBV()->GetCPUDescriptorHandleForHeapStart();
+	hSrcHandle.ptr += _iOffset * mCbvSrvUavDescriptorSize;
+
+	md3dDevice->CopyDescriptors(1, &hDummyHandle, &iDestRange,
+		1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	// 더미 힙을 레지스터에 등록
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_pDummyCbvHeap->GetGPUDescriptorHandleForHeapStart();
+	mCommandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
+}
+
+void CDevice::CreateConstBuffer(const wstring& _strName, size_t _iSize,
+	size_t _iMaxCount, CONST_REGISTER _eRegisterNum, bool _bGlobal)
+{
+	CConstantBuffer* pCB = new CConstantBuffer;
+
+	pCB->Create((UINT)_iSize, (UINT)_iMaxCount, _eRegisterNum);
+	
+	if (m_vecCB.size() <= (UINT)_eRegisterNum)
+	{
+		m_vecCB.resize((UINT)_eRegisterNum + 1);
+	}
+
+	m_vecCB[(UINT)_eRegisterNum] = pCB;
+}
+

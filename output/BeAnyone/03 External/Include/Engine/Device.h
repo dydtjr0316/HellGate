@@ -33,7 +33,7 @@ private:
 	// View
 	ComPtr<ID3D12DescriptorHeap>		mRtvHeap;
 	ComPtr<ID3D12DescriptorHeap>		mDsvHeap;
-	ComPtr<ID3D12DescriptorHeap>		mDummyCvbHeap;
+	ComPtr<ID3D12DescriptorHeap>		m_pDummyCbvHeap;
 
 	UINT mRtvDescriptorSize = 0;
 	UINT mDsvDescriptorSize = 0;
@@ -46,7 +46,7 @@ private:
 	HANDLE								m_hFenceEvent;
 	UINT64								mCurrentFence = 0;
 
-	vector<CConstantBuffer*>			mVecCB;
+	vector<CConstantBuffer*>			m_vecCB;
 
 private:
 	ComPtr<ID3D12RootSignature>	m_arrSig[(UINT)ROOT_SIG_TYPE::END];

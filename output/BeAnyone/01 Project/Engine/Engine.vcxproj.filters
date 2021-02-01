@@ -19,6 +19,12 @@
     <Filter Include="0. Default">
       <UniqueIdentifier>{d2e24bf9-92c8-4509-b194-c63b43ce5623}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ShaderCode">
+      <UniqueIdentifier>{14a150d9-85d5-4695-b874-2eb7522e6959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zBasic">
+      <UniqueIdentifier>{e559ce56-8229-468b-bfe6-cb95a2f06ee6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyManager.h">
@@ -27,19 +33,10 @@
     <ClInclude Include="Device.h">
       <Filter>03. Device</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>01. Header</Filter>
-    </ClInclude>
     <ClInclude Include="global.h">
       <Filter>01. Header</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>01. Header</Filter>
-    </ClInclude>
     <ClInclude Include="struct.h">
-      <Filter>01. Header</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
       <Filter>01. Header</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -60,6 +57,21 @@
     <ClInclude Include="ConstantBuffer.h">
       <Filter>03. Device</Filter>
     </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="func.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyManager.cpp">
@@ -67,9 +79,6 @@
     </ClCompile>
     <ClCompile Include="Device.cpp">
       <Filter>03. Device</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>01. Header</Filter>
     </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Resource</Filter>
@@ -85,6 +94,15 @@
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
       <Filter>03. Device</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>zBasic</Filter>
+    </ClCompile>
+    <ClCompile Include="func.cpp">
+      <Filter>01. Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
