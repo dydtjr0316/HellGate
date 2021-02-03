@@ -47,3 +47,19 @@ enum class CONST_REGISTER
 
 	END,
 };
+
+enum class RS_TYPE
+{
+	DEFAULT,
+	END,
+};
+
+enum class BLEND_TYPE
+{
+	DEFAULT,
+	END,
+};
+
+// State Description
+extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];
+extern D3D12_BLEND_DESC g_arrBlendDesc[(UINT)BLEND_TYPE::END];

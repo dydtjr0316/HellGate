@@ -77,5 +77,7 @@ private:
 public:
 	ComPtr<ID3D12GraphicsCommandList> GetCmdList() { return mCommandList; }
 	ComPtr<ID3D12Device> GetDevice() { return md3dDevice; }
+	ComPtr<ID3D12RootSignature> GetRootSignature(ROOT_SIG_TYPE _eType) { return m_arrSig[(UINT)_eType]; }
+	CConstantBuffer* GetCB(CONST_REGISTER _eRegister) { return m_vecCB[(UINT)_eRegister]; }
 };
 

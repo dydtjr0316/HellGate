@@ -7,10 +7,10 @@ CConstantBuffer::CConstantBuffer()
 	: m_pBuffer(nullptr)
 	, m_pCbvHeap(nullptr)
 	, m_iBufferSize(0)
-	, m_iMaxCount(0)
+	, m_iMaxCount(2)
 	, m_eRegisterNum(CONST_REGISTER::END)
 	, m_pData(nullptr)
-	//, m_tHeapDesc{}
+	, m_tHeapDesc{}
 {
 }
 
@@ -20,7 +20,7 @@ CConstantBuffer::~CConstantBuffer()
 
 void CConstantBuffer::Create(UINT _iBufferSize, UINT _iMaxCount, CONST_REGISTER _eRegisterNum)
 {
-	m_iBufferSize = _iBufferSize;
+	m_iBufferSize = (_iBufferSize + 255) & ~255;
 	m_iMaxCount = _iMaxCount;
 	m_eRegisterNum = _eRegisterNum;
 

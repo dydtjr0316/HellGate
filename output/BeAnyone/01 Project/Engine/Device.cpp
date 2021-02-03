@@ -5,6 +5,10 @@
 
 
 CDevice::CDevice()
+	: md3dDevice(nullptr)
+	, mFence(nullptr)
+	, mdxgiFactory(nullptr)
+	, m_hFenceEvent(nullptr)
 {
 }
 
@@ -45,7 +49,7 @@ int CDevice::initDirect3D(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	// 힙 크기 할당
 	mRtvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	mDsvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	
 
 	CreateCommandObjects();
 	CreateSwapChain();
@@ -53,8 +57,6 @@ int CDevice::initDirect3D(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	CreateView();
 	CreateViewPort();
 	CreateRootSignature();
-
-	// 루트 서명 해야 함
 
 
 	return S_OK;
@@ -90,7 +92,7 @@ void CDevice::CreateSwapChain()
 	// Release the previous swapChain we will be recreating
 	mSwapChain.Reset();
 
-	DXGI_SWAP_CHAIN_DESC tDesc;
+	DXGI_SWAP_CHAIN_DESC tDesc = {};
 	tDesc.BufferDesc.Width = (UINT)mtResolution.fWidth;			// 버퍼의 해상도(윈도우 해상도랑 일치시켜놓음)
 	tDesc.BufferDesc.Height = (UINT)mtResolution.fHeight;		// 버퍼의 해상도(윈도우 해상도랑 일치시켜놓음)
 	tDesc.BufferDesc.RefreshRate.Numerator = 100;				// 화면 갱신 비율
@@ -120,11 +122,11 @@ void CDevice::CreateRtvAndDsvDescriptorHeaps()
 	rtvHeapDesc.NodeMask = 0;
 	md3dDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(mRtvHeap.GetAddressOf()));
 
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
+	/*D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
 	dsvHeapDesc.NumDescriptors = 1;
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	md3dDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(mDsvHeap.GetAddressOf()));
+	md3dDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(mDsvHeap.GetAddressOf()));*/
 }
 
 void CDevice::CreateView()
@@ -145,68 +147,68 @@ void CDevice::CreateView()
 	}
 
 	// Create the depth/stencil buffer and view.
-	D3D12_RESOURCE_DESC depthStencilDesc;
-	depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthStencilDesc.Alignment = 0;
-	depthStencilDesc.Width = (UINT)mtResolution.fWidth;;
-	depthStencilDesc.Height = (UINT)mtResolution.fHeight;;
-	depthStencilDesc.DepthOrArraySize = 1;
-	depthStencilDesc.MipLevels = 1;
+	//D3D12_RESOURCE_DESC depthStencilDesc;
+	//depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	//depthStencilDesc.Alignment = 0;
+	//depthStencilDesc.Width = (UINT)mtResolution.fWidth;;
+	//depthStencilDesc.Height = (UINT)mtResolution.fHeight;;
+	//depthStencilDesc.DepthOrArraySize = 1;
+	//depthStencilDesc.MipLevels = 1;
 
-	depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	//depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-	depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+	//depthStencilDesc.SampleDesc.Count = 1;
+	//depthStencilDesc.SampleDesc.Quality = 0;
+	//depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	//depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
-	D3D12_CLEAR_VALUE optClear;
-	optClear.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	optClear.DepthStencil.Depth = 1.0f;
-	optClear.DepthStencil.Stencil = 0;
+	//D3D12_CLEAR_VALUE optClear;
+	//optClear.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//optClear.DepthStencil.Depth = 1.0f;
+	//optClear.DepthStencil.Stencil = 0;
 
-	D3D12_HEAP_PROPERTIES HeapProperties;
-	HeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-	HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	HeapProperties.CreationNodeMask = 1;
-	HeapProperties.VisibleNodeMask = 1;
+	//D3D12_HEAP_PROPERTIES HeapProperties;
+	//HeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+	//HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	//HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	//HeapProperties.CreationNodeMask = 1;
+	//HeapProperties.VisibleNodeMask = 1;
 
-	md3dDevice->CreateCommittedResource(
-		&HeapProperties,
-		D3D12_HEAP_FLAG_NONE,
-		&depthStencilDesc,
-		D3D12_RESOURCE_STATE_COMMON,
-		&optClear,
-		IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf()));
+	//md3dDevice->CreateCommittedResource(
+	//	&HeapProperties,
+	//	D3D12_HEAP_FLAG_NONE,
+	//	&depthStencilDesc,
+	//	D3D12_RESOURCE_STATE_COMMON,
+	//	&optClear,
+	//	IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf()));
 
-	
-	// d3dx12.h 헤더가 포함되어야 CD3DX12_~ 를 쓸 수 있음
-	/*md3dDevice->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-		D3D12_HEAP_FLAG_NONE,
-		&depthStencilDesc,
-		D3D12_RESOURCE_STATE_COMMON,
-		&optClear,
-		IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf()));*/
+	//
+	//// d3dx12.h 헤더가 포함되어야 CD3DX12_~ 를 쓸 수 있음
+	///*md3dDevice->CreateCommittedResource(
+	//	&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+	//	D3D12_HEAP_FLAG_NONE,
+	//	&depthStencilDesc,
+	//	D3D12_RESOURCE_STATE_COMMON,
+	//	&optClear,
+	//	IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf()));*/
 
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvDesc.Texture2D.MipSlice = 0;
+	//D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	//dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+	//dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	//dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//dsvDesc.Texture2D.MipSlice = 0;
 
-	md3dDevice->CreateDepthStencilView(mDepthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
+	//md3dDevice->CreateDepthStencilView(mDepthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
 
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = mDepthStencilBuffer.Get();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-	
-	// Transition the resource from its initial state to be used as a depth buffer.
-	mCommandList->ResourceBarrier(1, &barrier);
+	//D3D12_RESOURCE_BARRIER barrier = {};
+	//barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//barrier.Transition.pResource = mDepthStencilBuffer.Get();
+	//barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
+	//barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	//
+	//// Transition the resource from its initial state to be used as a depth buffer.
+	//mCommandList->ResourceBarrier(1, &barrier);
 
 	// d3dx12.h 헤더가 포함되어야 CD3DX12_~ 를 쓸 수 있음
 	/*mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mDepthStencilBuffer.Get(),
@@ -275,11 +277,11 @@ void CDevice::render_start(float(&_arrFloat)[4])
 	// Clear the back buffer and depth buffer.
 	// directxcolors.h 없음
 	// mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Honeydew, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	//mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to. => 파이프라인에 묶기?
-	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
-
+	// mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), FALSE, nullptr);
 }
 
 void CDevice::render_present()
@@ -330,6 +332,8 @@ void CDevice::CreateViewPort()
 
 void CDevice::CreateRootSignature()
 {
+	mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
 	D3D12_DESCRIPTOR_RANGE range[2] = {};
 	D3D12_ROOT_PARAMETER sigParam[2] = {};
 
@@ -405,4 +409,4 @@ void CDevice::CreateConstBuffer(const wstring& _strName, size_t _iSize,
 
 	m_vecCB[(UINT)_eRegisterNum] = pCB;
 }
-
+/////////////////////////

@@ -13,7 +13,7 @@ private:
 	CONST_REGISTER					m_eRegisterNum;		// 상수 버퍼 대응 레지스터 번호
 	BYTE*							m_pData;			// 상수 버퍼와 맵핑된 주소
 
-	// D3D12_DESCRIPTOR_HEAP_DESC		m_tHeapDesc;		// 상수 버퍼와 서술자 힙을 연결하는 정보
+	D3D12_DESCRIPTOR_HEAP_DESC		m_tHeapDesc;		// 상수 버퍼와 서술자 힙을 연결하는 정보
 
 public:
 	void Create(UINT _iBufferSize, UINT _iMaxCount, CONST_REGISTER _eRegisterNum);

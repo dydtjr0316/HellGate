@@ -7,7 +7,7 @@ public:
 
 public:
 	int init(HWND _hWnd, const tResolution& _resolution, bool _bWindow);
-	void prgress();
+	void progress();
 
 private:
 	void ChangeWindowSize(HWND _hWnd, const tResolution& _resolution);
