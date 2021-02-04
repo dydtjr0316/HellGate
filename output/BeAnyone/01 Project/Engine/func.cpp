@@ -60,6 +60,8 @@ void TestRender()
 
 	CDevice::GetInst()->render_start(arrColor);
 
+	g_pShader->UpdateData();
+
 	XMFLOAT4 vData = XMFLOAT4{ 0.5f, 0.f, 0.f, 0.f };
 
 	CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);

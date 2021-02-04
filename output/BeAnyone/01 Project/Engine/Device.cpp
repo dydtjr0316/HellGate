@@ -5,9 +5,9 @@
 
 
 CDevice::CDevice()
-	: md3dDevice(nullptr)
-	, mFence(nullptr)
-	, mdxgiFactory(nullptr)
+	: m_pDevice(nullptr)
+	, m_pFence(nullptr)
+	, m_pFactory(nullptr)
 	, m_hFenceEvent(nullptr)
 {
 }
@@ -15,29 +15,31 @@ CDevice::CDevice()
 CDevice::~CDevice()
 {
 	FlushCommandQueue();
+	CloseHandle(m_hFenceEvent);
 }
 
 int CDevice::initDirect3D(HWND _hWnd, const tResolution& _res, bool _bWindow)
 {
-	mhWnd = _hWnd;
-	mtResolution = _res;
-	mbWindowed = _bWindow;
+	m_hWnd = _hWnd;
+	m_tResolution = _res;
+	m_bWindowed = _bWindow;
 
 #ifdef _DEBUG
 	ComPtr<ID3D12Debug> debugController;
 	D3D12GetDebugInterface(IID_PPV_ARGS(&debugController));
 	debugController->EnableDebugLayer();
 #endif
-	CreateDXGIFactory(IID_PPV_ARGS(&mdxgiFactory));
+	CreateDXGIFactory(IID_PPV_ARGS(&m_pFactory));
 
 	// 디바이스 생성
 	D3D12CreateDevice(
 		nullptr,             // default adapter
 		D3D_FEATURE_LEVEL_11_0,
-		IID_PPV_ARGS(&md3dDevice));
+		IID_PPV_ARGS(&m_pDevice));
 
 	// 펜스 생성
-	md3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
+	m_pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_pFence));
+	m_iFenceValue = 1;
 
 	// Create an event handle to use for frame synchronization.
 	m_hFenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
@@ -47,8 +49,8 @@ int CDevice::initDirect3D(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	}
 
 	// 힙 크기 할당
-	mRtvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	mDsvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	m_iRtvDescriptorSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	m_iDsvDescriptorSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	
 
 	CreateCommandObjects();
@@ -68,33 +70,33 @@ void CDevice::CreateCommandObjects()
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	md3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mCommandQueue));
+	m_pDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_pCommandQueue));
 
 	// Create Command Allocator
-	md3dDevice->CreateCommandAllocator(
+	m_pDevice->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(mDirectCmdListAlloc.GetAddressOf()));
+		IID_PPV_ARGS(&m_pCmdListAlloc));
 
 	// Create Command List
-	md3dDevice->CreateCommandList(
+	m_pDevice->CreateCommandList(
 		0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		mDirectCmdListAlloc.Get(),	// Associated command allocator
+		m_pCmdListAlloc.Get(),	// Associated command allocator
 		nullptr,					// Initial PipelineStateObject
-		IID_PPV_ARGS(mCommandList.GetAddressOf()));
+		IID_PPV_ARGS(m_pCommandList.GetAddressOf()));
 
-	mCommandList->Close();
+	m_pCommandList->Close();
 
 }
 
 void CDevice::CreateSwapChain()
 {
 	// Release the previous swapChain we will be recreating
-	mSwapChain.Reset();
+	m_pSwapChain.Reset();
 
 	DXGI_SWAP_CHAIN_DESC tDesc = {};
-	tDesc.BufferDesc.Width = (UINT)mtResolution.fWidth;			// 버퍼의 해상도(윈도우 해상도랑 일치시켜놓음)
-	tDesc.BufferDesc.Height = (UINT)mtResolution.fHeight;		// 버퍼의 해상도(윈도우 해상도랑 일치시켜놓음)
+	tDesc.BufferDesc.Width = (UINT)m_tResolution.fWidth;			// 버퍼의 해상도(윈도우 해상도랑 일치시켜놓음)
+	tDesc.BufferDesc.Height = (UINT)m_tResolution.fHeight;		// 버퍼의 해상도(윈도우 해상도랑 일치시켜놓음)
 	tDesc.BufferDesc.RefreshRate.Numerator = 100;				// 화면 갱신 비율
 	tDesc.BufferDesc.RefreshRate.Denominator = 1;				// 화면 갱신 비율
 	tDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		// 버퍼의 픽셀 포멧(픽셀당 4바이트)
@@ -105,12 +107,12 @@ void CDevice::CreateSwapChain()
 	tDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;		// 출력 타겟 용도로 버퍼를 만든다.
 	tDesc.BufferCount = SwapChainBufferCount;
 
-	tDesc.OutputWindow = mhWnd;			// 출력 윈도우
-	tDesc.Windowed = mbWindowed;		// 창 모드 or 전체화면 모드
+	tDesc.OutputWindow = m_hWnd;			// 출력 윈도우
+	tDesc.Windowed = m_bWindowed;		// 창 모드 or 전체화면 모드
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;			// 전면 후면 버퍼 교체 시 이전 프레임 정보 버림
-	tDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	tDesc.Flags = 0;//DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	HRESULT hr = mdxgiFactory->CreateSwapChain(mCommandQueue.Get(), &tDesc, mSwapChain.GetAddressOf());
+	HRESULT hr = m_pFactory->CreateSwapChain(m_pCommandQueue.Get(), &tDesc, m_pSwapChain.GetAddressOf());
 }
 
 void CDevice::CreateRtvAndDsvDescriptorHeaps()
@@ -120,7 +122,7 @@ void CDevice::CreateRtvAndDsvDescriptorHeaps()
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	rtvHeapDesc.NodeMask = 0;
-	md3dDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(mRtvHeap.GetAddressOf()));
+	m_pDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(m_pRtvHeap.GetAddressOf()));
 
 	/*D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
 	dsvHeapDesc.NumDescriptors = 1;
@@ -131,19 +133,19 @@ void CDevice::CreateRtvAndDsvDescriptorHeaps()
 
 void CDevice::CreateView()
 {
-	miCurTargetIdx = 0;
+	// m_iCurTargetIdx = 0;
 
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle = mRtvHeap->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle = m_pRtvHeap->GetCPUDescriptorHandleForHeapStart();
 
 	// Create a RTV for each frame.
 	for (UINT i = 0; i < SwapChainBufferCount; ++i)
 	{
 		// 생성된 SwapChain 에서 버퍼를 가져옴
-		mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i]));
+		m_pSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_pSwapChainBuffer[i]));
 
 		// 해당 버퍼로 RenderTarvetView 생성함
-		md3dDevice->CreateRenderTargetView(mSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
-		rtvHeapHandle.ptr += mRtvDescriptorSize; // Offset 증가
+		m_pDevice->CreateRenderTargetView(m_pSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
+		rtvHeapHandle.ptr += m_iRtvDescriptorSize; // Offset 증가
 	}
 
 	// Create the depth/stencil buffer and view.
@@ -215,64 +217,66 @@ void CDevice::CreateView()
 		D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE));*/
 
 	// Execute the resize commands.
-	mCommandList->Close();
+	//m_pCommandList->Close();
 
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
-	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+	//ID3D12CommandList* cmdsLists[] = { m_pCommandList.Get() };
+	//m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	// Wait until resize is complete.
-	FlushCommandQueue();
+	//// Wait until resize is complete.
+	//FlushCommandQueue();
+	// -> 이 부분 닫힌 명령 목룍 오류 뜸
 }
 
 void CDevice::FlushCommandQueue()
 {
-	// Advance the fence value to mark commands up to this fence point.
-	mCurrentFence++;
+	// Signal and increment the fence value.
+	const UINT64 fence = m_iFenceValue;
+	m_pCommandQueue->Signal(m_pFence.Get(), fence);
+	m_iFenceValue++;
 
-	mCommandQueue->Signal(mFence.Get(), mCurrentFence);
-
-	if (mFence->GetCompletedValue() < mCurrentFence)
+	// Wait until the previous frame is finished.
+	if (m_pFence->GetCompletedValue() < fence)
 	{
-		// init에 만듦
-		/*HANDLE eventHandle = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
-		if (eventHandle == nullptr)
-		{
-			assert(nullptr);
-		}*/
-
 		// Fire event when GPU hits current fence.  
-		mFence->SetEventOnCompletion(mCurrentFence, m_hFenceEvent);
+		m_pFence->SetEventOnCompletion(fence, m_hFenceEvent);
 
 		// Wait until the GPU hits current fence event is fired.
 		WaitForSingleObject(m_hFenceEvent, INFINITE);
-		CloseHandle(m_hFenceEvent);
+		
 	}
 }
 
 void CDevice::render_start(float(&_arrFloat)[4])
 {
 	// 그리기 준비
-	mDirectCmdListAlloc->Reset();
-
-	mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr);
+	m_pCmdListAlloc->Reset();
+	m_pCommandList->Reset(m_pCmdListAlloc.Get(), nullptr);
 
 	// 필요한 상태 설정	
-	mCommandList->RSSetViewports(1, &mScreenViewport);
-	mCommandList->RSSetScissorRects(1, &mScissorRect);
+	// RootSignature 설정	
+	CMDLIST->SetGraphicsRootSignature(CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::INPUT_ASSEM).Get());
+
+	vector<ID3D12DescriptorHeap*> vecCBV;
+	
+	vecCBV.push_back(m_pDummyCbvHeap.Get());
+	m_pCommandList->SetDescriptorHeaps(1/*vecCBV.size()*/, &vecCBV[0]);
+	
+	m_pCommandList->RSSetViewports(1, &m_tScreenViewport);
+	m_pCommandList->RSSetScissorRects(1, &m_tScissorRect);
 
 	// Indicate that the back buffer will be used as a render target.
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = mSwapChainBuffer[miCurTargetIdx].Get();	// miCurTargetIdx로 현재 백버퍼 가져오기
+	barrier.Transition.pResource = m_pSwapChainBuffer[m_iCurTargetIdx].Get();	// miCurTargetIdx로 현재 백버퍼 가져오기
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;		// 출력에서
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET; // 다시 백버퍼로 지정
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
-	mCommandList->ResourceBarrier(1, &barrier);
+	m_pCommandList->ResourceBarrier(1, &barrier);
 
-	// const float color[4] = { 1.0, 0.7, 0.1, 0.0 };
-	// mCommandList->ClearRenderTargetView(CurrentBackBufferView(), color, 0, nullptr);
+	//const float color[4] = { 1.0, 0.7, 0.1, 0.0 };
+	m_pCommandList->ClearRenderTargetView(CurrentBackBufferView(), _arrFloat, 0, nullptr);
 
 	// Clear the back buffer and depth buffer.
 	// directxcolors.h 없음
@@ -281,7 +285,7 @@ void CDevice::render_start(float(&_arrFloat)[4])
 
 	// Specify the buffers we are going to render to. => 파이프라인에 묶기?
 	// mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
-	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), FALSE, nullptr);
+	m_pCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), FALSE, nullptr);
 }
 
 void CDevice::render_present()
@@ -290,49 +294,49 @@ void CDevice::render_present()
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE; ;
-	barrier.Transition.pResource = mSwapChainBuffer[miCurTargetIdx].Get();
+	barrier.Transition.pResource = m_pSwapChainBuffer[m_iCurTargetIdx].Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;	// 백버퍼에서
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;			// 다시 출력으로 지정
 
-	mCommandList->ResourceBarrier(1, &barrier);
+	m_pCommandList->ResourceBarrier(1, &barrier);
 
 	// Done recording commands.
-	mCommandList->Close();
+	m_pCommandList->Close();
 
 	// 커맨드 리스트 수행	(Add the command list to the queue for execution)
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
-	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+	ID3D12CommandList* cmdsLists[] = { m_pCommandList.Get() };
+	m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// Present the frame.
-	mSwapChain->Present(0, 0);
+	m_pSwapChain->Present(0, 0);
 	FlushCommandQueue();
 
-	miCurTargetIdx = (miCurTargetIdx + 1) % SwapChainBufferCount;
+	m_iCurTargetIdx = (m_iCurTargetIdx + 1) % SwapChainBufferCount;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE CDevice::DepthStencilView() const
 {
-	return mDsvHeap->GetCPUDescriptorHandleForHeapStart();
+	return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE CDevice::CurrentBackBufferView() const
 {
 	// miCurTargetIdx가 0이라면 0 * size = 0이니까 아무것도 안 더함 -> 핸들의 첫 시작
 	// miCurtargetIdx가 1이라면 1 * size = size니까 size만큼 더함 -> 핸들의 처음 + 사이즈 -> 즉, 두 번째 뷰
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle = mRtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvHeapHandle.ptr += miCurTargetIdx * mRtvDescriptorSize;
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle = m_pRtvHeap->GetCPUDescriptorHandleForHeapStart();
+	rtvHeapHandle.ptr += m_iCurTargetIdx * m_iRtvDescriptorSize;
 	return rtvHeapHandle;
 }
 
 void CDevice::CreateViewPort()
 {
-	mScreenViewport = D3D12_VIEWPORT{ 0.f, 0.f, mtResolution.fWidth, mtResolution.fHeight, 0.f, 1.f };
-	mScissorRect = D3D12_RECT{ 0, 0, (LONG)mtResolution.fWidth, (LONG)mtResolution.fHeight };
+	m_tScreenViewport = D3D12_VIEWPORT{ 0.f, 0.f, m_tResolution.fWidth, m_tResolution.fHeight, 0.f, 1.f };
+	m_tScissorRect = D3D12_RECT{ 0, 0, (LONG)m_tResolution.fWidth, (LONG)m_tResolution.fHeight };
 }
 
 void CDevice::CreateRootSignature()
 {
-	mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	m_iCbvSrvUavDescriptorSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	D3D12_DESCRIPTOR_RANGE range[2] = {};
 	D3D12_ROOT_PARAMETER sigParam[2] = {};
@@ -359,18 +363,18 @@ void CDevice::CreateRootSignature()
 	ComPtr<ID3DBlob> pSignature;
 	ComPtr<ID3DBlob> pError;
 	HRESULT hr = D3D12SerializeRootSignature(&sigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &pSignature, &pError);
-	md3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&m_arrSig[(UINT)ROOT_SIG_TYPE::INPUT_ASSEM]));
+	m_pDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&m_arrSig[(UINT)ROOT_SIG_TYPE::INPUT_ASSEM]));
 
 	// 더미용 DescriptorHeap 만들기
 	D3D12_DESCRIPTOR_HEAP_DESC dummyCbvHeapDesc = {};
 	dummyCbvHeapDesc.NumDescriptors = 2;
 	dummyCbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	dummyCbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	md3dDevice->CreateDescriptorHeap(&dummyCbvHeapDesc, IID_PPV_ARGS(&m_pDummyCbvHeap));
+	m_pDevice->CreateDescriptorHeap(&dummyCbvHeapDesc, IID_PPV_ARGS(&m_pDummyCbvHeap));
 
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_pDummyCbvHeap->GetCPUDescriptorHandleForHeapStart();
-	md3dDevice->CreateConstantBufferView(&cbvDesc, handle);
+	m_pDevice->CreateConstantBufferView(&cbvDesc, handle);
 }
 
 void CDevice::SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset)
@@ -381,18 +385,18 @@ void CDevice::SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset)
 	// 0번 슬롯이 상수 버퍼 데이터
 
 	D3D12_CPU_DESCRIPTOR_HANDLE hDummyHandle = m_pDummyCbvHeap->GetCPUDescriptorHandleForHeapStart();
-	hDummyHandle.ptr += _pCB->GetRegisterNum() * mCbvSrvUavDescriptorSize;
+	hDummyHandle.ptr += _pCB->GetRegisterNum() * m_iCbvSrvUavDescriptorSize;
 
 	// 상수 버퍼 512개 중 어떤 걸 넣을 거냐
 	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pCB->GetCBV()->GetCPUDescriptorHandleForHeapStart();
-	hSrcHandle.ptr += _iOffset * mCbvSrvUavDescriptorSize;
+	hSrcHandle.ptr += _iOffset * m_iCbvSrvUavDescriptorSize;
 
-	md3dDevice->CopyDescriptors(1, &hDummyHandle, &iDestRange,
+	m_pDevice->CopyDescriptors(1, &hDummyHandle, &iDestRange,
 		1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	// 더미 힙을 레지스터에 등록
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_pDummyCbvHeap->GetGPUDescriptorHandleForHeapStart();
-	mCommandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
+	m_pCommandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 }
 
 void CDevice::CreateConstBuffer(const wstring& _strName, size_t _iSize,
@@ -409,4 +413,3 @@ void CDevice::CreateConstBuffer(const wstring& _strName, size_t _iSize,
 
 	m_vecCB[(UINT)_eRegisterNum] = pCB;
 }
-/////////////////////////
