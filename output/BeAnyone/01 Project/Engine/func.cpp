@@ -70,6 +70,14 @@ void TestRender()
 
 	g_pMesh->render();
 
+	vData = XMFLOAT4{ -0.5f, 0.f, 0.f, 0.f };
+
+	pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
+	pCB->SetData(&vData, sizeof(XMFLOAT4), 1);
+	CDevice::GetInst()->SetConstBufferToRegister(pCB, 1);
+
+	g_pMesh->render();
+
 	// 그리기 종료
 	CDevice::GetInst()->render_present();
 }

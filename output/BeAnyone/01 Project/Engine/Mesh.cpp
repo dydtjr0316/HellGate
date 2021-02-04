@@ -76,6 +76,8 @@ void CMesh::Create(UINT _iBufferSize, BYTE* _pVtxSysMem)
 
 void CMesh::render()
 {
+	CDevice::GetInst()->UpdateTable();
+
 	CMDLIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	CMDLIST->IASetVertexBuffers(0, 1, &m_tVtxView);
 	CMDLIST->DrawInstanced(3, 1, 0, 0);

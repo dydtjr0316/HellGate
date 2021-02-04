@@ -2,6 +2,7 @@
 #include "Device.h"
 
 #include "ConstantBuffer.h"
+#include "Texture.h"
 
 
 CDevice::CDevice()
@@ -9,6 +10,7 @@ CDevice::CDevice()
 	, m_pFence(nullptr)
 	, m_pFactory(nullptr)
 	, m_hFenceEvent(nullptr)
+	, m_iCurDummyIdx(0)
 {
 }
 
@@ -248,6 +250,8 @@ void CDevice::FlushCommandQueue()
 
 void CDevice::render_start(float(&_arrFloat)[4])
 {
+	m_iCurDummyIdx = 0; 
+
 	// 그리기 준비
 	m_pCmdListAlloc->Reset();
 	m_pCommandList->Reset(m_pCmdListAlloc.Get(), nullptr);
@@ -256,10 +260,10 @@ void CDevice::render_start(float(&_arrFloat)[4])
 	// RootSignature 설정	
 	CMDLIST->SetGraphicsRootSignature(CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::INPUT_ASSEM).Get());
 
-	vector<ID3D12DescriptorHeap*> vecCBV;
-	
-	vecCBV.push_back(m_pDummyCbvHeap.Get());
-	m_pCommandList->SetDescriptorHeaps(1/*vecCBV.size()*/, &vecCBV[0]);
+	//vector<ID3D12DescriptorHeap*> vecCBV;
+	//
+	//vecCBV.push_back(m_pDummyCbvHeap.Get());
+	//m_pCommandList->SetDescriptorHeaps(1/*vecCBV.size()*/, &vecCBV[0]);
 	
 	m_pCommandList->RSSetViewports(1, &m_tScreenViewport);
 	m_pCommandList->RSSetScissorRects(1, &m_tScissorRect);
@@ -338,26 +342,46 @@ void CDevice::CreateRootSignature()
 {
 	m_iCbvSrvUavDescriptorSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	D3D12_DESCRIPTOR_RANGE range[2] = {};
-	D3D12_ROOT_PARAMETER sigParam[2] = {};
+	// 슬롯 별 Descriptor Table을 작성한다
+	// 0번 슬롯
+	vector<D3D12_DESCRIPTOR_RANGE> vecRange;
 
-	range[0].BaseShaderRegister = 0;
-	range[0].NumDescriptors = 2;
-	range[0].OffsetInDescriptorsFromTableStart = -1;
-	range[0].RegisterSpace = 0;
-	range[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV; // b
+	D3D12_DESCRIPTOR_RANGE range = {};
+	D3D12_ROOT_PARAMETER sigParam = {};
 
-	sigParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	sigParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	sigParam[0].DescriptorTable.NumDescriptorRanges = 1;
-	sigParam[0].DescriptorTable.pDescriptorRanges = range;
+	vecRange.clear();
+
+	// 상수 레지스터
+	range.BaseShaderRegister = 0;		// b0에서
+	range.NumDescriptors = 5;			// b4까지 5개 상수 레지스터 사용 여부
+	range.OffsetInDescriptorsFromTableStart = -1;
+	range.RegisterSpace = 0;
+	range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV; // b
+	vecRange.push_back(range);
+
+	// 텍스처 레지스터
+	range = {};
+	range.BaseShaderRegister = 0;		// t0에서
+	range.NumDescriptors = 13;			// t12까지 13개 텍스처 레지스터 사용 여부
+	range.OffsetInDescriptorsFromTableStart = 5;
+	range.RegisterSpace = 0;
+	range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // t
+	vecRange.push_back(range);
+
+	sigParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	sigParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	sigParam.DescriptorTable.NumDescriptorRanges = vecRange.size();
+	sigParam.DescriptorTable.pDescriptorRanges = &vecRange[0];
+
+	// Sampler Desc 만들기
+	CreateSamplerDesc();
 
 	//루트 서명
 	D3D12_ROOT_SIGNATURE_DESC sigDesc = {};
 	sigDesc.NumParameters = 1;
-	sigDesc.pParameters = sigParam;	// Descriptor Table 0번 슬롯 설명
-	sigDesc.NumStaticSamplers = 0;
-	sigDesc.pStaticSamplers = nullptr; // 사용될 Sampler 정보
+	sigDesc.pParameters = &sigParam;	// Descriptor Table 0번 슬롯 설명
+	sigDesc.NumStaticSamplers = 2;		// m_vecSamplerDesc.size(); -> 얘네 뭐 하는 애들이지?
+	sigDesc.pStaticSamplers = &m_vecSamplerDesc[0]; // 사용될 Sampler 정보
 	sigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT; // 입력 조립기 단계
 
 	ComPtr<ID3DBlob> pSignature;
@@ -367,14 +391,61 @@ void CDevice::CreateRootSignature()
 
 	// 더미용 DescriptorHeap 만들기
 	D3D12_DESCRIPTOR_HEAP_DESC dummyCbvHeapDesc = {};
-	dummyCbvHeapDesc.NumDescriptors = 2;
+
+	UINT iDescriptorNum = 0;
+	for (size_t i = 0; i < vecRange.size(); ++i) {
+		iDescriptorNum += vecRange[i].NumDescriptors;
+	}
+
+	dummyCbvHeapDesc.NumDescriptors = iDescriptorNum;
 	dummyCbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	dummyCbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	m_pDevice->CreateDescriptorHeap(&dummyCbvHeapDesc, IID_PPV_ARGS(&m_pDummyCbvHeap));
 
-	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+	for (int i = 0; i < 512; ++i) {
+		ComPtr<ID3D12DescriptorHeap> pDummyDescriptor;
+		m_pDevice->CreateDescriptorHeap(&dummyCbvHeapDesc, IID_PPV_ARGS(&pDummyDescriptor));
+		m_vecDummyDescriptor.push_back(pDummyDescriptor);
+	}
+
+	/*D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_pDummyCbvHeap->GetCPUDescriptorHandleForHeapStart();
-	m_pDevice->CreateConstantBufferView(&cbvDesc, handle);
+	m_pDevice->CreateConstantBufferView(&cbvDesc, handle);*/
+}
+
+void CDevice::CreateSamplerDesc()
+{
+	D3D12_STATIC_SAMPLER_DESC sampler = {};
+	sampler.Filter = D3D12_FILTER_ANISOTROPIC;
+	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	sampler.MipLODBias = 0;
+	sampler.MaxAnisotropy = 0;
+	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	sampler.MinLOD = 0.0f;
+	sampler.MaxLOD = D3D12_FLOAT32_MAX;
+	sampler.ShaderRegister = 0;
+	sampler.RegisterSpace = 0;
+	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	m_vecSamplerDesc.push_back(sampler);
+
+	sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.MipLODBias = 0;
+	sampler.MaxAnisotropy = 0;
+	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	sampler.MinLOD = 0.0f;
+	sampler.MaxLOD = D3D12_FLOAT32_MAX;
+	sampler.ShaderRegister = 1;
+	sampler.RegisterSpace = 0;
+	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	m_vecSamplerDesc.push_back(sampler);
 }
 
 void CDevice::SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset)
@@ -384,8 +455,8 @@ void CDevice::SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset)
 
 	// 0번 슬롯이 상수 버퍼 데이터
 
-	D3D12_CPU_DESCRIPTOR_HANDLE hDummyHandle = m_pDummyCbvHeap->GetCPUDescriptorHandleForHeapStart();
-	hDummyHandle.ptr += _pCB->GetRegisterNum() * m_iCbvSrvUavDescriptorSize;
+	D3D12_CPU_DESCRIPTOR_HANDLE hDummyHandle = m_vecDummyDescriptor[m_iCurDummyIdx]->GetCPUDescriptorHandleForHeapStart();
+	hDummyHandle.ptr += (UINT)_pCB->GetRegisterNum() * m_iCbvSrvUavDescriptorSize;
 
 	// 상수 버퍼 512개 중 어떤 걸 넣을 거냐
 	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pCB->GetCBV()->GetCPUDescriptorHandleForHeapStart();
@@ -393,11 +464,38 @@ void CDevice::SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset)
 
 	m_pDevice->CopyDescriptors(1, &hDummyHandle, &iDestRange,
 		1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	// 더미 힙을 레지스터에 등록
-	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_pDummyCbvHeap->GetGPUDescriptorHandleForHeapStart();
-	m_pCommandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 }
+
+
+void CDevice::SetTextureToRegister(CTexture* _pTex, TEXTURE_REGISTER _eRegisterNum)
+{
+	UINT iDestRange = 1;
+	UINT iSrcRange = 1;
+
+	// 0번 슬롯이 상수 버퍼 데이터
+	D3D12_CPU_DESCRIPTOR_HANDLE hDummyHandle = m_vecDummyDescriptor[m_iCurDummyIdx]->GetCPUDescriptorHandleForHeapStart();
+	hDummyHandle.ptr += (UINT)_eRegisterNum * m_iCbvSrvUavDescriptorSize;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pTex->GetSRV()->GetCPUDescriptorHandleForHeapStart();
+
+	m_pDevice->CopyDescriptors(1, &hDummyHandle, &iDestRange
+		, 1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+void CDevice::UpdateTable()
+{
+	ID3D12DescriptorHeap* pDescriptor = m_vecDummyDescriptor[m_iCurDummyIdx].Get();
+	m_pCommandList->SetDescriptorHeaps(1, &pDescriptor);
+
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuhandle = pDescriptor->GetGPUDescriptorHandleForHeapStart();
+	m_pCommandList->SetGraphicsRootDescriptorTable(0, gpuhandle);
+
+	// 다음 더미 Descriptor Heap 을 가리키게 인덱스를 증가시킨다.
+	++m_iCurDummyIdx;
+}
+
+
+
 
 void CDevice::CreateConstBuffer(const wstring& _strName, size_t _iSize,
 	size_t _iMaxCount, CONST_REGISTER _eRegisterNum, bool _bGlobal)

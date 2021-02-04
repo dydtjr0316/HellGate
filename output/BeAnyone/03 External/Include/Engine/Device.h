@@ -1,6 +1,7 @@
 #pragma once
 
 class CConstantBuffer;
+class CTexture;
 
 class CDevice
 {
@@ -31,14 +32,18 @@ private:
 	ComPtr<ID3D12Resource>				m_pDepthStencilBuffer;
 
 	// View
-	ComPtr<ID3D12DescriptorHeap>		m_pRtvHeap;
-	ComPtr<ID3D12DescriptorHeap>		m_pDsvHeap;
-	ComPtr<ID3D12DescriptorHeap>		m_pDummyCbvHeap;	// 2·Î?
+	ComPtr<ID3D12DescriptorHeap>			m_pRtvHeap;
+	ComPtr<ID3D12DescriptorHeap>			m_pDsvHeap;
+
+	vector<ComPtr<ID3D12DescriptorHeap>>	m_vecDummyDescriptor;
+	UINT									m_iCurDummyIdx;
+
 
 	UINT m_iRtvDescriptorSize = 0;
 	UINT m_iDsvDescriptorSize = 0;
 	UINT m_iCbvSrvUavDescriptorSize = 0;
 
+	vector<D3D12_STATIC_SAMPLER_DESC>	m_vecSamplerDesc;
 	D3D12_VIEWPORT						m_tScreenViewport;
 	D3D12_RECT							m_tScissorRect;
 
@@ -59,9 +64,13 @@ public:
 	void FlushCommandQueue();
 
 	void SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset);
+	void SetTextureToRegister(CTexture* _pTex, TEXTURE_REGISTER _eRegister);
 
 	void CreateConstBuffer(const wstring& _strName, size_t _iBufferOffset,
 		size_t _iMaxCount, CONST_REGISTER _eRegisterNum, bool _bGlobal = false);
+
+	void UpdateTable();
+	void ExcuteResourceLoad();
 
 private:
 	void CreateCommandObjects();	// Command
@@ -70,6 +79,7 @@ private:
 	void CreateView();				// View
 	void CreateViewPort();			// ViewPort
 	void CreateRootSignature();
+	void CreateSamplerDesc();
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilView() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferView()const;
