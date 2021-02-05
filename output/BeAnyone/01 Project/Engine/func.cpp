@@ -27,8 +27,28 @@ void TestInit()
 
 	VTX v;
 
-	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.5f);
+	v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.2f);
 	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+	g_vecVTX.push_back(v);
+
+	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.2f);
+	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+	g_vecVTX.push_back(v);
+
+	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.2f);
+	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+	g_vecVTX.push_back(v);
+
+	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.2f);
+	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
+	g_vecVTX.push_back(v);
+
+	v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.5f);
+	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+	g_vecVTX.push_back(v);
+
+	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.5f);
+	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
 	g_vecVTX.push_back(v);
 
 	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.5f);
@@ -36,16 +56,26 @@ void TestInit()
 	g_vecVTX.push_back(v);
 
 	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.5f);
-	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.5f);
 	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
 	g_vecVTX.push_back(v);
 
 	g_vecIDX.push_back(0); g_vecIDX.push_back(1); g_vecIDX.push_back(2);
 	g_vecIDX.push_back(0); g_vecIDX.push_back(2); g_vecIDX.push_back(3);
 
+	g_vecIDX.push_back(4); g_vecIDX.push_back(6); g_vecIDX.push_back(5);
+	g_vecIDX.push_back(4); g_vecIDX.push_back(7); g_vecIDX.push_back(6);
+
+	g_vecIDX.push_back(4); g_vecIDX.push_back(5); g_vecIDX.push_back(1);
+	g_vecIDX.push_back(4); g_vecIDX.push_back(1); g_vecIDX.push_back(0);
+
+	g_vecIDX.push_back(3); g_vecIDX.push_back(2); g_vecIDX.push_back(6);
+	g_vecIDX.push_back(3); g_vecIDX.push_back(6); g_vecIDX.push_back(7);
+
+	g_vecIDX.push_back(1); g_vecIDX.push_back(5); g_vecIDX.push_back(6);
+	g_vecIDX.push_back(1); g_vecIDX.push_back(6); g_vecIDX.push_back(2);
+
+	g_vecIDX.push_back(4); g_vecIDX.push_back(0); g_vecIDX.push_back(3);
+	g_vecIDX.push_back(4); g_vecIDX.push_back(3); g_vecIDX.push_back(7);
 
 	g_pMesh->Create(sizeof(VTX), g_vecVTX.size(), (BYTE*)g_vecVTX.data()
 		, DXGI_FORMAT_R32_UINT, g_vecIDX.size(), (BYTE*)g_vecIDX.data());
@@ -72,7 +102,7 @@ void TestRender()
 
 	g_pShader->UpdateData();
 
-	XMFLOAT4 vData = XMFLOAT4{ 0.5f, 0.f, 0.f, 0.f };
+	XMFLOAT4 vData = XMFLOAT4{ 0.f, 0.f, 0.f, 0.f };
 
 	CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
 	pCB->SetData(&vData, sizeof(XMFLOAT4), 0);
@@ -80,13 +110,13 @@ void TestRender()
 
 	g_pMesh->render();
 
-	vData = XMFLOAT4{ -0.5f, 0.f, 0.f, 0.f };
+	/*vData = XMFLOAT4{ -0.5f, 0.f, 0.f, 0.f };
 
 	pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
 	pCB->SetData(&vData, sizeof(XMFLOAT4), 1);
 	CDevice::GetInst()->SetConstBufferToRegister(pCB, 1);
 
-	g_pMesh->render();
+	g_pMesh->render();*/
 
 	// 그리기 종료
 	CDevice::GetInst()->render_present();
