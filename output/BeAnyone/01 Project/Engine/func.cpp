@@ -15,6 +15,7 @@
 #include "ConstantBuffer.h"
 
 vector<VTX> g_vecVTX;
+vector<UINT> g_vecIDX;
 
 CMesh* g_pMesh = nullptr;
 CShader* g_pShader = nullptr;
@@ -26,19 +27,28 @@ void TestInit()
 
 	VTX v;
 
-	v.vPos = XMFLOAT3(0.f, 1.f, 0.5f);
+	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.5f);
 	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
 	g_vecVTX.push_back(v);
 
-	v.vPos = XMFLOAT3(1.f, -1.f, 0.5f);
+	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.5f);
 	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
 	g_vecVTX.push_back(v);
 
-	v.vPos = XMFLOAT3(-1.f, -1.f, 0.5f);
+	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.5f);
+	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+	g_vecVTX.push_back(v);
+
+	v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.5f);
 	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
 	g_vecVTX.push_back(v);
 
-	g_pMesh->Create(g_vecVTX.size() * sizeof(VTX), (BYTE*)&g_vecVTX[0]);
+	g_vecIDX.push_back(0); g_vecIDX.push_back(1); g_vecIDX.push_back(2);
+	g_vecIDX.push_back(0); g_vecIDX.push_back(2); g_vecIDX.push_back(3);
+
+
+	g_pMesh->Create(sizeof(VTX), g_vecVTX.size(), (BYTE*)g_vecVTX.data()
+		, DXGI_FORMAT_R32_UINT, g_vecIDX.size(), (BYTE*)g_vecIDX.data());
 
 	// ½¦ÀÌ´õ »ý¼º
 	g_pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Test", "vs_5_1");
