@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="99Etc">
+      <UniqueIdentifier>{4679568f-370d-4120-adbc-5270c1c80218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00Main">
+      <UniqueIdentifier>{792138c7-5bea-404f-946d-5667b344469f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01NetMgr">
+      <UniqueIdentifier>{f30d2b5d-b171-4781-8540-10d004c86711}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>00Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="CNetMgr.h">
+      <Filter>01NetMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>00Main</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="CNetMgr.cpp">
+      <Filter>01NetMgr</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Client.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
