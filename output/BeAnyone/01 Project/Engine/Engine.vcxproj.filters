@@ -19,27 +19,21 @@
     <Filter Include="0. Default">
       <UniqueIdentifier>{d2e24bf9-92c8-4509-b194-c63b43ce5623}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ShaderCode">
+      <UniqueIdentifier>{14a150d9-85d5-4695-b874-2eb7522e6959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zBasic">
+      <UniqueIdentifier>{e559ce56-8229-468b-bfe6-cb95a2f06ee6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KeyManager.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Device.h">
       <Filter>03. Device</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>01. Header</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
       <Filter>01. Header</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>01. Header</Filter>
-    </ClInclude>
     <ClInclude Include="struct.h">
-      <Filter>01. Header</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
       <Filter>01. Header</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -60,22 +54,41 @@
     <ClInclude Include="ConstantBuffer.h">
       <Filter>03. Device</Filter>
     </ClInclude>
-    <ClInclude Include="PathManager.h">
+    <ClInclude Include="pch.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="func.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="PathMgr.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="TimeManager.h">
+    <ClInclude Include="KeyMgr.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="Texture.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>0. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>01. Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KeyManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Device.cpp">
       <Filter>03. Device</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>01. Header</Filter>
     </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Resource</Filter>
@@ -92,11 +105,42 @@
     <ClCompile Include="ConstantBuffer.cpp">
       <Filter>03. Device</Filter>
     </ClCompile>
-    <ClCompile Include="PathManager.cpp">
+    <ClCompile Include="pch.cpp">
+      <Filter>zBasic</Filter>
+    </ClCompile>
+    <ClCompile Include="func.cpp">
+      <Filter>01. Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="PathMgr.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="TimeManager.cpp">
+    <ClCompile Include="KeyMgr.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="desc.cpp">
+      <Filter>0. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>0. Default</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="std.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl">
+      <Filter>0. Default</Filter>
+    </None>
   </ItemGroup>
 </Project>

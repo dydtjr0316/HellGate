@@ -15,8 +15,10 @@ static type* GetInst()\
 #define DEVICE CDevice::GetInst()->GetDevice()
 #define CMDLIST CDevice::GetInst()->GetCmdList()
 
-
-
+//typedef DirectX::SimpleMath::Vector2 Vec2;
+//typedef DirectX::SimpleMath::Vector3 Vec3;
+//typedef DirectX::SimpleMath::Vector4 Vec4;
+//using DirectX::SimpleMath::Matrix;
 
 enum class RES_TYPE
 {
@@ -47,3 +49,37 @@ enum class CONST_REGISTER
 
 	END,
 };
+
+enum class TEXTURE_REGISTER
+{
+	t0 = (UINT)CONST_REGISTER::END,
+	t1,
+	t2,
+	t3,
+	t4,
+	t5,
+	t6,
+	t7,
+	t8,
+	t9,
+	t10,
+	t11,
+	t12,
+	END,
+};
+
+enum class RS_TYPE
+{
+	DEFAULT,
+	END,
+};
+
+enum class BLEND_TYPE
+{
+	DEFAULT,
+	END,
+};
+
+// State Description
+extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];
+extern D3D12_BLEND_DESC g_arrBlendDesc[(UINT)BLEND_TYPE::END];

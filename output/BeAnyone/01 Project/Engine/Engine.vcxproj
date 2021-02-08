@@ -21,33 +21,61 @@
   <ItemGroup>
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="d3dx12.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
-    <ClInclude Include="KeyManager.h" />
+    <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="PathManager.h" />
+    <ClInclude Include="PathMgr.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="desc.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="KeyManager.cpp" />
+    <ClCompile Include="func.cpp" />
+    <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="PathManager.cpp" />
+    <ClCompile Include="PathMgr.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Resource.cpp" />
-    <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="Texture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="std.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -115,6 +143,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\03 External\Library\Engine</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
