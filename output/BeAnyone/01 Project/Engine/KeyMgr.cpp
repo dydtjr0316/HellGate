@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "KeyMgr.h"
+#include "Device.h"
 
 // KEY_TYPE 에 대응하는 가상키
 int arrVK[(UINT)KEY_TYPE::KEY_END] =

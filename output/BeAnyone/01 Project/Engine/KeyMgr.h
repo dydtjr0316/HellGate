@@ -1,5 +1,7 @@
 #pragma once
 
+#define Vec2 DirectX::SimpleMath::Vector2
+
 // 해당 프레임에서는 모두가 같은 키에대해서 동일한 상태값을 가져가야 한다.
 // 최초 눌린 시점, 키를 최로로 뗀 시점
 enum class KEY_TYPE
@@ -22,7 +24,7 @@ enum class KEY_TYPE
 	KEY_A,
 	KEY_D,
 	KEY_R,
-	KEY_Z,
+	KEY_Z,	
 
 	KEY_LBTN,
 	KEY_RBTN,
@@ -61,8 +63,19 @@ class CKeyMgr
 private:
 	vector<tKeyState>	m_vecKey;
 
+	POINT				m_ptMouse;
+	POINT				m_ptOldMouse;
+
+	Vec2				m_vDragDir;
+
 public:
 	void init();
 	void update();
+
+public:
+	KEY_STATE GetKeyState( KEY_TYPE _eKey ) { return m_vecKey[(UINT)_eKey].eState; }
+	const POINT& GetMousePos() { return m_ptMouse; }
+	const POINT& GetPrevMousePos() { return m_ptOldMouse; }
+	Vec2 GetDragDir() { return m_vDragDir; }
 };
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 //-------------------------------------------------------------------------------------
 // SimpleMath.cpp -- Simplified C++ Math wrapper for DirectXMath
 //

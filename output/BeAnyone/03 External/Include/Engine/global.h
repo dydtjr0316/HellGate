@@ -20,6 +20,7 @@ using namespace DirectX::PackedVector;
 using namespace Microsoft::WRL;
 
 
+
 #include <string>
 #include <vector>
 #include <list>
@@ -33,7 +34,10 @@ using std::string;
 using std::wstring;
 using std::make_pair;
 
-#include "define.h" // 매크로, enum
+#include "d3dx12.h" // DX12 2헤더
+#include "define.h" // 매크로, enum	
 #include "struct.h" // 구조체 설계
 // #include "extern.h" // extern 변수
 #include "func.h"   // 전역 함수
+
+#include "SimpleMath.h"

@@ -79,6 +79,12 @@
     <ClInclude Include="Texture.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>0. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -120,6 +126,9 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>0. Default</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
@@ -128,5 +137,10 @@
     <FxCompile Include="std.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl">
+      <Filter>0. Default</Filter>
+    </None>
   </ItemGroup>
 </Project>
