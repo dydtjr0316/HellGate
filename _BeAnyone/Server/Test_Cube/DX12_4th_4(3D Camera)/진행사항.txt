@@ -1,0 +1,15 @@
+진행사항
+
+1. 깊이 스텐실 스테이트와 블렌드 스테이트에 대한 이해
+
+2. 3D Camera 에 대한 이해와 수학적 준비(기저벡터, 역행렬, 전치행렬)
+  - View 행렬의 구성 원리
+  - Projection 행렬의 w 요소 원리 (정점 쉐이더와 레스터라이져)
+  - 표준 3D 쉐이더 작성
+ 
+
+3. 3D Lighting 광원에 대한 이해
+  - Forward 렌더링 기반 광원 동작 방식(Directional, Point Light, SpotLight)
+  
+4. NormalMapping(Bump Mapping) 에 대한 이해
+

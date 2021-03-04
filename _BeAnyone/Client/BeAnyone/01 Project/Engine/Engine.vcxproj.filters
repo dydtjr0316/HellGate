@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{80b68363-ed43-4234-ba67-ce23449ec03e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{6a3704f2-d1c2-4b94-8e89-441a2d97e034}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Header">
+      <UniqueIdentifier>{857d3332-93f1-4dcc-a505-d90166a4a655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Device">
+      <UniqueIdentifier>{1026a325-8458-4ee0-bb91-74371f2e5fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Core">
+      <UniqueIdentifier>{22a0fde8-15aa-43e2-9237-9f3b744c7850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. Default">
+      <UniqueIdentifier>{d2e24bf9-92c8-4509-b194-c63b43ce5623}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderCode">
+      <UniqueIdentifier>{14a150d9-85d5-4695-b874-2eb7522e6959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zBasic">
+      <UniqueIdentifier>{e559ce56-8229-468b-bfe6-cb95a2f06ee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject">
+      <UniqueIdentifier>{5f8000b1-aed3-41a8-b192-e5020df3a292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\Component">
+      <UniqueIdentifier>{0118067e-2349-429c-b9b3-30cef68265a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\SceneMgr">
+      <UniqueIdentifier>{ac97bbfd-6e56-4e94-9f6a-5cb23bdead17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{b1ac74c8-9be7-4ccf-8e03-54d2810b0248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\Component\Camera">
+      <UniqueIdentifier>{12f79666-406d-4364-88e9-88d94d905bbc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Device.h">
+      <Filter>03. Device</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="struct.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>0. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>02. Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>03. Device</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="func.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="PathMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="Texture.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>04. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRender.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Ptr.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>0. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>Manager\SceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Manager\SceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMgr.h">
+      <Filter>Manager\SceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="ResMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderMgr.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>04. GameObject\Component\Camera</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Device.cpp">
+      <Filter>03. Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>0. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>02. Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>03. Device</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>zBasic</Filter>
+    </ClCompile>
+    <ClCompile Include="func.cpp">
+      <Filter>01. Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="PathMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="desc.cpp">
+      <Filter>0. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>04. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRender.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>0. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>Manager\SceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Manager\SceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMgr.cpp">
+      <Filter>Manager\SceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ResMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMgr.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMgrInit.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>04. GameObject\Component\Camera</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="std.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl">
+      <Filter>0. Default</Filter>
+    </None>
+  </ItemGroup>
+</Project>
