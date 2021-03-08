@@ -20,6 +20,11 @@ CDevice::~CDevice()
 {
 	FlushCommandQueue();
 	CloseHandle(m_hFenceEvent);
+
+	for (size_t i = 0; i < m_vecCB.size(); ++i)
+	{
+		SAFE_DELETE(m_vecCB[i]);
+	}
 }
 
 int CDevice::initDirect3D(HWND _hWnd, const tResolution& _res, bool _bWindow)
@@ -104,6 +109,7 @@ void CDevice::render_start(float(&_arrFloat)[4])
 	m_pCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), FALSE, &DepthStencilView());
 
 	// 첫 번째 더미 Descriptor Heap 초기화
+	ClearDummyDescriptorHeap(0);
 }
 
 void CDevice::render_present()
@@ -479,7 +485,19 @@ void CDevice::UpdateTable()
 
 void CDevice::ClearDummyDescriptorHeap(UINT _iDummyIndex)
 {
+	D3D12_CPU_DESCRIPTOR_HANDLE hDescHandle = m_vecDummyDescriptor[_iDummyIndex]->GetCPUDescriptorHandleForHeapStart();
+	hDescHandle.ptr;
 
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = m_pInitDescriptor->GetCPUDescriptorHandleForHeapStart();
+	hSrcHandle.ptr;
+
+	UINT iDestRange = (UINT)TEXTURE_REGISTER::END;
+	UINT iSrcRange = (UINT)TEXTURE_REGISTER::END;
+
+	m_pDevice->CopyDescriptors(1/*디스크립터 개수*/
+		, &hDescHandle, &iDestRange
+		, 1/*디스크립터 개수*/
+		, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
 void CDevice::ExcuteResourceLoad()

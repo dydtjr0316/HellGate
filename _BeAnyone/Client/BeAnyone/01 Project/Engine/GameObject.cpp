@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "MeshRender.h"
+#include "Script.h"
 
 #include "SceneMgr.h"
 #include "Scene.h"
@@ -39,7 +40,7 @@ CGameObject::~CGameObject()
 {
 	Safe_Delete_Array(m_arrCom);
 	Safe_Delete_Vector(m_vecChild);
-	//Safe_Delete_Vector(m_vecScript);
+	Safe_Delete_Vector(m_vecScript);
 }
 
 
@@ -147,7 +148,16 @@ void CGameObject::SetDead()
 
 void CGameObject::AddComponent(CComponent* _pCom)
 {
-	m_arrCom[(UINT)_pCom->GetComponentType()] = _pCom;
+	COMPONENT_TYPE eType = _pCom->GetComponentType();
+
+	if (eType == COMPONENT_TYPE::SCRIPT) {
+		m_vecScript.push_back((CScript*)_pCom);
+	}
+	else
+	{
+		m_arrCom[(UINT)eType] = _pCom;
+	}
+
 	_pCom->SetGameObject(this);
 }
 
@@ -164,6 +174,11 @@ void CGameObject::awake()
 		if (m_vecChild[i]->IsActive())
 			m_vecChild[i]->awake();
 	}
+
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
+	{
+		m_vecScript[i]->awake();
+	}
 }
 
 void CGameObject::start()
@@ -178,6 +193,11 @@ void CGameObject::start()
 	{
 		if (m_vecChild[i]->IsActive())
 			m_vecChild[i]->start();
+	}
+
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
+	{
+		m_vecScript[i]->start();
 	}
 }
 
@@ -194,6 +214,12 @@ void CGameObject::update()
 		if (m_vecChild[i]->IsActive())
 			m_vecChild[i]->update();
 	}
+
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
+	{
+		m_vecScript[i]->update();
+	}
+	
 }
 
 void CGameObject::lateupdate()
@@ -208,6 +234,11 @@ void CGameObject::lateupdate()
 	{
 		if (m_vecChild[i]->IsActive())
 			m_vecChild[i]->lateupdate();
+	}
+
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
+	{
+		m_vecScript[i]->lateupdate();
 	}
 }
 
@@ -240,62 +271,74 @@ void CGameObject::RegisterToLayer()
 	}
 }
 
-//void CGameObject::enable()
-//{
-//	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
-//	{
-//		if (nullptr != m_arrCom[i] && m_arrCom[i]->IsActive())
-//			m_arrCom[i]->enable();
-//	}
-//
-//	for (size_t i = 0; i < m_vecChild.size(); ++i)
-//	{
-//		m_vecChild[i]->enable();
-//	}
-//}
-//
-//void CGameObject::disable()
-//{
-//	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
-//	{
-//		if (nullptr != m_arrCom[i] && m_arrCom[i]->IsActive())
-//			m_arrCom[i]->disable();
-//	}
-//
-//	for (size_t i = 0; i < m_vecChild.size(); ++i)
-//	{
-//		m_vecChild[i]->disable();
-//	}
-//}
+void CGameObject::enable()
+{
+	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+	{
+		if (nullptr != m_arrCom[i] && m_arrCom[i]->IsActive())
+			m_arrCom[i]->enable();
+	}
 
-//void CGameObject::SetActive(bool _bTrue)
-//{
-//	if (m_bActive)
-//	{
-//		if (!_bTrue)
-//		{
-//			// 비활성화
-//			tEvent event = {};
-//			event.eType = EVENT_TYPE::DEACTIVATE_GAMEOBJECT;
-//			event.wParam = (DWORD_PTR)this;
-//
-//			CEventMgr::GetInst()->AddEvent(event);
-//		}
-//	}
-//	else
-//	{
-//		if (_bTrue)
-//		{
-//			// 활성화
-//			// 비활성화
-//			tEvent event = {};
-//			event.eType = EVENT_TYPE::ACTIVATE_GAMEOBJECT;
-//			event.wParam = (DWORD_PTR)this;
-//
-//			CEventMgr::GetInst()->AddEvent(event);
-//		}
-//	}
-//}
+	for (size_t i = 0; i < m_vecChild.size(); ++i)
+	{
+		m_vecChild[i]->enable();
+	}
+
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
+	{
+		if (m_vecScript[i]->IsActive())
+			m_vecScript[i]->enable();
+	}
+}
+
+void CGameObject::disable()
+{
+	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+	{
+		if (nullptr != m_arrCom[i] && m_arrCom[i]->IsActive())
+			m_arrCom[i]->disable();
+	}
+
+	for (size_t i = 0; i < m_vecChild.size(); ++i)
+	{
+		m_vecChild[i]->disable();
+	}
+
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
+	{
+		if (m_vecScript[i]->IsActive())
+			m_vecScript[i]->disable();
+	}
+}
+
+void CGameObject::SetActive(bool _bTrue)
+{
+	if (m_bActive)
+	{
+		if (!_bTrue)
+		{
+			// 비활성화
+			tEvent event = {};
+			event.eType = EVENT_TYPE::DEACTIVATE_GAMEOBJECT;
+			event.wParam = (DWORD_PTR)this;
+
+			CEventMgr::GetInst()->AddEvent(event);
+		}
+	}
+	else
+	{
+		if (_bTrue)
+		{
+			// 활성화
+			// 비활성화
+			tEvent event = {};
+			event.eType = EVENT_TYPE::ACTIVATE_GAMEOBJECT;
+			event.wParam = (DWORD_PTR)this;
+
+			CEventMgr::GetInst()->AddEvent(event);
+		}
+	}
+}
 
 
 // x

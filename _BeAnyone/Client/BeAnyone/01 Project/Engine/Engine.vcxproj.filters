@@ -40,6 +40,9 @@
     <Filter Include="04. GameObject\Component\Camera">
       <UniqueIdentifier>{12f79666-406d-4364-88e9-88d94d905bbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. GameObject\Script">
+      <UniqueIdentifier>{8e5c6fbb-2b16-455b-8077-9f1c4b5074ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h">
@@ -136,6 +139,15 @@
     <ClInclude Include="Camera.h">
       <Filter>04. GameObject\Component\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -215,6 +227,15 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>04. GameObject\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

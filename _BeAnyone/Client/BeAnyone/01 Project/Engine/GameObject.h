@@ -8,7 +8,7 @@ class CMeshRender;
 // class CCollider3D;
 // class CAnimator2D;
 // class CAnimator3D;
-// class CScript;
+class CScript;
 // class CLight2D;
 // class CLight3D;
 class CCamera;
@@ -18,7 +18,7 @@ class CGameObject :
 {
 private:
 	CComponent* m_arrCom[(UINT)COMPONENT_TYPE::END];
-	//vector<CScript*>		m_vecScript;
+	vector<CScript*>		m_vecScript;
 	vector<CGameObject*>	m_vecChild;
 	CGameObject*			m_pParentObj;
 	int						m_iLayerIdx;
@@ -33,8 +33,8 @@ public:
 	void update();
 	void lateupdate();
 	void finalupdate();
-	// void enable();
-	// void disable();
+	void enable();
+	void disable();
 
 	void render();
 
@@ -72,8 +72,8 @@ public:
 
 	void RegisterToLayer();
 
-//public:
-	//CLONE(CGameObject);
+public:
+	CLONE(CGameObject);
 
 private:
 	CGameObject(const CGameObject& _origin);
@@ -84,5 +84,5 @@ public:
 	virtual ~CGameObject();
 
 	friend class CLayer;
-	//friend class CEventMgr;
+	friend class CEventMgr;
 };

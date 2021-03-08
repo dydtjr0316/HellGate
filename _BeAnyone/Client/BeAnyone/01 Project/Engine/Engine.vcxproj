@@ -27,6 +27,7 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EventMgr.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="GameObject.h" />
@@ -38,6 +39,7 @@
     <ClInclude Include="MeshRender.h" />
     <ClInclude Include="PathMgr.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlayerScript.h" />
     <ClInclude Include="Ptr.h" />
     <ClInclude Include="RenderMgr.h" />
     <ClInclude Include="ResMgr.h" />
@@ -45,6 +47,7 @@
     <ClInclude Include="resource1.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMgr.h" />
+    <ClInclude Include="Script.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="struct.h" />
@@ -60,6 +63,7 @@
     <ClCompile Include="desc.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EventMgr.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
@@ -71,12 +75,14 @@
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PlayerScript.cpp" />
     <ClCompile Include="RenderMgr.cpp" />
     <ClCompile Include="RenderMgrInit.cpp" />
     <ClCompile Include="ResMgr.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMgr.cpp" />
+    <ClCompile Include="Script.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Texture.cpp" />

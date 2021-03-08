@@ -174,6 +174,23 @@ enum class DEPTH_STENCIL_TYPE
 extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];
 extern D3D12_BLEND_DESC g_arrBlendDesc[(UINT)BLEND_TYPE::END];
 
+enum class EVENT_TYPE
+{
+	CREATE_OBJECT,	// wParam : GameObject, lParam : Layer Idx
+	DELETE_OBJECT,	// wParam : GameObject,
+	ADD_CHILD,		// wParam : Parent Object, lParam : Child Object
+	CLEAR_PARENT,	// wParam : Target Object
+	TRANSFER_LAYER,	// wParam : Target Object, lParam : (HIWORD)Layer Index (LOWORD)bMoveAll
+	TRANSFER_SCENE,
+	ACTIVATE_GAMEOBJECT,	// wParam : GameObject Adress
+	DEACTIVATE_GAMEOBJECT,	// wParam : GameObject Adress
+
+	ACTIVATE_COMPONENT,		// wParam : Component Adress
+	DEACTIVATE_COMPONENT,	// wParam : Component Adress
+
+	END,
+};
+
 enum class DIR_TYPE
 {
 	RIGHT,

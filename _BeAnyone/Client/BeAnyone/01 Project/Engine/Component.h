@@ -58,7 +58,7 @@ public:
 	virtual ~CComponent();
 
 	friend class CGameObject;
-	// friend class CEventMgr;
+	friend class CEventMgr;
 	//friend void ComponentSetChange(CComponent*, bool);
 };
 
