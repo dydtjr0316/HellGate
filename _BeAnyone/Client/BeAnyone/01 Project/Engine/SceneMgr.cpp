@@ -83,7 +83,7 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CMeshRender);
 
 	pObject->Transform()->SetLocalPos(Vector3(0.f, -200.f, 1000.f));
-	pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 1.f));
+	pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
 
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
