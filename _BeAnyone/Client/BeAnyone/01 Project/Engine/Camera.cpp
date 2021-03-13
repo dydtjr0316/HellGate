@@ -9,14 +9,14 @@
 #include "Layer.h"
 
 #include "KeyMgr.h"
-//#include "TimeMgr.h"
+#include "TimeMgr.h"
 
 #include "MeshRender.h"
 //#include "Collider2D.h"
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
-	//, m_frustum(this)
+	, m_frustum(this)
 	, m_fFar(1000.f)
 	, m_fNear(1.f)
 	, m_fFOV(XM_PI / 4.f)
@@ -65,7 +65,7 @@ void CCamera::finalupdate()
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
 
-	//m_frustum.finalupdate();
+	m_frustum.finalupdate();
 
 	CRenderMgr::GetInst()->RegisterCamera(this);
 }
@@ -85,9 +85,9 @@ void CCamera::render()
 
 			for (UINT i = 0; i < vecObj.size(); ++i)
 			{
-				//if (!vecObj[i]->GetFrustumCheck()
-				//	|| m_frustum.CheckFrustumSphere(vecObj[i]->Transform()->GetWorldPos(), vecObj[i]->Transform()->GetMaxScale()))
-				//{
+				if (!vecObj[i]->GetFrustumCheck()
+					|| m_frustum.CheckFrustumSphere(vecObj[i]->Transform()->GetWorldPos(), vecObj[i]->Transform()->GetMaxScale()))
+				{
 					if (vecObj[i]->MeshRender())
 					{
 						vecObj[i]->MeshRender()->render();
@@ -97,7 +97,7 @@ void CCamera::render()
 					//{
 					//	vecObj[i]->Collider2D()->render();
 					//}
-				// }
+				 }
 			}
 		}
 	}

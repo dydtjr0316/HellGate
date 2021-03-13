@@ -21,14 +21,15 @@ private:
 
 	tResolution				m_tResolution;
 
-	CRenderTarget24* m_arrRT[(UINT)RT_TYPE::END];
-	CMRT* m_arrMRT[(UINT)MRT_TYPE::END];
+	CRenderTarget24*		m_arrRT[(UINT)RT_TYPE::END];
+	CMRT*					m_arrMRT[(UINT)MRT_TYPE::END];
 
 	//tLight2DInfo			m_tLight2DInfo;
 
 	//vector<CLight3D*>		m_vecLight3D;
 	vector<CCamera*>		m_vecCam;
 
+	HWND					m_hWnd;
 	bool					m_bWindowed;
 
 public:
@@ -61,6 +62,7 @@ public:
 	void ClearCamera() { m_vecCam.clear(); }
 
 	tResolution GetResolution() { return m_tResolution; }
+	HWND GetHwnd() { return m_hWnd; }
 
 	friend class CSceneMgr;
 };

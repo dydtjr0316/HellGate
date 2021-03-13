@@ -1,215 +1,215 @@
 #pragma once
 #include "pch.h"
 #include "func.h"
-#include "KeyMgr.h"
-//#include "TimeMgr.h"
+//#include "KeyMgr.h"
+////#include "TimeMgr.h"
+////
+//#include "PathMgr.h"
 //
-#include "PathMgr.h"
-
-// 물체 하나 그리기
-#include "Core.h"
-#include "Device.h"
-
-#include "Mesh.h"
-#include "shader.h"
-#include "Texture.h"
-#include "ConstantBuffer.h"
-
-#include "GameObject.h"
-#include "Transform.h"
-#include "MeshRender.h"
-
-vector<VTX> g_vecVTX;
-vector<UINT> g_vecIDX;
-
-CMesh* g_pMesh = nullptr;
-CShader* g_pShader = nullptr;
-CTexture* g_pTexture = nullptr;
-
-vector<CGameObject*> g_vecObj;
-
-void TestInit()
-{
-	g_pMesh = new CMesh;
-	g_pShader = new CShader;
-
-	VTX v;
-
-	/*v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.2f);
-	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.2f);
-	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.2f);
-	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.2f);
-	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.5f);
-	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.5f);
-	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.5f);
-	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.5f);
-	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	g_vecIDX.push_back(0); g_vecIDX.push_back(1); g_vecIDX.push_back(2);
-	g_vecIDX.push_back(0); g_vecIDX.push_back(2); g_vecIDX.push_back(3);
-
-	g_vecIDX.push_back(4); g_vecIDX.push_back(6); g_vecIDX.push_back(5);
-	g_vecIDX.push_back(4); g_vecIDX.push_back(7); g_vecIDX.push_back(6);
-
-	g_vecIDX.push_back(4); g_vecIDX.push_back(5); g_vecIDX.push_back(1);
-	g_vecIDX.push_back(4); g_vecIDX.push_back(1); g_vecIDX.push_back(0);
-
-	g_vecIDX.push_back(3); g_vecIDX.push_back(2); g_vecIDX.push_back(6);
-	g_vecIDX.push_back(3); g_vecIDX.push_back(6); g_vecIDX.push_back(7);
-
-	g_vecIDX.push_back(1); g_vecIDX.push_back(5); g_vecIDX.push_back(6);
-	g_vecIDX.push_back(1); g_vecIDX.push_back(6); g_vecIDX.push_back(2);
-
-	g_vecIDX.push_back(4); g_vecIDX.push_back(0); g_vecIDX.push_back(3);
-	g_vecIDX.push_back(4); g_vecIDX.push_back(3); g_vecIDX.push_back(7);*/
-
-	//-------------------------
-	
-	// 1. 입력 조립기 단계에 전달할, 정점 3개로 구성된 삼각형 1개
-	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.5f);
-	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
-	v.vUV = XMFLOAT2(0.f, 0.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.5f);
-	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
-	v.vUV = XMFLOAT2(1.f, 0.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.5f);
-	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
-	v.vUV = XMFLOAT2(1.f, 1.f);
-	g_vecVTX.push_back(v);
-
-	v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.5f);
-	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
-	v.vUV = XMFLOAT2(0.f, 1.f);
-	g_vecVTX.push_back(v);
-	
-	g_vecIDX.push_back(0); g_vecIDX.push_back(1); g_vecIDX.push_back(2);
-	g_vecIDX.push_back(0); g_vecIDX.push_back(2); g_vecIDX.push_back(3);
-
-	g_pMesh->Create(sizeof(VTX), g_vecVTX.size(), (BYTE*)g_vecVTX.data()
-		, DXGI_FORMAT_R32_UINT, g_vecIDX.size(), (BYTE*)g_vecIDX.data());
-
-
-	// 쉐이더 생성
-	g_pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Test", "vs_5_1");
-	g_pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Test", "ps_5_1");
-	g_pShader->Create();
-
-	// Texture 로드
-	wstring strPath = CPathMgr::GetResPath();
-	strPath += L"Texture\\cookie.png";
-
-	g_pTexture = new CTexture;
-	g_pTexture->Load(strPath);
-
-	CDevice::GetInst()->FlushCommandQueue();
-
-	//  GameObject 만들기
-	CGameObject* pObject = nullptr;
-	{
-		pObject = new CGameObject;
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CMeshRender);
-
-		pObject->MeshRender()->SetMesh(g_pMesh);
-		//pObject->MeshRender()->SetShader(g_pShader);
-
-		g_vecObj.push_back(pObject);
-
-		/*pObject = new CGameObject;
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CMeshRender);
-
-		pObject->MeshRender()->SetMesh(g_pMesh);
-		pObject->MeshRender()->SetShader(g_pShader);
-
-		g_vecObj.push_back(pObject);*/
-	}
-}
-
-void TestUpdate()
-{
-	g_vecObj[0]->update();
-	g_vecObj[0]->lateupdate();
-	g_vecObj[0]->finalupdate();
-}
-
-void TestRender()
-{
-	//// 그리기 준비
-	//float arrColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-	//CDevice::GetInst()->render_start(arrColor);
-
-	//g_pShader->UpdateData();
-
-	//XMFLOAT4 vData = XMFLOAT4{ 0.f, 0.f, 0.f, 0.f };
-
-	//CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
-	//pCB->SetData(&vData, sizeof(XMFLOAT4), 0);
-	//CDevice::GetInst()->SetConstBufferToRegister(pCB, 0);
-
-	//g_pMesh->render();
-
-	///*vData = XMFLOAT4{ -0.5f, 0.f, 0.f, 0.f };
-
-	//pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
-	//pCB->SetData(&vData, sizeof(XMFLOAT4), 1);
-	//CDevice::GetInst()->SetConstBufferToRegister(pCB, 1);
-
-	//g_pMesh->render();*/
-
-	//// 그리기 종료
-	//CDevice::GetInst()->render_present();
-
-	// ----------------
-
-	// 그리기 준비
-	float arrColor[4] = { 0.0f, 0.0f, 0.0f, 0.f };
-
-	CDevice::GetInst()->render_start(arrColor);
-
-	CDevice::GetInst()->SetTextureToRegister(g_pTexture, TEXTURE_REGISTER::t0);
-	for (size_t i = 0; i < g_vecObj.size(); ++i)
-	{
-		g_vecObj[i]->render();
-	}
-
-	// 그리기 종료
-	CDevice::GetInst()->render_present();
-}
-
-void TestRelease()
-{
-	SAFE_DELETE(g_pMesh);
-	SAFE_DELETE(g_pShader);
-}
-
+//// 물체 하나 그리기
+//#include "Core.h"
+//#include "Device.h"
+//
+//#include "Mesh.h"
+//#include "shader.h"
+//#include "Texture.h"
+//#include "ConstantBuffer.h"
+//
+//#include "GameObject.h"
+//#include "Transform.h"
+//#include "MeshRender.h"
+//
+//vector<VTX> g_vecVTX;
+//vector<UINT> g_vecIDX;
+//
+//CMesh* g_pMesh = nullptr;
+//CShader* g_pShader = nullptr;
+//CTexture* g_pTexture = nullptr;
+//
+//vector<CGameObject*> g_vecObj;
+//
+//void TestInit()
+//{
+//	g_pMesh = new CMesh;
+//	g_pShader = new CShader;
+//
+//	VTX v;
+//
+//	/*v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.2f);
+//	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.2f);
+//	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.2f);
+//	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.2f);
+//	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.5f);
+//	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.5f);
+//	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.5f);
+//	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.5f);
+//	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	g_vecIDX.push_back(0); g_vecIDX.push_back(1); g_vecIDX.push_back(2);
+//	g_vecIDX.push_back(0); g_vecIDX.push_back(2); g_vecIDX.push_back(3);
+//
+//	g_vecIDX.push_back(4); g_vecIDX.push_back(6); g_vecIDX.push_back(5);
+//	g_vecIDX.push_back(4); g_vecIDX.push_back(7); g_vecIDX.push_back(6);
+//
+//	g_vecIDX.push_back(4); g_vecIDX.push_back(5); g_vecIDX.push_back(1);
+//	g_vecIDX.push_back(4); g_vecIDX.push_back(1); g_vecIDX.push_back(0);
+//
+//	g_vecIDX.push_back(3); g_vecIDX.push_back(2); g_vecIDX.push_back(6);
+//	g_vecIDX.push_back(3); g_vecIDX.push_back(6); g_vecIDX.push_back(7);
+//
+//	g_vecIDX.push_back(1); g_vecIDX.push_back(5); g_vecIDX.push_back(6);
+//	g_vecIDX.push_back(1); g_vecIDX.push_back(6); g_vecIDX.push_back(2);
+//
+//	g_vecIDX.push_back(4); g_vecIDX.push_back(0); g_vecIDX.push_back(3);
+//	g_vecIDX.push_back(4); g_vecIDX.push_back(3); g_vecIDX.push_back(7);*/
+//
+//	//-------------------------
+//	
+//	// 1. 입력 조립기 단계에 전달할, 정점 3개로 구성된 삼각형 1개
+//	v.vPos = XMFLOAT3(-0.5f, 0.5f, 0.5f);
+//	v.vColor = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+//	v.vUV = XMFLOAT2(0.f, 0.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(0.5f, 0.5f, 0.5f);
+//	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+//	v.vUV = XMFLOAT2(1.f, 0.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(0.5f, -0.5f, 0.5f);
+//	v.vColor = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+//	v.vUV = XMFLOAT2(1.f, 1.f);
+//	g_vecVTX.push_back(v);
+//
+//	v.vPos = XMFLOAT3(-0.5f, -0.5f, 0.5f);
+//	v.vColor = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
+//	v.vUV = XMFLOAT2(0.f, 1.f);
+//	g_vecVTX.push_back(v);
+//	
+//	g_vecIDX.push_back(0); g_vecIDX.push_back(1); g_vecIDX.push_back(2);
+//	g_vecIDX.push_back(0); g_vecIDX.push_back(2); g_vecIDX.push_back(3);
+//
+//	g_pMesh->Create(sizeof(VTX), g_vecVTX.size(), (BYTE*)g_vecVTX.data()
+//		, DXGI_FORMAT_R32_UINT, g_vecIDX.size(), (BYTE*)g_vecIDX.data());
+//
+//
+//	// 쉐이더 생성
+//	g_pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Test", "vs_5_1");
+//	g_pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Test", "ps_5_1");
+//	g_pShader->Create();
+//
+//	// Texture 로드
+//	wstring strPath = CPathMgr::GetResPath();
+//	strPath += L"Texture\\cookie.png";
+//
+//	g_pTexture = new CTexture;
+//	g_pTexture->Load(strPath);
+//
+//	CDevice::GetInst()->FlushCommandQueue();
+//
+//	//  GameObject 만들기
+//	CGameObject* pObject = nullptr;
+//	{
+//		pObject = new CGameObject;
+//		pObject->AddComponent(new CTransform);
+//		pObject->AddComponent(new CMeshRender);
+//
+//		pObject->MeshRender()->SetMesh(g_pMesh);
+//		//pObject->MeshRender()->SetShader(g_pShader);
+//
+//		g_vecObj.push_back(pObject);
+//
+//		/*pObject = new CGameObject;
+//		pObject->AddComponent(new CTransform);
+//		pObject->AddComponent(new CMeshRender);
+//
+//		pObject->MeshRender()->SetMesh(g_pMesh);
+//		pObject->MeshRender()->SetShader(g_pShader);
+//
+//		g_vecObj.push_back(pObject);*/
+//	}
+//}
+//
+//void TestUpdate()
+//{
+//	g_vecObj[0]->update();
+//	g_vecObj[0]->lateupdate();
+//	g_vecObj[0]->finalupdate();
+//}
+//
+//void TestRender()
+//{
+//	//// 그리기 준비
+//	//float arrColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+//
+//	//CDevice::GetInst()->render_start(arrColor);
+//
+//	//g_pShader->UpdateData();
+//
+//	//XMFLOAT4 vData = XMFLOAT4{ 0.f, 0.f, 0.f, 0.f };
+//
+//	//CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
+//	//pCB->SetData(&vData, sizeof(XMFLOAT4), 0);
+//	//CDevice::GetInst()->SetConstBufferToRegister(pCB, 0);
+//
+//	//g_pMesh->render();
+//
+//	///*vData = XMFLOAT4{ -0.5f, 0.f, 0.f, 0.f };
+//
+//	//pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
+//	//pCB->SetData(&vData, sizeof(XMFLOAT4), 1);
+//	//CDevice::GetInst()->SetConstBufferToRegister(pCB, 1);
+//
+//	//g_pMesh->render();*/
+//
+//	//// 그리기 종료
+//	//CDevice::GetInst()->render_present();
+//
+//	// ----------------
+//
+//	// 그리기 준비
+//	float arrColor[4] = { 0.0f, 0.0f, 0.0f, 0.f };
+//
+//	CDevice::GetInst()->render_start(arrColor);
+//
+//	CDevice::GetInst()->SetTextureToRegister(g_pTexture, TEXTURE_REGISTER::t0);
+//	for (size_t i = 0; i < g_vecObj.size(); ++i)
+//	{
+//		g_vecObj[i]->render();
+//	}
+//
+//	// 그리기 종료
+//	CDevice::GetInst()->render_present();
+//}
+//
+//void TestRelease()
+//{
+//	SAFE_DELETE(g_pMesh);
+//	SAFE_DELETE(g_pShader);
+//}
+//
 int GetSizeofFormat(DXGI_FORMAT _eFormat)
 {
 	int iRetByte = 0;

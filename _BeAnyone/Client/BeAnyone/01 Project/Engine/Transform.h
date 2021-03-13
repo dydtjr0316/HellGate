@@ -1,23 +1,23 @@
 #pragma once
 #include "Component.h"
 
+
 class CTransform :
 	public CComponent
-
 {
 private:
-	Vector3	m_vLocalPos;	// GameObect 좌표
-	Vector3	m_vLocalRot;	// GameObject 크기
-	Vector3	m_vLocalScale;	// GameObject 회전량
+	Vector3		m_vLocalPos;	// GameObject 좌표
+	Vector3		m_vLocalScale;	// GameObject 크기
+	Vector3		m_vLocalRot;	// GameObject 회전량
 
-	Vector3	m_vLocalDir[(UINT)DIR_TYPE::END]; // GameObject 의 Front, Up, Right 방향
-	Vector3	m_vWorldDir[(UINT)DIR_TYPE::END]; // GameObject 의 Front, Up, Right 방향
+	Vector3		m_vLocalDir[(UINT)DIR_TYPE::END]; // GameObject 의 Front, Up, Right 방향
+	Vector3		m_vWorldDir[(UINT)DIR_TYPE::END]; // GameObject 의 Front, Up, Right 방향
 
-	XMMATRIX	m_matWorld;
+	Matrix		m_matWorld;
 
 public:
-	void SetLocalPos(const XMFLOAT3& _vPos) { m_vLocalPos = _vPos; }
-	const Vector3& GetWorldPos() { return m_vLocalPos; }
+	const Vector3& GetLocalPos() { return m_vLocalPos; }
+	Vector3 GetWorldPos() { return m_matWorld.Translation(); }
 
 	const Vector3& GetLocalScale() { return m_vLocalScale; }
 	Vector3 GetWorldScale();

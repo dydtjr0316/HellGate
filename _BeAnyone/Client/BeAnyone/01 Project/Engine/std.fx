@@ -118,6 +118,7 @@ float4 PS_Test(VS_OUTPUT _input) : SV_Target
     if (g_int_0 == 2)
         return float4(0.2f, 0.2f, 1.f, 1.f);
 
-    return g_tex_0.Sample(g_sam_0, _input.vUV);
+    return _input.vOutColor;
+  //  return g_tex_0.Sample(g_sam_0, _input.vUV);
 }
 

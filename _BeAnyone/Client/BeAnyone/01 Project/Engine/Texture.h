@@ -24,12 +24,9 @@ private:
 	ComPtr<ID3D12DescriptorHeap> m_pSRV;
 
 public:
-	void UpdateData(UINT _iShaderType, UINT _iRegisterNum);
-	static void ClearData(UINT _iShaderType, UINT _iRegisterNum);
-
-public:
 	virtual void Load(const wstring& _strFullPath);
 
+	virtual void Save(const wstring& _strPath/*최종 경로*/);
 	ComPtr<ID3D12DescriptorHeap> GetSRV() { return m_pSRV; }
 
 	float Width() { return (float)m_Image.GetMetadata().width; }

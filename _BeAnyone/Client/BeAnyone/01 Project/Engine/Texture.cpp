@@ -2,6 +2,9 @@
 #include "Texture.h"
 
 #include "Device.h"
+#include "PathMgr.h"
+
+#include <wincodec.h>
 
 CTexture::CTexture()
 	: CResource(RES_TYPE::TEXTURE)
@@ -103,12 +106,24 @@ void CTexture::Load(const wstring& _strFullPath)
 	DEVICE->CreateShaderResourceView(m_pTex2D.Get(), &srvDesc, m_pSRV->GetCPUDescriptorHandleForHeapStart());
 }
 
-void CTexture::UpdateData(UINT _iShaderType, UINT _iRegisterNum)
+void CTexture::Save(const wstring& _strPath)
 {
+	wstring strPath = CPathMgr::GetResPath();
+	strPath += _strPath;
 
-}
-
-void CTexture::ClearData(UINT _iShaderType, UINT _iRegisterNum)
-{
+	const wchar_t* pExt = CPathMgr::GetExt(_strPath.c_str());
+	const Image* pImage = m_Image.GetImages();
+	if (!wcscmp(pExt, L".dds"))
+	{
+		SaveToDDSFile(m_Image.GetImages(), m_Image.GetMetadata().arraySize, m_Image.GetMetadata(), DDS_FLAGS::DDS_FLAGS_NONE, strPath.c_str());
+	}
+	else if (!wcscmp(pExt, L".tga"))
+	{
+		SaveToTGAFile(*pImage, strPath.c_str());
+	}
+	else
+	{
+		SaveToWICFile(*pImage, WIC_FLAGS_NONE, GUID_ContainerFormatPng, strPath.c_str());
+	}
 
 }

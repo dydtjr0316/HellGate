@@ -39,5 +39,5 @@ using std::make_pair;
 #include "d3dx12.h"	// Dx12 서포트 헤더
 #include "define.h" // 매크로, enum
 #include "struct.h" // 구조체 설계
-// #include "extern.h" // extern 변수
+#include "extern.h" // extern 변수
 #include "func.h"   // 전역 함수

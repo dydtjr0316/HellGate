@@ -24,7 +24,7 @@ private:
 	int						m_iLayerIdx;
 	bool					m_bDead;
 	bool					m_bActive;
-	// bool					m_bFrustumCheck;
+	bool					m_bFrustumCheck;
 
 
 public:
@@ -36,30 +36,25 @@ public:
 	void enable();
 	void disable();
 
-	void render();
-
-	//template<typename T>
-	//void AddComponent(T* _pCom);
-
 public:
 	void SetActive(bool _bTrue);
 	bool IsActive() { return m_bActive; }
 
-	// void FrustumCheck(bool _bCheck) { m_bFrustumCheck = _bCheck; }
-	// bool GetFrustumCheck() { return m_bFrustumCheck; }
+	void FrustumCheck(bool _bCheck) { m_bFrustumCheck = _bCheck; }
+	bool GetFrustumCheck() { return m_bFrustumCheck; }
 
 
 public:
 	void AddComponent(CComponent* _pCom);
-	CComponent* GetComponent(COMPONENT_TYPE _eType) { return m_arrCom[(UINT)_eType]; }
+	CComponent* GetComponent(COMPONENT_TYPE _eType) { assert(_eType != COMPONENT_TYPE::SCRIPT); return m_arrCom[(UINT)_eType]; }
 	CTransform* Transform() { return (CTransform*)GetComponent(COMPONENT_TYPE::TRANSFORM); }		// 다운 캐스팅
 	CMeshRender* MeshRender() { return (CMeshRender*)GetComponent(COMPONENT_TYPE::MESHRENDER); }	// 다운 캐스팅
 	CCamera* Camera() { return (CCamera*)m_arrCom[(UINT)COMPONENT_TYPE::CAMERA]; }
 
-	// const vector<CScript*>& GetScripts() const { return m_vecScript; }
-	// 
-	// template<typename T>
-	// T* GetScript();
+	const vector<CScript*>& GetScripts() const { return m_vecScript; }
+	
+	template<typename T>
+	T* GetScript();
 
 	void AddChild(CGameObject* _pChildObj);
 	bool IsAncestor(CGameObject* _pObj);
@@ -86,3 +81,19 @@ public:
 	friend class CLayer;
 	friend class CEventMgr;
 };
+
+template<typename T>
+inline T* CGameObject::GetScript()
+{
+	T* pScript = nullptr;
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
+	{
+		pScript = dynamic_cast<T*>(m_vecScript[i]);
+		if (nullptr != pScript)
+		{
+			return pScript;
+		}
+	}
+
+	return pScript;
+}

@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-//#include "EventMgr.h"
+#include "EventMgr.h"
 
 CScene::CScene()
 	: m_arrLayer{}

@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 
-//#include "Frustum.h"
+#include "Frustum.h"
 
 enum class PROJ_TYPE
 {
@@ -13,7 +13,7 @@ class CCamera :
 	public CComponent
 {
 private:
-	// CFrustum	m_frustum;
+	CFrustum	m_frustum;
 
 	float		m_fNear; // View Space 에서 시야 범위
 	float		m_fFar;  // View Space 에서 시야 범위

@@ -16,6 +16,14 @@ static type* GetInst()\
 #define CMDLIST CDevice::GetInst()->GetCmdList()
 #define CMDLIST_RES CDevice::GetInst()->GetCmdListRes()
 
+#define KEY(Key, State) (CKeyMgr::GetInst()->GetKeyState(Key) == State)
+#define KEY_HOLD(Key) KEY(Key, KEY_STATE::STATE_HOLD)
+#define KEY_TAB(Key) KEY(Key, KEY_STATE::STATE_TAB)
+#define KEY_AWAY(Key) KEY(Key, KEY_STATE::STATE_AWAY)
+#define KEY_NONE(Key) KEY(Key, KEY_STATE::STATE_NONE)
+
+#define DT CTimeMgr::GetInst()->GetDeltaTime()
+
 #define CLONE(type) public: type* Clone() { return new type(*this); }
 #define CLONE_DISABLE(type) type* Clone() { assert(nullptr); return nullptr;} \
                             type(const type& _class){assert(nullptr);}
@@ -163,16 +171,16 @@ enum class BLEND_TYPE
 
 enum class DEPTH_STENCIL_TYPE
 {
-	DEFAULT,
+	LESS,
 	LESS_EQUAL,
 	GRATER,
 	GRATER_EQUAL,
+
+	NO_DEPTHTEST,
+	NO_DEPTHTEST_NO_WRITE,
+
 	END,
 };
-
-// State Description
-extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];
-extern D3D12_BLEND_DESC g_arrBlendDesc[(UINT)BLEND_TYPE::END];
 
 enum class EVENT_TYPE
 {
@@ -197,6 +205,17 @@ enum class DIR_TYPE
 	UP,
 	FRONT,
 	END,
+};
+
+enum class FACE_TYPE
+{
+	FT_NEAR,
+	FT_FAR,
+	FT_UP,
+	FT_DOWN,
+	FT_LEFT,
+	FT_RIGHT,
+	FT_END,
 };
 
 enum class RT_TYPE

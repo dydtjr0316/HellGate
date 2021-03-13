@@ -124,7 +124,7 @@ void CResMgr::CreateDefaultMesh()
 	vecIdx.push_back(0); vecIdx.push_back(2); vecIdx.push_back(3);
 
 	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
-		, DXGI_FORMAT_R32_UINT, vecIdx.size(), (BYTE*)vecIdx.data());
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
 
 	AddRes(L"RectMesh", pMesh);
 
@@ -139,7 +139,7 @@ void CResMgr::CreateDefaultMesh()
 	vecIdx.push_back(2); vecIdx.push_back(3); vecIdx.push_back(0);
 
 	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
-		, DXGI_FORMAT_R32_UINT, vecIdx.size(), (BYTE*)vecIdx.data()); //D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data()); //D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
 
 	AddRes(L"ColRectMesh", pMesh);
 
@@ -182,7 +182,7 @@ void CResMgr::CreateDefaultMesh()
 	vecIdx.push_back(4); vecIdx.push_back(5);
 
 	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
-		, DXGI_FORMAT_R32_UINT, vecIdx.size(), (BYTE*)vecIdx.data()); // D3D11_PRIMITIVE_TOPOLOGY_LINELIST
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data()); // D3D11_PRIMITIVE_TOPOLOGY_LINELIST
 
 	AddRes(L"DirMesh", pMesh);
 
@@ -231,7 +231,7 @@ void CResMgr::CreateDefaultMesh()
 	}
 
 	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
-		, DXGI_FORMAT_R32_UINT, vecIdx.size(), (BYTE*)vecIdx.data());
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
 
 	AddRes(L"CircleMesh", pMesh);
 
@@ -248,7 +248,7 @@ void CResMgr::CreateDefaultMesh()
 	}
 
 	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
-		, DXGI_FORMAT_R32_UINT, vecIdx.size(), (BYTE*)vecIdx.data()); // D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data()); // D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
 
 	AddRes(L"ColCircleMesh", pMesh);
 
@@ -402,13 +402,102 @@ void CResMgr::CreateDefaultMesh()
 	pMesh = new CMesh;
 
 	pMesh->Create(sizeof(VTX), 24, (BYTE*)arrCube
-		, DXGI_FORMAT_R32_UINT, vecIdx.size(), (BYTE*)vecIdx.data());
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
 
 	pMesh->SetName(L"CubeMesh");
 	AddRes<CMesh>(pMesh->GetName(), pMesh);
 
 	vecVTX.clear();
 	vecIdx.clear();
+
+	// test
+	/*VTX Cube = {};
+
+	Cube.vPos = Vector3(-1.0f, -1.0f, -1.0f);
+	Cube.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Cube.vUV = Vector2(0.f, 0.f);
+	Cube.vNormal = Vector3(0.f, 1.f, 0.f);
+
+	vecVTX.push_back(Cube);
+
+	Cube.vPos = Vector3(-1.0f, 1.0f, -1.0f);
+	Cube.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Cube.vUV = Vector2(0.f, 0.f);
+	Cube.vNormal = Vector3(0.f, 1.f, 0.f);
+
+	vecVTX.push_back(Cube);
+
+	Cube.vPos = Vector3(1.0f, 1.0f, -1.0f);
+	Cube.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Cube.vUV = Vector2(0.f, 0.f);
+	Cube.vNormal = Vector3(0.f, 1.f, 0.f);
+
+	vecVTX.push_back(Cube);
+
+	Cube.vPos = Vector3(1.0f, -1.0f, -1.0f);
+	Cube.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Cube.vUV = Vector2(0.f, 0.f);
+	Cube.vNormal = Vector3(0.f, 1.f, 0.f);
+
+	vecVTX.push_back(Cube);
+
+	Cube.vPos = Vector3(-1.0f, -1.0f, 1.0f);
+	Cube.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Cube.vUV = Vector2(0.f, 0.f);
+	Cube.vNormal = Vector3(0.f, 1.f, 0.f);
+
+	vecVTX.push_back(Cube);
+
+	Cube.vPos = Vector3(-1.0f, 1.0f, 1.0f);
+	Cube.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Cube.vUV = Vector2(0.f, 0.f);
+	Cube.vNormal = Vector3(0.f, 1.f, 0.f);
+
+	vecVTX.push_back(Cube);
+
+	Cube.vPos = Vector3(1.0f, 1.0f, 1.0f);
+	Cube.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Cube.vUV = Vector2(0.f, 0.f);
+	Cube.vNormal = Vector3(0.f, 1.f, 0.f);
+
+	vecVTX.push_back(Cube);
+
+	Cube.vPos = Vector3(1.0f, -1.0f, 1.0f);
+	Cube.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Cube.vUV = Vector2(0.f, 0.f);
+	Cube.vNormal = Vector3(0.f, 1.f, 0.f);
+
+	vecVTX.push_back(Cube);
+
+
+	vecIdx.push_back(0); vecIdx.push_back(1); vecIdx.push_back(2);
+	vecIdx.push_back(0); vecIdx.push_back(2); vecIdx.push_back(3);
+
+	vecIdx.push_back(4); vecIdx.push_back(6); vecIdx.push_back(5);
+	vecIdx.push_back(4); vecIdx.push_back(7); vecIdx.push_back(6);
+
+	vecIdx.push_back(4); vecIdx.push_back(5); vecIdx.push_back(1);
+	vecIdx.push_back(4); vecIdx.push_back(1); vecIdx.push_back(0);
+
+	vecIdx.push_back(3); vecIdx.push_back(2); vecIdx.push_back(6);
+	vecIdx.push_back(3); vecIdx.push_back(6); vecIdx.push_back(7);
+
+	vecIdx.push_back(1); vecIdx.push_back(5); vecIdx.push_back(6);
+	vecIdx.push_back(1); vecIdx.push_back(6); vecIdx.push_back(2);
+
+	vecIdx.push_back(4); vecIdx.push_back(0); vecIdx.push_back(3);
+	vecIdx.push_back(4); vecIdx.push_back(3); vecIdx.push_back(7);
+
+	pMesh = new CMesh;
+
+	pMesh->Create(sizeof(VTX), 24, (BYTE*)vecVTX.data()
+		, DXGI_FORMAT_R32_UINT, vecIdx.size(), (BYTE*)vecIdx.data());
+
+	pMesh->SetName(L"TestCube");
+	AddRes<CMesh>(pMesh->GetName(), pMesh);
+
+	vecVTX.clear();
+	vecIdx.clear();*/
 
 	// ============
 	// Sphere Mesh
@@ -516,7 +605,7 @@ void CResMgr::CreateDefaultMesh()
 	pMesh = new CMesh;
 
 	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
-		, DXGI_FORMAT_R32_UINT, vecIdx.size(), (BYTE*)vecIdx.data());
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
 
 	pMesh->SetName(L"SphereMesh");
 	AddRes<CMesh>(pMesh->GetName(), pMesh);
@@ -536,6 +625,9 @@ void CResMgr::CreateDefaultShader()
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Test", "vs_5_0");
 	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Test", "ps_5_0");
+	
+	// BlendState ¼³Á¤
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 	pShader->Create();
 
 	pShader->AddShaderParam(tShaderParam{ L"Test Value", SHADER_PARAM::INT_0 });

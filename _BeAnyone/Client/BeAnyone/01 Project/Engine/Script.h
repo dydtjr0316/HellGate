@@ -8,7 +8,7 @@
 //#include "Animation2D.h"
 
 #include "EventMgr.h"
-//#include "TimeMgr.h"
+#include "TimeMgr.h"
 #include "KeyMgr.h"
 #include "ResMgr.h"
 #include "SceneMgr.h"

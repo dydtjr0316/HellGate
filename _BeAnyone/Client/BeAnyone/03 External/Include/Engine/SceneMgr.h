@@ -1,7 +1,7 @@
 #pragma once
 
 class CScene;
-// class CCamera;
+class CCamera;
 class CGameObject;
 
 class CSceneMgr

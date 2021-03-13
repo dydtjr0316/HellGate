@@ -3,10 +3,11 @@
 
 #include "Device.h"
 #include "KeyMgr.h"
-// #include "TimeMgr.h"
+#include "TimeMgr.h"
 #include "ResMgr.h"
 
 #include "SceneMgr.h"
+#include "EventMgr.h"
 #include "RenderMgr.h"
 
 #include "PathMgr.h"
@@ -19,7 +20,7 @@ CCore::CCore()
 
 CCore::~CCore()
 {
-	TestRelease();
+	//TestRelease();
 }
 
 int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
@@ -41,7 +42,7 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 	// 매니저 초기화
 	CPathMgr::init();
 	CKeyMgr::GetInst()->init();
-	// CTimeMgr::GetInst()->init();
+	CTimeMgr::GetInst()->init();
 
 	CResMgr::GetInst()->init();
 
@@ -64,30 +65,13 @@ void CCore::ChangeWindowSize(HWND _hWnd, const tResolution& _resolution)
 void CCore::progress()
 {
     CKeyMgr::GetInst()->update();
+	CTimeMgr::GetInst()->update();
 
-	update();
-
-	render();
+	CEventMgr::GetInst()->clear();
+	{
+		CSceneMgr::GetInst()->update();
+		CRenderMgr::GetInst()->render();
+	}
+	CEventMgr::GetInst()->update();
 }
 
-void CCore::update()
-{
-	CSceneMgr::GetInst()->update();
-	// TestUpdate();
-}
-
-void CCore::lateupdate()
-{
-
-}
-
-void CCore::finalupdate()
-{
-
-}
-
-void CCore::render()
-{
-	CRenderMgr::GetInst()->render();
-	// TestRender();
-}

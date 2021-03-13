@@ -15,16 +15,18 @@
 // #include "Animation2D.h"
 // #include "Light2D.h"
 
-// #include "TimeMgr.h"
+#include "TimeMgr.h"
 #include "KeyMgr.h"
 #include "Camera.h"
 
 //#include "CollisionMgr.h"
-//#include "EventMgr.h"
+#include "EventMgr.h"
 #include "RenderMgr.h"
 #include "Device.h"
-
 #include "Core.h"
+
+#include "PlayerScript.h"
+#include "ToolCamScript.h"
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -57,33 +59,40 @@ void CSceneMgr::init()
 	m_pCurScene->SetName(L"Test Scene");
 
 	m_pCurScene->GetLayer(0)->SetName(L"Default");
+	m_pCurScene->GetLayer(1)->SetName(L"Player");
+	m_pCurScene->GetLayer(2)->SetName(L"Monster");
+
 	CGameObject* pObject = nullptr;
 
 	// Camera Object
 	pObject = new CGameObject;
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCamera);
+	pObject->AddComponent(new CToolCamScript);
 
 	pObject->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pObject->Camera()->SetFar(100000.f);
 	pObject->Camera()->SetLayerAllCheck();
 
-	m_pCurScene->GetLayer(0)->AddGameObject(pObject);
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-	// Temp Object
+	// Player Object
 	pObject = new CGameObject;
+	pObject->SetName(L"Player Object");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 
-	pObject->Transform()->SetLocalPos(Vector3(0.f, 0.f, 500.f));
+	pObject->Transform()->SetLocalPos(Vector3(0.f, -200.f, 1000.f));
 	pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 1.f));
 
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
 
-	m_pCurScene->GetLayer(0)->AddGameObject(pObject);
+	// Script ¼³Á¤
+	pObject->AddComponent(new CPlayerScript);
+	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 
 	m_pCurScene->awake();
 	m_pCurScene->start();

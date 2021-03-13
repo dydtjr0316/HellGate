@@ -3,8 +3,6 @@
 
 #include "Device.h"
 
-//#include "Device.h"
-
 CMesh::CMesh()
 	: CResource(RES_TYPE::MESH)
 	, m_pVertexBuffer(nullptr)
@@ -12,6 +10,7 @@ CMesh::CMesh()
 	, m_iVtxSize(0)
 	, m_iVtxCount(0)
 	, m_pVtxSysMem(nullptr)
+	, m_pIdxSysMem(nullptr)
 {
 
 }
@@ -20,6 +19,7 @@ CMesh::~CMesh()
 {
 	// ¾ê ¾îµð´Ù ¾²Áö?
 	SAFE_DELETE(m_pVtxSysMem);
+	SAFE_DELETE(m_pIdxSysMem);
 
 }
 
@@ -76,7 +76,7 @@ void CMesh::Create(UINT _iVtxSize, UINT _iVtxCount, BYTE* _pVtxSysMem, DXGI_FORM
 	// ÈüÀº ÇÊ¿äÇÏÁö ¾Ê³ª º½
 	m_tVtxView.BufferLocation = m_pVertexBuffer->GetGPUVirtualAddress();
 	m_tVtxView.StrideInBytes = sizeof(VTX);
-	m_tVtxView.SizeInBytes = tResDesc.Width;
+	m_tVtxView.SizeInBytes = (UINT)tResDesc.Width;
 
 	// IdxBuffer
 	tHeapProperty = {};
@@ -117,7 +117,7 @@ void CMesh::Create(UINT _iVtxSize, UINT _iVtxCount, BYTE* _pVtxSysMem, DXGI_FORM
 
 	m_tIdxView.BufferLocation = m_pIndexBuffer->GetGPUVirtualAddress();
 	m_tIdxView.Format = DXGI_FORMAT_R32_UINT;
-	m_tIdxView.SizeInBytes = tResDesc.Width * tResDesc.Height;
+	m_tIdxView.SizeInBytes = (UINT)(tResDesc.Width * tResDesc.Height);
 
 	CDevice::GetInst()->FlushCommandQueue();
 }
@@ -126,7 +126,7 @@ void CMesh::render()
 {
 	CDevice::GetInst()->UpdateTable();
 
-	CMDLIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//CMDLIST->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	CMDLIST->IASetVertexBuffers(0, 1, &m_tVtxView);
 	CMDLIST->IASetIndexBuffer(&m_tIdxView);
 

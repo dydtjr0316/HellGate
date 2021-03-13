@@ -7,8 +7,8 @@
 #include "SceneMgr.h"
 #include "ConstantBuffer.h"
 
-//#include "TimeMgr.h"
-//#include "EventMgr.h"
+#include "TimeMgr.h"
+#include "EventMgr.h"
 //
 //#include "Light3D.h"
 

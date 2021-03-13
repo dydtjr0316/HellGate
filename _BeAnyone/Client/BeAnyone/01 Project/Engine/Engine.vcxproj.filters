@@ -148,6 +148,18 @@
     <ClInclude Include="PlayerScript.h">
       <Filter>04. GameObject\Script</Filter>
     </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolCamScript.h">
+      <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>04. GameObject\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="extern.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -236,6 +248,15 @@
     </ClCompile>
     <ClCompile Include="PlayerScript.cpp">
       <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolCamScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>04. GameObject\Component\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

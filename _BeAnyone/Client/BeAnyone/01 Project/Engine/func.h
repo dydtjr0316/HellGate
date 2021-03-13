@@ -1,13 +1,13 @@
 #pragma once
-
-void TestInit();
-
-void TestUpdate();
-
-void TestRender();
-
-void TestRelease();
-
+//
+//void TestInit();
+//
+//void TestUpdate();
+//
+////void TestRender();
+//
+//void TestRelease();
+//
 int GetSizeofFormat(DXGI_FORMAT _eFormat);
 
 template<typename T1, typename T2>

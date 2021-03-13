@@ -15,7 +15,7 @@ CGameObject::CGameObject()
 	, m_iLayerIdx(-1)
 	, m_bDead(false)
 	, m_bActive(true)
-	//, m_bFrustumCheck(true)
+	, m_bFrustumCheck(true)
 {
 }
 
@@ -25,7 +25,7 @@ CGameObject::CGameObject(const CGameObject& _origin)
 	, m_iLayerIdx(-1)
 	, m_bDead(false)
 	, m_bActive(true)
-	//, m_bFrustumCheck(_origin.m_bFrustumCheck)
+	, m_bFrustumCheck(_origin.m_bFrustumCheck)
 {
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
@@ -342,10 +342,3 @@ void CGameObject::SetActive(bool _bTrue)
 
 
 // x
-void CGameObject::render()
-{
-	if (nullptr == MeshRender())
-		return;
-
-	MeshRender()->render();
-}
