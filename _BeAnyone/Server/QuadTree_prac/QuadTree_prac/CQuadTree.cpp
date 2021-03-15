@@ -8,7 +8,7 @@ CQuadTree::CQuadTree()
 	m_pRoot = new CQuad(0, 0, WINDOW::WIDTH, WINDOW::HEIGHT);
 }
 
-void CQuadTree::update(const CQuad* root)
+void CQuadTree::update(CQuad* root)
 {
 	bool flag = true;
 	if (root->GetChildern().size() != 0)							// 노드에 자식이 존재한다면
@@ -38,14 +38,24 @@ void CQuadTree::update(const CQuad* root)
 			{
 				for (auto it : root->GetChildern()[i].GetInfo())
 				{
-					root->GetInfo()[it.first] = it.second;
-					// Player class 내용 작성 후 시작 
-
+					root->GetInfo()[it.first] = it.second; // Player class 내용 작성 후 시작 
+					root->GetInfo()[it.first]->SetParent(root);
 				}
 			}
+			root->GetChildern().clear();
 		}
 	}
 
+	// 이부분 적용 할때 어떻게 할지 다시 생각해보기
+	{
+		// ERASING CODE HERE
 
+		/*for (auto it = root->people.begin(); it != root->people.end(); it++) {
+			if (it.value().update()) {
+				queue.push_back(&it.value());
+			}
+		}*/
+	}	
 
+	for (int i = 0; i < root->GetChildern().size(); ++i) { update(&root->GetChildern()[i]); }
 }

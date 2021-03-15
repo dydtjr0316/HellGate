@@ -7,7 +7,8 @@ public:
 	~CQuadTree() {}
 
 public:
-	void update(const CQuad* root);
+	void update(CQuad* root);
+	void insert(const int& x, const int& y, CQuad* root, const bool dead);
 private:
 	CQuad* m_pRoot;
 };

@@ -10,6 +10,9 @@ public:
 public:
 	void clean();
 
+public: // Set
+	void SetParent(CQuad* parent) { m_pParent = parent; }	//  이거 맞는건가?
+
 public: // Get
 	bool GetDead() const { return m_bisDead; }
 	int GetID() const { return m_iID; }
