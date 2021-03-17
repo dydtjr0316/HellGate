@@ -431,7 +431,7 @@ void CDevice::CreateConstBuffer(const wstring& _strName, size_t _iSize,
 	
 	if (_bGlobal)
 	{
-		//SetGlobalConstBufferToRegister(pCB, 0);
+		SetGlobalConstBufferToRegister(pCB, 0);
 	}
 }
 
@@ -450,6 +450,22 @@ void CDevice::SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset)
 
 	m_pDevice->CopyDescriptors(1, &hDummyHandle, &iDestRange,
 		1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+void CDevice::SetGlobalConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset)
+{
+	UINT iDestRange = 1;
+	UINT iSrcRange = 1;
+
+	// 0번 슬롯이 상수버퍼 데이터
+	D3D12_CPU_DESCRIPTOR_HANDLE hDescHandle = m_pInitDescriptor->GetCPUDescriptorHandleForHeapStart();
+	hDescHandle.ptr += m_iCbvSrvUavDescriptorSize * (UINT)_pCB->GetRegisterNum();
+
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pCB->GetCBV()->GetCPUDescriptorHandleForHeapStart();
+	hSrcHandle.ptr += _iOffset * m_iCbvSrvUavDescriptorSize;
+
+	m_pDevice->CopyDescriptors(1, &hDescHandle, &iDestRange
+		, 1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
 

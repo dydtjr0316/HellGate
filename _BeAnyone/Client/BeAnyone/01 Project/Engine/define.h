@@ -110,12 +110,9 @@ enum class COMPONENT_TYPE
 	TRANSFORM,
 	MESHRENDER,
 	CAMERA,
-	COLLIDER2D,
 	COLLIDER3D,
-	ANIMATOR2D,
 	ANIMATOR3D,
-	LIGHT2D,
-	LIGHT3D,
+	LIGHT,
 	END,
 	SCRIPT,
 };
@@ -196,6 +193,14 @@ enum class EVENT_TYPE
 	ACTIVATE_COMPONENT,		// wParam : Component Adress
 	DEACTIVATE_COMPONENT,	// wParam : Component Adress
 
+	END,
+};
+
+enum class LIGHT_TYPE
+{
+	DIR,
+	POINT,
+	SPOT,
 	END,
 };
 

@@ -9,8 +9,8 @@
 
 #include "TimeMgr.h"
 #include "EventMgr.h"
-//
-//#include "Light3D.h"
+
+#include "Light.h"
 
 CRenderMgr::CRenderMgr()
 	: m_arrRT{}
@@ -62,21 +62,21 @@ void CRenderMgr::render_tool()
 //	m_tLight2DInfo.iCount = 0;
 //}
 //
-//void CRenderMgr::UpdateLight3D()
-//{
-//	static CConstantBuffer* pLight3DBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b4);
-//
-//	tLight3DInfo tLight3DArray;
-//
-//	for (size_t i = 0; i < m_vecLight3D.size(); ++i)
-//	{
-//		const tLight3D& info = m_vecLight3D[i]->GetLight3DInfo();
-//		tLight3DArray.arrLight3D[i] = info;
-//	}
-//	tLight3DArray.iCurCount = (UINT)m_vecLight3D.size();
-//
-//	UINT iOffsetPos = pLight3DBuffer->AddData(&tLight3DArray);
-//	CDevice::GetInst()->SetConstBufferToRegister(pLight3DBuffer, iOffsetPos);
-//
-//	m_vecLight3D.clear();
-//}
+void CRenderMgr::UpdateLight()
+{
+	static CConstantBuffer* pLight3DBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b4);
+
+	tLightInfo tLight3DArray;
+
+	for (size_t i = 0; i < m_vecLight.size(); ++i)
+	{
+		const tLight& info = m_vecLight[i]->GetLightInfo();
+		tLight3DArray.arrLight3D[i] = info;
+	}
+	tLight3DArray.iCurCount = (UINT)m_vecLight.size();
+
+	UINT iOffsetPos = pLight3DBuffer->AddData(&tLight3DArray);
+	CDevice::GetInst()->SetConstBufferToRegister(pLight3DBuffer, iOffsetPos);
+
+	m_vecLight.clear();
+}

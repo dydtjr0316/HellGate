@@ -10,7 +10,7 @@ class CMeshRender;
 // class CAnimator3D;
 class CScript;
 // class CLight2D;
-// class CLight3D;
+class CLight;
 class CCamera;
 
 class CGameObject :
@@ -50,6 +50,7 @@ public:
 	CTransform* Transform() { return (CTransform*)GetComponent(COMPONENT_TYPE::TRANSFORM); }		// 다운 캐스팅
 	CMeshRender* MeshRender() { return (CMeshRender*)GetComponent(COMPONENT_TYPE::MESHRENDER); }	// 다운 캐스팅
 	CCamera* Camera() { return (CCamera*)m_arrCom[(UINT)COMPONENT_TYPE::CAMERA]; }
+	CLight* Light() { return (CLight*)m_arrCom[(UINT)COMPONENT_TYPE::LIGHT]; }
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
 	

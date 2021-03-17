@@ -1,74 +1,8 @@
+#include "value.fx"
+#include "func.fx"
 
-cbuffer TRANSFORM_MATRIX : register(b0)
-{
-    row_major matrix g_matWorld;
-    row_major matrix g_matView;
-    row_major matrix g_matProj;
-
-    row_major matrix g_matWV;
-    row_major matrix g_matWVP;
-};
-
-cbuffer MATERIAL_PARAM : register(b1)
-{
-    float4 g_vDiff;
-    float4 g_vSpec;
-    float4 g_vEmv;
-
-    int g_int_0;
-    int g_int_1;
-    int g_int_2;
-    int g_int_3;
-
-    float g_float_0;
-    float g_float_1;
-    float g_float_2;
-    float g_float_3;
-
-    float2 g_vec2_0;
-    float2 g_vec2_1;
-    float2 g_vec2_2;
-    float2 g_vec2_3;
-
-    float4 g_vec4_0;
-    float4 g_vec4_1;
-    float4 g_vec4_2;
-    float4 g_vec4_3;
-
-    row_major float4x4 g_mat_0;
-    row_major float4x4 g_mat_1;
-    row_major float4x4 g_mat_2;
-    row_major float4x4 g_mat_3;
-
-    int tex_0;
-    int tex_1;
-    int tex_2;
-    int tex_3;
-};
-
-cbuffer GLOBAL_MATRIX3 : register(b2)
-{
-    float4 vOffset2;
-};
-
-cbuffer GLOBAL_MATRIX4 : register(b3)
-{
-    float4 vOffset3;
-};
-
-cbuffer GLOBAL_DATA : register(b5)
-{
-    float fDT;
-    float fAccTime;
-    float fWidth;
-    float fHeight;
-};
-
-Texture2D g_tex_0 : register(t0);
-Texture2D g_tex_1 : register(t1);
-
-SamplerState g_sam_0 : register(s0);    // anisotrophic
-SamplerState g_sam_1 : register(s1);    // point
+#ifndef _STD
+#define _STD
 
 struct VS_INPUT
 {
@@ -122,3 +56,83 @@ float4 PS_Test(VS_OUTPUT _input) : SV_Target
   //  return g_tex_0.Sample(g_sam_0, _input.vUV);
 }
 
+// ==========================
+// Std3D Shader
+// 
+// g_tex_0 : Diffuse Texture
+// g_tex_1 : Normalmap Texture
+// ==========================
+struct VS_STD3D_INPUT
+{
+    float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
+
+    float3 vTangent : TANGENT;
+    float3 vNormal : NORMAL;
+    float3 vBinormal : BINORMAL;
+};
+
+struct VS_STD3D_OUTPUT
+{
+    float4 vPosition : SV_Position;
+
+    float3 vViewPos : POSITION;
+
+    float3 vViewTangent : TANGENT;
+    float3 vViewNormal : NORMAL;
+    float3 vViewBinormal : BINORMAL;
+
+    float2 vUV : TEXCOORD;
+};
+
+VS_STD3D_OUTPUT VS_Std3D(VS_STD3D_INPUT _in)
+{
+    VS_STD3D_OUTPUT output = (VS_STD3D_OUTPUT)0.f;
+
+    output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
+
+    output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV).xyz;
+    output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV).xyz);
+    output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV).xyz);
+    output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV).xyz);
+    output.vUV = _in.vUV;
+    return output;
+}
+
+float4 PS_Std3D(VS_STD3D_OUTPUT _in) : SV_Target
+{
+    float4 vOutColor = float4(1.f, 0.f, 1.f, 1.f);
+
+    if (tex_0)
+    {
+        vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+    }
+
+    float3 vViewNormal = _in.vViewNormal;
+    // 노말맵이 있는경우
+    if (tex_1)
+    {
+        float3 vTSNormal = g_tex_1.Sample(g_sam_0, _in.vUV).xyz;
+        vTSNormal.xyz = (vTSNormal.xyz - 0.5f) * 2.f;
+        float3x3 matTBN = { _in.vViewTangent, _in.vViewBinormal, _in.vViewNormal};
+        vViewNormal = normalize(mul(vTSNormal, matTBN));
+    }
+
+    tLightColor tCol = (tLightColor)0.f;
+
+    for (int i = 0; i < g_iLightCount; ++i)
+    {
+        tLightColor tCurCol = CalLight(i, vViewNormal, _in.vViewPos);
+        tCol.vDiff += tCurCol.vDiff;
+        tCol.vSpec += tCurCol.vSpec;
+        tCol.vAmb += tCurCol.vAmb;
+    }
+
+    vOutColor.xyz = (tCol.vDiff.xyz * vOutColor.xyz)
+                  + tCol.vSpec.xyz
+                  + tCol.vAmb.xyz * vOutColor.xyz;
+
+    return vOutColor;
+}
+
+#endif

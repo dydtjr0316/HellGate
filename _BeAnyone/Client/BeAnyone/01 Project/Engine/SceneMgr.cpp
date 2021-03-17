@@ -14,6 +14,7 @@
 // #include "Animator2D.h"
 // #include "Animation2D.h"
 // #include "Light2D.h"
+#include "Light.h"
 
 #include "TimeMgr.h"
 #include "KeyMgr.h"
@@ -76,6 +77,29 @@ void CSceneMgr::init()
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
+	// ====================
+// 3D Light Object 추가
+// ====================
+	pObject = new CGameObject;
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CLight);
+
+	pObject->Light()->SetLightPos(Vector3(-100.f, 200.f, 1000.f));
+	pObject->Light()->SetLightType(LIGHT_TYPE::POINT);
+	pObject->Light()->SetDiffuseColor(Vector3(1.f, 0.2f, 0.2f));
+	pObject->Light()->SetSpecular(Vector3(0.3f, 0.3f, 0.3f));
+	pObject->Light()->SetAmbient(Vector3(0.f, 0.f, 0.f));
+	pObject->Light()->SetLightDir(Vector3(1.f, -1.f, 1.f));
+	pObject->Light()->SetLightRange(500.f);
+
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
+	// 2 번째 광원
+	pObject = pObject->Clone();
+	pObject->Light()->SetLightPos(Vector3(100.f, 200.f, 1000.f));
+	pObject->Light()->SetDiffuseColor(Vector3(0.2f, 0.2f, 1.f));
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
 	// Player Object
 	pObject = new CGameObject;
 	pObject->SetName(L"Player Object");
@@ -86,7 +110,7 @@ void CSceneMgr::init()
 	pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
 
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
 
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
 

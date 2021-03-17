@@ -44,3 +44,28 @@ struct tMtrlParam
 
 	int				m_iArrTex[(UINT)SHADER_PARAM::TEX_END - (UINT)SHADER_PARAM::TEX_0];
 };
+
+struct tLightColor
+{
+	Vector4 vDiff;
+	Vector4 vSpec;
+	Vector4 vAmb;
+};
+
+struct tLight
+{
+	tLightColor tColor;
+	Vector4		vLightPos;
+	Vector4		vLightDir;
+	int			iLightType;
+	float		fRange;
+	float		fAngle;
+	int			iPadding;
+};
+
+struct tLightInfo
+{
+	tLight arrLight3D[100];
+	UINT	 iCurCount;
+	Vector3     vPadding;
+};

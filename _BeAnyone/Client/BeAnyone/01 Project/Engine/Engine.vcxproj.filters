@@ -160,6 +160,9 @@
     <ClInclude Include="extern.h">
       <Filter>01. Header</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -258,12 +261,21 @@
     <ClCompile Include="Frustum.cpp">
       <Filter>04. GameObject\Component\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="std.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="func.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="value.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

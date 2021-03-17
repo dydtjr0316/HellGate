@@ -692,15 +692,15 @@ void CResMgr::CreateDefaultShader()
 	//pShader->Create();
 	//AddRes(L"2DShadowShader", pShader);
 
-	//// ============
-	//// Std3D Shader
-	//// ============
-	//pShader = new CShader;
-	//pShader->CreateVertexShader(L"Shader\\std3d.fx", "VS_Std3D", "vs_5_0");
-	//pShader->CreatePixelShader(L"Shader\\std3d.fx", "PS_Std3D", "ps_5_0");
-	////pShader->SetRSType(RS_TYPE::WIRE_FRAME);
-	//pShader->Create();
-	//AddRes(L"Std3DShader", pShader);
+	// ============
+	// Std3D Shader
+	// ============
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Std3D", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Std3D", "ps_5_0");
+	//pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+	pShader->Create();
+	AddRes(L"Std3DShader", pShader);
 
 	//// ============
 	//// Skybox Shader
@@ -749,13 +749,14 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"DirShader"));
-	AddRes(L"DirMtrl", pMtrl);
+	AddRes(L"DirMtrl", pMtrl);*/
 
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"Std3DShader"));
 	AddRes(L"Std3DMtrl", pMtrl);
 
+	/*
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"SkyboxShader"));
