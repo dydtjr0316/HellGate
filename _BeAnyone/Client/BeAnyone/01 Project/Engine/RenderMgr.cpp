@@ -30,7 +30,7 @@ void CRenderMgr::render()
 
 	// 광원 정보 업데이트
 	//UpdateLight2D();
-	//UpdateLight3D();
+	UpdateLight();
 
 	for (size_t i = 0; i < m_vecCam.size(); ++i)
 	{
@@ -64,19 +64,19 @@ void CRenderMgr::render_tool()
 //
 void CRenderMgr::UpdateLight()
 {
-	static CConstantBuffer* pLight3DBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b4);
+	static CConstantBuffer* pLightBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b3);
 
-	tLightInfo tLight3DArray;
+	tLightInfo tLightArray;
 
 	for (size_t i = 0; i < m_vecLight.size(); ++i)
 	{
 		const tLight& info = m_vecLight[i]->GetLightInfo();
-		tLight3DArray.arrLight3D[i] = info;
+		tLightArray.arrLight[i] = info;
 	}
-	tLight3DArray.iCurCount = (UINT)m_vecLight.size();
+	tLightArray.iCurCount = (UINT)m_vecLight.size();
 
-	UINT iOffsetPos = pLight3DBuffer->AddData(&tLight3DArray);
-	CDevice::GetInst()->SetConstBufferToRegister(pLight3DBuffer, iOffsetPos);
+	UINT iOffsetPos = pLightBuffer->AddData(&tLightArray);
+	CDevice::GetInst()->SetConstBufferToRegister(pLightBuffer, iOffsetPos);
 
 	m_vecLight.clear();
 }

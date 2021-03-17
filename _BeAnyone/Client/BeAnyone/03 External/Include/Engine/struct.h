@@ -65,7 +65,7 @@ struct tLight
 
 struct tLightInfo
 {
-	tLight arrLight3D[100];
+	tLight arrLight[100];
 	UINT	 iCurCount;
 	Vector3     vPadding;
 };

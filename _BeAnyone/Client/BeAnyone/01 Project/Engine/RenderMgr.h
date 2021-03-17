@@ -46,15 +46,7 @@ private:
 	void UpdateLight();
 
 public:
-	/*void RegisterLight2D(const tLight2D& _Light2D)
-	{
-		if (100 <= m_tLight2DInfo.iCount)
-		{
-			return;
-		}
-
-		m_tLight2DInfo.arrLight2D[m_tLight2DInfo.iCount++] = _Light2D;
-	}*/
+	
 	void RegisterLight(CLight* _pLight) { if (m_vecLight.size() >= 100) return; m_vecLight.push_back(_pLight); }
 
 	CCamera* GetCamera(int _iIdx) { return m_vecCam[_iIdx]; }

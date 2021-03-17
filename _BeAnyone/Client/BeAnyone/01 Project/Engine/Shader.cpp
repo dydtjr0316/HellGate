@@ -14,6 +14,7 @@ CShader::CShader()
 	, m_pErrBlob(nullptr)
 	, m_pCSBlob(nullptr)
 	, m_pPipelineState(nullptr)
+	, m_eRSType(RS_TYPE::CULL_BACK)
 	, m_eBlendType(BLEND_TYPE::DEFAULT)
 	, m_eDSType(DEPTH_STENCIL_TYPE::LESS)
 	, m_tPipeline {}
@@ -99,15 +100,15 @@ void CShader::Create(D3D_PRIMITIVE_TOPOLOGY _eTopology)
 	m_tPipeline.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
 	m_tPipeline.pRootSignature = CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::INPUT_ASSEM).Get();
 
-	m_tPipeline.RasterizerState = g_arrRSDesc[(UINT)RS_TYPE::CULL_BACK];
+	m_tPipeline.RasterizerState = g_arrRSDesc[(UINT)m_eRSType];
 	m_tPipeline.BlendState = g_arrBlendDesc[(UINT)m_eBlendType];
 
 	m_tPipeline.DepthStencilState = g_arrDepthStencilDesc[(UINT)m_eDSType];
 
 	m_tPipeline.SampleMask = UINT_MAX;
-	//m_tPipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	m_tPipeline.NumRenderTargets = 1;
 	m_tPipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_tPipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	m_tPipeline.SampleDesc.Count = 1;
 
 	switch (_eTopology)

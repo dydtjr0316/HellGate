@@ -268,17 +268,17 @@ void CResMgr::CreateDefaultMesh()
 
 	arrCube[1].vPos = Vector3(0.5f, 0.5f, 0.5f);
 	arrCube[1].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
-	arrCube[1].vUV = Vector2(0.f, 0.f);
+	arrCube[1].vUV = Vector2(1.f, 0.f);
 	arrCube[1].vNormal = Vector3(0.f, 1.f, 0.f);
 
 	arrCube[2].vPos = Vector3(0.5f, 0.5f, -0.5f);
 	arrCube[2].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
-	arrCube[2].vUV = Vector2(0.f, 0.f);
+	arrCube[2].vUV = Vector2(1.f, 1.f);
 	arrCube[2].vNormal = Vector3(0.f, 1.f, 0.f);
 
 	arrCube[3].vPos = Vector3(-0.5f, 0.5f, -0.5f);
 	arrCube[3].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
-	arrCube[3].vUV = Vector2(0.f, 0.f);
+	arrCube[3].vUV = Vector2(0.f, 1.f);
 	arrCube[3].vNormal = Vector3(0.f, 1.f, 0.f);
 
 
@@ -290,17 +290,17 @@ void CResMgr::CreateDefaultMesh()
 
 	arrCube[5].vPos = Vector3(0.5f, -0.5f, -0.5f);
 	arrCube[5].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
-	arrCube[5].vUV = Vector2(0.f, 0.f);
+	arrCube[5].vUV = Vector2(0.f, 1.f);
 	arrCube[5].vNormal = Vector3(0.f, -1.f, 0.f);
 
 	arrCube[6].vPos = Vector3(0.5f, -0.5f, 0.5f);
 	arrCube[6].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
-	arrCube[6].vUV = Vector2(0.f, 0.f);
+	arrCube[6].vUV = Vector2(1.f, 1.f);
 	arrCube[6].vNormal = Vector3(0.f, -1.f, 0.f);
 
 	arrCube[7].vPos = Vector3(-0.5f, -0.5f, 0.5f);
 	arrCube[7].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
-	arrCube[7].vUV = Vector2(0.f, 0.f);
+	arrCube[7].vUV = Vector2(1.f, 0.f);
 	arrCube[7].vNormal = Vector3(0.f, -1.f, 0.f);
 
 	// 왼쪽 면
@@ -311,17 +311,17 @@ void CResMgr::CreateDefaultMesh()
 
 	arrCube[9].vPos = Vector3(-0.5f, 0.5f, -0.5f);
 	arrCube[9].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
-	arrCube[9].vUV = Vector2(0.f, 0.f);
+	arrCube[9].vUV = Vector2(0.f, 1.f);
 	arrCube[9].vNormal = Vector3(-1.f, 0.f, 0.f);
 
 	arrCube[10].vPos = Vector3(-0.5f, -0.5f, -0.5f);
 	arrCube[10].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
-	arrCube[10].vUV = Vector2(0.f, 0.f);
+	arrCube[10].vUV = Vector2(1.f, 1.f);
 	arrCube[10].vNormal = Vector3(-1.f, 0.f, 0.f);
 
 	arrCube[11].vPos = Vector3(-0.5f, -0.5f, 0.5f);
 	arrCube[11].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
-	arrCube[11].vUV = Vector2(0.f, 0.f);
+	arrCube[11].vUV = Vector2(1.f, 0.f);
 	arrCube[11].vNormal = Vector3(-1.f, 0.f, 0.f);
 
 	// 오른쪽 면
@@ -332,17 +332,17 @@ void CResMgr::CreateDefaultMesh()
 
 	arrCube[13].vPos = Vector3(0.5f, 0.5f, 0.5f);
 	arrCube[13].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
-	arrCube[13].vUV = Vector2(0.f, 0.f);
+	arrCube[13].vUV = Vector2(0.f, 1.f);
 	arrCube[13].vNormal = Vector3(1.f, 0.f, 0.f);
 
 	arrCube[14].vPos = Vector3(0.5f, -0.5f, 0.5f);
 	arrCube[14].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
-	arrCube[14].vUV = Vector2(0.f, 0.f);
+	arrCube[14].vUV = Vector2(1.f, 1.f);
 	arrCube[14].vNormal = Vector3(1.f, 0.f, 0.f);
 
 	arrCube[15].vPos = Vector3(0.5f, -0.5f, -0.5f);
 	arrCube[15].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
-	arrCube[15].vUV = Vector2(0.f, 0.f);
+	arrCube[15].vUV = Vector2(1.f, 0.f);
 	arrCube[15].vNormal = Vector3(1.f, 0.f, 0.f);
 
 	// 뒷 면
@@ -353,17 +353,17 @@ void CResMgr::CreateDefaultMesh()
 
 	arrCube[17].vPos = Vector3(-0.5f, 0.5f, 0.5f);
 	arrCube[17].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
-	arrCube[17].vUV = Vector2(0.f, 0.f);
+	arrCube[17].vUV = Vector2(0.f, 1.f);
 	arrCube[17].vNormal = Vector3(0.f, 0.f, 1.f);
 
 	arrCube[18].vPos = Vector3(-0.5f, -0.5f, 0.5f);
 	arrCube[18].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
-	arrCube[18].vUV = Vector2(0.f, 0.f);
+	arrCube[18].vUV = Vector2(1.f, 1.f);
 	arrCube[18].vNormal = Vector3(0.f, 0.f, 1.f);
 
 	arrCube[19].vPos = Vector3(0.5f, -0.5f, 0.5f);
 	arrCube[19].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
-	arrCube[19].vUV = Vector2(0.f, 0.f);
+	arrCube[19].vUV = Vector2(1.f, 0.f);
 	arrCube[19].vNormal = Vector3(0.f, 0.f, 1.f);
 
 	// 앞 면
@@ -374,17 +374,17 @@ void CResMgr::CreateDefaultMesh()
 
 	arrCube[21].vPos = Vector3(0.5f, 0.5f, -0.5f);
 	arrCube[21].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
-	arrCube[21].vUV = Vector2(0.f, 0.f);
+	arrCube[21].vUV = Vector2(0.f, 1.f);
 	arrCube[21].vNormal = Vector3(0.f, 0.f, -1.f);
 
 	arrCube[22].vPos = Vector3(0.5f, -0.5f, -0.5f);
 	arrCube[22].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
-	arrCube[22].vUV = Vector2(0.f, 0.f);
+	arrCube[22].vUV = Vector2(1.f, 1.f);
 	arrCube[22].vNormal = Vector3(0.f, 0.f, -1.f);
 
 	arrCube[23].vPos = Vector3(-0.5f, -0.5f, -0.5f);
 	arrCube[23].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
-	arrCube[23].vUV = Vector2(0.f, 0.f);
+	arrCube[23].vUV = Vector2(1.f, 0.f);
 	arrCube[23].vNormal = Vector3(0.f, 0.f, -1.f);
 
 	// 인덱스
@@ -702,15 +702,16 @@ void CResMgr::CreateDefaultShader()
 	pShader->Create();
 	AddRes(L"Std3DShader", pShader);
 
-	//// ============
-	//// Skybox Shader
-	//// ============
-	//pShader = new CShader;
-	//pShader->CreateVertexShader(L"Shader\\std3d.fx", "VS_Skybox", "vs_5_0");
-	//pShader->CreatePixelShader(L"Shader\\std3d.fx", "PS_Skybox", "ps_5_0");
-	//pShader->SetRasterizerType(RS_TYPE::CULL_FRONT);
-	//pShader->Create();
-	//AddRes(L"SkyboxShader", pShader);
+	// ============
+	// Skybox Shader
+	// ============
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Skybox", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Skybox", "ps_5_0");
+	pShader->SetRasterizerType(RS_TYPE::CULL_FRONT);  // 구의 안쪽면을 보기 때문에, 시계방향 컬링을 사용한다(반시계를 그림)
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_EQUAL); // 스카이박스 표면을 최대거리로 셋팅하기 때문에, 깊이 판정을 같거나 작다로 설정한다.
+	pShader->Create();
+	AddRes(L"SkyboxShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -756,11 +757,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CShader>(L"Std3DShader"));
 	AddRes(L"Std3DMtrl", pMtrl);
 
-	/*
+	
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"SkyboxShader"));
-	AddRes(L"SkyboxMtrl", pMtrl);*/
+	AddRes(L"SkyboxMtrl", pMtrl);
 
 
 

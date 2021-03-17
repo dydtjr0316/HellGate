@@ -52,8 +52,8 @@ float4 PS_Test(VS_OUTPUT _input) : SV_Target
     if (g_int_0 == 2)
         return float4(0.2f, 0.2f, 1.f, 1.f);
 
-    return _input.vOutColor;
-  //  return g_tex_0.Sample(g_sam_0, _input.vUV);
+   // return _input.vOutColor;
+      return g_tex_0.Sample(g_sam_0, _input.vUV);
 }
 
 // ==========================
@@ -103,10 +103,10 @@ float4 PS_Std3D(VS_STD3D_OUTPUT _in) : SV_Target
 {
     float4 vOutColor = float4(1.f, 0.f, 1.f, 1.f);
 
-    if (tex_0)
+  /*  if (tex_0)
     {
         vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
-    }
+    }*/
 
     float3 vViewNormal = _in.vViewNormal;
     // 노말맵이 있는경우
@@ -135,4 +135,47 @@ float4 PS_Std3D(VS_STD3D_OUTPUT _in) : SV_Target
     return vOutColor;
 }
 
+
+// =============
+// Skybox Shader
+// mesh         : sphere
+// rasterizer   : CULL_FRONT
+// DepthStencilState : Less_Equal ( 최대깊이 1.f 로 설정하면, Less 비교판정에서 실패할 수 있음 )
+// g_tex_0 : Output Texture
+// =============
+struct VS_SKY_IN
+{
+    float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
+};
+
+struct VS_SKY_OUT
+{
+    float4 vPosition : SV_POSITION;
+    float2 vUV : TEXCOORD;
+};
+
+VS_SKY_OUT VS_Skybox(VS_SKY_IN _in)
+{
+    VS_SKY_OUT output = (VS_SKY_OUT)0.f;
+
+    // skybox 의 월드좌표를 무시하기 위해서, Local 좌표를 활용한다.(원점이 중심 == View Space 기준과 일치)
+    float4 vViewPos = mul(float4(_in.vPos, 0.f), g_matView);
+    float4 vProjPos = mul(vViewPos, g_matProj);
+
+    // w 값으로 z 값을 나눌것이기 때문에 미리 w 값을 셋팅해두면
+    // 어떤 상황에서도 깊이값이 1.f 로 판정된다.
+    vProjPos.z = vProjPos.w;
+
+    output.vPosition = vProjPos;
+    output.vUV = _in.vUV;
+
+    return output;
+}
+
+float4 PS_Skybox(VS_SKY_OUT _in) : SV_Target
+{
+    float4 vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+    return vOutColor;
+}
 #endif

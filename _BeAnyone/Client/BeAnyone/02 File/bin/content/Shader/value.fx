@@ -73,12 +73,12 @@ cbuffer GLOBAL_MATRIX3 : register(b2)
     float4 vOffset2;
 };
 
-cbuffer GLOBAL_MATRIX4 : register(b3)
-{
-    float4 vOffset3;
-};
+//cbuffer GLOBAL_MATRIX4 : register(b3)
+//{
+//    float4 vOffset3;
+//};
 
-cbuffer LIGHT : register(b4)
+cbuffer LIGHT : register(b3)
 {
     tLightInfo      g_Light[100];
     int             g_iLightCount;
