@@ -26,6 +26,10 @@ struct tTransform
 
 	Matrix matWV;
 	Matrix matWVP;
+
+	Matrix matWorldInv;
+	Matrix matViewInv;
+	Matrix matProjInv;
 };
 
 extern tTransform g_transform;

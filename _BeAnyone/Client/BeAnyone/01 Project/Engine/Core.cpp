@@ -34,6 +34,8 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 		return E_FAIL;
 	}
 
+	CRenderMgr::GetInst()->init(_hWnd, _resolution, _bWindow);
+
 	// 상수 버퍼 만들기
 	CDevice::GetInst()->CreateConstBuffer(L"TRANSFORM_MATRIX", sizeof(tTransform), 512, CONST_REGISTER::b0);
 	CDevice::GetInst()->CreateConstBuffer(L"MATERIAL_PARAM", sizeof(tMtrlParam), 512, CONST_REGISTER::b1);
@@ -51,7 +53,6 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 	CResMgr::GetInst()->init();
 
 	CSceneMgr::GetInst()->init();
-	CRenderMgr::GetInst()->init(_hWnd, _resolution, _bWindow);
 
 	// TestInit();
 

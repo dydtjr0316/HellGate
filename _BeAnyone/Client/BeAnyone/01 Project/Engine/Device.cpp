@@ -4,6 +4,9 @@
 #include "ConstantBuffer.h"
 #include "Texture.h"
 
+#include "ResMgr.h"
+#include "RenderMgr.h"
+#include "MRT.h"
 
 CDevice::CDevice()
 	: m_pDevice(nullptr)
@@ -56,16 +59,9 @@ int CDevice::initDirect3D(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	{
 		assert(nullptr);
 	}
-
-	// 힙 크기 할당
-	m_iRtvDescriptorSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	m_iDsvDescriptorSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	
-
 	CreateCommandObjects();
 	CreateSwapChain();
-	CreateRtvAndDsvDescriptorHeaps();
-	CreateView();
 	CreateViewPort();
 	CreateRootSignature();
 
@@ -88,25 +84,18 @@ void CDevice::render_start(float(&_arrFloat)[4])
 	m_pCommandList->RSSetViewports(1, &m_tScreenViewport);
 	m_pCommandList->RSSetScissorRects(1, &m_tScissorRect);
 
+	CMRT* pSwapChainMRT = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN);
+
 	// Indicate that the back buffer will be used as a render target.
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = m_pSwapChainBuffer[m_iCurTargetIdx].Get();	// miCurTargetIdx로 현재 백버퍼 가져오기
+	barrier.Transition.pResource = pSwapChainMRT->GetRTTex(m_iCurTargetIdx)->GetTex2D().Get();	// miCurTargetIdx로 현재 백버퍼 가져오기
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;		// 출력에서
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET; // 다시 백버퍼로 지정
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
 	m_pCommandList->ResourceBarrier(1, &barrier);
-
-	// 타겟 클리어
-	// const float color[4] = { 0.6, 0.6, 0.6, 1.0 };
-	m_pCommandList->ClearRenderTargetView(CurrentBackBufferView(), _arrFloat, 0, nullptr);
-	m_pCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-	// 타겟 지정
-	// Specify the buffers we are going to render to. => 파이프라인에 묶기?
-	m_pCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), FALSE, &DepthStencilView());
 
 	// 첫 번째 더미 Descriptor Heap 초기화
 	ClearDummyDescriptorHeap(0);
@@ -114,11 +103,13 @@ void CDevice::render_start(float(&_arrFloat)[4])
 
 void CDevice::render_present()
 {
+	CMRT* pSwapChainMRT = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN);
+
 	// Indicate that the back buffer will now be used to present.
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE; ;
-	barrier.Transition.pResource = m_pSwapChainBuffer[m_iCurTargetIdx].Get();
+	barrier.Transition.pResource = pSwapChainMRT->GetRTTex(m_iCurTargetIdx)->GetTex2D().Get();// m_arrRenderTargets[m_iCurTargetIdx]->GetTex2D().Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;	// 백버퍼에서
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;			// 다시 출력으로 지정
 
@@ -218,91 +209,6 @@ void CDevice::CreateSwapChain()
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;			// 전면 후면 버퍼 교체 시 이전 프레임 정보 버림
 	
 	HRESULT hr = m_pFactory->CreateSwapChain(m_pCommandQueue.Get(), &tDesc, m_pSwapChain.GetAddressOf());
-}
-
-void CDevice::CreateRtvAndDsvDescriptorHeaps()
-{
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-	rtvHeapDesc.NumDescriptors = SwapChainBufferCount;
-	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	rtvHeapDesc.NodeMask = 0;
-	m_pDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(m_pRtvHeap.GetAddressOf()));
-
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
-	dsvHeapDesc.NumDescriptors = 1;
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	dsvHeapDesc.NodeMask = 0;
-	m_pDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(m_pDsvHeap.GetAddressOf()));
-}
-
-void CDevice::CreateView()
-{
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle = m_pRtvHeap->GetCPUDescriptorHandleForHeapStart();
-
-	// Create a RTV for each frame.
-	for (UINT i = 0; i < SwapChainBufferCount; ++i)
-	{
-		// 생성된 SwapChain 에서 버퍼를 가져옴
-		m_pSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_pSwapChainBuffer[i]));
-
-		// 해당 버퍼로 RenderTarvetView 생성함
-		m_pDevice->CreateRenderTargetView(m_pSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
-		rtvHeapHandle.ptr += m_iRtvDescriptorSize; // Offset 증가
-	}
-
-	// Create the depth/stencil buffer and view.
-	D3D12_RESOURCE_DESC depthStencilDesc = {};
-	depthStencilDesc.MipLevels = 1;
-	depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	depthStencilDesc.Width = (UINT)m_tResolution.fWidth;
-	depthStencilDesc.Height = (UINT)m_tResolution.fHeight;
-	depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-	depthStencilDesc.DepthOrArraySize = 1;
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-	depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	
-	depthStencilDesc.Alignment = 0;
-	depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	
-	CD3DX12_CLEAR_VALUE depthOptimizedClearValue(DXGI_FORMAT_D32_FLOAT, 1.0f, 0);
-
-	HRESULT hr = m_pDevice->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-		D3D12_HEAP_FLAG_NONE,
-		&depthStencilDesc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,
-		&depthOptimizedClearValue,
-		IID_PPV_ARGS(m_pDepthStencilBuffer.GetAddressOf()));
-
-	if (FAILED(hr))
-		assert(nullptr);
-
-	//// 이거 안 넣었음 -> 왜지? nullptr 넣었던데 ...
-	//D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	//dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-	//dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	//dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	//dsvDesc.Texture2D.MipSlice = 0;
-
-	m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer.Get(), nullptr, DepthStencilView());
-
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE CDevice::DepthStencilView() const
-{
-	return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE CDevice::CurrentBackBufferView() const
-{
-	// miCurTargetIdx가 0이라면 0 * size = 0이니까 아무것도 안 더함 -> 핸들의 첫 시작
-	// miCurtargetIdx가 1이라면 1 * size = size니까 size만큼 더함 -> 핸들의 처음 + 사이즈 -> 즉, 두 번째 뷰
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle = m_pRtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvHeapHandle.ptr += m_iCurTargetIdx * m_iRtvDescriptorSize;
-	return rtvHeapHandle;
 }
 
 void CDevice::CreateViewPort()

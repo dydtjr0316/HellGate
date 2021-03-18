@@ -15,6 +15,7 @@ public:
 private:
 	ComPtr<ID3D12Fence>						m_pFence;
 	ComPtr<IDXGIFactory>					m_pFactory;
+
 	ComPtr<ID3D12Device>					m_pDevice;
 	ComPtr<ID3D12CommandQueue>				m_pCommandQueue;
 
@@ -31,20 +32,11 @@ private:
 	UINT									m_iCurTargetIdx = 0;
 	
 	ComPtr<IDXGISwapChain>					m_pSwapChain;
-	
-	ComPtr<ID3D12Resource>					m_pSwapChainBuffer[SwapChainBufferCount];
-	ComPtr<ID3D12Resource>					m_pDepthStencilBuffer;
-
-	// View
-	ComPtr<ID3D12DescriptorHeap>			m_pRtvHeap;
-	ComPtr<ID3D12DescriptorHeap>			m_pDsvHeap;
 
 	vector<ComPtr<ID3D12DescriptorHeap>>	m_vecDummyDescriptor;
 	UINT									m_iCurDummyIdx;
 	ComPtr<ID3D12DescriptorHeap>			m_pInitDescriptor;
 
-	UINT m_iRtvDescriptorSize = 0;
-	UINT m_iDsvDescriptorSize = 0;
 	UINT m_iCbvSrvUavDescriptorSize = 0;
 
 	vector<D3D12_STATIC_SAMPLER_DESC>		m_vecSamplerDesc;
@@ -76,16 +68,12 @@ public:
 	void SetTextureToRegister(CTexture* _pTex, TEXTURE_REGISTER _eRegister);
 	void ClearDummyDescriptorHeap(UINT _iDummyIndex);
 
-	
-
 	void UpdateTable();
 	void ExcuteResourceLoad();
 
 private:
 	void CreateCommandObjects();	// Command
 	void CreateSwapChain();			// Swap Chain
-	void CreateRtvAndDsvDescriptorHeaps();	// DescriptorHeaps
-	void CreateView();				// View
 	void CreateViewPort();			// ViewPort
 	void CreateRootSignature();
 	void CreateSamplerDesc();
@@ -99,5 +87,7 @@ public:
 	ComPtr<ID3D12Device> GetDevice() { return m_pDevice; }
 	ComPtr<ID3D12RootSignature> GetRootSignature(ROOT_SIG_TYPE _eType) { return m_arrSig[(UINT)_eType]; }
 	CConstantBuffer* GetCB(CONST_REGISTER _eRegister) { return m_vecCB[(UINT)_eRegister]; }
+	UINT GetSwapchainIdx() { return m_iCurTargetIdx; }
+	ComPtr<IDXGISwapChain> GetSwapChain() { return m_pSwapChain; }
 };
 

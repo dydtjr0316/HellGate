@@ -40,10 +40,11 @@ public:
 	Ptr<T> Load(const wstring& _strKey, const wstring& _strPath/*상대 경로*/);
 
 	// Texture
-	//Ptr<CTexture> CreateTexture(const wstring _strKey, float _fWidth, float _iHeight
-	//	, UINT _iBindFlag, DXGI_FORMAT _eFormat, D3D11_USAGE _eUsage = D3D11_USAGE_DEFAULT);
-	//
-	//Ptr<CTexture> CreateTexture(const wstring& _strKey, ID3D11Texture2D* _pTex2D);
+	Ptr<CTexture> CreateTexture(const wstring& _strName, UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
+		, const D3D12_HEAP_PROPERTIES& _HeapProperty, D3D12_HEAP_FLAGS _eHeapFlag
+		, D3D12_RESOURCE_FLAGS _eResFlag = D3D12_RESOURCE_FLAG_NONE, Vector4 _vClearColor = Vector4());
+
+	Ptr<CTexture> CreateTextureFromResource(const wstring& _strName, ComPtr<ID3D12Resource> _pTex2D);
 };
 
 template<typename T>
