@@ -89,6 +89,8 @@ float4 PS_Test(VS_OUTPUT _input) : SV_Target
                  + tCol.vSpec
                  + tCol.vAmb;
 
+    
+    //return tCol.vDiff;
     return vOutColor;
 }
 

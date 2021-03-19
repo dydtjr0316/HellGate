@@ -185,18 +185,10 @@ void CSceneMgr::init()
 	// MeshRender 설정
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyboxMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky02.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
 
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
-
-
-
-
-	// =================================
-	// CollisionMgr 충돌 그룹(Layer) 지정
-	// =================================
-	// Player Layer 와 Monster Layer 는 충돌 검사 진행
 	
 
 	m_pCurScene->awake();

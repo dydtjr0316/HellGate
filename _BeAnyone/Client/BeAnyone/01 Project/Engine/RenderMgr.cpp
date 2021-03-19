@@ -21,6 +21,7 @@ CRenderMgr::CRenderMgr()
 
 CRenderMgr::~CRenderMgr()
 {
+	Safe_Delete_Array(m_arrMRT);
 }
 
 void CRenderMgr::render()
