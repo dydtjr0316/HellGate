@@ -9,17 +9,19 @@
 
 #include "TimeMgr.h"
 #include "EventMgr.h"
-//
-//#include "Light3D.h"
+
+#include "Light.h"
+#include "MRT.h"
 
 CRenderMgr::CRenderMgr()
-	: m_arrRT{}
-	, m_arrMRT{}
+	: m_arrMRT{}
+	, m_iRTVHeapSize(0)
 {
 }
 
 CRenderMgr::~CRenderMgr()
 {
+	Safe_Delete_Array(m_arrMRT);
 }
 
 void CRenderMgr::render()
@@ -30,11 +32,36 @@ void CRenderMgr::render()
 
 	// 광원 정보 업데이트
 	//UpdateLight2D();
-	//UpdateLight3D();
+	UpdateLight();
+
+	// SwapChain MRT 초기화
+	UINT iIdx = CDevice::GetInst()->GetSwapchainIdx();
+	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->Clear(iIdx);
+
+	// DeferredMRT 초기화
+	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->Clear();
 
 	for (size_t i = 0; i < m_vecCam.size(); ++i)
 	{
-		m_vecCam[i]->render();
+		m_vecCam[i]->SortGameObject();
+
+		// Deferred MRT 셋팅
+		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
+		m_vecCam[i]->render_deferred();
+
+		// Light MRT 세팅
+		//m_arrMRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
+		//for (size_t i = 0; i < m_vecLight3D.size(); ++i)
+		//{
+		//	m_vecLight3D[i]->Light3D()->render();
+		//}
+
+		// SwapChain MRT 셋팅
+		m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
+		m_vecCam[i]->render_forward();
+
+		// Merge (Diffuse Target, Diffuse Light Target, Specular Target )
+		// ㄴ->
 	}
 
 	// 출력
@@ -62,21 +89,21 @@ void CRenderMgr::render_tool()
 //	m_tLight2DInfo.iCount = 0;
 //}
 //
-//void CRenderMgr::UpdateLight3D()
-//{
-//	static CConstantBuffer* pLight3DBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b4);
-//
-//	tLight3DInfo tLight3DArray;
-//
-//	for (size_t i = 0; i < m_vecLight3D.size(); ++i)
-//	{
-//		const tLight3D& info = m_vecLight3D[i]->GetLight3DInfo();
-//		tLight3DArray.arrLight3D[i] = info;
-//	}
-//	tLight3DArray.iCurCount = (UINT)m_vecLight3D.size();
-//
-//	UINT iOffsetPos = pLight3DBuffer->AddData(&tLight3DArray);
-//	CDevice::GetInst()->SetConstBufferToRegister(pLight3DBuffer, iOffsetPos);
-//
-//	m_vecLight3D.clear();
-//}
+void CRenderMgr::UpdateLight()
+{
+	static CConstantBuffer* pLightBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b3);
+
+	tLightInfo tLightArray;
+
+	for (size_t i = 0; i < m_vecLight.size(); ++i)
+	{
+		const tLight& info = m_vecLight[i]->GetLightInfo();
+		tLightArray.arrLight[i] = info;
+	}
+	tLightArray.iCurCount = (UINT)m_vecLight.size();
+
+	UINT iOffsetPos = pLightBuffer->AddData(&tLightArray);
+	CDevice::GetInst()->SetConstBufferToRegister(pLightBuffer, iOffsetPos);
+
+	m_vecLight.clear();
+}

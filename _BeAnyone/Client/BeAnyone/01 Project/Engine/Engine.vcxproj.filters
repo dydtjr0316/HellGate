@@ -43,6 +43,12 @@
     <Filter Include="04. GameObject\Script">
       <UniqueIdentifier>{8e5c6fbb-2b16-455b-8077-9f1c4b5074ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager\ResMgr">
+      <UniqueIdentifier>{bdf3f6d3-61c2-47fe-9b6b-9cca60403810}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\MRT">
+      <UniqueIdentifier>{8c8887f6-bb59-4c3e-8d0a-b6d862afb811}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h">
@@ -130,9 +136,6 @@
     <ClInclude Include="SceneMgr.h">
       <Filter>Manager\SceneMgr</Filter>
     </ClInclude>
-    <ClInclude Include="ResMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="RenderMgr.h">
       <Filter>Rendering</Filter>
     </ClInclude>
@@ -159,6 +162,15 @@
     </ClInclude>
     <ClInclude Include="extern.h">
       <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ResMgr.h">
+      <Filter>Manager\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="MRT.h">
+      <Filter>Rendering\MRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -228,9 +240,6 @@
     <ClCompile Include="SceneMgr.cpp">
       <Filter>Manager\SceneMgr</Filter>
     </ClCompile>
-    <ClCompile Include="ResMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="RenderMgr.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
@@ -258,12 +267,30 @@
     <ClCompile Include="Frustum.cpp">
       <Filter>04. GameObject\Component\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ResMgr.cpp">
+      <Filter>Manager\ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ResMgrInit.cpp">
+      <Filter>Manager\ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="MRT.cpp">
+      <Filter>Rendering\MRT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="std.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="func.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="value.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

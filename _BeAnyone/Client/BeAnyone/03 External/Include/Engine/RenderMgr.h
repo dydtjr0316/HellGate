@@ -3,7 +3,7 @@
 class CBlendState;
 class CDepthStencilState;
 class CCamera;
-//class CLight3D;
+class CLight;
 
 class CRenderTarget24;
 class CMRT;
@@ -21,13 +21,15 @@ private:
 
 	tResolution				m_tResolution;
 
-	CRenderTarget24*		m_arrRT[(UINT)RT_TYPE::END];
+	// CRenderTarget24*		m_arrRT[(UINT)RT_TYPE::END];
 	CMRT*					m_arrMRT[(UINT)MRT_TYPE::END];
 
 	//tLight2DInfo			m_tLight2DInfo;
 
-	//vector<CLight3D*>		m_vecLight3D;
+	vector<CLight*>			m_vecLight;
 	vector<CCamera*>		m_vecCam;
+
+	UINT					m_iRTVHeapSize;
 
 	HWND					m_hWnd;
 	bool					m_bWindowed;
@@ -38,24 +40,14 @@ public:
 	void render_tool();
 
 private:
-	void CreateSamplerState();
-	void CreateBlendState();
-	void CreateDepthStencilState();
+	void CreateMRT();
 
 	//void UpdateLight2D();
-	//void UpdateLight3D();
+	void UpdateLight();
 
 public:
-	/*void RegisterLight2D(const tLight2D& _Light2D)
-	{
-		if (100 <= m_tLight2DInfo.iCount)
-		{
-			return;
-		}
-
-		m_tLight2DInfo.arrLight2D[m_tLight2DInfo.iCount++] = _Light2D;
-	}
-	void RegisterLight3D(CLight3D* _pLight3D) { if (m_vecLight3D.size() >= 100) return; m_vecLight3D.push_back(_pLight3D); }*/
+	
+	void RegisterLight(CLight* _pLight) { if (m_vecLight.size() >= 100) return; m_vecLight.push_back(_pLight); }
 
 	CCamera* GetCamera(int _iIdx) { return m_vecCam[_iIdx]; }
 	void RegisterCamera(CCamera* _pCam) { m_vecCam.push_back(_pCam); }
@@ -63,6 +55,9 @@ public:
 
 	tResolution GetResolution() { return m_tResolution; }
 	HWND GetHwnd() { return m_hWnd; }
+	UINT GetRTVHeapSize() { return m_iRTVHeapSize; }
+
+	CMRT* GetMRT(MRT_TYPE _eType) { return m_arrMRT[(UINT)_eType]; }
 
 	friend class CSceneMgr;
 };

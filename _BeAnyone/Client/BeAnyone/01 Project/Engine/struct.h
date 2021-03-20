@@ -26,6 +26,10 @@ struct tTransform
 
 	Matrix matWV;
 	Matrix matWVP;
+
+	Matrix matWorldInv;
+	Matrix matViewInv;
+	Matrix matProjInv;
 };
 
 extern tTransform g_transform;
@@ -43,4 +47,29 @@ struct tMtrlParam
 	Matrix			m_arrMat[(UINT)SHADER_PARAM::MATRIX_END - (UINT)SHADER_PARAM::MATRIX_0];
 
 	int				m_iArrTex[(UINT)SHADER_PARAM::TEX_END - (UINT)SHADER_PARAM::TEX_0];
+};
+
+struct tLightColor
+{
+	Vector4 vDiff;
+	Vector4 vSpec;
+	Vector4 vAmb;
+};
+
+struct tLight
+{
+	tLightColor tColor;
+	Vector4		vLightPos;
+	Vector4		vLightDir;
+	int			iLightType;
+	float		fRange;
+	float		fAngle;
+	int			iPadding;
+};
+
+struct tLightInfo
+{
+	tLight arrLight[100];
+	UINT	 iCurCount;
+	Vector3     vPadding;
 };

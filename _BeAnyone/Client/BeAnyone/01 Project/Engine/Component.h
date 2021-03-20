@@ -38,7 +38,7 @@ public:
 	//CAnimator2D* Animator2D() { return m_pObject->Animator2D(); }
 	//CCollider2D* Collider2D() { return m_pObject->Collider2D(); }
 	//CLight2D* Light2D() { return m_pObject->Light2D(); }
-	//CLight3D* Light3D() { return m_pObject->Light3D(); }
+	CLight* Light() { return m_pObject->Light(); }
 	CCamera* Camera() { return m_pObject->Camera(); }
 
 private:
