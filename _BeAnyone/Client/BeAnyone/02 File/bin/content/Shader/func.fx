@@ -17,7 +17,7 @@ tLightColor CalLight(int _iLightIdx, float3 _vViewNormal, float3 _vViewPos)
 	{
 		// 광원의 방향
 		vViewLightDir = normalize(mul(float4(g_Light[_iLightIdx].vLightDir.xyz, 0.f), g_matView).xyz);
-		fDiffPow = saturate(dot(vViewLightDir, _vViewNormal));
+		fDiffPow = saturate(dot(-vViewLightDir, _vViewNormal));
 	}
 	// Point Light
 	else if (g_Light[_iLightIdx].iLightType == 1)
