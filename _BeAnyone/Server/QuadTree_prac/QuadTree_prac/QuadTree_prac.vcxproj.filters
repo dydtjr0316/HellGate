@@ -54,6 +54,9 @@
     <ClInclude Include="Namespace.h">
       <Filter>99Etc</Filter>
     </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>99Etc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

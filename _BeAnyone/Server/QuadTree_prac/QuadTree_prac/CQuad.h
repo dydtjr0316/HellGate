@@ -13,7 +13,7 @@ public: // Set
 public: // Get
 	int GetIteration() const { return m_iIteration; }
 	CQuad& GetParent() const { return *m_pParent; }	// 메모리 문제?
-	CRect& GetRect() const { return *m_pRect; }
+	CRect& GetRect()  { return *m_pRect; }
 	vector<CQuad> GetChildern() const { return m_vChildern; }	// 이거도 한번 보기
 	unordered_map<int, CPlayer*> GetInfo()const { return m_mInfo; }
 

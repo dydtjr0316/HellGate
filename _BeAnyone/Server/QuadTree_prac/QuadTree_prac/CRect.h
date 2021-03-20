@@ -10,6 +10,10 @@ public:
 	void update();
 
 public:	// Get
+	int	  GetX() { return m_ix; }
+	int	  GetY() { return m_iy; }
+	int	  GetW() { return m_iw; }
+	int	  GetH() { return m_ih; }
 	float GetRight() const { return m_iRight; }
 	float GetBottom() const { return m_iBottom; }
 	float GetLeft() const { return m_iLeft; }
