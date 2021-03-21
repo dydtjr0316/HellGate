@@ -16,6 +16,9 @@ struct VTX
 	Vector3 vTangent;
 	Vector3 vNormal;
 	Vector3 vBinormal;
+
+	Vector4 vWeights;
+	Vector4 vIndices;
 };
 
 struct tTransform

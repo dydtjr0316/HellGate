@@ -49,6 +49,9 @@
     <Filter Include="Rendering\MRT">
       <UniqueIdentifier>{8c8887f6-bb59-4c3e-8d0a-b6d862afb811}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Module">
+      <UniqueIdentifier>{dd89d460-9ea1-45c3-bb52-b0b26ad902c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h">
@@ -172,6 +175,9 @@
     <ClInclude Include="MRT.h">
       <Filter>Rendering\MRT</Filter>
     </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -279,6 +285,9 @@
     <ClCompile Include="MRT.cpp">
       <Filter>Rendering\MRT</Filter>
     </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
@@ -291,6 +300,9 @@
       <Filter>ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="value.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="light.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

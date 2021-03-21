@@ -14,6 +14,7 @@ private:
 	Vector3		m_vWorldDir[(UINT)DIR_TYPE::END]; // GameObject ¿« Front, Up, Right πÊ«‚
 
 	Matrix		m_matWorld;
+	Matrix		m_matWorldInv;
 
 public:
 	const Vector3& GetLocalPos() { return m_vLocalPos; }

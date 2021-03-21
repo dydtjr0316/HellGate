@@ -92,7 +92,7 @@ void CRenderMgr::CreateMRT()
 		arrRT[1].vClearColor = Vector4(0.f, 0.f, 0.f, 0.f);
 		arrRT[1].pTarget = CResMgr::GetInst()->CreateTexture(L"SpecularLightTargetTex"
 			, (UINT)m_tResolution.fWidth, (UINT)m_tResolution.fHeight
-			, DXGI_FORMAT_R32G32B32A32_FLOAT, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
+			, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
 			, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, arrRT[0].vClearColor);
 
 		m_arrMRT[(UINT)MRT_TYPE::LIGHT] = new CMRT;

@@ -51,6 +51,9 @@ void CTransform::finalupdate()
 	{
 		memcpy(m_vWorldDir, m_vLocalDir, sizeof(Vector3) * 3);
 	}
+
+	// 역행렬 계산
+	m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
 }
 
 void CTransform::UpdateData()

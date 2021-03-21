@@ -9,6 +9,7 @@
 
 #include "TimeMgr.h"
 #include "EventMgr.h"
+#include "ResMgr.h"
 
 #include "Light.h"
 #include "MRT.h"
@@ -41,6 +42,9 @@ void CRenderMgr::render()
 	// DeferredMRT 초기화
 	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->Clear();
 
+	// LightMRT 초기화
+	m_arrMRT[(UINT)MRT_TYPE::LIGHT]->Clear();
+
 	for (size_t i = 0; i < m_vecCam.size(); ++i)
 	{
 		m_vecCam[i]->SortGameObject();
@@ -48,20 +52,19 @@ void CRenderMgr::render()
 		// Deferred MRT 셋팅
 		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
 		m_vecCam[i]->render_deferred();
+		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->TargetToResBarrier();
 
-		// Light MRT 세팅
-		//m_arrMRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
-		//for (size_t i = 0; i < m_vecLight3D.size(); ++i)
-		//{
-		//	m_vecLight3D[i]->Light3D()->render();
-		//}
+		// Render Light
+		render_lights();
+
+		// Merge (Diffuse Target, Diffuse Light Target, Specular Target )		
+		merge_light();
 
 		// SwapChain MRT 셋팅
-		m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
+		//m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
 		m_vecCam[i]->render_forward();
 
-		// Merge (Diffuse Target, Diffuse Light Target, Specular Target )
-		// ㄴ->
+	
 	}
 
 	// 출력
@@ -78,17 +81,7 @@ void CRenderMgr::render_tool()
 	//UpdateLight2D();
 	//UpdateLight3D();
 }
-//
-//void CRenderMgr::UpdateLight2D()
-//{
-//	static CConstantBuffer* pLight2DBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b3);
-//
-//	UINT iOffsetPos = pLight2DBuffer->AddData(&m_tLight2DInfo);
-//	CDevice::GetInst()->SetConstBufferToRegister(pLight2DBuffer, iOffsetPos);
-//
-//	m_tLight2DInfo.iCount = 0;
-//}
-//
+
 void CRenderMgr::UpdateLight()
 {
 	static CConstantBuffer* pLightBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b3);
@@ -105,5 +98,35 @@ void CRenderMgr::UpdateLight()
 	UINT iOffsetPos = pLightBuffer->AddData(&tLightArray);
 	CDevice::GetInst()->SetConstBufferToRegister(pLightBuffer, iOffsetPos);
 
-	m_vecLight.clear();
 }
+
+void CRenderMgr::render_lights()
+{
+	m_arrMRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
+
+	// 광원을 그린다.
+	for (size_t i = 0; i < m_vecLight.size(); ++i)
+	{
+		m_vecLight[i]->Light()->render();
+	}
+
+	m_vecLight.clear();
+	m_arrMRT[(UINT)MRT_TYPE::LIGHT]->TargetToResBarrier();
+
+	// SwapChain MRT 셋팅
+	UINT iIdx = CDevice::GetInst()->GetSwapchainIdx();
+	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
+}
+
+void CRenderMgr::merge_light()
+{
+	// ========================
+	// Merge (Diffuse + Lights)
+	// ========================
+	static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+	static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
+
+	pMtrl->UpdateData();
+	pRectMesh->render();
+}
+

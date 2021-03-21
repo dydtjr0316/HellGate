@@ -11,16 +11,15 @@ class CMeshRender :
 {
 private:
 	Ptr<CMesh>		m_pMesh;
-	Ptr<CMaterial>	m_pMtrl;
+	vector<Ptr<CMaterial>>  m_vecMtrl;
 
 public:
 	Ptr<CMesh> GetMesh() { return m_pMesh; }
 	void SetMesh(Ptr<CMesh> _pMesh) { m_pMesh = _pMesh; }
 
-	Ptr<CMaterial> GetCloneMaterial();
-	Ptr<CMaterial> GetSharedMaterial() { return m_pMtrl; }
-
-	void SetMaterial(Ptr<CMaterial> _pMtrl) { m_pMtrl = _pMtrl; }
+	Ptr<CMaterial> GetCloneMaterial(UINT _iSubset = 0);
+	Ptr<CMaterial> GetSharedMaterial(UINT _iSubSet = 0) { return m_vecMtrl[_iSubSet]; }
+	void SetMaterial(Ptr<CMaterial> _pMtrl, UINT _iSubset = 0);
 
 public:
 	void render();

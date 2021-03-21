@@ -69,6 +69,11 @@ void CSceneMgr::init()
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
 
+	Ptr<CMaterial> pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
+	pPM->SetData(SHADER_PARAM::TEX_3, pSky01.GetPointer());
+
+	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
+	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
 
 	// ===============
 	// Test Scene »ý¼º

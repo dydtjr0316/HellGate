@@ -1,11 +1,20 @@
 #pragma once
 #include "Component.h"
 
+#include "Mesh.h"
+#include "Material.h"
+#include "Ptr.h"
+
 class CLight
 	: public CComponent
 {
 private:
 	tLight	m_tLightInfo;
+
+	Ptr<CMesh>		m_pVolumeMesh;
+	Ptr<CMaterial>	m_pLightMtrl;
+
+	int				m_iArrIdx;
 
 public:
 	void SetLightType(LIGHT_TYPE _eType);
@@ -19,7 +28,7 @@ public:
 
 public:
 	virtual void finalupdate();
-
+	void render();
 
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);

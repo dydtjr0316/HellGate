@@ -45,7 +45,7 @@ void CTexture::Create(UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
 	}
 	else if (_eResFlag & D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
 	{
-		eResStates = D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET;
+		eResStates = D3D12_RESOURCE_STATE_COMMON;
 		float arrFloat[4] = { _vClearColor.x, _vClearColor.y, _vClearColor.z, _vClearColor.w };
 		CD3DX12_CLEAR_VALUE depthOptimizedClearValue(_eFormat, arrFloat);
 		pValue = &depthOptimizedClearValue;
