@@ -12,6 +12,7 @@ CFRect::CFRect()
 
 void CFRect::initialize(const float& x, const float& y, const float& w, const float& h)
 {
+	// 아래 4줄 문제 될지도? 확인해보기 패킷넘어가며 이상해질수도
 	m_fx = (int)x;
 	m_fy = (int)y;
 	m_fw = (int)w; 

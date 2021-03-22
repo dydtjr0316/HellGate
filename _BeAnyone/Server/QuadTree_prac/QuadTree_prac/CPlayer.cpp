@@ -2,6 +2,7 @@
 #include "CPlayer.h"
 #include "CQuad.h"
 #include "CRect.h"
+int CPlayer::m_iCounter = 0;
 
 CPlayer::CPlayer()
 {

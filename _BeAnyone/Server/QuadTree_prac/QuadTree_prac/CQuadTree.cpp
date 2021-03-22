@@ -61,7 +61,7 @@ void CQuadTree::update(CQuad* root)
 	for (int i = 0; i < root->GetChildern().size(); ++i) { update(&root->GetChildern()[i]); }
 }
 
-void CQuadTree::insert(int& x,int& y, CQuad* root, const bool dead)
+void CQuadTree::insert(const int& x,const int& y, CQuad* root, const bool dead)
 {
 	CQuad* quad = nullptr;
 	try
@@ -92,13 +92,37 @@ void CQuadTree::insert(int& x,int& y, CQuad* root, const bool dead)
 	{
 		if (quad->GetChildern().size() == 0)
 		{
-
+			quad->GetChildern().push_back(CQuad(dest.m_ix, dest.m_iy, dest.m_iw / 2, dest.m_ih / 2));
+			quad->GetChildern().push_back(CQuad(dest.m_ix + (dest.m_iw / 2), dest.m_iy, dest.m_iw / 2, dest.m_ih / 2));
+			quad->GetChildern().push_back(CQuad(dest.m_ix, dest.m_iy + (dest.m_ih / 2), dest.m_iw / 2, dest.m_ih / 2));
+			quad->GetChildern().push_back(CQuad(dest.m_ix + (dest.m_iw / 2), dest.m_iy + (dest.m_ih / 2), dest.m_iw / 2, dest.m_ih / 2));
 		}
+
+		for (unsigned int i = 0; i < quad->GetChildern().size(); i++)
+		{
+			quad->GetChildern()[i].SetParent(quad);
+			quad->GetChildern()[i].SetIteration(quad->GetIteration() + 1);	// 여기 오류날지도? getiter const 해놓은거 오류나면 수정하기 
+		}
+
+		for (auto it = quad->GetInfo().begin(); it != quad->GetInfo().end(); it++)
+		{
+			for (int i = 0; i < quad->GetChildern().size(); i++)
+			{
+				if (quad->GetChildern()[i].GetRect().CollidePoint(it->second->GetRect().GetX(), it->second->GetRect().GetY()))
+				{
+					insert(it->second->GetRect().GetX(), it->second->GetRect().GetY(), &quad->GetChildern()[i], it->second->GetDead());
+					it->second->clean();
+					break;
+				}
+			}
+		}
+		quad->GetInfo().clear();
 	}
+	quad = nullptr;
 
 }
 
-CQuad* CQuadTree::search(int& x, int& y, CQuad* root)
+CQuad* CQuadTree::search(const int& x, const int& y, CQuad* root)
 {
 	
 	if (!root->GetRect().CollidePoint(x, y))

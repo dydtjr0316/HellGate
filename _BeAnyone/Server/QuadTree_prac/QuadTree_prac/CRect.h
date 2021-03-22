@@ -14,10 +14,11 @@ public:	// Get
 	int	  GetY() { return m_iy; }
 	int	  GetW() { return m_iw; }
 	int	  GetH() { return m_ih; }
-	float GetRight() const { return m_iRight; }
-	float GetBottom() const { return m_iBottom; }
-	float GetLeft() const { return m_iLeft; }
-	float GetTop() const { return m_iTop; }
+	// 아래 부분 틀릴지도
+	float GetRight() const { return (float)m_iRight; }
+	float GetBottom() const { return(float)m_iBottom; }
+	float GetLeft() const { return (float)m_iLeft; }
+	float GetTop() const { return (float)m_iTop; }
 
 public: // Set
 	void SetPos(const int& x, const int& y, const int& w, const int& h);

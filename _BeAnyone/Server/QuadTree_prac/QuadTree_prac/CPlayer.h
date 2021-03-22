@@ -19,7 +19,7 @@ public: // Get
 	int GetValue() const { return m_iValue; }
 	int GetCounter() const { return m_iCounter; }
 	CQuad& GetParent() const { return *m_pParent; }
-	CRect& GetRect() const { return *m_pRect; }
+	CRect& GetRect()  { return *m_pRect; }
 
 private:
 	bool m_bisDead = false;
