@@ -178,6 +178,9 @@
     <ClInclude Include="FBXLoader.h">
       <Filter>Module</Filter>
     </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -287,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="FBXLoader.cpp">
       <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshData.cpp">
+      <Filter>Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

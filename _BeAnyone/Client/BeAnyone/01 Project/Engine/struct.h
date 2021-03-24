@@ -76,3 +76,70 @@ struct tLightInfo
 	UINT	 iCurCount;
 	Vector3     vPadding;
 };
+
+
+//================
+// Struct of FBX 
+//=================
+typedef struct _tagMtrlInfo
+{
+	Vector4	vMtrlDiff;
+	Vector4	vMtrlSpec;
+	Vector4	vMtrlAmb;
+	Vector4	vMtrlEmiv;
+	_tagMtrlInfo()
+		: vMtrlDiff(1.f, 1.f, 1.f, 1.f)
+		, vMtrlSpec(1.f, 1.f, 1.f, 1.f)
+		, vMtrlAmb(1.f, 1.f, 1.f, 1.f)
+		, vMtrlEmiv(1.f, 1.f, 1.f, 1.f)
+	{}
+
+}tMtrlInfo;
+
+typedef struct _tagFbxMat
+{
+	tMtrlInfo	tMtrl;
+	wstring     strMtrlName;
+	wstring     strDiff;
+	wstring		strNormal;
+	wstring		strSpec;
+}tFbxMaterial;
+
+typedef struct _tagWeightsAndIndices
+{
+	int		iBoneIdx;
+	double	dWeight;
+}tWeightsAndIndices;
+
+typedef struct _tagContainer
+{
+	wstring								strName;
+	vector<Vector3>						vecPos;
+	vector<Vector3>						vecTangent;
+	vector<Vector3>						vecBinormal;
+	vector<Vector3>						vecNormal;
+	vector<Vector2>						vecUV;
+
+	vector<Vector4>						vecIndices;
+	vector<Vector4>						vecWeights;
+
+	vector<vector<UINT>>				vecIdx;
+	vector<tFbxMaterial>				vecMtrl;
+
+	// Animation 관련 정보
+	bool								bAnimation;
+	vector<vector<tWeightsAndIndices>>	vecWI;
+
+	void Resize(UINT _iSize)
+	{
+		vecPos.resize(_iSize);
+		vecTangent.resize(_iSize);
+		vecBinormal.resize(_iSize);
+		vecNormal.resize(_iSize);
+		vecUV.resize(_iSize);
+		vecIndices.resize(_iSize);
+		vecWeights.resize(_iSize);
+		vecWI.resize(_iSize);
+	}
+
+}tContainer;

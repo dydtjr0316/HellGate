@@ -26,8 +26,8 @@ void CMeshRender::render()
 
 		Transform()->UpdateData();
 		m_vecMtrl[i]->UpdateData();
-		m_pMesh->render();
-		//m_pMesh->render((UINT)i);
+		//m_pMesh->render();
+		m_pMesh->render((UINT)i);
 	}
 }
 Ptr<CMaterial> CMeshRender::GetCloneMaterial(UINT _iSubSet)

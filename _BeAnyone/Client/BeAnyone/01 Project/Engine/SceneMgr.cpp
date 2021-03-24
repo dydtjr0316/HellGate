@@ -128,6 +128,28 @@ void CSceneMgr::init()
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
+	// =============
+	// FBX 파일 로드
+	// =============
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale.fbx");
+	//pMeshData->Save(pMeshData->GetPath());
+	// MeshData 로드
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\House.mdat", L"MeshData\\monster.mdat");
+
+	pObject = pMeshData->Instantiate();
+	pObject->SetName(L"PlayerMale");
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vector3(0.f, 150.f, 300.f));
+	pObject->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
+	pObject->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+	
+
+	// Script 설정
+	pObject->AddComponent(new CPlayerScript);
+
+	m_pCurScene->AddGameObject(L"Player", pObject, false);
+
+
 	// ===================
 	// Player 오브젝트 생성
 	// ===================
@@ -148,10 +170,10 @@ void CSceneMgr::init()
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
 
 	// Script 설정
-	pObject->AddComponent(new CPlayerScript);
+	//pObject->AddComponent(new CPlayerScript);
 
 	// AddGameObject
-	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
+	//m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 
 
 	// ====================
@@ -169,7 +191,7 @@ void CSceneMgr::init()
 	// MeshRender 설정
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pNormalTargetTex.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
 
 	// Script 설정

@@ -40,6 +40,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshData.h" />
     <ClInclude Include="MeshRender.h" />
     <ClInclude Include="MRT.h" />
     <ClInclude Include="PathMgr.h" />
@@ -80,6 +81,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshData.cpp" />
     <ClCompile Include="MeshRender.cpp" />
     <ClCompile Include="MRT.cpp" />
     <ClCompile Include="PathMgr.cpp" />
@@ -204,7 +206,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\03 External\Library\Engine</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
-    <IncludePath>$(SolutionDir)03 External\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)03 External\Include\FBXLoader\;$(SolutionDir)03 External\Include\;$(IncludePath)</IncludePath>
     <ReferencePath>$(SolutionDir)03 External\Library\;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

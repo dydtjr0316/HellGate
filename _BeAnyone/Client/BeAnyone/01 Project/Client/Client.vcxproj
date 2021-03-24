@@ -73,13 +73,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\02 File\bin_debug</OutDir>
-    <IncludePath>$(SolutionDir)03 External\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)03 External\Include\FBXLoader\;$(SolutionDir)03 External\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)03 External\Library\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)02 File\bin_debug\</OutDir>
-    <IncludePath>$(SolutionDir)03 External\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)03 External\Include\;$(SolutionDir)03 External\Include\FBXLoader\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)03 External\Library\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -88,7 +88,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)03 External\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)03 External\Include\FBXLoader\;$(SolutionDir)03 External\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)03 External\Library\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)02 File\bin\</OutDir>
   </PropertyGroup>

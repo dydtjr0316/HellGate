@@ -28,12 +28,12 @@ void CPlayerScript::update()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
-		vPos.y += DT * 200.f;
+		vPos.z += DT * 200.f;
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
 	{
-		vPos.y -= DT * 200.f;
+		vPos.z -= DT * 200.f;
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_A))
