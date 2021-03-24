@@ -35,11 +35,12 @@ struct _tSector
 	int x;
 	int y;
 	int z;
-	_tSector() {}
+	_tSector() { x = y = z = 0; }
 	_tSector(const int& _x, const int& _y)
 	{
 		x = _x;
 		y = _y;
+		z = 0;
 	}
 	void SetSector(const int& _x, const int& _y)
 	{
