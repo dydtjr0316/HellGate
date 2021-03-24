@@ -79,13 +79,23 @@ void CQuadTree::insert(const int& x,const int& y, CQuad* root, const bool dead)
 	// 현재는 안 묶여있는 상태
 	
 	// 이건 인간적으로 해야됨 일단 손가는대로
-	CRect& temp = quad->GetRect();
+	
 	tRect dest;
-	dest.set(temp.GetX(), temp.GetY(), temp.GetW(), temp.GetH());
+	
+	dest.set(quad->GetRect()->GetX(), quad->GetRect()->GetY(), quad->GetRect()->GetW(), quad->GetRect()->GetH());
+
+
+
+	quad->GetInfo()[CPlayer::m_iCounter] = new CPlayer(x, y);
+	quad->GetInfo()[CPlayer::m_iCounter]->SetParent(quad);
+	CPlayer::m_iCounter++;
+
+
 
 	if (quad->GetIteration() > MAX_ITER)
 	{
 		quad = nullptr;
+		return;
 	}
 
 	if (quad->GetInfo().size() >= 4/*한구역에 들어가는 캐릭터 숫자 다시설정해야함*/)
@@ -108,9 +118,9 @@ void CQuadTree::insert(const int& x,const int& y, CQuad* root, const bool dead)
 		{
 			for (int i = 0; i < quad->GetChildern().size(); i++)
 			{
-				if (quad->GetChildern()[i].GetRect().CollidePoint(it->second->GetRect().GetX(), it->second->GetRect().GetY()))
+				if (quad->GetChildern()[i].GetRect()->CollidePoint(it->second->GetRect()->GetX(), it->second->GetRect()->GetY()))
 				{
-					insert(it->second->GetRect().GetX(), it->second->GetRect().GetY(), &quad->GetChildern()[i], it->second->GetDead());
+					insert(it->second->GetRect()->GetX(), it->second->GetRect()->GetY(), &quad->GetChildern()[i], it->second->GetDead());
 					it->second->clean();
 					break;
 				}
@@ -124,8 +134,8 @@ void CQuadTree::insert(const int& x,const int& y, CQuad* root, const bool dead)
 
 CQuad* CQuadTree::search(const int& x, const int& y, CQuad* root)
 {
-	
-	if (!root->GetRect().CollidePoint(x, y))
+
+	if (!(root->GetRect()->CollidePoint(x, y)))
 	{
 		// 뭐하는 코드인가,,,?
 		std::string tmp = "Out of range: ";
@@ -135,16 +145,16 @@ CQuad* CQuadTree::search(const int& x, const int& y, CQuad* root)
 		buffer << y;
 		tmp += buffer.str() + "  SDL_Rect {";
 		buffer.str("");
-		buffer << root->GetRect().GetX();
+		buffer << root->GetRect()->GetX();
 		tmp += buffer.str() + ", ";
 		buffer.str("");
-		buffer << root->GetRect().GetY();
+		buffer << root->GetRect()->GetY();
 		tmp += buffer.str() + ", ";
 		buffer.str("");
-		buffer << root->GetRect().GetW();
+		buffer << root->GetRect()->GetW();
 		tmp += buffer.str() + ", ";
 		buffer.str("");
-		buffer << root->GetRect().GetH();
+		buffer << root->GetRect()->GetH();
 		tmp += buffer.str() + "}";
 		buffer.str("");
 		throw std::exception(tmp.c_str());
@@ -154,8 +164,8 @@ CQuad* CQuadTree::search(const int& x, const int& y, CQuad* root)
 	
 	for (int i = 0; i < root->GetChildern().size(); i++)
 	{
-		if (root->GetChildern()[i].GetRect().CollidePoint(x, y))
+		if (root->GetChildern()[i].GetRect()->CollidePoint(x, y))
 			return search(x, y, &root->GetChildern()[i]);
 	}
-	return nullptr;
+	return root;
 }

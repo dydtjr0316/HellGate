@@ -18,14 +18,14 @@ public: // Get
 	int GetID() const { return m_iID; }
 	int GetValue() const { return m_iValue; }
 	int GetCounter() const { return m_iCounter; }
-	CQuad& GetParent() const { return *m_pParent; }
-	CRect& GetRect()  { return *m_pRect; }
+	CQuad* GetParent() const { return m_pParent; }
+	CRect* GetRect()  { return m_pRect; }
 
+	static int m_iCounter;
 private:
 	bool m_bisDead = false;
 	int m_iID;
 	static const int m_iValue;
-	static int m_iCounter;
 	CQuad* m_pParent = nullptr;
 	CRect* m_pRect = nullptr;
 

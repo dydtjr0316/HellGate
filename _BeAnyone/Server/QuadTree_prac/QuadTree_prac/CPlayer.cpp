@@ -16,6 +16,7 @@ CPlayer::CPlayer()
 CPlayer::CPlayer(const int& x, const int& y)
 {
 	m_pRect = new CRect(x, y, PLAYER::SIZE, PLAYER::SIZE);
+	m_pParent = nullptr;//지워야 될지도
 	m_iID = m_iCounter;
 }
 

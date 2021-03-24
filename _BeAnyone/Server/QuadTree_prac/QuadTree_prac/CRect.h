@@ -31,7 +31,8 @@ public:
 
 private:
 	//tRect m_tdest;
-	int m_ix, m_iy;
+	int m_ix = 0;
+	int m_iy;
 	int m_iw, m_ih;
 
 	int m_iRight, m_iBottom, m_iLeft, m_iTop, m_iCenter_Arr[2];

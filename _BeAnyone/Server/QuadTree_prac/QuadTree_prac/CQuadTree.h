@@ -7,7 +7,7 @@ public:
 	~CQuadTree() {}
 
 public:
-	CQuad& GetRoot() { return *m_pRoot; }
+	CQuad* GetRoot() { return m_pRoot; }
 
 public:
 	void update(CQuad* root);
@@ -15,5 +15,6 @@ public:
 	CQuad* search(const int& x,const int& y, CQuad* root);
 public:
 	CQuad* m_pRoot;
+
 };
 
