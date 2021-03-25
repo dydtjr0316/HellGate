@@ -1,5 +1,9 @@
 #pragma once
 
+typedef unordered_map<int, CGameObject*> OBJLIST;
+typedef OBJLIST::iterator OBJITER;
+
+extern OBJLIST g_Object;
 
 // State Description
 extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];

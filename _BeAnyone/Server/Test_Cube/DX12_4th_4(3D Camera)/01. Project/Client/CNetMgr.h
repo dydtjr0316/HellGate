@@ -12,11 +12,15 @@ public:
 	void Recevie_Data();
 	void ProcessPacket(char* ptr);
 	void Process_Data(char* net_buf, size_t& io_byte);
+	
 
 	void Send_Packet(void* _packet);
 	void Send_LogIN_Packet();
 	void Send_Move_Packet(unsigned const char& dir);
 	void Send_Attack_Packet();
+
+	void testX(const float& x);
+	float testgetx() { return x; }
 
 public:
 	//void SetPos(const Vec3& _v3) { m_v3testPos = _v3; }
@@ -34,6 +38,7 @@ public:
 private:
 	OVERLAPPED m_overlapped;
 	//Vec3 m_v3testPos;
+	float x;
 
 };
 

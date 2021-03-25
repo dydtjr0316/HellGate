@@ -90,6 +90,14 @@ void CNetMgr::Send_Attack_Packet()
 	Send_Packet(&m_packet);
 }
 
+void CNetMgr::testX(const float& _x)
+{
+	x = _x;
+	cout << "test : " << x << endl;
+}
+
+
+
 void CNetMgr::Recevie_Data()
 {
 	EXOVER dataBuf;
@@ -123,11 +131,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
+
+		cout << "packet x : " << packet->x << endl;
+		testX(packet->x);
+
 		/*m_Pos.x = packet->x;
 		m_Pos.y = packet->y;
-		m_Pos.z = packet->z;
+		m_Pos.z = packet->z;*/
 
-		cout << m_Pos.x << endl;
+		/*cout << m_Pos.x << endl;
 		cout << m_Pos.y << endl;
 		cout << m_Pos.z << endl;*/
 	}
@@ -176,3 +188,4 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 		}
 	}
 }
+

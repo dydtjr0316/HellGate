@@ -214,6 +214,7 @@ void CGameObject::update()
 	{
 		if (m_vecChild[i]->IsActive())
 			m_vecChild[i]->update();
+
 	}
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)

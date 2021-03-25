@@ -34,6 +34,7 @@ public:
 	void enable();
 	void disable();
 
+
 public:
 	void SetActive(bool _bTrue);
 	bool IsActive() { return m_bActive; }

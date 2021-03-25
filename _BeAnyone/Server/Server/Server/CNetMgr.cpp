@@ -165,6 +165,8 @@ void CNetMgr::Send_Leave_Packet( const int& user_id, const int& other_id)
     Send_Packet(user_id, &p);
 }
 
+
+
 void CNetMgr::Send_Move_Packet( const int& user_id,  const int& mover_id)
 {
     sc_packet_move p;
@@ -173,6 +175,8 @@ void CNetMgr::Send_Move_Packet( const int& user_id,  const int& mover_id)
     p.type = SC_PACKET_MOVE;
     p.x = Find(mover_id)->GetX();
     p.y = Find(mover_id)->GetY();
+    p.z = Find(mover_id)->GetZ();
+    cout << p.z << endl;
 
     p.move_time = Find(mover_id)->GetClientTime();
 
@@ -328,6 +332,7 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
 
     int x = pClient->GetX();
     int y = pClient->GetY();
+    int z = pClient->GetZ();
 
     _tSector oldSector = pClient->GetSector();
 
@@ -338,6 +343,9 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
     case MV_DOWN: if (y < (WORLD_HEIGHT - 1)) y++; break;
     case MV_LEFT: if (x > 0) x--; break;
     case MV_RIGHT: if (x < (WORLD_WIDTH - 1)) x++; break;
+    case MV_FRONT: if (z >0) z--; break;
+    case MV_BACK: if (z < (WORLD_WIDTH - 1)) z++; break;
+        
     default:
         cout << "Unknown Direction from Client move packet!\n";
         DebugBreak();
@@ -346,6 +354,7 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
 
     pClient->SetX(x);
     pClient->SetY(y);
+    pClient->SetZ(z);
 
     pClient->Change_Sector(oldSector);
 
@@ -527,6 +536,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     switch (buf[1]) {
     case CS_LOGIN: {
         cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
+        cout << packet->name << endl;
         Enter_Game(user_id, packet->name);
     }
                  break;

@@ -51,6 +51,8 @@ constexpr char MV_UP = 0;
 constexpr char MV_DOWN = 1;
 constexpr char MV_LEFT = 2;
 constexpr char MV_RIGHT = 3;
+constexpr char MV_FRONT = 4;
+constexpr char MV_BACK = 5;
 
 // 패킷 이벤트 // 추후 수정
 constexpr char SC_PACKET_LOGIN_OK = 0;

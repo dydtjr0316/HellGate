@@ -14,6 +14,13 @@
 #pragma comment(lib, "Engine/Engine.lib")
 #endif
 
+#ifdef UNICODE
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+#else
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#endif
+
+
 Vec3 t;
 
 SOCKET g_Socket;
@@ -46,8 +53,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
-    //netMgr.Connect();
-    //netMgr.Send_LogIN_Packet();
+    netMgr.Connect();
+    netMgr.Send_LogIN_Packet();
 
 
     // 응용 프로그램 초기화를 수행합니다:
@@ -80,6 +87,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		
 		// Game Running
 		CCore::GetInst()->progress();
+
+        netMgr.Recevie_Data();
+        
     }
 
     return (int) msg.wParam;

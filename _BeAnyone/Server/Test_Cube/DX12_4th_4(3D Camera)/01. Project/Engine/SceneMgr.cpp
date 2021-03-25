@@ -31,6 +31,8 @@
 #include "MonsterScript.h"
 #include "ToolCamScript.h"
 
+#include "CPlayer.h"
+
 CScene* CSceneMgr::GetCurScene()
 {
 	return m_pCurScene;
@@ -111,7 +113,7 @@ void CSceneMgr::init()
 	// ===================
 	// Player 오브젝트 생성
 	// ===================
-	pObject = new CGameObject;
+	pObject = new CPlayer;
 	pObject->SetName(L"Player Object");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
@@ -132,7 +134,7 @@ void CSceneMgr::init()
 
 	// Script 설정
 	pObject->AddComponent(new CPlayerScript);
-
+	
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 

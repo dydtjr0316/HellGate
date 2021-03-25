@@ -50,6 +50,9 @@
     <Filter Include="04. GameObject\Script">
       <UniqueIdentifier>{cbb81f79-d307-4371-9e99-ab9e93821102}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. GameObject\Player">
+      <UniqueIdentifier>{a452ab14-8166-48e1-baa1-0d12e8007ad0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -189,6 +192,9 @@
     <ClInclude Include="ToolCamScript.h">
       <Filter>04. GameObject\Script</Filter>
     </ClInclude>
+    <ClInclude Include="CPlayer.h">
+      <Filter>04. GameObject\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -314,6 +320,9 @@
     </ClCompile>
     <ClCompile Include="ToolCamScript.cpp">
       <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayer.cpp">
+      <Filter>04. GameObject\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

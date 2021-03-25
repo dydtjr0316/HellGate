@@ -4,6 +4,9 @@
 #include "ConstantBuffer.h"
 #include "Device.h"
 
+#include <iostream>
+using namespace std;
+
 tTransform	g_transform;
 
 
@@ -38,6 +41,7 @@ void CTransform::finalupdate()
 	// 로컬 x (크기 x 회전 x 이동)(월드행렬)
 	m_matWorld = matScale * matRot * matTranslation;
 
+
 	if (GetObj()->GetParent())
 	{
 		m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
@@ -58,12 +62,17 @@ void CTransform::UpdateData()
 {
 	static CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
 
+	
+
 	g_transform.matWorld = m_matWorld;
 	g_transform.matWV = g_transform.matWorld * g_transform.matView;
 	g_transform.matWVP = g_transform.matWV * g_transform.matProj;
 
 	UINT iOffsetPos = pCB->AddData(&g_transform);
 	CDevice::GetInst()->SetConstBufferToRegister(pCB, iOffsetPos);
+
+
+
 }
 
 Vec3 CTransform::GetWorldScale()
