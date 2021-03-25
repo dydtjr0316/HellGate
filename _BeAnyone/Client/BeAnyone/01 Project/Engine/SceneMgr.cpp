@@ -87,12 +87,28 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(0)->SetName(L"Default");
 	m_pCurScene->GetLayer(1)->SetName(L"Player");
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
-	m_pCurScene->GetLayer(3)->SetName(L"Bullet");
-
-	m_pCurScene->GetLayer(30)->SetName(L"UI");
-	m_pCurScene->GetLayer(31)->SetName(L"Tool");
 
 	CGameObject* pObject = nullptr;
+
+	// =============
+	// FBX 파일 로드
+	// =============
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale.fbx");
+	//pMeshData->Save(pMeshData->GetPath());
+	// MeshData 로드
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\House.mdat", L"MeshData\\monster.mdat");
+
+	pObject = pMeshData->Instantiate();
+	pObject->SetName(L"PlayerMale");
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vector3(0.f, 150.f, 300.f));
+	pObject->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
+	pObject->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+
+	// Script 설정
+	pObject->AddComponent(new CPlayerScript);
+
+	m_pCurScene->AddGameObject(L"Player", pObject, false);
 
 	// ==================
 	// Camera Object 생성
@@ -104,12 +120,22 @@ void CSceneMgr::init()
 	pMainCam->AddComponent(new CCamera);
 	pMainCam->AddComponent(new CToolCamScript);
 
+	pMainCam->Transform()->SetLocalPos(Vector3(0.f, 370.f, 100.f));
+	pMainCam->Transform()->SetLocalRot(Vector3(XM_PI / 6, 0.f, 0.f));
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetFar(100000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 	pMainCam->Camera()->SetLayerCheck(30, false);
+	//vector<CToolCamScript*> camScript = (CToolCamScript*)(pMainCam->GetScripts())
+	////camScript[0]->
+	//pMainCam->GetScripts()[0]->SetPlayer();
+
+	CToolCamScript* camScript = pMainCam->GetScript<CToolCamScript>();
+	camScript->SetPlayer(pObject);
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);
+
+	
 
 	// ====================
 	// 3D Light Object 추가
@@ -128,26 +154,7 @@ void CSceneMgr::init()
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-	// =============
-	// FBX 파일 로드
-	// =============
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale.fbx");
-	//pMeshData->Save(pMeshData->GetPath());
-	// MeshData 로드
-	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\House.mdat", L"MeshData\\monster.mdat");
-
-	pObject = pMeshData->Instantiate();
-	pObject->SetName(L"PlayerMale");
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vector3(0.f, 150.f, 300.f));
-	pObject->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-	pObject->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	
-
-	// Script 설정
-	pObject->AddComponent(new CPlayerScript);
-
-	m_pCurScene->AddGameObject(L"Player", pObject, false);
 
 
 	// ===================

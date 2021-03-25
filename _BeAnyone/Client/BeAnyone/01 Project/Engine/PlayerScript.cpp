@@ -45,6 +45,7 @@ void CPlayerScript::update()
 	{
 		vPos.x += DT * 200.f;
 	}
+
 	if (KEY_HOLD(KEY_TYPE::KEY_Z))
 	{
 		vRot.z += DT * XM_PI;
@@ -58,6 +59,17 @@ void CPlayerScript::update()
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
 
+	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+	{
+		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+		Vector3 vRot = Transform()->GetLocalRot();
+
+		//vRot.x -= vDrag.y * DT * 3.f;
+		vRot.y += vDrag.x * DT * 1.5f;
+
+		Transform()->SetLocalRot(vRot);
+	}
+
 	Transform()->SetLocalPos(vPos);
-	Transform()->SetLocalRot(vRot);
+	//Transform()->SetLocalRot(vRot);
 }

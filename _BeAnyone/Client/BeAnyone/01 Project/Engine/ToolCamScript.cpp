@@ -17,48 +17,42 @@ CToolCamScript::~CToolCamScript()
 void CToolCamScript::update()
 {
 	Vector3 vPos = Transform()->GetLocalPos();
+	Vector3 vPlayerPos = m_pPlayer->Transform()->GetLocalPos();
+
+	Vector3 vRot = Transform()->GetLocalRot();
+	Vector3 vPlayerRot = m_pPlayer->Transform()->GetLocalRot();
+
 	float fScale = Camera()->GetScale();
 	float fSpeed = m_fSpeed;
 
-	if (KEY_HOLD(KEY_TYPE::KEY_LSHIFT))
-	{
-		fSpeed *= 5.f;
-	}
+	vPos.x = vPlayerPos.x;
+	vPos.y = vPlayerPos.y + 450;
+	vPos.z = vPlayerPos.z - 400;
 
-	if (KEY_HOLD(KEY_TYPE::KEY_UP))
-	{
-		Vector3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vPos += vFront * fSpeed * DT;
-	}
+	
 
-	if (KEY_HOLD(KEY_TYPE::KEY_DOWN))
-	{
-		Vector3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vPos += vBack * fSpeed * DT;
-	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_LEFT))
-	{
-		Vector3 vLeft = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-		vPos += vLeft * fSpeed * DT;
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_RIGHT))
-	{
-		Vector3 vRight = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-		vPos += vRight * fSpeed * DT;
-	}
+	//vRot.x = vPlayerRot.x;
+	//vRot.y = XM_PI / (vPlayerRot.y);
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-		Vector3 vRot = Transform()->GetLocalRot();
+		//Vector3 vRot = Transform()->GetLocalRot();
+		Vector3 a;
+		
+		
+		Matrix matRot = XMMatrixRotationAxis(vPlayerPos, vDrag.x * 0.0001f);
+		a = XMVector3TransformNormal(vPos, matRot);
+		vPos = a;
 
-		vRot.x -= vDrag.y * DT * 3.f;
-		vRot.y += vDrag.x * DT * 1.5f;
 
-		Transform()->SetLocalRot(vRot);
+		//vRot.x -= vDrag.y * DT * 2.f;
+		//vRot.y += vDrag.x * DT * 1.0f;
+
+		//Transform()->SetLocalRot(vRot);
 	}
 
+	//Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
 }
