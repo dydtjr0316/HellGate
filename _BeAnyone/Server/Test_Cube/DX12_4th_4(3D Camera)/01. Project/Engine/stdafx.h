@@ -15,7 +15,11 @@
 #include <Windows.h>
 
 #include "../Client/stdafx.h"
+
 #include "global.h"
+
+//OBJLIST g_Object;
+//int g_myid;
 
 
 #include <iostream>

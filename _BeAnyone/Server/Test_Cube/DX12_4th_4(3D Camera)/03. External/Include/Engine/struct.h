@@ -2,6 +2,8 @@
 
 #include "define.h"
 
+
+
 struct tResolution
 {
 	float fWidth;

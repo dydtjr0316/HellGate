@@ -113,7 +113,7 @@ void CSceneMgr::init()
 	// ===================
 	// Player 오브젝트 생성
 	// ===================
-	pObject = new CPlayer;
+	pObject = new CGameObject;
 	pObject->SetName(L"Player Object");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
@@ -137,6 +137,7 @@ void CSceneMgr::init()
 	
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
+	g_Object[g_myid] = pObject;
 
 
 	// ====================

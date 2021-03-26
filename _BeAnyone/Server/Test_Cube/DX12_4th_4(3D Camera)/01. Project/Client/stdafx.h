@@ -38,6 +38,6 @@ using namespace chrono;
 #include "../../../../Server/Server/Enum.h"
 #include "../../../../Server/Server/Struct.h"
 #include "Extern.h"
-
+//#include "../Engine/extern.h"
 
 // 여기서 프로그램에 필요한 추가 헤더를 참조합니다.
