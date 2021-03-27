@@ -4,6 +4,7 @@
 const char ip[] = "127.0.0.1";
 
 CNetMgr g_netMgr;
+int testpacket;
 
 void CNetMgr::err_quit(const char* msg)
 {
@@ -18,6 +19,11 @@ void CNetMgr::err_quit(const char* msg)
 	exit(1);
 }
 
+void CNetMgr::SetLoginPacket(sc_packet_login_ok* packet)
+{
+	m_loginPacket = packet;
+}
+
 void CNetMgr::Connect()
 {
 
@@ -25,33 +31,39 @@ void CNetMgr::Connect()
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != NULL)err_quit("WSAStartup");
 
-	//g_Socket = WSASocket(PF_INET, SOCK_STREAM, 0, nullptr, 0, WSA_FLAG_OVERLAPPED);
-	g_Socket = socket(AF_INET, SOCK_STREAM, 0);
-	u_long temp = 1;
-	//ioctlsocket(g_Socket, FIONBIO, &temp);
-	cout << "g_Socket -> " << g_Socket << endl;
+	//g_Socket = WSASocket(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	g_Socket = socket(PF_INET, SOCK_STREAM,IPPROTO_TCP);
+	ULONG l = 1;
+	ioctlsocket(g_Socket, FIONBIO, (unsigned long*)&l);
+
 
 	if (g_Socket == INVALID_SOCKET)err_quit("WSASocket");
 
-	WSAEVENT event;
-
-
 	SOCKADDR_IN recvAddr;
 	memset(&recvAddr, 0, sizeof(recvAddr));
-
+	
 	recvAddr.sin_family = AF_INET;
-	//recvAddr.sin_addr.S_un.S_addr = ip;
-	//recvAddr.sin_addr.s_addr = inet_addr(ip);
-	inet_pton(AF_INET, ip, &(recvAddr.sin_addr.s_addr)); // inet addr sdl검사 끄고 실행 해도 안되서 pton으로 수정
+	recvAddr.sin_addr.s_addr = inet_addr(ip);
 	recvAddr.sin_port = htons(SERVER_PORT);
 
 	if (connect(g_Socket, (SOCKADDR*)&recvAddr, sizeof(recvAddr)) == SOCKET_ERROR)
-		err_quit("Connect()");
+	{
+		if (WSAGetLastError() == WSAEWOULDBLOCK)
+		{
+			int i = 0;
+		}
+		else
+		{
+			int i = 0;
+		}
+	}
+		//err_quit("Connect()");
 
-	event = WSACreateEvent();
+	WSAEVENT event = WSACreateEvent();
 	memset(&m_overlapped, 0, sizeof(m_overlapped));
 
 	m_overlapped.hEvent = event;
+	cout << "over : " << m_overlapped.hEvent << endl;
 
 }
 
@@ -64,7 +76,17 @@ void CNetMgr::Send_Packet(void* _packet)
 	dataBuf.wsabuf.buf = (char*)packet;
 	dataBuf.over = m_overlapped;
 
-	if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) != 0)err_quit("WSASend");
+	testpacket = dataBuf.wsabuf.len;
+	if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() == WSA_IO_PENDING)
+		{
+			WSAWaitForMultipleEvents(1, &m_overlapped.hEvent, TRUE, WSA_INFINITE, FALSE);
+			WSAGetOverlappedResult(g_Socket, &m_overlapped, (LPDWORD)&sent, FALSE, NULL);
+		}
+		else
+			err_quit("WSASend");
+	}
 }
 
 void CNetMgr::Send_LogIN_Packet()
@@ -108,36 +130,59 @@ void CNetMgr::testX(const float& _x)
 	cout << "test : " << x << endl;
 }
 
+int CNetMgr::recvn(SOCKET s, char* buf, int len, int flags)
+{
+	int received;
+	char* ptr = buf;
+	int left = 38;
+	if (buf[1] == SC_PACKET_LOGIN_OK)
+		left = sizeof(sc_packet_login_ok);
+	//int left = len;
+
+	while (left > 0) {
+		received = recv(g_Socket, ptr, left, flags);
+		if (received == SOCKET_ERROR)
+			return SOCKET_ERROR;
+		else if (received == 0)
+			break;
+		left -= received;
+		ptr += received;
+	}
+
+	return (len - left);
+}
+
+
 
 
 void CNetMgr::Recevie_Data()
 {
-	EXOVER* dataBuf = new EXOVER;
-	int recvByte = 0;
-	int flags = 0;
+	EXOVER* dataBuf = new EXOVER{};
+	DWORD	 recvByte = 0;
+	DWORD	 flags = 0;
 	
 	dataBuf->over = m_overlapped;
-	cout << g_Socket << endl;
+	//cout << g_Socket << endl;
+	//cout << "over : " << m_overlapped.hEvent << endl;
 
-//	auto recv_result = WSARecv(g_Socket, &(dataBuf->wsabuf), 1, (LPDWORD)&recvByte, (LPDWORD)&flags, &(dataBuf->over), NULL);
+	//auto result = WSARecv(g_Socket, &(dataBuf->wsabuf), 1, &recvByte, &flags, &(dataBuf->over), NULL);
+	char recvbuf[100] = "";
+	int fg = 0;
 
-	char net_buf[1024];
-	cout << "wait " << endl;
-	auto recv_result = recv(g_Socket, net_buf, 1024, 0);
-	//// 여기 recv로 바꾼거 언젠간 문제될지도 모름 한번 물어보기 
+	int ret = recv(g_Socket, recvbuf, sizeof(recvbuf), fg);
+	size_t retbytesize = ret;
 
-	cout << "byte : " << recv_result << endl;
-	if (recv_result > 0)
-	//if (recv_result == 0)
+	if (ret < 0)
 	{
-		cout << "수신 완료" << endl;
-		if (recv_result > 0)Process_Data(net_buf, (size_t&)recv_result);
-		//if (recvByte > 0)Process_Data((dataBuf->wsabuf).buf, (size_t&)recvByte);
+		if (WSAGetLastError() == WSAEWOULDBLOCK)
+		{
+			int i = 0;
+		}
 	}
-	//else
-	//{
-	//	err_quit("recv()");
-	//}
+	else
+	{
+		Process_Data(recvbuf, retbytesize);
+	}
 }
 
 void CNetMgr::ProcessPacket(char* ptr)
@@ -153,6 +198,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		g_myid = packet->id;
 
 		cout << "My ID : " << g_myid << endl;
+		SetLoginPacket(packet);
+
 		
 		
 	}

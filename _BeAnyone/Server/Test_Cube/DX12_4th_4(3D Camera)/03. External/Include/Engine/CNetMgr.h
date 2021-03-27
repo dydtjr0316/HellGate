@@ -21,6 +21,7 @@ public:
 
 	void testX(const float& x);
 	float testgetx() { return x; }
+	int recvn(SOCKET s, char* buf, int len, int flags);
 
 public:
 	//void SetPos(const Vec3& _v3) { m_v3testPos = _v3; }

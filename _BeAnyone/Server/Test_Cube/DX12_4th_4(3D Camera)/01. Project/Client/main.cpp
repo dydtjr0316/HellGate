@@ -54,10 +54,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     netMgr.Connect();
     netMgr.Send_LogIN_Packet();
+    netMgr.Recevie_Data();
 
 
     // 응용 프로그램 초기화를 수행합니다:
-   /* if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
     }
@@ -68,12 +69,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
-    */		
+    		
     MSG msg;
 
     while (true)
     {
-		/*if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
 				break;
@@ -83,12 +84,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
-		}*/
+		}
+        netMgr.Recevie_Data();
 		
 		// Game Running
-		//CCore::GetInst()->progress();
+		CCore::GetInst()->progress();
 
-        netMgr.Recevie_Data();
         
     }
 

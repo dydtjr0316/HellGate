@@ -1,4 +1,4 @@
 #include "stdafx.h"
 #include "CPlayer.h"
 OBJLIST g_Object;
-int g_myid;
+int g_myid = -1;

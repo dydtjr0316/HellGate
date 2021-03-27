@@ -7,6 +7,7 @@ typedef OBJLIST::iterator OBJITER;
 extern CNetMgr g_netMgr;
 extern OBJLIST g_Object;
 extern int g_myid;
+extern int testpacket;
 
 // State Description
 extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];

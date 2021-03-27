@@ -82,7 +82,7 @@ struct sc_packet_login_ok {
 	char type;
 
 	int  id;
-	int x, y, z;
+	float x, y, z;
 	int hp;
 	int level;
 	int   exp;
@@ -95,7 +95,7 @@ struct sc_packet_move {
 	char size;
 	char type;
 	int id;
-	int x, y, z;
+	float x, y, z;
 	int move_time;
 };
 
@@ -105,7 +105,7 @@ struct sc_packet_enter {
 	int  id;
 	char name[MAX_ID_LEN];
 	char o_type;
-	int x, y;
+	float x, y, z;
 };
 
 struct sc_packet_leave {
