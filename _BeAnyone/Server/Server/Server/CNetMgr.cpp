@@ -65,6 +65,8 @@ void CNetMgr::Send_Packet(const int& id, void* packet)
 {
     unsigned char* buf = reinterpret_cast<unsigned char*>(packet);
 
+    
+
     EXOVER* exover = new EXOVER;
     ZeroMemory(&exover->io_buf, sizeof(exover->io_buf));
     memcpy(exover->io_buf, buf, buf[0]);
@@ -73,6 +75,8 @@ void CNetMgr::Send_Packet(const int& id, void* packet)
     exover->wsabuf.buf = reinterpret_cast<char*>(exover->io_buf);
     exover->wsabuf.len = buf[0];
     ZeroMemory(&exover->over, sizeof(exover->over));
+
+    cout << exover->wsabuf.len << endl;
 
     // ?????왜 터지노
     Find(id)->GetLock().lock();

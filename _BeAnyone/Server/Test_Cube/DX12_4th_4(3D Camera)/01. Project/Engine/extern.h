@@ -1,8 +1,10 @@
 #pragma once
 #include "../Engine/GameObject.h"
+#include "CNetMgr.h"
 typedef unordered_map<int, CGameObject*> OBJLIST;
 typedef OBJLIST::iterator OBJITER;
 
+extern CNetMgr g_netMgr;
 extern OBJLIST g_Object;
 extern int g_myid;
 

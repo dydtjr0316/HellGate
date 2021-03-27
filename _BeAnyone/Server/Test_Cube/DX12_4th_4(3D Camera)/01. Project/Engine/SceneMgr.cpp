@@ -137,7 +137,8 @@ void CSceneMgr::init()
 	
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
-	g_Object[g_myid] = pObject;
+	if(g_myid==0)
+		g_Object[g_myid] = pObject;
 
 
 	// ====================

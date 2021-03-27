@@ -53,6 +53,9 @@
     <Filter Include="04. GameObject\Player">
       <UniqueIdentifier>{a452ab14-8166-48e1-baa1-0d12e8007ad0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.NetMgr">
+      <UniqueIdentifier>{0886b567-f6a3-4d5c-9ecc-f72a4e80ff9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -195,6 +198,9 @@
     <ClInclude Include="CPlayer.h">
       <Filter>04. GameObject\Player</Filter>
     </ClInclude>
+    <ClInclude Include="CNetMgr.h">
+      <Filter>05.NetMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -323,6 +329,9 @@
     </ClCompile>
     <ClCompile Include="CPlayer.cpp">
       <Filter>04. GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CNetMgr.cpp">
+      <Filter>05.NetMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

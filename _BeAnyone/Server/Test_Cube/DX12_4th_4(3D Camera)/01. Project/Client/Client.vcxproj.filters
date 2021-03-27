@@ -28,9 +28,6 @@
     <ClInclude Include="targetver.h">
       <Filter>99Etc</Filter>
     </ClInclude>
-    <ClInclude Include="CNetMgr.h">
-      <Filter>01NetMgr</Filter>
-    </ClInclude>
     <ClInclude Include="Extern.h">
       <Filter>99Etc</Filter>
     </ClInclude>
@@ -41,9 +38,6 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>99Etc</Filter>
-    </ClCompile>
-    <ClCompile Include="CNetMgr.cpp">
-      <Filter>01NetMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

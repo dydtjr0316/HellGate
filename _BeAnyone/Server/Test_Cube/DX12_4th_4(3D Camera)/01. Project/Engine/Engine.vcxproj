@@ -170,6 +170,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Animator2D.h" />
     <ClInclude Include="BulletScript.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CNetMgr.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="CollisionMgr.h" />
     <ClInclude Include="Component.h" />
@@ -220,6 +221,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Animator2D.cpp" />
     <ClCompile Include="BulletScript.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CNetMgr.cpp" />
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="CollisionMgr.cpp" />
     <ClCompile Include="Component.cpp" />
