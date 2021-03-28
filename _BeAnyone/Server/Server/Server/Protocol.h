@@ -64,6 +64,8 @@ constexpr char SC_PACKET_LOGIN_FAIL = 5;
 constexpr char SC_PACKET_STAT_CHANGE = 6;
 constexpr char SC_PACKET_ATTACK = 7;
 constexpr char SC_PACKET_LEVEL_UP = 8;
+constexpr char SC_PACKET_ID = 9;
+
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -77,6 +79,13 @@ constexpr unsigned char O_NPC = 1;
 
 
 // 추후 수정, Z값 포함 
+struct sc_packet_id
+{
+	char size;
+	char type;
+
+	int  id;
+};
 struct sc_packet_login_ok {
 	char size;
 	char type;

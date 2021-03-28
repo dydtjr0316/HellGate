@@ -94,7 +94,7 @@ void CNetMgr::Send_LogIN_Packet()
 	cs_packet_login l_packet;
 	l_packet.size = sizeof(l_packet);
 	l_packet.type = CS_LOGIN;
-	int t_id = GetCurrentProcessId();
+	//int t_id = GetCurrentProcessId();
 	char tempName[MAX_ID_LEN];
 	string tempstring;
 	cout << "nick name : ";
@@ -191,14 +191,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 	case SC_PACKET_LOGIN_OK:
 	{
-		sc_packet_login_ok* packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
-		// 플레이어스크립트에서 addobj 하는 부분과 어떻게 연결시킬껀지 고민해보기
-		// 아직 테스트용 코드
-		// 이따구로하면 멀티스레드에서 무적권 꼬임
-		g_myid = packet->id;
-
-		cout << "My ID : " << g_myid << endl;
-		SetLoginPacket(packet);
+		
 
 		
 		
@@ -239,6 +232,17 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_ATTACK:
 	{
 
+	}
+	break;
+	case SC_PACKET_ID:
+	{
+		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
+		// 플레이어스크립트에서 addobj 하는 부분과 어떻게 연결시킬껀지 고민해보기
+		// 아직 테스트용 코드
+		// 이따구로하면 멀티스레드에서 무적권 꼬임
+		g_myid = packet->id;
+
+		cout << "My ID : " << g_myid << endl;
 	}
 	break;
 	default:

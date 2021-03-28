@@ -7,6 +7,10 @@ public:
 	CNetMgr() {}
 	~CNetMgr() {}
 public:
+	void SetLoginPacket(sc_packet_login_ok* packet);
+	sc_packet_login_ok* GetLoginPacket() { return m_loginPacket; }
+
+public:
 	void Connect();
 	// 아래 두개 문제 생기면 const랑 reference 확인해보기
 	void Recevie_Data();
@@ -15,6 +19,7 @@ public:
 	
 
 	void Send_Packet(void* _packet);
+	
 	void Send_LogIN_Packet();
 	void Send_Move_Packet(unsigned const char& dir);
 	void Send_Attack_Packet();
@@ -22,6 +27,7 @@ public:
 	void testX(const float& x);
 	float testgetx() { return x; }
 	int recvn(SOCKET s, char* buf, int len, int flags);
+	
 
 public:
 	//void SetPos(const Vec3& _v3) { m_v3testPos = _v3; }
@@ -39,6 +45,9 @@ public:
 private:
 	OVERLAPPED m_overlapped;
 	//Vec3 m_v3testPos;
+
+	sc_packet_login_ok* m_loginPacket;
+
 	float x;
 
 };

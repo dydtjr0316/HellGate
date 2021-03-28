@@ -55,6 +55,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     netMgr.Connect();
     netMgr.Send_LogIN_Packet();
     netMgr.Recevie_Data();
+    //netMgr.Recevie_Data();
+   
 
 
     // 응용 프로그램 초기화를 수행합니다:
@@ -67,6 +69,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	{
 		return 0;
 	}
+
+    
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
     		

@@ -19,6 +19,7 @@ public:
 	
 
 	void Send_Packet(void* _packet);
+	
 	void Send_LogIN_Packet();
 	void Send_Move_Packet(unsigned const char& dir);
 	void Send_Attack_Packet();

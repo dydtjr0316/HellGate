@@ -15,6 +15,7 @@ public:
 	void Send_LevelUP_Packet(const int& id);
 	void Send_Attacked_Packet_Monster(const int& monster_id);
 	void Send_Attacked_Packet_Client(const int& client_id);
+	void Send_ID_Packet(const int& user_id);
 	void Send_LoginOK_Packet(const int& id);
 	void Send_Enter_Packet(  const int& user_id,   const int& other_id );
 	void Send_Leave_Packet(  const int& user_id, const int& other_id);

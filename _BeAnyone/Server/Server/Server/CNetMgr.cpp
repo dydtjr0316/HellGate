@@ -124,6 +124,17 @@ void CNetMgr::Send_Attacked_Packet_Client(const int& client_id)
     Send_Packet(client_id, &p);
 }
 
+void CNetMgr::Send_ID_Packet(const int& user_id)
+{
+    sc_packet_id p;
+    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+    p.id = user_id;
+    p.size = sizeof(sc_packet_id);
+    p.type = SC_PACKET_ID;
+
+    Send_Packet(user_id, &p);
+}
+
 void CNetMgr::Send_LoginOK_Packet(const int& user_id)
 {
     sc_packet_login_ok p;
@@ -493,6 +504,7 @@ void CNetMgr::Enter_Game(const int& user_id, char name[])
     pUser->SetName(name);
     pUser->GetLock().unlock();
     pUser->GetName()[MAX_ID_LEN] = NULL;
+    //Send_ID_Packet(user_id);
 
     Send_LoginOK_Packet(user_id);
     pUser->Insert_Sector();
@@ -541,6 +553,8 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     case CS_LOGIN: {
         cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
         cout << packet->name << endl;
+        Send_ID_Packet(user_id);
+        // 여기에 send id 해보기
         Enter_Game(user_id, packet->name);
     }
                  break;
@@ -709,7 +723,9 @@ void CNetMgr::Worker_Thread()
                 if (Find( i)->GetStatus() == OBJSTATUS::ST_FREE) {
                     Find( i)->SetStatus(OBJSTATUS::ST_ALLOC);
                     user_id = i;
+                    //
                     Find( i)->GetLock().unlock();
+                    // 여기
 
                     break;
                 }
