@@ -23,33 +23,73 @@ void CTransform::finalupdate()
 	Matrix matTranslation = XMMatrixTranslation(m_vLocalPos.x, m_vLocalPos.y, m_vLocalPos.z);
 	Matrix matScale = XMMatrixScaling(m_vLocalScale.x, m_vLocalScale.y, m_vLocalScale.z);
 
-	Matrix matRot = XMMatrixRotationX(m_vLocalRot.x);
-	matRot *= XMMatrixRotationY(m_vLocalRot.y);
-	matRot *= XMMatrixRotationZ(m_vLocalRot.z);
+	if (m_bCamera == false) {
 
-	static Vector3 arrDefault[(UINT)DIR_TYPE::END] = { Vector3::Right, Vector3::Up, Vector3::Front };
+		Matrix matRot = XMMatrixRotationX(m_vLocalRot.x);
+		matRot *= XMMatrixRotationY(m_vLocalRot.y);
+		matRot *= XMMatrixRotationZ(m_vLocalRot.z);
 
-	for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
-	{
-		m_vLocalDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
-	}
-
-	// 로컬 x (크기 x 회전 x 이동)(월드행렬)
-	m_matWorld = matScale * matRot * matTranslation;
-
-	if (GetObj()->GetParent())
-	{
-		m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
+		static Vector3 arrDefault[(UINT)DIR_TYPE::END] = { Vector3::Right, Vector3::Up, Vector3::Front };
 
 		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
 		{
-			m_vWorldDir[i] = XMVector3TransformNormal(arrDefault[i], m_matWorld);
-			m_vWorldDir[i].Normalize();
+			m_vLocalDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
+		}
+
+		// 로컬 x (크기 x 회전 x 이동)(월드행렬)
+		m_matWorld = matScale * matRot * matTranslation;
+
+		if (GetObj()->GetParent())
+		{
+			m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
+
+			for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
+			{
+				m_vWorldDir[i] = XMVector3TransformNormal(arrDefault[i], m_matWorld);
+				m_vWorldDir[i].Normalize();
+			}
+		}
+		else
+		{
+			memcpy(m_vWorldDir, m_vLocalDir, sizeof(Vector3) * 3);
 		}
 	}
 	else
 	{
-		memcpy(m_vWorldDir, m_vLocalDir, sizeof(Vector3) * 3);
+		//Vector3 a = { 0, m_vPlayerPos.y, 0 };
+		Matrix matRot = XMMatrixRotationAxis(m_vPlayerPos, m_vLocalRot.y);
+
+		Matrix matRotA = XMMatrixRotationX(m_vLocalRot.x);
+		matRotA *= XMMatrixRotationY(m_vLocalRot.y);
+		matRotA *= XMMatrixRotationZ(m_vLocalRot.z);
+
+		static Vector3 arrDefault[(UINT)DIR_TYPE::END] = { Vector3::Right, Vector3::Up, Vector3::Front };
+
+		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
+		{
+			m_vLocalDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
+		}
+
+		// 로컬 x (크기 x 회전 x 이동)(월드행렬)
+		// 로컬 x (크기
+		m_matWorld = (matScale * matRot * matTranslation) * matRotA * m_mPlayerWolrd;
+
+		if (GetObj()->GetParent())
+		{
+			m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
+
+			for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
+			{
+				m_vWorldDir[i] = XMVector3TransformNormal(arrDefault[i], m_matWorld);
+				m_vWorldDir[i].Normalize();
+			}
+		}
+		else
+		{
+			memcpy(m_vWorldDir, m_vLocalDir, sizeof(Vector3) * 3);
+		}
+
+		//m_bCamera = true;
 	}
 
 	// 역행렬 계산

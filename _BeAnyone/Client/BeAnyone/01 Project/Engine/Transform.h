@@ -16,6 +16,13 @@ private:
 	Matrix		m_matWorld;
 	Matrix		m_matWorldInv;
 
+	// 3인칭 카메라 검사
+	bool m_bCamera = false;
+	Vector2 m_vDrag;
+	Vector3 m_vPlayerPos;
+	Matrix m_mPlayerWolrd;
+	Vector3 m_vPlayerDir[(UINT)DIR_TYPE::END];
+
 public:
 	const Vector3& GetLocalPos() { return m_vLocalPos; }
 	Vector3 GetWorldPos() { return m_matWorld.Translation(); }
@@ -38,6 +45,13 @@ public:
 
 	// Transform 정보를 상수데이터 및 레지스터로 전달한다.
 	void UpdateData();
+
+	// 3인칭 카메라 검사
+	void Set3Camera(bool _bCamera) { m_bCamera = _bCamera; }
+	void SetPlayerPosition(Vector3 _vPlayerPos) { m_vPlayerPos = _vPlayerPos; }
+	void SetDrag(Vector2 _vDrag) { m_vDrag = _vDrag; }
+	void SetPlayerWorldMat(Matrix _mPlayerWorld) { m_mPlayerWolrd = _mPlayerWorld; }
+	void SetWorldDir(Vector3 _vPlayerDir, DIR_TYPE _eType) { m_vPlayerDir[(UINT)_eType] = _vPlayerDir; }
 
 public:
 	virtual void finalupdate();

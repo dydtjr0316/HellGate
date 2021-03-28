@@ -28,31 +28,35 @@ void CPlayerScript::update()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
-		vPos.z += DT * 200.f;
+		Vector3 vFront = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		vPos += vFront * DT * 200.f;
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
 	{
-		vPos.z -= DT * 200.f;
+		Vector3 vBack = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		vPos += vBack * DT * 200.f;
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_A))
 	{
-		vPos.x -= DT * 200.f;
+		Vector3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+		vPos += vLeft * DT * 200.f;
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_D))
 	{
-		vPos.x += DT * 200.f;
+		Vector3 vRight = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+		vPos += vRight * DT * 200.f;
 	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_Z))
-	{
-		vRot.z += DT * XM_PI;
-
-		// 복사 메테리얼을 MeshRender 에 세팅
-		MeshRender()->SetMaterial(m_pCloneMtrl);
-	}
+	//if (KEY_HOLD(KEY_TYPE::KEY_Z))
+	//{
+	//	vRot += DT * XM_PI;
+	//
+	//	// 복사 메테리얼을 MeshRender 에 세팅
+	//	MeshRender()->SetMaterial(m_pCloneMtrl);
+	//}
 	else if (KEY_AWAY(KEY_TYPE::KEY_Z))
 	{
 		// z 키를 떼면 원레 메테리얼로 돌아감

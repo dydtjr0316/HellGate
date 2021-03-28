@@ -121,7 +121,7 @@ void CSceneMgr::init()
 	pMainCam->AddComponent(new CToolCamScript);
 
 	pMainCam->Transform()->SetLocalPos(Vector3(0.f, 370.f, 100.f));
-	pMainCam->Transform()->SetLocalRot(Vector3(XM_PI / 6, 0.f, 0.f));
+	pMainCam->Transform()->SetLocalRot(Vector3(/*XM_PI / 6*/ 0.f, 0.f, 0.f));
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetFar(100000.f);
 	pMainCam->Camera()->SetLayerAllCheck();

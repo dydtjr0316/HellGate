@@ -20,39 +20,47 @@ void CToolCamScript::update()
 	Vector3 vPlayerPos = m_pPlayer->Transform()->GetLocalPos();
 
 	Vector3 vRot = Transform()->GetLocalRot();
-	Vector3 vPlayerRot = m_pPlayer->Transform()->GetLocalRot();
+	//Vector3 vPlayerRot = m_pPlayer->Transform()->GetLocalRot();
+	//XMMATRIX vPlayerMat = m_pPlayer->Transform()->GetWorldMat();
+	Vector3 vFront = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vector3 vUp = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
+	Vector3 vRight = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 
 	float fScale = Camera()->GetScale();
 	float fSpeed = m_fSpeed;
 
 	vPos.x = vPlayerPos.x;
-	vPos.y = vPlayerPos.y + 450;
+	vPos.y = vPlayerPos.y + 100;// +450;
 	vPos.z = vPlayerPos.z - 400;
-
 	
-
-
-	//vRot.x = vPlayerRot.x;
-	//vRot.y = XM_PI / (vPlayerRot.y);
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		//Vector3 vRot = Transform()->GetLocalRot();
-		Vector3 a;
+		//Vector3 a;
 		
 		
-		Matrix matRot = XMMatrixRotationAxis(vPlayerPos, vDrag.x * 0.0001f);
-		a = XMVector3TransformNormal(vPos, matRot);
-		vPos = a;
-
-
+		//Matrix matRot = XMMatrixRotationAxis(vPlayerPos, vDrag.x * 0.0001f);
+		//a = XMVector3TransformNormal(vPos, matRot);
+		//vPos = a;
+	
+	
 		//vRot.x -= vDrag.y * DT * 2.f;
-		//vRot.y += vDrag.x * DT * 1.0f;
-
+		vRot.y += vDrag.x * DT * 1.5f;
+	
+		
+		//Transform()->SetPlayerPosition(vPlayerPos);
 		//Transform()->SetLocalRot(vRot);
+		//Transform()->SetPlayerWorldMat(vPlayerMat);
+	
+		
 	}
-
-	//Transform()->SetLocalRot(vRot);
+	//Transform()->Set3Camera(true);
+	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
+	Transform()->SetWorldDir(vFront, DIR_TYPE::FRONT);
+	Transform()->SetWorldDir(vUp, DIR_TYPE::UP);
+	Transform()->SetWorldDir(vRight, DIR_TYPE::RIGHT);
+
 }
