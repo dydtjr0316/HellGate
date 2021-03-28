@@ -138,8 +138,8 @@ void CSceneMgr::init()
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 
-	if(g_myid>=0)
-		g_Object[g_myid] = pObject;
+	//g_Object[g_myid] = pObject;
+	g_Object.insert(make_pair(g_myid, pObject));
 
 
 	// ====================

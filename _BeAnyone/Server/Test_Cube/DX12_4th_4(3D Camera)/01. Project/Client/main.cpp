@@ -55,7 +55,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     netMgr.Connect();
     netMgr.Send_LogIN_Packet();
     netMgr.Recevie_Data();
-    //netMgr.Recevie_Data();
+    
+    //netMgr.Recevie_ID_Data();
    
 
 

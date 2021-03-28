@@ -14,6 +14,7 @@ public:
 	void Connect();
 	// 아래 두개 문제 생기면 const랑 reference 확인해보기
 	void Recevie_Data();
+	void Recevie_ID_Data();
 	void ProcessPacket(char* ptr);
 	void Process_Data(char* net_buf, size_t& io_byte);
 	

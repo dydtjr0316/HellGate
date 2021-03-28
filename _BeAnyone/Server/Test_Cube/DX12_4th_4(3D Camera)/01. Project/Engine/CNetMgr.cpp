@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
-
+#include "Transform.h"
+#include "TimeMgr.h"
 const char ip[] = "127.0.0.1";
 
 CNetMgr g_netMgr;
@@ -185,15 +186,50 @@ void CNetMgr::Recevie_Data()
 	}
 }
 
+void CNetMgr::Recevie_ID_Data()
+{
+
+	EXOVER* dataBuf = new EXOVER{};
+	DWORD	 recvByte = 0;
+	DWORD	 flags = 0;
+
+	dataBuf->over = m_overlapped;
+	//cout << g_Socket << endl;
+	//cout << "over : " << m_overlapped.hEvent << endl;
+
+	//auto result = WSARecv(g_Socket, &(dataBuf->wsabuf), 1, &recvByte, &flags, &(dataBuf->over), NULL);
+	char recvbuf[100] = "";
+	int fg = 0;
+
+	int ret = recv(g_Socket, recvbuf, sizeof(recvbuf), fg);
+	size_t retbytesize = ret;
+
+	if (ret < 0)
+	{
+		if (WSAGetLastError() == WSAEWOULDBLOCK)
+		{
+			int i = 0;
+		}
+	}
+	else
+	{
+		if(recvbuf[1] == SC_PACKET_ID)
+			Process_Data(recvbuf, retbytesize);
+	}
+}
+
 void CNetMgr::ProcessPacket(char* ptr)
 {
 	switch (ptr[1])
 	{
 	case SC_PACKET_LOGIN_OK:
 	{
-		
+		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
+		Vec3 packetpos(p->x, p->y, 1000.f);
 
+		g_Object[g_myid]->Transform()->SetLocalPos(packetpos);
 		
+		// 나머지 추가 컨텐츠 구현
 		
 	}
 	break;
@@ -206,17 +242,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
-
-		cout << "packet x : " << packet->x << endl;
-		testX(packet->x);
-
-		/*m_Pos.x = packet->x;
-		m_Pos.y = packet->y;
-		m_Pos.z = packet->z;*/
-
-		/*cout << m_Pos.x << endl;
-		cout << m_Pos.y << endl;
-		cout << m_Pos.z << endl;*/
+		if (other_id == g_myid)
+		{
+			Vec3 temp(packet->x + DT * 200.f, packet->y + DT * 200.f, 1000.f);
+			g_Object[other_id]->Transform()->SetLocalPos(temp);
+		}
+		else
+		{
+			//추가
+		}
 	}
 	break;
 	case SC_PACKET_LEAVE:

@@ -44,9 +44,6 @@ void CPlayerScript::update()
 	{	
 		//vPos.x -= DT * 200.f;
 		g_netMgr.Send_Move_Packet(MV_LEFT);
-
-		cout << "testgetx : "<< g_netMgr.testgetx() << endl;
-		vPos.x = g_netMgr.testgetx();
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_D))

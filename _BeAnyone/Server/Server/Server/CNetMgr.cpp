@@ -553,7 +553,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     case CS_LOGIN: {
         cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
         cout << packet->name << endl;
-        Send_ID_Packet(user_id);
+        
         // 여기에 send id 해보기
         Enter_Game(user_id, packet->name);
     }
@@ -780,6 +780,8 @@ void CNetMgr::Worker_Thread()
             ZeroMemory(&exover->over, sizeof(exover->over));
             AcceptEx(l_socket, c_socket, exover->io_buf, NULL,
                 sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
+        
+            Send_ID_Packet(user_id);
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_NPC:
@@ -836,7 +838,9 @@ void CNetMgr::Worker_Thread()
         }
         break;
         }
+   
     }
+
 }
 
 void CNetMgr::Timer_Worker()

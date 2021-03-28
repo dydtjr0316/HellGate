@@ -90,7 +90,9 @@ struct sc_packet_login_ok {
 	char size;
 	char type;
 
-	int  id;
+	// id제거해도 되는데 일단 두고 나중에 최적화 할때 지우자
+	int  id;				
+	
 	float x, y, z;
 	int hp;
 	int level;
