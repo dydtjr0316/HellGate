@@ -20,6 +20,7 @@ private:
 	bool m_bCamera = false;
 	Vector2 m_vDrag;
 	Vector3 m_vPlayerPos;
+	Vector3 m_vPlayerRot;
 	Matrix m_mPlayerWolrd;
 	Vector3 m_vPlayerDir[(UINT)DIR_TYPE::END];
 
@@ -49,6 +50,7 @@ public:
 	// 3인칭 카메라 검사
 	void Set3Camera(bool _bCamera) { m_bCamera = _bCamera; }
 	void SetPlayerPosition(Vector3 _vPlayerPos) { m_vPlayerPos = _vPlayerPos; }
+	void SetPlayerRotation(Vector3 _vPlayerRot) { m_vPlayerRot = _vPlayerRot; }
 	void SetDrag(Vector2 _vDrag) { m_vDrag = _vDrag; }
 	void SetPlayerWorldMat(Matrix _mPlayerWorld) { m_mPlayerWolrd = _mPlayerWorld; }
 	void SetWorldDir(Vector3 _vPlayerDir, DIR_TYPE _eType) { m_vPlayerDir[(UINT)_eType] = _vPlayerDir; }

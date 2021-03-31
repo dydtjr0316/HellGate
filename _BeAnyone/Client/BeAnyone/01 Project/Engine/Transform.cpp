@@ -56,23 +56,25 @@ void CTransform::finalupdate()
 	}
 	else
 	{
-		//Vector3 a = { 0, m_vPlayerPos.y, 0 };
-		Matrix matRot = XMMatrixRotationAxis(m_vPlayerPos, m_vLocalRot.y);
+		Vector3 a = { 0, m_vPlayerPos.y, 0 };
+		Matrix matRotRevol = XMMatrixRotationAxis(a, m_vPlayerRot.y);
 
-		Matrix matRotA = XMMatrixRotationX(m_vLocalRot.x);
-		matRotA *= XMMatrixRotationY(m_vLocalRot.y);
-		matRotA *= XMMatrixRotationZ(m_vLocalRot.z);
+		Matrix matRot = XMMatrixRotationX(m_vLocalRot.x);
+		matRot *= XMMatrixRotationY(m_vLocalRot.y);
+		matRot *= XMMatrixRotationZ(m_vLocalRot.z);
 
 		static Vector3 arrDefault[(UINT)DIR_TYPE::END] = { Vector3::Right, Vector3::Up, Vector3::Front };
 
 		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
 		{
 			m_vLocalDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
+			//m_vLocalDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
+			//m_vLocalDir[i] = m_vPlayerDir[i];
 		}
 
 		// 로컬 x (크기 x 회전 x 이동)(월드행렬)
 		// 로컬 x (크기
-		m_matWorld = (matScale * matRot * matTranslation) * matRotA * m_mPlayerWolrd;
+		m_matWorld = (matScale * matRot * matTranslation);// *matRotRevol* m_mPlayerWolrd;
 
 		if (GetObj()->GetParent())
 		{

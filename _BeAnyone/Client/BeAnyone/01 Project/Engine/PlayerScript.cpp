@@ -67,10 +67,10 @@ void CPlayerScript::update()
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = Transform()->GetLocalRot();
-
+	
 		//vRot.x -= vDrag.y * DT * 3.f;
 		vRot.y += vDrag.x * DT * 1.5f;
-
+	
 		Transform()->SetLocalRot(vRot);
 	}
 

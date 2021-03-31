@@ -635,6 +635,19 @@ void CResMgr::CreateDefaultShader()
 	pShader->Create(SHADER_POV::FORWARD);
 	AddRes(L"SkyboxShader", pShader);
 
+	// ============
+	// GridShader
+	// ============
+	pShader = new CShader;
+
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Grid", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Grid", "ps_5_0");
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+	pShader->SetRasterizerType(RS_TYPE::CULL_NONE);
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
+	pShader->Create(SHADER_POV::FORWARD);
+	AddRes(L"GridShader", pShader);
+
 	// ===============
 	// DirLight Shader
 	// ===============
@@ -745,6 +758,13 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"SkyboxShader"));
 	AddRes(L"SkyboxMtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"GridShader"));
+	//Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
+	//pMtrl->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
+	AddRes(L"GridMtrl", pMtrl);
 
 
 

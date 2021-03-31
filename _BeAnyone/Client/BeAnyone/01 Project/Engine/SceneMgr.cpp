@@ -28,6 +28,7 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
+#include "GridScript.h"
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -120,8 +121,8 @@ void CSceneMgr::init()
 	pMainCam->AddComponent(new CCamera);
 	pMainCam->AddComponent(new CToolCamScript);
 
-	pMainCam->Transform()->SetLocalPos(Vector3(0.f, 370.f, 100.f));
-	pMainCam->Transform()->SetLocalRot(Vector3(/*XM_PI / 6*/ 0.f, 0.f, 0.f));
+	pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));
+	pMainCam->Transform()->SetLocalRot(Vector3(XM_PI / 6 /*0.f*/, 0.0f, 0.f));
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetFar(100000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
@@ -220,6 +221,31 @@ void CSceneMgr::init()
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyboxMtrl"));
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
+
+	// AddGameObject
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
+	// ====================
+	// Grid 오브젝트 생성
+	// ====================
+	pObject = new CGameObject;
+	pObject->SetName(L"Grid");
+	pObject->FrustumCheck(false);
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CGridScript);
+
+	// Transform 설정
+	pObject->Transform()->SetLocalScale(Vector3(100000.f, 100000.f, 1.f));
+	pObject->Transform()->SetLocalRot(Vector3(XM_PI / 2.f, 0.f, 0.f));
+
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"GridMtrl"));
+
+	// Script 설정	
+	pObject->GetScript<CGridScript>()->SetToolCamera(pMainCam);
+	pObject->GetScript<CGridScript>()->SetGridColor(Vector3(0.8f, 0.2f, 0.2f));
 
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);

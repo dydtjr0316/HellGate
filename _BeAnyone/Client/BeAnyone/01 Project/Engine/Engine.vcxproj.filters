@@ -181,6 +181,9 @@
     <ClInclude Include="MeshData.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="GridScript.h">
+      <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -293,6 +296,9 @@
     </ClCompile>
     <ClCompile Include="MeshData.cpp">
       <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="GridScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
