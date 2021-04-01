@@ -244,7 +244,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int other_id = packet->id;
 		if (other_id == g_myid)
 		{
-			Vec3 temp(packet->x + DT * 200.f, packet->y + DT * 200.f, 1000.f);
+			Vec3 temp(packet->x + DT * 200.f, packet->y + DT * 200.f, packet->z + DT * 200.f);
 			g_Object[other_id]->Transform()->SetLocalPos(temp);
 		}
 		else

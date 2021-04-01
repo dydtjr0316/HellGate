@@ -76,7 +76,7 @@ void CNetMgr::Send_Packet(const int& id, void* packet)
     exover->wsabuf.len = buf[0];
     ZeroMemory(&exover->over, sizeof(exover->over));
 
-    cout << exover->wsabuf.len << endl;
+   // cout << exover->wsabuf.len << endl;
 
     // ?????왜 터지노
     Find(id)->GetLock().lock();
@@ -191,7 +191,6 @@ void CNetMgr::Send_Move_Packet( const int& user_id,  const int& mover_id)
     p.x = Find(mover_id)->GetX();
     p.y = Find(mover_id)->GetY();
     p.z = Find(mover_id)->GetZ();
-    cout << p.z << endl;
 
     p.move_time = Find(mover_id)->GetClientTime();
 
@@ -358,8 +357,8 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
     case MV_DOWN: if (y < (WORLD_HEIGHT - 1)) y++; break;
     case MV_LEFT: if (x > 0) x--; break;
     case MV_RIGHT: if (x < (WORLD_WIDTH - 1)) x++; break;
-    case MV_FRONT: if (z >0) z--; break;
-    case MV_BACK: if (z < (WORLD_WIDTH - 1)) z++; break;
+    case MV_FRONT: if (z < (WORLD_WIDTH - 1)) z++; break;
+    case MV_BACK: if (z > 0) z--; break;
         
     default:
         cout << "Unknown Direction from Client move packet!\n";
@@ -752,6 +751,7 @@ void CNetMgr::Worker_Thread()
                 pClient->SetSocket(c_socket);
                 pClient->SetX(rand() % WORLD_WIDTH);
                 pClient->SetY(rand() % WORLD_HEIGHT);
+                pClient->SetZ(20);
                 pClient->SetFirstXY(pClient->GetX(), pClient->GetY());
 
                 CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket), g_iocp, user_id, 0);
@@ -888,7 +888,7 @@ void CNetMgr::WakeUp_NPC(const int& id)
     {
         Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
     }
-    cout<<Find(id)->GetStatus()<<endl;
+    //cout<<Find(id)->GetStatus()<<endl;
 }
 
 void CNetMgr::WakeUp_Monster(const int& id)

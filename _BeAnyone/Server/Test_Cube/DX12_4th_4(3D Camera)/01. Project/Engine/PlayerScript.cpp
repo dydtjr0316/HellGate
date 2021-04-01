@@ -26,18 +26,19 @@ void CPlayerScript::awake()
 
 void CPlayerScript::update()
 {
-	Vec3 vPos = Transform()->GetLocalPos();
-	Vec3 vRot = Transform()->GetLocalRot();
+	/*Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vRot = Transform()->GetLocalRot();*/
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
-		vPos.z += DT * 200.f;
-		
+		//vPos.z += DT * 200.f;
+		g_netMgr.Send_Move_Packet(MV_FRONT);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
 	{
-		vPos.z -= DT * 200.f;
+		//vPos.z -= DT * 200.f;
+		g_netMgr.Send_Move_Packet(MV_BACK);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_A))
@@ -66,29 +67,29 @@ void CPlayerScript::update()
 		MeshRender()->SetMaterial(m_pOriginMtrl);		
 	}
 
-	Transform()->SetLocalPos(vPos);
-	Transform()->SetLocalRot(vRot);
+	//Transform()->SetLocalPos(vPos);
+	//Transform()->SetLocalRot(vRot);
 
-	if (KEY_TAB(KEY_TYPE::KEY_SPACE))
-	{
-		// ¹Ì»çÀÏ ½î±â
-		CGameObject* pBullet = new CGameObject;
-		pBullet->SetName(L"Bullet Object");
+	//if (KEY_TAB(KEY_TYPE::KEY_SPACE))
+	//{
+	//	// ¹Ì»çÀÏ ½î±â
+	//	CGameObject* pBullet = new CGameObject;
+	//	pBullet->SetName(L"Bullet Object");
 
-		vPos.y += 50;
-		pBullet->AddComponent(new CTransform());
-		pBullet->Transform()->SetLocalPos(vPos);
-		pBullet->Transform()->SetLocalScale(Vec3(50.f, 50.f, 1.f));
+	//	vPos.y += 50;
+	//	pBullet->AddComponent(new CTransform());
+	//	pBullet->Transform()->SetLocalPos(vPos);
+	//	pBullet->Transform()->SetLocalScale(Vec3(50.f, 50.f, 1.f));
 
-		pBullet->AddComponent(new CMeshRender);
-		pBullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
-		pBullet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"));
+	//	pBullet->AddComponent(new CMeshRender);
+	//	pBullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+	//	pBullet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"));
 
-		pBullet->AddComponent(new CCollider2D);
-		pBullet->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
-		
-		pBullet->AddComponent(new CBulletScript);
-			   
-		CreateObject(pBullet, L"Bullet");
-	}
+	//	pBullet->AddComponent(new CCollider2D);
+	//	pBullet->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
+	//	
+	//	pBullet->AddComponent(new CBulletScript);
+	//		   
+	//	CreateObject(pBullet, L"Bullet");
+	//}
 }
