@@ -7,9 +7,9 @@ public:
 public: // 상속 ,, 함수
 	// GET
 	const int& GetID() { return m_id; }
-	const int& GetX() { return m_iX; }
-	const int& GetY() { return m_iY; }
-	const int& GetZ() { return m_iZ; }
+	const float& GetX() { return m_iX; }
+	const float& GetY() { return m_iY; }
+	const float& GetZ() { return m_iZ; }
 	const int& GetClientTime() { return m_iclinet_time; }
 	int Get_Prev_Size() { return m_prev_size; }
 	//
@@ -25,10 +25,10 @@ public: // 상속 ,, 함수
 
 	// set
 	void SetID(const int& id) { m_id = id; }
-	void SetX(const int& x) { m_iX = x; }
-	void SetY(const int& y) { m_iY = y; }
-	void SetZ(const int& z) { m_iZ = z; }
-	void SetPos(const int& x, const int& y, const int& z) { m_iX = x; m_iY = y; m_iZ = z; }
+	void SetX(const float& x) { m_iX = x; }
+	void SetY(const float& y) { m_iY = y; }
+	void SetZ(const float& z) { m_iZ = z; }
+	void SetPos(const float& x, const float& y, const float& z) { m_iX = x; m_iY = y; m_iZ = z; }
 	void SetClientTime(const int& t) { m_iclinet_time = t; }
 	void SetPrev_Size(const int& size) { m_prev_size = size; }
 	//
@@ -49,7 +49,7 @@ public:
 protected:
 	// int
 	int		m_id;	// id
-	int		m_iX, m_iY, m_iZ; // 좌표
+	float		m_iX, m_iY, m_iZ; // 좌표
 	int   m_prev_size;
 
 	// CHAR
