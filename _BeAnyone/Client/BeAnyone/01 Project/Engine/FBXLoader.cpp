@@ -89,7 +89,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	m_pImporter->Destroy();
 
 	// 필요한 텍스쳐 로드
-	//LoadTexture();
+	LoadTexture();
 
 	// 필요한 메테리얼 생성
 	CreateMaterial();
@@ -335,8 +335,8 @@ void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int 
 	
 	iUVIdx = _iUVIndex;
 	FbxVector2 vUV = pUV->GetDirectArray().GetAt(iUVIdx);
-	_pContainer->vecUV[_iIdx].x = 0.0f;//(float)vUV.mData[0];
-	_pContainer->vecUV[_iIdx].y = 0.0f;//1.f - (float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0
+	_pContainer->vecUV[_iIdx].x = (float)vUV.mData[0];
+	_pContainer->vecUV[_iIdx].y = 1.f - (float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0
 }
 
 Vector4 CFBXLoader::GetMtrlData(FbxSurfaceMaterial* _pSurface
@@ -362,6 +362,8 @@ Vector4 CFBXLoader::GetMtrlData(FbxSurfaceMaterial* _pSurface
 wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char* _pMtrlProperty)
 {
 	string strName;
+	wstring wstrName = CPathMgr::GetResPath();
+	wstrName += L"Texture\\Player\\";
 
 	FbxProperty TextureProperty = _pSurface->FindProperty(_pMtrlProperty);
 	if (TextureProperty.IsValid())
@@ -371,12 +373,16 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 		if (1 <= iCnt)
 		{
 			FbxFileTexture* pFbxTex = TextureProperty.GetSrcObject<FbxFileTexture>(0);
-			if (NULL != pFbxTex)
-				strName = pFbxTex->GetFileName();
+			if (NULL != pFbxTex) {
+				//strName = "C:\\Users\\HyoRim\\Desktop\\graduation project\\HellGate\\_BeAnyone\\Client\\BeAnyone\\02 File\\bin\\content\\FBX\\PlayerMale02.tga"; //pFbxTex->GetFileName();
+				strName = _pSurface->GetName();
+				strName += ".tga";
+				wstrName += wstring(strName.begin(), strName.end());
+			}
 		}
 	}
 
-	return wstring(strName.begin(), strName.end());
+	return wstrName; // wstring(strName.begin(), strName.end());
 }
 
 void CFBXLoader::LoadTexture()
@@ -394,13 +400,13 @@ void CFBXLoader::LoadTexture()
 			strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strDiff.c_str());
 			CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
 
-			strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
-			strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
-			CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
-
-			strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
-			strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
-			CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
+			//strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
+			//strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
+			//CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
+			//
+			//strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
+			//strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
+			//CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
 		}
 	}
 }
