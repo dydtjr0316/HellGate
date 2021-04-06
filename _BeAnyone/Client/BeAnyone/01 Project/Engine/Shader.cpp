@@ -76,6 +76,33 @@ void CShader::CreatePixelShader(const wstring& _strPath, const string& _strFuncN
 	m_tPipeline.PS = { m_pPSBlob->GetBufferPointer(), m_pPSBlob->GetBufferSize() };
 }
 
+void CShader::CreateComputeShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion)
+{
+	int iFlag = 0;
+#ifdef _DEBUG
+	iFlag = D3DCOMPILE_DEBUG;
+#endif
+
+	wstring strPath = CPathMgr::GetResPath();
+	strPath += _strPath;
+
+	char* pErr = nullptr;
+
+	if (FAILED(D3DCompileFromFile(strPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, _strFuncName.c_str(), _strhlslVersion.c_str(), iFlag, 0, &m_pCSBlob, &m_pErrBlob)))
+	{
+		pErr = (char*)m_pErrBlob->GetBufferPointer();
+		MessageBoxA(nullptr, pErr, "Shader Create Failed !!!", MB_OK);
+	}
+
+	m_tCSStateDesc.pRootSignature = CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::COMPUTE).Get();
+	m_tCSStateDesc.CS = { m_pCSBlob->GetBufferPointer(), m_pCSBlob->GetBufferSize() };
+
+	DEVICE->CreateComputePipelineState(&m_tCSStateDesc, IID_PPV_ARGS(&m_pPilelineState_CS));
+
+	m_ePOV = SHADER_POV::COMPUTE;
+}
+
 void CShader::UpdateData()
 {
 	CMDLIST->SetPipelineState(m_pPipelineState.Get());
@@ -99,7 +126,7 @@ void CShader::Create(SHADER_POV _ePOV, D3D_PRIMITIVE_TOPOLOGY _eTopology)
 	};
 
 	m_tPipeline.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-	m_tPipeline.pRootSignature = CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::INPUT_ASSEM).Get();
+	m_tPipeline.pRootSignature = CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::RENDER).Get();
 
 	m_tPipeline.RasterizerState = g_arrRSDesc[(UINT)m_eRSType];
 	m_tPipeline.BlendState = g_arrBlendDesc[(UINT)m_eBlendType];

@@ -25,6 +25,9 @@ private:
 	ComPtr<ID3D12DescriptorHeap> m_pSRV;
 	ComPtr<ID3D12DescriptorHeap> m_pRTV; // Render Target View
 	ComPtr<ID3D12DescriptorHeap> m_pDSV; // Depth Stencil View
+	ComPtr<ID3D12DescriptorHeap> m_pUAV;
+
+	D3D12_RESOURCE_STATES		 m_eState;
 
 public:
 	void Create(UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
@@ -37,6 +40,10 @@ public:
 	ComPtr<ID3D12DescriptorHeap> GetSRV() { return m_pSRV; }
 	ComPtr<ID3D12DescriptorHeap> GetRTV() { return m_pRTV; }
 	ComPtr<ID3D12DescriptorHeap> GetDSV() { return m_pDSV; }
+	ComPtr<ID3D12DescriptorHeap> GetUAV() { return m_pUAV; }
+
+	D3D12_RESOURCE_STATES GetResState() { return m_eState; }
+	void SetResState(D3D12_RESOURCE_STATES _eState) { m_eState = _eState; }
 
 	virtual void Load(const wstring& _strFullPath);
 	virtual void Save(const wstring& _strPath/*최종 경로*/);

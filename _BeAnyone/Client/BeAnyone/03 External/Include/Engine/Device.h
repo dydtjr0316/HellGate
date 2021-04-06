@@ -14,10 +14,15 @@ public:
 
 private:
 	ComPtr<ID3D12Fence>						m_pFence;
-	ComPtr<IDXGIFactory>					m_pFactory;
+	ComPtr<ID3D12Fence>						m_pFenceCompute;
 
+	ComPtr<IDXGIFactory>					m_pFactory;
 	ComPtr<ID3D12Device>					m_pDevice;
+
 	ComPtr<ID3D12CommandQueue>				m_pCommandQueue;
+
+	// 컴퓨트 쉐이더 커맨드 큐
+	ComPtr<ID3D12CommandQueue>				m_pCommandQueueCompute;
 
 	// 렌더링 커맨드 리스트
 	ComPtr<ID3D12CommandAllocator>			m_pCmdListAlloc;
@@ -27,12 +32,18 @@ private:
 	ComPtr<ID3D12CommandAllocator>			m_pCmdListAllocRes;
 	ComPtr<ID3D12GraphicsCommandList>		m_pCommandListRes;
 
+	// 컴퓨터 쉐이더 커맨드 리스트
+	ComPtr<ID3D12CommandAllocator>			m_pCmdListAllocCompute;
+	ComPtr<ID3D12GraphicsCommandList>		m_pCommandListCompute;
+
 	// SwapChain
 	static const int						SwapChainBufferCount = 2;
 	UINT									m_iCurTargetIdx = 0;
 	
 	ComPtr<IDXGISwapChain>					m_pSwapChain;
 
+	// 컴퓨트 쉐이더 더미 힙
+	ComPtr<ID3D12DescriptorHeap>			m_pDummyDescriptorCompute;
 	vector<ComPtr<ID3D12DescriptorHeap>>	m_vecDummyDescriptor;
 	UINT									m_iCurDummyIdx;
 	ComPtr<ID3D12DescriptorHeap>			m_pInitDescriptor;
@@ -62,6 +73,7 @@ public:
 
 	void render_present();
 	void FlushCommandQueue();
+	void FlushCommandQueue_CS();
 
 	void SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset);
 	void SetGlobalConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset);
@@ -84,6 +96,7 @@ private:
 public:
 	ComPtr<ID3D12GraphicsCommandList> GetCmdList() { return m_pCommandList; }
 	ComPtr<ID3D12GraphicsCommandList> GetCmdListRes() { return m_pCommandListRes; }
+	ComPtr<ID3D12GraphicsCommandList> GetCmdListCompute() { return m_pCommandListCompute; }
 	ComPtr<ID3D12Device> GetDevice() { return m_pDevice; }
 	ComPtr<ID3D12RootSignature> GetRootSignature(ROOT_SIG_TYPE _eType) { return m_arrSig[(UINT)_eType]; }
 	CConstantBuffer* GetCB(CONST_REGISTER _eRegister) { return m_vecCB[(UINT)_eRegister]; }

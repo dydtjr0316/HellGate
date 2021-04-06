@@ -15,6 +15,7 @@ static type* GetInst()\
 #define DEVICE CDevice::GetInst()->GetDevice()
 #define CMDLIST CDevice::GetInst()->GetCmdList()
 #define CMDLIST_RES CDevice::GetInst()->GetCmdListRes()
+#define CMDLIST_CS CDevice::GetInst()->GetCmdListCompute()
 
 #define KEY(Key, State) (CKeyMgr::GetInst()->GetKeyState(Key) == State)
 #define KEY_HOLD(Key) KEY(Key, KEY_STATE::STATE_HOLD)
@@ -81,8 +82,8 @@ enum class RES_TYPE
 
 enum class ROOT_SIG_TYPE
 {
-	INPUT_ASSEM,
-	CONST_BUFFER,
+	RENDER,
+	COMPUTE,
 	END,
 };
 

@@ -708,6 +708,15 @@ void CResMgr::CreateDefaultShader()
 
 	pShader->Create(SHADER_POV::LIGHTING);
 	AddRes(L"MergeLightShader", pShader);
+
+	//=======================
+	// Test Compute Shader
+	// int 1 °³ ÇÊ¿ä
+	//=======================
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\compute.fx", "CS_TEST", "cs_5_0");
+	pShader->AddShaderParam(tShaderParam{ L"Test Value", SHADER_PARAM::INT_0 });
+	AddRes(L"CSTestShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -821,4 +830,9 @@ void CResMgr::CreateDefaultMaterial()
 
 		AddRes(L"MergeLightMtrl", pMtrl);
 	}
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"CSTestShader"));
+	AddRes(L"CSTestMtrl", pMtrl);
 }
