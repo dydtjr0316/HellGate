@@ -79,6 +79,8 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
 	m_pCurScene->GetLayer(3)->SetName(L"Bullet");
 
+	//m_pCurScene->GetLayer(1)->GetObjects();
+
 	CGameObject* pObject = nullptr;
 
 	// ==================

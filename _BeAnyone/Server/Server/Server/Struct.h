@@ -33,18 +33,16 @@ struct event_type
 struct _tSector
 {
 	int x;
-	int y;
 	int z;
-	_tSector() { x = y = z = 0; }
-	_tSector(const int& _x, const int& _y)
+	_tSector() { x = z = 0; }
+	_tSector(const int& _x, const int& _z)
 	{
 		x = _x;
-		y = _y;
-		z = 0;
+		z = _z;
 	}
-	void SetSector(const int& _x, const int& _y)
+	void SetSector(const int& _x, const int& _z)
 	{
 		x = _x;
-		y = _y;
+		z = _z;
 	}
 };

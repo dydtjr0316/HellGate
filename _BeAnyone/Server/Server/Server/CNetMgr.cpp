@@ -19,10 +19,10 @@ void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 
 bool CNetMgr::is_near( const int& p1, const int& p2)
 {
-    int dist = (Find(p1)->GetX() - Find(p2)->GetX()) * (Find(p1)->GetX() - Find(p2)->GetX());
+    float dist = (Find(p1)->GetX() - Find(p2)->GetX()) * (Find(p1)->GetX() - Find(p2)->GetX());
     dist += (Find(p1)->GetY() - Find(p2)->GetY()) * (Find(p1)->GetY() - Find(p2)->GetY());
 
-    return dist <= (VIEW_LIMIT * VIEW_LIMIT);
+    return dist <= (float)(VIEW_LIMIT * VIEW_LIMIT);
 }
 
 
@@ -200,8 +200,8 @@ void CNetMgr::Send_Move_Packet( const int& user_id,  const int& mover_id)
 void CNetMgr::Random_Move_NPC(const int& id)
 {
     CGameObject* NPCObj = Find( id);
-    int x = NPCObj->GetX();
-    int y = NPCObj->GetY();
+    float x = NPCObj->GetX();
+    float y = NPCObj->GetY();
     
 
     // 체인지 섹터 함수 호출
@@ -269,8 +269,8 @@ void CNetMgr::Random_Move_Monster(const int& id)
 {
     CGameObject* MonsterObj = Find( id);
 
-    int x = MonsterObj->GetX();
-    int y = MonsterObj->GetY();
+    float x = MonsterObj->GetX();
+    float y = MonsterObj->GetY();
 
     _tSector oldSector = MonsterObj->GetSector();
 
@@ -344,9 +344,9 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
     unordered_set<int> old_viewList = pClient->GetViewList();
 
 
-    int x = pClient->GetX();
-    int y = pClient->GetY();
-    int z = pClient->GetZ();
+    float x = pClient->GetX();
+    float y = pClient->GetY();
+    float z = pClient->GetZ();
 
     _tSector oldSector = pClient->GetSector();
 
@@ -623,8 +623,8 @@ void CNetMgr::Init_Monster()
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
         // 좌표 어캐할지 생각
         pObj = new CMonster;
-        pObj->SetX(rand() % WORLD_WIDTH);
-        pObj->SetY(rand() % WORLD_HEIGHT);
+        pObj->SetX((float)(rand() % WORLD_WIDTH));
+        pObj->SetY((float)(rand() % WORLD_HEIGHT));
         pObj->SetID(i);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->Insert_Sector();
@@ -640,8 +640,8 @@ void CNetMgr::Init_NPC()
     {
         pObj = new CNPC;
         // 좌표 어캐 할지 생각
-        pObj->SetX(rand() % WORLD_WIDTH);
-        pObj->SetY(rand() % WORLD_HEIGHT);
+        pObj->SetX((float)(rand() % WORLD_WIDTH));
+        pObj->SetY((float)(rand() % WORLD_HEIGHT));
         pObj->SetID(i);
         char npc_name[50];
         sprintf_s(npc_name, "N%d", i);
@@ -749,9 +749,13 @@ void CNetMgr::Worker_Thread()
                 pClient->GetExover().wsabuf.buf = pClient->GetExover().io_buf;
                 pClient->GetExover().wsabuf.len = MAX_BUF_SIZE;
                 pClient->SetSocket(c_socket);
-                pClient->SetX(rand() % WORLD_WIDTH);
-                pClient->SetY(rand() % WORLD_HEIGHT);
-                pClient->SetZ(20);
+
+                ////////////////////////////////////////////////////////
+                pClient->SetX((float)(rand() % 20));
+                pClient->SetY((float)(rand() % 20));
+                pClient->SetZ(20.f);
+                ////////////////////////////////////////////////////////
+                
                 pClient->SetFirstXY(pClient->GetX(), pClient->GetY());
 
                 CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket), g_iocp, user_id, 0);

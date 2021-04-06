@@ -34,13 +34,13 @@ public:
 private:
 	// 전부 값 수정
 	// 필수 
-	int		m_id;	// id
+	int		m_id = 0;	// id
 	int		m_iAttack_Damage = 5; // 공격력
 	int		m_iHP = 100;  // 체력
 	int		m_iMaxHP = 100;  // 체력
 	int		m_iFirstX = 0;
 	int		m_iFirstY = 0;
-	int   m_prev_size;
+	int   m_prev_size = 0;
 
 	unordered_set<int> view_list;
 
@@ -48,10 +48,10 @@ private:
 	bool m_bisDead = false;
 
 	// char
-	char  m_packet_buf[MAX_PACKET_SIZE];
-	char  m_name[MAX_ID_LEN + 1];
+	char  m_packet_buf[MAX_PACKET_SIZE]{};
+	char  m_name[MAX_ID_LEN + 1]{};
 
 	// struct
-	MONSTER_TYPE m_Type;
+	MONSTER_TYPE m_Type = MONSTER_TYPE::DEFAULT;
 };
 

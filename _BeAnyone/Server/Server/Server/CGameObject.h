@@ -2,7 +2,7 @@
 class CGameObject
 {
 public:
-	CGameObject() = default;
+	CGameObject();
 	virtual ~CGameObject() {}
 public: // 상속 ,, 함수
 	// GET
@@ -35,7 +35,7 @@ public: // 상속 ,, 함수
 	void SetName(char* name) { strcpy_s(m_name, name); }
 	//
 	void SetStatus(const OBJSTATUS& status) { m_status = status; }
-	void SetSector(const int& x, const int& y) { m_tSector.x = x; m_tSector.y = y; }
+	void SetSector(const int& x, const int& z) { m_tSector.x = x; m_tSector.z = z; }
 	void SetSector(const _tSector& tsec) { m_tSector = tsec; }
 
 	void SetSocket_Zero() { m_s = 0; }
@@ -53,8 +53,8 @@ protected:
 	int   m_prev_size;
 
 	// CHAR
-	char  m_name[MAX_ID_LEN + 1];
-	char  m_packet_buf[MAX_PACKET_SIZE];
+	char  m_name[MAX_ID_LEN + 1]{"",};
+	char  m_packet_buf[MAX_PACKET_SIZE]{};
 	int	  m_iclinet_time;
 
 	// 구조체
@@ -63,6 +63,5 @@ protected:
 	_tSector m_tSector;
 	mutex m_lock;
 	EXOVER m_Exover;
-
 };
 
