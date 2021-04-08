@@ -172,7 +172,49 @@ PS_STD3D_OUTPUT PS_Std3D(VS_STD3D_OUTPUT _in)
     return output;
 }
 
+// =============================
+// Texture Shader
+// g_tex_0 : Output Texture
+// AlphaBlend = true;
+// =============================
+struct TEX_INPUT
+{
+    float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
+};
 
+struct TEX_OUTPUT
+{
+    float4 vOutPos : SV_Position;
+    float2 vUV : TEXCOORD;
+};
+
+TEX_OUTPUT VS_Tex(TEX_INPUT _input)
+{
+    TEX_OUTPUT output = (TEX_OUTPUT)0;
+
+    // 투영좌표계를 반환할 때에는 float4 4번째 w 요소에 1.f 을 넣어준다.
+    float4 vWorldPos = mul(float4(_input.vPos, 1.f), g_matWorld);
+    float4 vViewPos = mul(vWorldPos, g_matView);
+    float4 vProjPos = mul(vViewPos, g_matProj);
+
+    output.vOutPos = vProjPos;
+    output.vUV = _input.vUV;
+
+    return output;
+}
+
+float4 PS_Tex(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+    if (tex_0)
+        vColor = g_tex_0.Sample(g_sam_1, _input.vUV);
+    else
+        vColor = float4(1.f, 0.f, 1.f, 1.f);
+
+    return vColor;
+}
 // =============
 // Skybox Shader
 // mesh         : sphere

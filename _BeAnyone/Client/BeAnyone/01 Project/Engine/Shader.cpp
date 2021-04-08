@@ -18,6 +18,7 @@ CShader::CShader()
 	, m_eBlendType(BLEND_TYPE::DEFAULT)
 	, m_eDSType(DEPTH_STENCIL_TYPE::LESS)
 	, m_tPipeline {}
+	, m_tCSStateDesc{}
 {
 }
 
@@ -107,6 +108,11 @@ void CShader::UpdateData()
 {
 	CMDLIST->SetPipelineState(m_pPipelineState.Get());
 	CMDLIST->IASetPrimitiveTopology(m_eTopology);
+}
+
+void CShader::UpdateData_CS()
+{
+	CMDLIST_CS->SetPipelineState(m_pPilelineState_CS.Get());
 }
 
 void CShader::Create(SHADER_POV _ePOV, D3D_PRIMITIVE_TOPOLOGY _eTopology)

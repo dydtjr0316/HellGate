@@ -102,6 +102,46 @@ void CMaterial::UpdateData()
 	m_pShader->UpdateData();
 }
 
+void CMaterial::UpdateData_CS()
+{
+	// CS 용 Dummy 클리어
+	CDevice::GetInst()->ClearDymmyDescriptorHeap_CS();
+
+	// Texture Register Update
+	UINT iOffsetPos = (UINT)TEXTURE_REGISTER::t0;
+
+	for (UINT i = 0; i < (UINT)SHADER_PARAM::TEX_END - (UINT)SHADER_PARAM::TEX_0; ++i)
+	{
+		if (nullptr != m_arrTex[i])
+		{
+			CDevice::GetInst()->SetTextureToRegister_CS(m_arrTex[i].GetPointer(), TEXTURE_REGISTER(i + iOffsetPos));
+			m_tParam.m_iArrTex[i] = 1;
+		}
+		else
+		{
+			m_tParam.m_iArrTex[i] = 0;
+		}
+	}
+
+	static CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b1);
+	CDevice::GetInst()->SetConstBufferToRegister_CS(pCB, pCB->AddData(&m_tParam));
+
+	m_pShader->UpdateData_CS();
+}
+
+void CMaterial::Dispatch(UINT _x, UINT _y, UINT _z)
+{
+	// 리소스를 Compute DescHeap 에 전달
+	UpdateData_CS();
+
+	// Compute Descriptor heap update 하기
+	CDevice::GetInst()->UpdateTable_CS();
+
+	CMDLIST_CS->Dispatch(_x, _y, _z);
+
+	CDevice::GetInst()->ExcuteComputeShader();
+}
+
 void CMaterial::Load(const wstring& _strFullPath)
 {
 	FILE* pFile = nullptr;

@@ -50,7 +50,7 @@ public:
 	void SetRasterizerType(RS_TYPE _eType) { m_eRSType = _eType; }
 
 	void UpdateData();
-	// void UpdateData_CS();
+	void UpdateData_CS();
 	void AddShaderParam(const tShaderParam& _param) { m_vecShaderPamam.push_back(_param); }
 
 	SHADER_POV GetShaderPOV() { return m_ePOV; }

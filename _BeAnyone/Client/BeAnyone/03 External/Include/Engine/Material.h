@@ -20,6 +20,8 @@ public:
 	void SetData(SHADER_PARAM _eParam, void* _pData);
 	void DisableFileSave() { m_bFileSave = false; };
 	void UpdateData();
+	void UpdateData_CS();
+	void Dispatch(UINT _x, UINT _y, UINT _z);
 
 	virtual void Load(const wstring& _strFullPath);
 	virtual void Save(const wstring& _strPath);

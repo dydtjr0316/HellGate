@@ -556,22 +556,25 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"TestShader", pShader);
 
-	//// ==============
-	//// Texture Shader
-	//// ==============
-	//pShader = new CShader;
-	//pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Tex", "vs_5_0");
-	//pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Tex", "ps_5_0");
+	// ==============
+	// Texture Shader
+	// ==============
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Tex", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Tex", "ps_5_0");
 
-	//// BlendState 설정
-	//pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+	// BlendState 설정
+	// pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
-	//// Shader Parameter 알림
-	//pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+	// DSState
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
 
-	//pShader->Create();
+	// Shader Parameter 알림
+	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
 
-	//AddRes(L"TexShader", pShader);
+	pShader->Create(SHADER_POV::FORWARD);
+
+	AddRes(L"TexShader", pShader);
 
 	//// =================
 	//// Collider2D Shader
@@ -728,13 +731,13 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CShader>(L"TestShader"));
 	AddRes(L"TestMtrl", pMtrl);
 
-	/*pMtrl = new CMaterial;
+	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"TexShader"));
 	AddRes(L"TexMtrl", pMtrl);
 
 	int a = 0;
-	pMtrl = new CMaterial;
+	/*pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"Collider2DShader"));
 	pMtrl->SetData(SHADER_PARAM::INT_0, &a);

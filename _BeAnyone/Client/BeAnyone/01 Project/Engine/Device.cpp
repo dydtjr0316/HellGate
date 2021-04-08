@@ -463,6 +463,61 @@ void CDevice::SetTextureToRegister(CTexture* _pTex, TEXTURE_REGISTER _eRegisterN
 		, 1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
+void CDevice::SetConstBufferToRegister_CS(CConstantBuffer* _pCB, UINT _iOffset)
+{
+	UINT iDestRange = 1;
+	UINT iSrcRange = 1;
+
+	// 0번 슬롯이 상수버퍼 데이터
+	D3D12_CPU_DESCRIPTOR_HANDLE hDescHandle = m_pDummyDescriptorCompute->GetCPUDescriptorHandleForHeapStart();
+	hDescHandle.ptr += m_iCbvSrvUavDescriptorSize * (UINT)_pCB->GetRegisterNum();
+
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pCB->GetCBV()->GetCPUDescriptorHandleForHeapStart();
+	hSrcHandle.ptr += _iOffset * m_iCbvSrvUavDescriptorSize;
+
+	m_pDevice->CopyDescriptors(1, &hDescHandle, &iDestRange
+		, 1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+void CDevice::SetTextureToRegister_CS(CTexture* _pTex, TEXTURE_REGISTER _eRegister)
+{
+	UINT iDestRange = 1;
+	UINT iSrcRange = 1;
+
+	// 0번 슬롯이 상수버퍼 데이터
+	D3D12_CPU_DESCRIPTOR_HANDLE hDescHandle = m_pDummyDescriptorCompute->GetCPUDescriptorHandleForHeapStart();
+	hDescHandle.ptr += m_iCbvSrvUavDescriptorSize * (UINT)_eRegister;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pTex->GetSRV()->GetCPUDescriptorHandleForHeapStart();
+
+	m_pDevice->CopyDescriptors(1, &hDescHandle, &iDestRange
+		, 1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+void CDevice::SetUAVToRegister_CS(CTexture* _pTex, UAV_REGISTER _eRegister)
+{
+	UINT iDestRange = 1;
+	UINT iSrcRange = 1;
+
+	// 0번 슬롯이 상수버퍼 데이터
+	D3D12_CPU_DESCRIPTOR_HANDLE hDescHandle = m_pDummyDescriptorCompute->GetCPUDescriptorHandleForHeapStart();
+	hDescHandle.ptr += m_iCbvSrvUavDescriptorSize * (UINT)_eRegister;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pTex->GetUAV()->GetCPUDescriptorHandleForHeapStart();
+
+	m_pDevice->CopyDescriptors(1, &hDescHandle, &iDestRange
+		, 1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	// 리소스 상태 변경
+	if (_pTex->GetResState() == D3D12_RESOURCE_STATE_COMMON)
+	{
+		CMDLIST_CS->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(_pTex->GetTex2D().Get()
+			, D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_UNORDERED_ACCESS));
+
+		_pTex->SetResState(D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	}
+}
+
 void CDevice::UpdateTable()
 {
 	ID3D12DescriptorHeap* pDescriptor = m_vecDummyDescriptor[m_iCurDummyIdx].Get();
@@ -478,9 +533,37 @@ void CDevice::UpdateTable()
 	ClearDummyDescriptorHeap(m_iCurDummyIdx);
 }
 
+
+void CDevice::UpdateTable_CS()
+{
+	ID3D12DescriptorHeap* pDescriptor = m_pDummyDescriptorCompute.Get();
+	m_pCommandListCompute->SetDescriptorHeaps(1, &pDescriptor);
+
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuhandle = pDescriptor->GetGPUDescriptorHandleForHeapStart();
+	m_pCommandListCompute->SetComputeRootDescriptorTable(0, gpuhandle);
+}
+
+
 void CDevice::ClearDummyDescriptorHeap(UINT _iDummyIndex)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE hDescHandle = m_vecDummyDescriptor[_iDummyIndex]->GetCPUDescriptorHandleForHeapStart();
+	hDescHandle.ptr;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = m_pInitDescriptor->GetCPUDescriptorHandleForHeapStart();
+	hSrcHandle.ptr;
+
+	UINT iDestRange = (UINT)TEXTURE_REGISTER::END;
+	UINT iSrcRange = (UINT)TEXTURE_REGISTER::END;
+
+	m_pDevice->CopyDescriptors(1/*디스크립터 개수*/
+		, &hDescHandle, &iDestRange
+		, 1/*디스크립터 개수*/
+		, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+void CDevice::ClearDymmyDescriptorHeap_CS()
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE hDescHandle = m_pDummyDescriptorCompute->GetCPUDescriptorHandleForHeapStart();
 	hDescHandle.ptr;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = m_pInitDescriptor->GetCPUDescriptorHandleForHeapStart();
@@ -512,3 +595,21 @@ void CDevice::ExcuteResourceLoad()
 }
 
 
+void CDevice::ExcuteComputeShader()
+{
+	// 컴퓨트 쉐이더 명령 닫기
+	m_pCommandListCompute->Close();
+
+	// 커맨드 리스트 수행	
+	ID3D12CommandList* ppCommandLists[] = { m_pCommandListCompute.Get() };
+	m_pCommandQueueCompute->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+	FlushCommandQueue_CS();
+
+	// 다시 활성화
+	m_pCmdListAllocCompute->Reset();
+	m_pCommandListCompute->Reset(m_pCmdListAllocCompute.Get(), nullptr);
+
+	// 루트서명 등록
+	m_pCommandListCompute->SetComputeRootSignature(CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::COMPUTE).Get());
+}

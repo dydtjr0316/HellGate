@@ -70,11 +70,18 @@ void CSceneMgr::init()
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
 
+	// UAV 용 Texture 생성
+	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024
+		, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
+		, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+
 	Ptr<CMaterial> pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
 	pPM->SetData(SHADER_PARAM::TEX_3, pSky01.GetPointer());
 
 	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
 	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
+
+
 
 	// ===============
 	// Test Scene 생성
@@ -161,21 +168,21 @@ void CSceneMgr::init()
 	// ===================
 	// Player 오브젝트 생성
 	// ===================
-	pObject = new CGameObject;
-	pObject->SetName(L"Player Object");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-
-	// Transform 설정
-	pObject->Transform()->SetLocalPos(Vector3(0.f, 200.f, 1000.f));
-	pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
-	//pObject->Transform()->SetLocalRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-
-	// MeshRender 설정
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
+	//pObject = new CGameObject;
+	//pObject->SetName(L"Player Object");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//
+	//// Transform 설정
+	//pObject->Transform()->SetLocalPos(Vector3(0.f, 200.f, 1000.f));
+	//pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
+	////pObject->Transform()->SetLocalRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	//
+	//// MeshRender 설정
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
 
 	// Script 설정
 	//pObject->AddComponent(new CPlayerScript);
@@ -185,7 +192,7 @@ void CSceneMgr::init()
 
 
 	// ====================
-	// Monster 오브젝트 생성
+	// Monster1 오브젝트 생성
 	// ====================
 	pObject = new CGameObject;
 	pObject->SetName(L"Monster Object");
@@ -201,6 +208,30 @@ void CSceneMgr::init()
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
+
+	// Script 설정
+	// pObject->AddComponent(new CMonsterScript);
+
+	// AddGameObject
+	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
+
+	// ====================
+	// Monster2 오브젝트 생성(comput shader test)
+	// ====================
+	pObject = new CGameObject;
+	pObject->SetName(L"Monster Object");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+
+	// Transform 설정
+	pObject->Transform()->SetLocalPos(Vector3(500.f, 200.f, 500.f));
+	pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 1.f));
+
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTestUAVTexture.GetPointer());
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pNormalTargetTex.GetPointer());	
 
 	// Script 설정
 	// pObject->AddComponent(new CMonsterScript);
@@ -249,6 +280,18 @@ void CSceneMgr::init()
 
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
+	// ====================
+	// Compute Shader Test
+	// ====================
+	int i = 1;
+
+	Ptr<CMaterial> pCSMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"CSTestMtrl");
+	pCSMtrl->SetData(SHADER_PARAM::INT_0, &i);
+	CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
+
+	pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
+
 	
 
 	m_pCurScene->awake();

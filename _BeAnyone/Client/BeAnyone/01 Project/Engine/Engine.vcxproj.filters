@@ -317,6 +317,9 @@
     <FxCompile Include="light.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="compute.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

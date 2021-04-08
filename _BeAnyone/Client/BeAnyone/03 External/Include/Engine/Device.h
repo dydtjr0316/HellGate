@@ -80,8 +80,15 @@ public:
 	void SetTextureToRegister(CTexture* _pTex, TEXTURE_REGISTER _eRegister);
 	void ClearDummyDescriptorHeap(UINT _iDummyIndex);
 
+	void SetConstBufferToRegister_CS(CConstantBuffer* _pCB, UINT _iOffset);
+	void SetTextureToRegister_CS(CTexture* _pTex, TEXTURE_REGISTER _eRegister);
+	void SetUAVToRegister_CS(CTexture* _pTex, UAV_REGISTER _eRegister);
+	void ClearDymmyDescriptorHeap_CS();
+
 	void UpdateTable();
+	void UpdateTable_CS();
 	void ExcuteResourceLoad();
+	void ExcuteComputeShader();
 
 private:
 	void CreateCommandObjects();	// Command
