@@ -257,9 +257,47 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		Vec3 packetpos(p->x, p->y, 1000.f);
 
-		g_Object[g_myid]->Transform()->SetLocalPos(packetpos);
+		cout << "ok id -> " << p->id << endl;
+
+		Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
+		// ===================
+		// Player 오브젝트 생성
+		// ===================
+		CGameObject* pObject = new CGameObject;
+		// ===================
+	// Player 오브젝트 생성
+	// ===================
+		pObject = new CPlayer;
+		pObject->SetName(L"Player Object");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
+		pObject->AddComponent(new CCollider2D);
+
+		// Transform 설정
+		pObject->Transform()->SetLocalPos(Vec3(p->x, p->y, p->z));
+		pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+
+		// MeshRender 설정
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
+
+		// Collider2D 설정	
+		pObject->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
+		pObject->Collider2D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
+
+		// Script 설정
+		pObject->AddComponent(new CPlayerScript);
+
+		// AddGameObject
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Player")->AddGameObject(pObject);
+
+		//g_Object[g_myid] = pObject;
+		g_Object.insert(make_pair(g_myid, pObject));
+
+		//g_Object[g_myid]->Transform()->SetLocalPos(packetpos);
 		
-		// 나머지 추가 컨텐츠 구현
+	
 		
 	}
 	break;
@@ -267,20 +305,20 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
-
+		Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
+		// ===================
+		// Player 오브젝트 생성
+		// ===================
+		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
-
+			
 		}
 		else
 		{
 			if (id < MAX_USER)
 			{
-				Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
-				// ===================
-				// Player 오브젝트 생성
-				// ===================
-				CGameObject* pObject = new CGameObject;
+				
 				pObject = new CPlayer;
 				pObject->SetName(L"Player Object");
 				pObject->AddComponent(new CTransform);
@@ -288,7 +326,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				pObject->AddComponent(new CCollider2D);
 
 				// Transform 설정
-				pObject->Transform()->SetLocalPos(Vec3(0.f, -200.f, 1000.f));
+				pObject->Transform()->SetLocalPos(Vec3(my_packet->x, my_packet->y, my_packet->z));
 				pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 
 				// MeshRender 설정
@@ -304,11 +342,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 				pObject->AddComponent(new CPlayerScript);
 
 				// AddGameObject
-				m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
+				//m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
+				CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Player")->AddGameObject(pObject);
 
-				//g_Object[g_myid] = pObject;
+				
 				g_Object.insert(make_pair(g_myid, pObject));
 				cout << "id -> "<< g_myid << endl;
+				cout << "g_Object size -> " << g_Object.size() << endl;
 			}
 		}
 	}

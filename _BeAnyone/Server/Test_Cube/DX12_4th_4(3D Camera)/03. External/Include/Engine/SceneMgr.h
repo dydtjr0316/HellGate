@@ -4,11 +4,12 @@ class CScene;
 class CCamera;
 class CGameObject;
 
-CScene* m_pCurScene;
+
 class CSceneMgr
 {
 	SINGLE(CSceneMgr);
 private:
+	CScene*		m_pCurScene;	
 
 public:
 	void init();
@@ -21,5 +22,6 @@ public:
 	void ChangeScene(CScene* _pNextScene);
 	void FindGameObjectByTag( const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 	//void FindGameObjectByPoint(POINT _point, vector<CGameObject*>& _vecFindObj, CCamera* _pToolCam = nullptr);
+	//static CScene* gGetCurScene() { return m_pCurScene; }
 };
 

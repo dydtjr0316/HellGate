@@ -112,36 +112,36 @@ void CSceneMgr::init()
 	   
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-	// ===================
-	// Player 오브젝트 생성
-	// ===================
-	pObject = new CPlayer;
-	pObject->SetName(L"Player Object");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	pObject->AddComponent(new CCollider2D);
+	//// ===================
+	//// Player 오브젝트 생성
+	//// ===================
+	//pObject = new CPlayer;
+	//pObject->SetName(L"Player Object");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//pObject->AddComponent(new CCollider2D);
 
-	// Transform 설정
-	pObject->Transform()->SetLocalPos(Vec3(0.f, -200.f, 1000.f));
-	pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+	//// Transform 설정
+	//pObject->Transform()->SetLocalPos(Vec3(0.f, -200.f, 1000.f));
+	//pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 
-	// MeshRender 설정
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
+	//// MeshRender 설정
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
 
-	// Collider2D 설정	
-	pObject->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
-	pObject->Collider2D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
+	//// Collider2D 설정	
+	//pObject->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
+	//pObject->Collider2D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
 
-	// Script 설정
-	pObject->AddComponent(new CPlayerScript);
-	
-	// AddGameObject
-	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
+	//// Script 설정
+	//pObject->AddComponent(new CPlayerScript);
+	//
+	//// AddGameObject
+	//m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 
-	//g_Object[g_myid] = pObject;
-	g_Object.insert(make_pair(g_myid, pObject));
+	////g_Object[g_myid] = pObject;
+	//g_Object.insert(make_pair(g_myid, pObject));
 
 
 	// ====================

@@ -8,7 +8,6 @@ extern CNetMgr g_netMgr;
 extern OBJLIST g_Object;
 extern int g_myid;
 extern int testpacket;
-extern CScene* m_pCurScene;
 
 
 // State Description
