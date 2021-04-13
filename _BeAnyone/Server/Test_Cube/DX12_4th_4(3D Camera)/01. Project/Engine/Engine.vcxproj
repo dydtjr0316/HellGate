@@ -72,30 +72,37 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <ReferencePath>$(VC_ReferencesPath_x86);</ReferencePath>
+    <ReferencePath>$(SolutionDir)03 External\Library\</ReferencePath>
     <IncludePath>$(SolutionDir)03. External\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)03. External\Library\;$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\03. External\Library\Engine</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)03. External\Library\Engine\</OutDir>
+    <OutDir>..\..\03. External\Library\Engine</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
-    <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
+    <ReferencePath>$(SolutionDir)03 External\Library\</ReferencePath>
     <IncludePath>$(SolutionDir)03. External\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)03. External\Library\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <ReferencePath>$(VC_ReferencesPath_x86);</ReferencePath>
+    <ReferencePath>$(SolutionDir)03 External\Library\</ReferencePath>
     <IncludePath>$(SolutionDir)03. External\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)03. External\Library\;$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\03. External\Library\Engine</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)03. External\Library\Engine\</OutDir>
-    <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
+    <OutDir>..\..\03. External\Library\Engine</OutDir>
+    <ReferencePath>$(SolutionDir)03 External\Library\</ReferencePath>
     <IncludePath>$(SolutionDir)03. External\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)03. External\Library\;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

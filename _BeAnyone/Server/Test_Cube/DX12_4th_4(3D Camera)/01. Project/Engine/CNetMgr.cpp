@@ -1,12 +1,42 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
+
+#include "Scene.h"
+
+#include "Layer.h"
+#include "GameObject.h"
+
 #include "Transform.h"
-#include "TimeMgr.h"
+#include "MeshRender.h"
+
+#include "Collider2D.h"
+#include "CollisionMgr.h"
+#include "PlayerScript.h"
+
+#include "CPlayer.h"
+
 const char ip[] = "127.0.0.1";
 
 CNetMgr g_netMgr;
 int testpacket;
 
+
+CNetMgr::CNetMgr()
+{
+	//// ===============
+	//	// Test Scene 생성
+	//	// ===============
+	//m_pCurScene = new CScene;
+	//m_pCurScene->SetName(L"Test Scene");
+
+	//// ===============
+	//// Layer 이름 지정
+	//// ===============
+	//m_pCurScene->GetLayer(0)->SetName(L"Default");
+	//m_pCurScene->GetLayer(1)->SetName(L"Player");
+	//m_pCurScene->GetLayer(2)->SetName(L"Monster");
+	//m_pCurScene->GetLayer(3)->SetName(L"Bullet");
+}
 void CNetMgr::err_quit(const char* msg)
 {
 	LPVOID lpMsgBuf;
@@ -235,7 +265,52 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ENTER:
 	{
+		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
+		int id = my_packet->id;
 
+		if (id == g_myid)
+		{
+
+		}
+		else
+		{
+			if (id < MAX_USER)
+			{
+				Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
+				// ===================
+				// Player 오브젝트 생성
+				// ===================
+				CGameObject* pObject = new CGameObject;
+				pObject = new CPlayer;
+				pObject->SetName(L"Player Object");
+				pObject->AddComponent(new CTransform);
+				pObject->AddComponent(new CMeshRender);
+				pObject->AddComponent(new CCollider2D);
+
+				// Transform 설정
+				pObject->Transform()->SetLocalPos(Vec3(0.f, -200.f, 1000.f));
+				pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+
+				// MeshRender 설정
+				pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+				pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+				pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
+
+				// Collider2D 설정	
+				pObject->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
+				pObject->Collider2D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
+
+				// Script 설정
+				pObject->AddComponent(new CPlayerScript);
+
+				// AddGameObject
+				m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
+
+				//g_Object[g_myid] = pObject;
+				g_Object.insert(make_pair(g_myid, pObject));
+				cout << "id -> "<< g_myid << endl;
+			}
+		}
 	}
 	break;
 	case SC_PACKET_MOVE:
@@ -307,5 +382,10 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 			io_byte = 0;
 		}
 	}
+}
+
+void CNetMgr::Enter_Player(const int& id)
+{
+
 }
 

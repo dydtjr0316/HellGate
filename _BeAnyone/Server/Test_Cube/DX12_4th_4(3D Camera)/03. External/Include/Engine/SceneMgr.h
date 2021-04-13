@@ -4,12 +4,11 @@ class CScene;
 class CCamera;
 class CGameObject;
 
-
+CScene* m_pCurScene;
 class CSceneMgr
 {
 	SINGLE(CSceneMgr);
 private:
-	CScene*		m_pCurScene;	
 
 public:
 	void init();

@@ -1,10 +1,10 @@
 #pragma once
-//typedef DirectX::SimpleMath::Vector3 Vec3;
+class CScene;
 
 class CNetMgr
 {
 public:
-	CNetMgr() {}
+	CNetMgr();
 	~CNetMgr() {}
 public:
 	void SetLoginPacket(sc_packet_login_ok* packet);
@@ -17,6 +17,8 @@ public:
 	void Recevie_ID_Data();
 	void ProcessPacket(char* ptr);
 	void Process_Data(char* net_buf, size_t& io_byte);
+
+	void Enter_Player(const int& id);
 	
 
 	void Send_Packet(void* _packet);
@@ -43,6 +45,8 @@ public:
 
 public:
 	void err_quit(const char* msg);
+private:
+	//CScene* m_pCurScene;
 private:
 	OVERLAPPED m_overlapped;
 	//Vec3 m_v3testPos;

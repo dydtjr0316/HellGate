@@ -8,6 +8,8 @@ extern CNetMgr g_netMgr;
 extern OBJLIST g_Object;
 extern int g_myid;
 extern int testpacket;
+extern CScene* m_pCurScene;
+
 
 // State Description
 extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];
