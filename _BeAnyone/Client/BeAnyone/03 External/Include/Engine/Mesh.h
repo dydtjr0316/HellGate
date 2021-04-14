@@ -24,7 +24,7 @@ private:
 	
 	UINT						m_iVtxSize;
 	UINT						m_iVtxCount;
-	void*						m_pVtxSysMem;
+	void*						m_pVtxSysMem; 
 
 	vector<tIndexInfo>			m_vecIdxInfo;
 

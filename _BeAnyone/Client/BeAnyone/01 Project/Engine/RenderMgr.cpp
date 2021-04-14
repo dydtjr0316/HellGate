@@ -45,26 +45,31 @@ void CRenderMgr::render()
 	// LightMRT 초기화
 	m_arrMRT[(UINT)MRT_TYPE::LIGHT]->Clear();
 
-	for (size_t i = 0; i < m_vecCam.size(); ++i)
+	// ==================================
+	// Main Camera 로 Deferred 렌더링 진행
+	// ==================================
+
+	m_vecCam[0]->SortGameObject();
+
+	// Deferred MRT 셋팅
+	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
+	m_vecCam[0]->render_deferred();
+	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->TargetToResBarrier();
+
+	// Render Light
+	render_lights();
+
+	// Merge (Diffuse Target, Diffuse Light Target, Specular Target )		
+	merge_light();
+
+	// SwapChain MRT 셋팅
+	//m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
+	m_vecCam[0]->render_forward();
+
+	for (size_t i = 1; i < m_vecCam.size(); ++i)
 	{
 		m_vecCam[i]->SortGameObject();
-
-		// Deferred MRT 셋팅
-		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
-		m_vecCam[i]->render_deferred();
-		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->TargetToResBarrier();
-
-		// Render Light
-		render_lights();
-
-		// Merge (Diffuse Target, Diffuse Light Target, Specular Target )		
-		merge_light();
-
-		// SwapChain MRT 셋팅
-		//m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
 		m_vecCam[i]->render_forward();
-
-	
 	}
 
 	// 출력

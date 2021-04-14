@@ -20,7 +20,7 @@ void CResMgr::CreateDefaultMesh()
 	VTX v;
 	// 1. 입력 조립기 단계에 전달할, 정점 3개로 구성된 삼각형 1개
 	v.vPos = Vector3(-0.5f, 0.5f, 0.f);
-	v.vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+	v.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 	v.vUV = Vector2(0.f, 0.f);
 	v.vNormal = Vector3(0.f, 0.f, -1.f);
 	v.vTangent = Vector3(1.f, 0.f, 0.f);
@@ -28,17 +28,17 @@ void CResMgr::CreateDefaultMesh()
 	vecVTX.push_back(v);
 
 	v.vPos = Vector3(0.5f, 0.5f, 0.f);
-	v.vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+	v.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 	v.vUV = Vector2(1.f, 0.f);
 	vecVTX.push_back(v);
 
 	v.vPos = Vector3(0.5f, -0.5f, 0.f);
-	v.vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+	v.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 	v.vUV = Vector2(1.f, 1.f);
 	vecVTX.push_back(v);
 
 	v.vPos = Vector3(-0.5f, -0.5f, 0.f);
-	v.vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+	v.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 	v.vUV = Vector2(0.f, 1.f);
 	vecVTX.push_back(v);
 

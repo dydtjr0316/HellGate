@@ -59,7 +59,16 @@ VS_OUTPUT VS_Test(VS_INPUT _input)
 // 정점에서 반환한 색상값을 타겟에 출력한다.
 float4 PS_Test(VS_OUTPUT _input) : SV_Target
 {
-    float4 vOutColor = g_tex_0.Sample(g_sam_0, _input.vUV);
+    float4 vOutColor;
+    if (tex_0) {
+        vOutColor = g_tex_0.Sample(g_sam_0, _input.vUV);
+    }
+    else {
+        vOutColor = _input.vOutColor;
+    }
+
+   // float4 vOutColor = _input.vOutColor;
+  //  float4 vOutColor = g_tex_0.Sample(g_sam_0, _input.vUV);
     float4 vNormal = g_tex_1.Sample(g_sam_0, _input.vUV);
     vNormal = vNormal * 2.f - 1.f; // 표면 좌표에서의 Normal
 
@@ -85,9 +94,9 @@ float4 PS_Test(VS_OUTPUT _input) : SV_Target
         tCol.vAmb += tTemp.vAmb;
     }
 
-    vOutColor = vOutColor * tCol.vDiff
-                 + tCol.vSpec
-                 + tCol.vAmb;
+   // vOutColor = vOutColor * tCol.vDiff
+   //              + tCol.vSpec
+   //              + tCol.vAmb;
 
     
     //return tCol.vDiff;

@@ -51,6 +51,120 @@ CSceneMgr::~CSceneMgr()
 	SAFE_DELETE(m_pCurScene);
 }
 
+void CSceneMgr::CreateTargetUI()
+{
+	//Vector3 vScale(150.f, 150.f, 1.f);
+	//
+	//Ptr<CTexture> arrTex[5] = { CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex")
+	//	, CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex")
+	//	, CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex")
+	//	, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseLightTargetTex")
+	//	, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularLightTargetTex") };
+	//
+	//for (UINT i = 0; i < 5; ++i)
+	//{
+	//	CGameObject* pObject = new CGameObject;
+	//	pObject->SetName(L"UI Object");
+	//	pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+	//	pObject->AddComponent(new CTransform);
+	//	pObject->AddComponent(new CMeshRender);
+	//
+	//	// Transform 설정
+	//	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	//
+	//	pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x)
+	//		, (res.fHeight / 2.f) - (vScale.y / 2.f)
+	//		, 1.f));
+	//
+	//	pObject->Transform()->SetLocalScale(vScale);
+	//
+	//	// MeshRender 설정
+	//	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+	//	pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+	//	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, arrTex[i].GetPointer());
+	//
+	//	// AddGameObject
+	//	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+	//}
+
+	Ptr<CTexture> UiTexture = CResMgr::GetInst()->FindRes<CTexture>(L"UiHug");
+
+	Vector3 vScale(350.f, 10.f, 1.f);
+
+	for (int i = 0; i < 4; ++i) {
+
+		CGameObject* pObject = new CGameObject;
+		pObject->SetName(L"UI Object");
+		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
+
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+		if (i == 0 || i == 1) {
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 50.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
+				, 1.f));
+		}
+		else if (i == 2 || i == 3) {
+			vScale = Vector3(400.f, 2.f, 1.f);
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 50.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
+				, 1.f));
+		}
+
+		pObject->Transform()->SetLocalScale(vScale);
+
+		// MeshRender 설정
+		Ptr<CMesh> hp = new CMesh;
+		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+
+
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+
+		// AddGameObject
+		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+	}
+
+	vScale = Vector3(30.f, 30.f, 1.f);
+
+	for (int i = 0; i < 1; ++i) {
+
+		CGameObject* pObject = new CGameObject;
+		pObject->SetName(L"UI Object");
+		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
+
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+		
+		pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 10.f
+			, (res.fHeight / 2.f) - (vScale.y / 2.f) - 10.f
+			, 1.f));
+	
+
+		pObject->Transform()->SetLocalScale(vScale);
+
+		// MeshRender 설정
+		Ptr<CMesh> hp = new CMesh;
+		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+
+
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, UiTexture.GetPointer());
+
+		// AddGameObject
+		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+	}
+
+}
+
 void CSceneMgr::init()
 {
 	// =================
@@ -62,6 +176,9 @@ void CSceneMgr::init()
 	Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
 	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky01.png");
 	Ptr<CTexture> pSky02 = CResMgr::GetInst()->Load<CTexture>(L"Sky02", L"Texture\\Skybox\\Sky02.jpg");
+
+	// UI
+	Ptr<CTexture> pUiHug = CResMgr::GetInst()->Load<CTexture>(L"UiHug", L"Texture\\hug.png");
 
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pNormal = CResMgr::GetInst()->Load<CTexture>(L"Tile_n", L"Texture\\Tile\\TILE_03_N.tga");
@@ -95,6 +212,7 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(0)->SetName(L"Default");
 	m_pCurScene->GetLayer(1)->SetName(L"Player");
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
+	m_pCurScene->GetLayer(30)->SetName(L"UI");
 
 	CGameObject* pObject = nullptr;
 
@@ -142,6 +260,21 @@ void CSceneMgr::init()
 	camScript->SetPlayer(pObject);
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);
+
+	// UI Camera
+	CGameObject* pUICam = new CGameObject;
+	pUICam->SetName(L"MainCam");
+	pUICam->AddComponent(new CTransform);
+	pUICam->AddComponent(new CCamera);
+
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHGRAPHIC);
+	pUICam->Camera()->SetFar(100.f);
+	pUICam->Camera()->SetLayerCheck(30, true);
+
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pUICam);
+
+
+	CreateTargetUI();
 
 	
 
