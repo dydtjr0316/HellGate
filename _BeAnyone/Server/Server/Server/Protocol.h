@@ -32,11 +32,11 @@ constexpr int START_NPC = END_MONSTER;
 constexpr int MAX_NPC = 2000;
 constexpr int END_NPC = START_NPC + MAX_NPC;
 
-constexpr int VIEW_LIMIT = 7;				// 시야 반지름
+constexpr int VIEW_LIMIT = 1000;				// 시야 반지름
 
 // 화면 // 추후 수정
-constexpr int WORLD_WIDTH = 800;
-constexpr int WORLD_HEIGHT = 800;
+constexpr int WORLD_WIDTH = 100000;
+constexpr int WORLD_HEIGHT = 100000;
 
 constexpr int SECTOR_COL = 20;
 constexpr int SECTOR_ROW = 20;

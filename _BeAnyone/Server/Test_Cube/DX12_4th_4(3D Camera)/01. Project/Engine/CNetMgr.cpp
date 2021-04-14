@@ -312,7 +312,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
-			
+			g_Object.find(g_myid)->second->Transform()->SetLocalPos(Vec3(my_packet->x, my_packet->y, my_packet->z));
+			cout << "enter id(" << g_myid << ") packet=================" << endl;
 		}
 		else
 		{
@@ -345,9 +346,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 				//m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 				CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Player")->AddGameObject(pObject);
 
-				
-				g_Object.insert(make_pair(g_myid, pObject));
-				cout << "id -> "<< g_myid << endl;
+				g_Object.emplace(id, pObject);
+				cout << "packet enter in " << endl;
+				cout << "id -> "<< id << endl;
 				cout << "g_Object size -> " << g_Object.size() << endl;
 			}
 		}
@@ -359,12 +360,16 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int other_id = packet->id;
 		if (other_id == g_myid)
 		{
+			cout << "my move===>"<< other_id<<", "<<g_myid << endl;
 			Vec3 temp(packet->x + DT * 200.f, packet->y + DT * 200.f, packet->z + DT * 200.f);
-			g_Object[other_id]->Transform()->SetLocalPos(temp);
+			g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
 		}
 		else
 		{
 			//Ãß°¡
+			cout << "my move===>" << other_id << ", " << g_myid << endl;
+			if (0 != g_Object.count(other_id))
+				g_Object.find(other_id)->second->Transform()->SetLocalPos(Vec3(packet->x + DT * 200.f, packet->y + DT * 200.f, packet->z + DT * 200.f));
 		}
 	}
 	break;

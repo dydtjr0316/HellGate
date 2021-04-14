@@ -52,8 +52,8 @@ int main()
 
     cout << "Initializing" << endl;
     Netmgr.Init_Client();
-    Netmgr.Init_Monster();
-    Netmgr.Init_NPC();
+    //Netmgr.Init_Monster();
+    //Netmgr.Init_NPC();
     cout << "Initializing Finish" << endl;
 
     thread time_thread(&CNetMgr::Timer_Worker, &Netmgr);
