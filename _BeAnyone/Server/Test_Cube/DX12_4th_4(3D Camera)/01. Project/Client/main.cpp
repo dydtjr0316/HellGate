@@ -20,7 +20,6 @@
 #endif
 
 
-Vec3 t;
 
 SOCKET g_Socket;
 char name[10];

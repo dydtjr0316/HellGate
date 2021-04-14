@@ -148,6 +148,7 @@ void CNetMgr::Send_LoginOK_Packet(const int& user_id)
     p.level = pClient->GetLevel();
     p.x = pClient->GetX();
     p.y = pClient->GetY();
+    p.z = pClient->GetZ();
 
     p.iMax_exp = pClient->GetMaxEXP();
     p.Attack_Damage = pClient->GetAttackDamage();
@@ -163,6 +164,7 @@ void CNetMgr::Send_Enter_Packet( const int& user_id,  const int& other_id)
     p.type = SC_PACKET_ENTER;
     p.x = Find(other_id)->GetX();
     p.y = Find(other_id)->GetY();
+    p.z = Find(other_id)->GetZ();
 
     strcpy_s(p.name, Find(other_id)->GetName());    // data race???
     p.o_type = O_PLAYER;

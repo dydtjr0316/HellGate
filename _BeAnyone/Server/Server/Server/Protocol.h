@@ -108,6 +108,7 @@ struct sc_packet_move {
 	int id;
 	float x, y, z;
 	int move_time;
+	Vector3 dirVec;
 };
 
 struct sc_packet_enter {

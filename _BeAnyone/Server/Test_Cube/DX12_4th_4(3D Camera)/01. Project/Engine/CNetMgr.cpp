@@ -264,6 +264,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		// Player 오브젝트 생성
 		// ===================
 		CGameObject* pObject = new CGameObject;
+
+
 		// ===================
 	// Player 오브젝트 생성
 	// ===================

@@ -17,6 +17,7 @@ using namespace chrono;
 #include <mutex>
 #include <windows.h>  
 
+
 // stl
 #include <vector>
 #include <queue>
@@ -47,3 +48,9 @@ using namespace chrono;
 #include "struct.h"
 #include "Global.h" 
 #include "Template.h"
+#include "SimpleMath.h"
+
+using DirectX::SimpleMath::Vector2;
+using DirectX::SimpleMath::Vector3;
+using DirectX::SimpleMath::Vector4;
+using DirectX::SimpleMath::Matrix;
