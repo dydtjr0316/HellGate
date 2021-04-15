@@ -27,6 +27,9 @@
     <Filter Include="02CGameObject\03NPC">
       <UniqueIdentifier>{457ba210-0511-45e6-8e34-21f5b3534f8f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. SimpleMath">
+      <UniqueIdentifier>{af61c17b-0f05-4c3a-b1f0-5856f76fb4a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ServerMain.cpp">
@@ -49,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="CNetMgr.cpp">
       <Filter>00Main\00NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>03. SimpleMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,5 +94,13 @@
     <ClInclude Include="Template.h">
       <Filter>99Etc</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>03. SimpleMath</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl">
+      <Filter>03. SimpleMath</Filter>
+    </None>
   </ItemGroup>
 </Project>
