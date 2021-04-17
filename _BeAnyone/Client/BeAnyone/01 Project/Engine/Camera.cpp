@@ -130,7 +130,9 @@ void CCamera::render_forward()
 
 	for (size_t i = 0; i < m_vecForward.size(); ++i)
 	{
-		m_vecForward[i]->MeshRender()->render();
+		if (m_vecForward[i]->GetUiRenderCheck() == true) {
+			m_vecForward[i]->MeshRender()->render();
+		}
 
 		//if (m_vecForward[i]->Collider2D())
 		//	m_vecForward[i]->Collider2D()->render();

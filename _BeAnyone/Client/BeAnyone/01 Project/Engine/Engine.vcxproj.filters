@@ -52,6 +52,9 @@
     <Filter Include="Module">
       <UniqueIdentifier>{dd89d460-9ea1-45c3-bb52-b0b26ad902c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. GameObject\Script\UiScript">
+      <UniqueIdentifier>{a795a92d-7069-4c56-be6b-e295497593bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h">
@@ -184,6 +187,18 @@
     <ClInclude Include="GridScript.h">
       <Filter>04. GameObject\Script</Filter>
     </ClInclude>
+    <ClInclude Include="TemperUiScript.h">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClInclude>
+    <ClInclude Include="EnergeUiScript.h">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HpUiScript.h">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HugUiScript.h">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -299,6 +314,18 @@
     </ClCompile>
     <ClCompile Include="GridScript.cpp">
       <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="EnergeUiScript.cpp">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HpUiScript.cpp">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HugUiScript.cpp">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClCompile>
+    <ClCompile Include="TemperUiScript.cpp">
+      <Filter>04. GameObject\Script\UiScript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

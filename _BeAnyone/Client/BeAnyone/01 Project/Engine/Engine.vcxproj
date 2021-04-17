@@ -26,6 +26,7 @@
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="Device.h" />
+    <ClInclude Include="EnergeUiScript.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EventMgr.h" />
     <ClInclude Include="extern.h" />
@@ -36,6 +37,8 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="GridScript.h" />
+    <ClInclude Include="HpUiScript.h" />
+    <ClInclude Include="HugUiScript.h" />
     <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Light.h" />
@@ -59,6 +62,7 @@
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TemperUiScript.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="ToolCamScript.h" />
@@ -71,6 +75,7 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="desc.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="EnergeUiScript.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EventMgr.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
@@ -78,6 +83,8 @@
     <ClCompile Include="func.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GridScript.cpp" />
+    <ClCompile Include="HpUiScript.cpp" />
+    <ClCompile Include="HugUiScript.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -101,6 +108,7 @@
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="TemperUiScript.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="ToolCamScript.cpp" />

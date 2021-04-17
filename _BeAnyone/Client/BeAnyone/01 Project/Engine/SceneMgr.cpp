@@ -30,6 +30,8 @@
 #include "ToolCamScript.h"
 #include "GridScript.h"
 
+#include "TemperUiScript.h"
+
 CScene* CSceneMgr::GetCurScene()
 {
 	return m_pCurScene;
@@ -88,7 +90,10 @@ void CSceneMgr::CreateTargetUI()
 	//	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	//}
 
-	Ptr<CTexture> UiTexture = CResMgr::GetInst()->FindRes<CTexture>(L"UiHug");
+	Ptr<CTexture> UiTexture[2] = { 
+		CResMgr::GetInst()->FindRes<CTexture>(L"UiHug"),
+		CResMgr::GetInst()->FindRes<CTexture>(L"UiTemper")
+	};
 
 	Vector3 vScale(350.f, 10.f, 1.f);
 
@@ -103,13 +108,16 @@ void CSceneMgr::CreateTargetUI()
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
 
 		if (i == 0 || i == 1) {
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 50.f
+			if (i == 1) {
+				vScale = Vector3(350.f, 20.f, 1.f);
+			}
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
 				, 1.f));
 		}
 		else if (i == 2 || i == 3) {
-			vScale = Vector3(400.f, 2.f, 1.f);
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 50.f
+			vScale = Vector3(360.f, 2.f, 1.f);
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
 				, 1.f));
 		}
@@ -129,20 +137,68 @@ void CSceneMgr::CreateTargetUI()
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
 
-	vScale = Vector3(30.f, 30.f, 1.f);
+	vector<CGameObject*> vUiObject;
 
-	for (int i = 0; i < 1; ++i) {
+	vScale = Vector3(350.f, 10.f, 1.f);
+
+	for (int i = 0; i < 4; ++i) {
+
+		CGameObject* pUiObject = new CGameObject;
+		pUiObject->SetName(L"UI Object");
+		pUiObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pUiObject->AddComponent(new CTransform);
+		pUiObject->AddComponent(new CMeshRender);
+
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+		if (i == 0 || i == 1) {
+			//if (i == 1) {
+			//	vScale = Vector3(350.f, 20.f, 1.f);
+			//}
+			pUiObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 600.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
+				, 1.f));
+		}
+		else if (i == 2 || i == 3) {
+			vScale = Vector3(360.f, 2.f, 1.f);
+			pUiObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 600.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
+				, 1.f));
+		}
+
+		pUiObject->Transform()->SetLocalScale(vScale);
+
+		// MeshRender 설정
+		Ptr<CMesh> hp = new CMesh;
+		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+
+
+		pUiObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pUiObject->MeshRender()->SetMaterial(pMtrl->Clone());
+		pUiObject->SetUiRenderCheck(false);
+
+		vUiObject.push_back(pUiObject);
+
+		// AddGameObject
+		m_pCurScene->FindLayer(L"UI")->AddGameObject(pUiObject);
+	}
+
+	vScale = Vector3(40.f, 40.f, 1.f);
+
+	for (int i = 0; i < 2; ++i) {
 
 		CGameObject* pObject = new CGameObject;
 		pObject->SetName(L"UI Object");
 		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CMeshRender);
+		pObject->AddComponent(new CTemperUiScript);
 
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
 
 		
-		pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 10.f
+		pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 10.f + (410 * i)
 			, (res.fHeight / 2.f) - (vScale.y / 2.f) - 10.f
 			, 1.f));
 	
@@ -157,8 +213,20 @@ void CSceneMgr::CreateTargetUI()
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
 		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
 		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
-		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, UiTexture.GetPointer());
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, UiTexture[i].GetPointer());
+		
 
+		CTemperUiScript* uiScript = pObject->GetScript<CTemperUiScript>();
+		uiScript->SetObject(pObject);
+
+		if (i == 0) {
+			uiScript->SetTempBar(vUiObject[0]);
+			uiScript->SetUnderTempBar(vUiObject[2]);
+		}
+		else if (i == 1) {
+			uiScript->SetTempBar(vUiObject[1]);
+			uiScript->SetUnderTempBar(vUiObject[3]);
+		}
 		// AddGameObject
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
@@ -179,6 +247,7 @@ void CSceneMgr::init()
 
 	// UI
 	Ptr<CTexture> pUiHug = CResMgr::GetInst()->Load<CTexture>(L"UiHug", L"Texture\\hug.png");
+	Ptr<CTexture> pUiTemper = CResMgr::GetInst()->Load<CTexture>(L"UiTemper", L"Texture\\temper.png");
 
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pNormal = CResMgr::GetInst()->Load<CTexture>(L"Tile_n", L"Texture\\Tile\\TILE_03_N.tga");
