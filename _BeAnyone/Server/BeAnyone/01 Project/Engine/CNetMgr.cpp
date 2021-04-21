@@ -326,6 +326,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
 		Vector3 temp;
+		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
 			switch (packet->dir)
@@ -351,13 +352,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 			case MV_FRONT:
 			case MV_BACK:
 				cout << "╬у╣з" << endl;
-				temp = Vector3(g_Object.find(other_id)->second->Transform()->GetLocalPos().x,
-					g_Object.find(other_id)->second->Transform()->GetLocalPos().y, packet->z + DT * 200.f);
+				temp = Vector3(ObjTrans->GetLocalPos().x,
+					ObjTrans->GetLocalPos().y, packet->z + DT * 200.f * ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z);
 				break;
 			case MV_LEFT:
 			case MV_RIGHT:
-				temp = Vector3(packet->x + DT * 200.f, 
-					g_Object.find(other_id)->second->Transform()->GetLocalPos().y, g_Object.find(other_id)->second->Transform()->GetLocalPos().z);
+				temp = Vector3(packet->x + DT * 200.f* ObjTrans->GetWorldDir(DIR_TYPE::FRONT).x,
+					ObjTrans->GetLocalPos().y, ObjTrans->GetLocalPos().z);
 				cout << "аб©Л" << endl;
 				break;
 			default:
