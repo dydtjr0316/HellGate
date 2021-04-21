@@ -349,24 +349,31 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
     float x = pClient->GetX();
     float y = pClient->GetY();
     float z = pClient->GetZ();
+    cout << "세팅 전" << endl;
+    cout << x <<", "<< y << ", " << z << endl;
 
     _tSector oldSector = pClient->GetSector();
 
 
     switch (dir)
     {
-    case MV_UP: if (y > 0) y--; break;
-    case MV_DOWN: if (y < (WORLD_HEIGHT - 1)) y++; break;
-    case MV_LEFT: if (x > 0) x--; break;
-    case MV_RIGHT: if (x < (WORLD_WIDTH - 1)) x++; break;
-    case MV_FRONT: if (z < (WORLD_WIDTH - 1)) z++; break;
-    case MV_BACK: if (z > 0) z--; break;
-        
+    case MV_UP: if (y > 0) y -= MOVE_SPEED; break;
+    case MV_DOWN: if (y < (WORLD_HEIGHT - 1)) y += MOVE_SPEED; break;
+    case MV_LEFT: if (x > 0) x -= MOVE_SPEED; break;
+    case MV_RIGHT: if (x < (WORLD_WIDTH - 1)) x += MOVE_SPEED; break;
+    case MV_FRONT: if (z < (WORLD_WIDTH - 1)) z += MOVE_SPEED; break;
+    case MV_BACK: if (z > 0) z -= MOVE_SPEED; break;
+
     default:
         cout << "Unknown Direction from Client move packet!\n";
         DebugBreak();
         exit(-1);
     }
+    cout << "세팅 후====" << endl;
+
+    cout << x << ", " << y << ", " << z << endl;
+
+
 
     pClient->SetX(x);
     pClient->SetY(y);
@@ -753,9 +760,12 @@ void CNetMgr::Worker_Thread()
                 pClient->SetSocket(c_socket);
 
                 ////////////////////////////////////////////////////////
-                pClient->SetX((float)(rand() % 20));
-                pClient->SetY((float)(rand() % 20));
-                pClient->SetZ(20.f);
+                float x = static_cast<float>((rand() % 20));
+                float y = static_cast<float>((rand() % 20));
+                cout << x << ", " << y << endl;
+                pClient->SetX(0.f);
+                pClient->SetY(0.f);
+                pClient->SetZ(0.f);
                 ////////////////////////////////////////////////////////
                 
                 pClient->SetFirstXY(pClient->GetX(), pClient->GetY());

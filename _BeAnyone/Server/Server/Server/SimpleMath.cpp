@@ -1,4 +1,5 @@
-#include "pch.h"
+#include "stdafx.h"
+//#include "../../../Client/BeAnyone/01 Project/Engine/pch.h"
 //-------------------------------------------------------------------------------------
 // SimpleMath.cpp -- Simplified C++ Math wrapper for DirectXMath
 //
@@ -9,6 +10,7 @@
 // http://go.microsoft.com/fwlink/?LinkID=615561
 //-------------------------------------------------------------------------------------
 #include "global.h"
+
 #include "SimpleMath.h"
 
 /****************************************************************************

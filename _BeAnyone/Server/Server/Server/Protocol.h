@@ -2,7 +2,7 @@
 #pragma once
 
 // 섹터 디파인 값
-
+constexpr float MOVE_SPEED = 5.f;
 
 // 추후  수정
 constexpr int NAME_LEN = 50;
@@ -108,7 +108,7 @@ struct sc_packet_move {
 	int id;
 	float x, y, z;
 	int move_time;
-	Vector3 dirVec;
+	//Vector3 dirVec;
 };
 
 struct sc_packet_enter {

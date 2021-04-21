@@ -48,6 +48,7 @@ using namespace chrono;
 #include "struct.h"
 #include "Global.h" 
 #include "Template.h"
+#include <d3d12.h>
 #include "SimpleMath.h"
 
 using DirectX::SimpleMath::Vector2;

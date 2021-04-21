@@ -13,6 +13,7 @@
 #error include d3d11.h or d3d12.h before including SimpleMath.h
 #endif
 
+
 #if !defined(_XBOX_ONE) || !defined(_TITLE)
 #include <dxgi1_2.h>
 #endif

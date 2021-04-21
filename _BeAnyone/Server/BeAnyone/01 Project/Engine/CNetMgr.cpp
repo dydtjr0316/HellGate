@@ -345,8 +345,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (other_id == g_myid)
 		{
 			cout << "my move===>" << other_id << ", " << g_myid << endl;
-			Vector3 temp(packet->x + DT * 200.f, packet->y + DT * 200.f, packet->z + DT * 200.f);
+			Vector3 temp(0.f,0.f, packet->z + DT * 200.f);
 			g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
+
+			cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
+			cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
+			cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+			cout << endl;
+
 		}
 		else
 		{
