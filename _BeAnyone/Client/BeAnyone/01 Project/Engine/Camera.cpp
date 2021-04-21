@@ -115,7 +115,9 @@ void CCamera::render_deferred()
 
 	for (size_t i = 0; i < m_vecDeferred.size(); ++i)
 	{
-		m_vecDeferred[i]->MeshRender()->render();
+		if (m_vecDeferred[i]->GetUiRenderCheck() == true) {
+			m_vecDeferred[i]->MeshRender()->render();
+		}
 	}
 }
 

@@ -55,6 +55,9 @@
     <Filter Include="05. NetMgr">
       <UniqueIdentifier>{232ad2e1-f9b0-4098-beb6-87f280c4fe7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. GameObject\Script\UiScript">
+      <UniqueIdentifier>{c8d6c2a2-4916-4c69-a775-f93116344c33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h">
@@ -190,6 +193,18 @@
     <ClInclude Include="CNetMgr.h">
       <Filter>05. NetMgr</Filter>
     </ClInclude>
+    <ClInclude Include="EnergeUiScript.h">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HpUiScript.h">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HugUiScript.h">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClInclude>
+    <ClInclude Include="TemperUiScript.h">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -308,6 +323,18 @@
     </ClCompile>
     <ClCompile Include="CNetMgr.cpp">
       <Filter>05. NetMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="EnergeUiScript.cpp">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HpUiScript.cpp">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HugUiScript.cpp">
+      <Filter>04. GameObject\Script\UiScript</Filter>
+    </ClCompile>
+    <ClCompile Include="TemperUiScript.cpp">
+      <Filter>04. GameObject\Script\UiScript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

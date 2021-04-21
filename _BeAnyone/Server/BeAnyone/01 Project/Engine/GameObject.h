@@ -26,7 +26,8 @@ private:
 	bool					m_bActive;
 	bool					m_bFrustumCheck;
 
-
+	// UI
+	bool					m_bUiRenderCheck = true;
 public:
 	void awake();
 	void start();
@@ -42,6 +43,10 @@ public:
 
 	void FrustumCheck(bool _bCheck) { m_bFrustumCheck = _bCheck; }
 	bool GetFrustumCheck() { return m_bFrustumCheck; }
+
+	// UI
+	void SetUiRenderCheck(bool _bCheck) { m_bUiRenderCheck = _bCheck; }
+	bool GetUiRenderCheck() { return m_bUiRenderCheck; }
 
 
 public:
