@@ -5,6 +5,7 @@
 #include "CPlayer.h"
 int main()
 {
+	//d f
 	CQuadTree* quadtree = new CQuadTree();
 	quadtree->insert(10, 10, quadtree->GetRoot());
 	quadtree->insert(500, 500, quadtree->GetRoot());
