@@ -53,6 +53,7 @@ constexpr char MV_LEFT = 2;
 constexpr char MV_RIGHT = 3;
 constexpr char MV_FRONT = 4;
 constexpr char MV_BACK = 5;
+constexpr char MV_IDLE = 6;
 
 // 패킷 이벤트 // 추후 수정
 constexpr char SC_PACKET_LOGIN_OK = 0;
@@ -108,6 +109,7 @@ struct sc_packet_move {
 	int id;
 	float x, y, z;
 	int move_time;
+	char dir = MV_IDLE;
 	//Vector3 dirVec;
 };
 

@@ -342,24 +342,93 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
+		Vector3 temp;
 		if (other_id == g_myid)
 		{
-			cout << "my move===>" << other_id << ", " << g_myid << endl;
-			Vector3 temp(0.f,0.f, packet->z + DT * 200.f);
-			g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
+			switch (packet->dir)
+			{
+			case MV_FRONT:
+				cout << "앞" << endl;
+				break;
+			case MV_BACK:
+				cout << "뒤" << endl;
+				break;
+			case MV_LEFT:
+				cout << "좌" << endl;
+				break;
+			case MV_RIGHT:
+				cout << "우" << endl;
+				break;
+			default:
+				cout << "디폴트?" << endl;
+				break;
+			}
+			switch (packet->dir)
+			{
+			case MV_FRONT:
+			case MV_BACK:
+				cout << "앞뒤" << endl;
+				temp = Vector3(g_Object.find(other_id)->second->Transform()->GetLocalPos().x,
+					g_Object.find(other_id)->second->Transform()->GetLocalPos().y, packet->z + DT * 200.f);
+				break;
+			case MV_LEFT:
+			case MV_RIGHT:
+				temp = Vector3(packet->x + DT * 200.f, 
+					g_Object.find(other_id)->second->Transform()->GetLocalPos().y, g_Object.find(other_id)->second->Transform()->GetLocalPos().z);
+				cout << "좌우" << endl;
+				break;
+			default:
+				cout << "디폴트?" << endl;
+				break;
+			}
 
-			cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
-			cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
-			cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-			cout << endl;
+			switch (packet->dir)
+			{
+			case MV_FRONT:
+				
+			case MV_BACK:
+				
+			case MV_LEFT:
+				
+			case MV_RIGHT:
+				cout << "my move===>" << other_id << ", " << g_myid << endl;
+				g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
 
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+				cout << endl;
+				break;
+			default:
+				cout << "디폴트?" << endl;
+				break;
+			}
+			
 		}
 		else
 		{
 			//추가
-			cout << "my move===>" << other_id << ", " << g_myid << endl;
 			if (0 != g_Object.count(other_id))
-				g_Object.find(other_id)->second->Transform()->SetLocalPos(Vector3(packet->x + DT * 200.f, packet->y + DT * 200.f, packet->z + DT * 200.f));
+			{
+				switch (packet->dir)
+				{
+				case MV_FRONT:
+				case MV_BACK:
+					temp = Vector3(0.f, 0.f, packet->z + DT * 200.f);
+					break;
+				case MV_LEFT:
+				case MV_RIGHT:
+					temp = Vector3(packet->x + DT * 200.f, 0.f, 0.f);
+					break;
+				}
+				cout << "other move===>" << other_id << ", " << g_myid << endl;
+				g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
+
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+				cout << endl;
+			}
 		}
 	}
 	break;

@@ -182,6 +182,22 @@ void CNetMgr::Send_Leave_Packet( const int& user_id, const int& other_id)
     Send_Packet(user_id, &p);
 }
 
+void CNetMgr::Send_Move_Packet(const int& user_id, const int& mover_id, const char& dir)
+{
+    sc_packet_move p;
+    p.id = mover_id;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_MOVE;
+    p.x = Find(mover_id)->GetX();
+    p.y = Find(mover_id)->GetY();
+    p.z = Find(mover_id)->GetZ();
+    p.dir = dir;
+
+    p.move_time = Find(mover_id)->GetClientTime();
+
+    Send_Packet(user_id, &p);
+}
+
 
 
 void CNetMgr::Send_Move_Packet( const int& user_id,  const int& mover_id)
@@ -339,11 +355,13 @@ void CNetMgr::Do_Attack(const int& user_id)
     /// <param name="user_id"></param>
 }
 
-void CNetMgr::Do_Move(const int& user_id, const int& dir)
+void CNetMgr::Do_Move(const int& user_id, const char& dir)
 {
     CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
 
     unordered_set<int> old_viewList = pClient->GetViewList();
+
+    
 
 
     float x = pClient->GetX();
@@ -383,7 +401,7 @@ void CNetMgr::Do_Move(const int& user_id, const int& dir)
 
     unordered_set<int> new_viewList;
 
-    Send_Move_Packet(user_id, user_id);
+    Send_Move_Packet(user_id, user_id, dir);
 
     vector<unordered_set<int>> vSectors = pClient->Search_Sector();
     
