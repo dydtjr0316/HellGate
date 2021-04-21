@@ -43,11 +43,6 @@ using namespace chrono;
 #pragma comment (lib, "odbc32.lib")*/
 
 // user
-#include "protocol.h"
-#include "enum.h"
-#include "struct.h"
-#include "Global.h" 
-#include "Template.h"
 #include <d3d12.h>
 #include "SimpleMath.h"
 
@@ -55,3 +50,12 @@ using DirectX::SimpleMath::Vector2;
 using DirectX::SimpleMath::Vector3;
 using DirectX::SimpleMath::Vector4;
 using DirectX::SimpleMath::Matrix;
+
+
+#include "protocol.h"
+#include "enum.h"
+#include "struct.h"
+#include "Global.h" 
+#include "Template.h"
+
+

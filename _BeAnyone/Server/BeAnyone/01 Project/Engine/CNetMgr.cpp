@@ -193,17 +193,30 @@ void CNetMgr::Recevie_Data()
 	EXOVER* dataBuf = new EXOVER{};
 	DWORD	 recvByte = 0;
 	DWORD	 flags = 0;
-
 	dataBuf->over = m_overlapped;
-	//cout << g_Socket << endl;
-	//cout << "over : " << m_overlapped.hEvent << endl;
-
-	//auto result = WSARecv(g_Socket, &(dataBuf->wsabuf), 1, &recvByte, &flags, &(dataBuf->over), NULL);
 	char recvbuf[100] = "";
 	int fg = 0;
 
 	int ret = recv(g_Socket, recvbuf, sizeof(recvbuf), fg);
+	if (ret <= 0)return;
+
 	size_t retbytesize = ret;
+	cout << "=====================================" << endl;
+
+	switch (recvbuf[1])
+	{
+	case SC_PACKET_LOGIN_OK:
+		cout << "SC_PACKET_LOGIN_OK" << endl;
+		break;
+	case SC_PACKET_MOVE:
+		cout << "SC_PACKET_MOVE" << endl;
+		break;
+	case SC_PACKET_ENTER:
+		cout << "SC_PACKET_ENTER" << endl;
+		break;
+	default:
+		break;
+	}
 
 	if (ret < 0)
 	{
@@ -218,37 +231,7 @@ void CNetMgr::Recevie_Data()
 	}
 }
 
-void CNetMgr::Recevie_ID_Data()
-{
 
-	EXOVER* dataBuf = new EXOVER{};
-	DWORD	 recvByte = 0;
-	DWORD	 flags = 0;
-
-	dataBuf->over = m_overlapped;
-	//cout << g_Socket << endl;
-	//cout << "over : " << m_overlapped.hEvent << endl;
-
-	//auto result = WSARecv(g_Socket, &(dataBuf->wsabuf), 1, &recvByte, &flags, &(dataBuf->over), NULL);
-	char recvbuf[100] = "";
-	int fg = 0;
-
-	int ret = recv(g_Socket, recvbuf, sizeof(recvbuf), fg);
-	size_t retbytesize = ret;
-
-	if (ret < 0)
-	{
-		if (WSAGetLastError() == WSAEWOULDBLOCK)
-		{
-			int i = 0;
-		}
-	}
-	else
-	{
-		if (recvbuf[1] == SC_PACKET_ID)
-			Process_Data(recvbuf, retbytesize);
-	}
-}
 
 void CNetMgr::ProcessPacket(char* ptr)
 {
@@ -360,7 +343,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				cout << "우" << endl;
 				break;
 			default:
-				cout << "디폴트?" << endl;
+				cout << "방향 디폴트?" << endl;
 				break;
 			}
 			switch (packet->dir)
@@ -378,7 +361,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				cout << "좌우" << endl;
 				break;
 			default:
-				cout << "디폴트?" << endl;
+				cout << "실제 움직임 디폴트?" << endl;
 				break;
 			}
 
@@ -400,7 +383,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 				cout << endl;
 				break;
 			default:
-				cout << "디폴트?" << endl;
+				cout << "출력 디폴트?" << endl;
+				cout << "--------------" << endl;
 				break;
 			}
 			
@@ -469,6 +453,8 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 	static size_t in_packet_size = 0;
 	static size_t saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF_SIZE];
+	cout << "Process_Data -> " << io_byte << endl;
+	cout << "=====================================" << endl;
 
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];

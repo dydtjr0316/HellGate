@@ -26,7 +26,7 @@ void CPlayerScript::update()
 	/*Vec3 vPos = Transform()->GetLocalPos();
 Vec3 vRot = Transform()->GetLocalRot();*/
 
-	if (KEY_HOLD(KEY_TYPE::KEY_W))
+	if (KEY_TAB(KEY_TYPE::KEY_W))
 	{
 		//vPos.z += DT * 200.f;
 		Vector3 vFront = -Transform()->GetWorldDir(DIR_TYPE::FRONT);

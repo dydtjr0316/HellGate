@@ -361,14 +361,13 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir)
 
     unordered_set<int> old_viewList = pClient->GetViewList();
 
-    
 
 
     float x = pClient->GetX();
     float y = pClient->GetY();
     float z = pClient->GetZ();
-    cout << "세팅 전" << endl;
-    cout << x <<", "<< y << ", " << z << endl;
+    //cout << "세팅 전" << endl;
+    //cout << x <<", "<< y << ", " << z << endl;
 
     _tSector oldSector = pClient->GetSector();
 
@@ -387,9 +386,9 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir)
         DebugBreak();
         exit(-1);
     }
-    cout << "세팅 후====" << endl;
+    //cout << "세팅 후====" << endl;
 
-    cout << x << ", " << y << ", " << z << endl;
+    //cout << x << ", " << y << ", " << z << endl;
 
 
 
@@ -445,7 +444,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir)
         {
             pClient->GetViewList().insert(ob);
             Send_Enter_Packet(user_id, ob);
-            if (IsClient(ob))
+            if (IsClient(ob)&&ob!=user_id)
             {
                 if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
                 {
@@ -453,12 +452,12 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir)
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
-                    Send_Move_Packet(ob, user_id);
+                    Send_Move_Packet(ob, user_id);  // 여기서 또 들어옴
             }
         }
         else // 이전에도 있던 아이디 
         {
-            if (IsClient(ob))
+            if (IsClient(ob) && ob != user_id)
             {
                 if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
                 {
