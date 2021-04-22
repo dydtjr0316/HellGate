@@ -186,6 +186,8 @@ struct cs_packet_move {
 	char  type;
 	char  direction;
 	int	  move_time;
+	Vector3 localVec;
+	Vector3 dirVec;
 };
 
 struct cs_packet_attack {
