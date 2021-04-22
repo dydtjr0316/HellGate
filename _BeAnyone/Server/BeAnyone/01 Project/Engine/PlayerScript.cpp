@@ -26,6 +26,8 @@ void CPlayerScript::update()
 	/*Vec3 vPos = Transform()->GetLocalPos();
 Vec3 vRot = Transform()->GetLocalRot();*/
 
+	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
+
 	if (KEY_TAB(KEY_TYPE::KEY_W))
 	{
 		//vPos.z += DT * 200.f;

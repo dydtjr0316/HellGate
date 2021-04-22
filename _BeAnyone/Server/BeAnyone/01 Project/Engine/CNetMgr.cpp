@@ -149,6 +149,18 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir)
 	Send_Packet(&m_packet);
 }
 
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector)
+{
+	cs_packet_move m_packet;
+	m_packet.type = CS_MOVE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.direction = dir;
+	m_packet.localVec = local;
+	m_packet.dirVec = dirVector;
+
+	Send_Packet(&m_packet);
+}
+
 void CNetMgr::Send_Attack_Packet()
 {
 	cs_packet_attack m_packet;
@@ -350,10 +362,25 @@ void CNetMgr::ProcessPacket(char* ptr)
 			switch (packet->dir)
 			{
 			case MV_FRONT:
+				cout << "앞뒤" << endl;
+				temp = ObjTrans->GetLocalPos() + (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT) * DT * 200.f);
+
+				temp.z += DT * 200.f;
+
+
+
+
+				temp = Vector3(ObjTrans->GetLocalPos().x,
+					ObjTrans->GetLocalPos().y, 
+					packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z * DT * 200.f));
+
+				break;
 			case MV_BACK:
 				cout << "앞뒤" << endl;
 				temp = Vector3(ObjTrans->GetLocalPos().x,
-					ObjTrans->GetLocalPos().y, packet->z + DT * 200.f * ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z);
+					ObjTrans->GetLocalPos().y, packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z*DT*200.f));
+
+				
 				break;
 			case MV_LEFT:
 			case MV_RIGHT:
