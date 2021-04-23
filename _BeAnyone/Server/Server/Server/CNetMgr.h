@@ -26,7 +26,8 @@ public:
 	void Random_Move_NPC(const int& id);
 	void Random_Move_Monster(const int& id);
 	void Do_Attack(const int& user_id);
-	void Do_Move(const int& user_id, const char& dir);
+	void Do_Move(const int& user_id, const char& dir);//아래꺼 완성하고 잘돌아가면 없애도 되는 코드 : 용석
+	void Do_Move(const int& user_id, const char& dir, Vector3& localVec, Vector3& dirVec);
 	void Disconnect(const int& user_id);
 	void Enter_Game(const int& user_id, char name[]);
 	void Process_Packet(const int& user_id, char* buf);

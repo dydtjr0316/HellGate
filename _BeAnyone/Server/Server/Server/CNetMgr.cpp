@@ -490,6 +490,139 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir)
 
 }
 
+void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Vector3& dirVec)
+{
+    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+
+    unordered_set<int> old_viewList = pClient->GetViewList();
+
+
+
+    float x = pClient->GetX();
+    float y = pClient->GetY();
+    float z = pClient->GetZ();
+    //cout << "세팅 전" << endl;
+    //cout << x <<", "<< y << ", " << z << endl;
+
+    _tSector oldSector = pClient->GetSector();
+
+
+    switch (dir)
+    {
+    case MV_UP: if (y > 0) y -= MOVE_SPEED; break;
+    case MV_DOWN: if (y < (WORLD_HEIGHT - 1)) y += MOVE_SPEED; break;
+    case MV_LEFT: if (x > 0) x -= MOVE_SPEED; break;
+    case MV_RIGHT: if (x < (WORLD_WIDTH - 1)) x += MOVE_SPEED; break;
+    case MV_FRONT: if (z < (WORLD_WIDTH - 1)) z += MOVE_SPEED; break;
+    case MV_BACK: if (z > 0) z -= MOVE_SPEED; break;
+
+    default:
+        cout << "Unknown Direction from Client move packet!\n";
+        DebugBreak();
+        exit(-1);
+    }
+    //cout << "세팅 후====" << endl;
+
+    //cout << x << ", " << y << ", " << z << endl;
+
+
+
+    pClient->SetX(x);
+    pClient->SetY(y);
+    pClient->SetZ(z);
+
+    pClient->Change_Sector(oldSector);
+
+    unordered_set<int> new_viewList;
+
+    Send_Move_Packet(user_id, user_id, dir);
+
+    vector<unordered_set<int>> vSectors = pClient->Search_Sector();
+
+    for (auto& vSec : vSectors)
+    {
+        if (vSec.size() != 0)
+        {
+            for (auto& user : vSec)
+            {
+                if (is_near(user_id, user))
+                {
+                    if (!IsClient(user))
+                    {
+                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                        {
+                            if (IsMonster(user))
+                                WakeUp_Monster(user);
+                            else
+                            {
+                                //cout << "do move 함수 호출" << endl;
+                                //cout << Find(user)->GetStatus() << endl;
+                                WakeUp_NPC(user);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //if (Find(user)->GetStatus() != ST_ACTIVE)continue;
+                    }
+                    new_viewList.insert(user);
+                }
+            }
+        }
+    }
+
+    for (auto& ob : new_viewList)
+    {
+        //시야에 새로 들어온 객체 구분
+
+        if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
+        {
+            pClient->GetViewList().insert(ob);
+            Send_Enter_Packet(user_id, ob);
+            if (IsClient(ob) && ob != user_id)
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Send_Enter_Packet(ob, user_id);
+                }
+                else
+                    Send_Move_Packet(ob, user_id);  // 여기서 또 들어옴
+            }
+        }
+        else // 이전에도 있던 아이디 
+        {
+            if (IsClient(ob) && ob != user_id)
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Send_Enter_Packet(ob, user_id);
+                }
+                else
+                    Send_Move_Packet(ob, user_id);
+            }
+        }
+    }
+    for (auto& ob : old_viewList)
+    {
+        if (new_viewList.count(ob) == 0)
+        {
+            pClient->GetViewList().erase(ob);
+            Send_Leave_Packet(user_id, ob);
+
+            if (IsClient(ob))
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) != 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().erase(user_id);
+                    Send_Leave_Packet(ob, user_id);
+                }
+            }
+        }
+    }
+}
+
 void CNetMgr::Disconnect(const int& user_id)
 {
     CGameObject* pUser = Find( user_id);
@@ -586,7 +719,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
         Find( user_id)->SetClientTime(packet->move_time);
-        Do_Move(user_id, packet->direction);
+        Do_Move(user_id, packet->direction, packet->localVec, packet->dirVec);
 
     }
                 break;

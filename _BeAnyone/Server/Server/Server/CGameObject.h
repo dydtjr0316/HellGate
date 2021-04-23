@@ -25,15 +25,13 @@ public: // 상속 ,, 함수
 
 	// set
 	void SetID(const int& id) { m_id = id; }
-	void SetX(const float& x) { m_iX = x; }
-	void SetY(const float& y) { m_iY = y; }
-	void SetZ(const float& z) { m_iZ = z; }
+	void SetX(const float& x) { m_iX = x; }	// 삭제 용석
+	void SetY(const float& y) { m_iY = y; } // 삭제 용석
+	void SetZ(const float& z) { m_iZ = z; } // 삭제 용석
 	void SetPos(const float& x, const float& y, const float& z) { m_iX = x; m_iY = y; m_iZ = z; }
 	void SetClientTime(const int& t) { m_iclinet_time = t; }
 	void SetPrev_Size(const int& size) { m_prev_size = size; }
-	//
 	void SetName(char* name) { strcpy_s(m_name, name); }
-	//
 	void SetStatus(const OBJSTATUS& status) { m_status = status; }
 	void SetSector(const int& x, const int& z) { m_tSector.x = x; m_tSector.z = z; }
 	void SetSector(const _tSector& tsec) { m_tSector = tsec; }
@@ -63,5 +61,8 @@ protected:
 	_tSector m_tSector;
 	mutex m_lock;
 	EXOVER m_Exover;
+
+	Vector3 m_v3LocalPosVector;
+	Vector3 m_v3DirVector;
 };
 

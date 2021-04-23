@@ -29,7 +29,7 @@ public:
 	void Send_Packet(void* _packet);
 
 	void Send_LogIN_Packet();
-	void Send_Move_Packet(unsigned const char& dir);// 아래꺼 완성하면 지워도됨
+	void Send_Move_Packet(unsigned const char& dir);// 아래꺼 완성하면 지워도됨 : 용석
 	void Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector);
 	void Send_Attack_Packet();
 
