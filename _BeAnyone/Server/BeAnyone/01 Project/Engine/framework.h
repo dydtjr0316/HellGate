@@ -13,9 +13,6 @@
 
 #include "global.h"
 
-//OBJLIST g_Object;
-//int g_myid;
-
 
 #include <iostream>
 using namespace std;

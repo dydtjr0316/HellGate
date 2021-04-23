@@ -1,8 +1,9 @@
 #pragma once
 #pragma once
 
+
 // 섹터 디파인 값
-constexpr float MOVE_SPEED = 5.f;
+constexpr float MOVE_SPEED = 5.f; // 이동패킷 구조변경 성공시 삭제
 
 // 추후  수정
 constexpr int NAME_LEN = 50;
@@ -34,8 +35,8 @@ constexpr int END_NPC = START_NPC + MAX_NPC;
 
 constexpr int VIEW_LIMIT = 1000;				// 시야 반지름
 
-// 화면 // 추후 수정
-constexpr int WORLD_WIDTH = 100000;
+// 화면 // 추후 수정 // float로 수정해야되는지 확인
+constexpr int WORLD_WIDTH = 100000;		
 constexpr int WORLD_HEIGHT = 100000;
 
 constexpr int SECTOR_COL = 20;
@@ -94,7 +95,8 @@ struct sc_packet_login_ok {
 	// id제거해도 되는데 일단 두고 나중에 최적화 할때 지우자
 	int  id;				
 	
-	float x, y, z;
+	//float x, y, z; 아래꺼 성공하면 삭제하는데 여기에 dirVector 필요한지 효림이한테 물어보기
+	Vector3 localVec;
 	int hp;
 	int level;
 	int   exp;
@@ -107,10 +109,11 @@ struct sc_packet_move {
 	char size;
 	char type;
 	int id;
-	float x, y, z;
+	//float x, y, z;	// 아래꺼 완성하면 삭제
 	int move_time;
 	char dir = MV_IDLE;
-	//Vector3 dirVec;
+	Vector3 localVec;
+	Vector3 dirVec;	//받아올땐 삭제해도되는가?
 };
 
 struct sc_packet_enter {
@@ -119,7 +122,8 @@ struct sc_packet_enter {
 	int  id;
 	char name[MAX_ID_LEN];
 	char o_type;
-	float x, y, z;
+	Vector3 localVec;
+	//float x, y, z; // 보고 삭제
 };
 
 struct sc_packet_leave {

@@ -255,9 +255,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		cout << "ok id -> " << p->id << endl;
 		
-		Vector3 a(p->x, p->y, p->z);
 		
-		m_pObj->Transform()->SetLocalPos(Vector3((p->x, p->y, p->z)));
+		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
 
 
 		g_Object.emplace(g_myid, m_pObj);
@@ -303,7 +302,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
-			g_Object.find(g_myid)->second->Transform()->SetLocalPos(Vector3(my_packet->x, my_packet->y, my_packet->z));
+			g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
 			cout << "enter id(" << g_myid << ") packet=================" << endl;
 		}
 		else
@@ -363,30 +362,27 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 			case MV_FRONT:
 				cout << "앞뒤" << endl;
-				temp = ObjTrans->GetLocalPos() + (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT) * DT * 200.f);
+				/*temp = ObjTrans->GetLocalPos() + (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT) * DT * 200.f);
 
 				temp.z += DT * 200.f;
-
-
-
-
 				temp = Vector3(ObjTrans->GetLocalPos().x,
 					ObjTrans->GetLocalPos().y, 
-					packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z * DT * 200.f));
-
+					packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z * DT * 200.f));*/
+				ObjTrans->SetLocalPos(packet->localVec);
 				break;
 			case MV_BACK:
-				cout << "앞뒤" << endl;
+				/*cout << "앞뒤" << endl;
 				temp = Vector3(ObjTrans->GetLocalPos().x,
-					ObjTrans->GetLocalPos().y, packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z*DT*200.f));
-
+					ObjTrans->GetLocalPos().y, packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z*DT*200.f));*/
+				ObjTrans->SetLocalPos(packet->localVec);
 				
 				break;
 			case MV_LEFT:
 			case MV_RIGHT:
-				temp = Vector3(packet->x + DT * 200.f* ObjTrans->GetWorldDir(DIR_TYPE::FRONT).x,
-					ObjTrans->GetLocalPos().y, ObjTrans->GetLocalPos().z);
 				cout << "좌우" << endl;
+			/*	temp = Vector3(packet->x + DT * 200.f* ObjTrans->GetWorldDir(DIR_TYPE::FRONT).x,
+					ObjTrans->GetLocalPos().y, ObjTrans->GetLocalPos().z);*/
+				ObjTrans->SetLocalPos(packet->localVec);
 				break;
 			default:
 				cout << "실제 움직임 디폴트?" << endl;
@@ -403,8 +399,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				
 			case MV_RIGHT:
 				cout << "my move===>" << other_id << ", " << g_myid << endl;
-				g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
-
+				
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
@@ -417,30 +412,30 @@ void CNetMgr::ProcessPacket(char* ptr)
 			}
 			
 		}
-		else
+		else // 여기 브로드캐스팅하려면 다시수정
 		{
-			//추가
-			if (0 != g_Object.count(other_id))
-			{
-				switch (packet->dir)
-				{
-				case MV_FRONT:
-				case MV_BACK:
-					temp = Vector3(0.f, 0.f, packet->z + DT * 200.f);
-					break;
-				case MV_LEFT:
-				case MV_RIGHT:
-					temp = Vector3(packet->x + DT * 200.f, 0.f, 0.f);
-					break;
-				}
-				cout << "other move===>" << other_id << ", " << g_myid << endl;
-				g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
+			////추가
+			//if (0 != g_Object.count(other_id))
+			//{
+			//	switch (packet->dir)
+			//	{
+			//	case MV_FRONT:
+			//	case MV_BACK:
+			//		temp = Vector3(0.f, 0.f, packet->z + DT * 200.f);
+			//		break;
+			//	case MV_LEFT:
+			//	case MV_RIGHT:
+			//		temp = Vector3(packet->x + DT * 200.f, 0.f, 0.f);
+			//		break;
+			//	}
+			//	cout << "other move===>" << other_id << ", " << g_myid << endl;
+			//	g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
 
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-				cout << endl;
-			}
+			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
+			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
+			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+			//	cout << endl;
+			//}
 		}
 	}
 	break;

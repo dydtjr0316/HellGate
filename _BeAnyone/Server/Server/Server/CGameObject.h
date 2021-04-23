@@ -7,9 +7,9 @@ public:
 public: // 상속 ,, 함수
 	// GET
 	const int& GetID() { return m_id; }
-	const float& GetX() { return m_iX; }
-	const float& GetY() { return m_iY; }
-	const float& GetZ() { return m_iZ; }
+	//const float& GetX() { return m_iX; }
+	//const float& GetY() { return m_iY; }
+	//const float& GetZ() { return m_iZ; }
 	const int& GetClientTime() { return m_iclinet_time; }
 	int Get_Prev_Size() { return m_prev_size; }
 	//
@@ -22,13 +22,29 @@ public: // 상속 ,, 함수
 	EXOVER& GetExover() { return m_Exover; }
 	void ZeroMemory_recv_over() { ZeroMemory(&m_Exover.over, sizeof(m_Exover.over)); }
 	char* Get_Packet_buf() { return m_packet_buf; }
+	Vector3& GetLocalPosVector() { return m_v3LocalPosVector; }
+	Vector3& GetDirVector() { return m_v3DirVector; }
+
 
 	// set
 	void SetID(const int& id) { m_id = id; }
-	void SetX(const float& x) { m_iX = x; }	// 삭제 용석
-	void SetY(const float& y) { m_iY = y; } // 삭제 용석
-	void SetZ(const float& z) { m_iZ = z; } // 삭제 용석
-	void SetPos(const float& x, const float& y, const float& z) { m_iX = x; m_iY = y; m_iZ = z; }
+	
+	void SetPosX(const float& x) {		m_v3LocalPosVector.x = x; }
+	void SetPosY(const float& y) {		m_v3LocalPosVector.y = y; }
+	void SetPosZ(const float& z) {		m_v3LocalPosVector.z = z; }
+	void SetPosV(const Vector3& pos) {	m_v3LocalPosVector = pos; }
+	void SetPosV(const float& x, const float& y, const float& z);
+
+	void SetDirX(const float& x) {		m_v3DirVector.x = x; }
+	void SetDirY(const float& y) {		m_v3DirVector.y = y; }
+	void SetDirZ(const float& z) {		m_v3DirVector.z = z; }
+	void SetDirV(const Vector3& dir) {	m_v3DirVector = dir; }
+	void SetDirV(const float& x, const float& y, const float& z);
+
+	//void SetX(const float& x) { m_iX = x; }	// 삭제 용석
+	//void SetY(const float& y) { m_iY = y; } // 삭제 용석
+	//void SetZ(const float& z) { m_iZ = z; } // 삭제 용석
+	//void SetPos(const float& x, const float& y, const float& z) { m_iX = x; m_iY = y; m_iZ = z; }
 	void SetClientTime(const int& t) { m_iclinet_time = t; }
 	void SetPrev_Size(const int& size) { m_prev_size = size; }
 	void SetName(char* name) { strcpy_s(m_name, name); }
@@ -47,7 +63,7 @@ public:
 protected:
 	// int
 	int		m_id;	// id
-	float		m_iX, m_iY, m_iZ; // 좌표
+	//float		m_iX, m_iY, m_iZ; // 좌표
 	int   m_prev_size;
 
 	// CHAR

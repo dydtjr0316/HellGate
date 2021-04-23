@@ -23,8 +23,8 @@ public:
 	void Send_Move_Packet(  const int& user_id,   const int& mover_id);
 	//
 public:
-	void Random_Move_NPC(const int& id);
-	void Random_Move_Monster(const int& id);
+	//void Random_Move_NPC(const int& id);
+	//void Random_Move_Monster(const int& id);
 	void Do_Attack(const int& user_id);
 	void Do_Move(const int& user_id, const char& dir);//아래꺼 완성하고 잘돌아가면 없애도 되는 코드 : 용석
 	void Do_Move(const int& user_id, const char& dir, Vector3& localVec, Vector3& dirVec);
