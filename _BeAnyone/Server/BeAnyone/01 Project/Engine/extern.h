@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "CNetMgr.h"
 
+using namespace std;
+
 typedef unordered_map<int, CGameObject*> OBJLIST;
 typedef OBJLIST::iterator OBJITER;
 

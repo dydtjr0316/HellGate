@@ -30,7 +30,11 @@
     <ClInclude Include="main.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="ServerHeader.h">
+=======
+    <ClInclude Include="SimpleMath.h">
+>>>>>>> 28ea19eafed0606209d4a387ff302cbc8329a72b
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -54,5 +58,13 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>헤더 파일</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>
