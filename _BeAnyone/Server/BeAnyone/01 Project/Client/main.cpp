@@ -6,6 +6,7 @@
 
 #include "Engine/global.h"
 #include "Engine/Core.h"
+#include "ServerHeader.h"
 
 
 #ifdef _DEBUG

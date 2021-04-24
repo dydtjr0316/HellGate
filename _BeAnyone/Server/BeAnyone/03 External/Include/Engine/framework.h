@@ -9,13 +9,9 @@
 // 여기서 프로그램에 필요한 추가 헤더를 참조합니다.
 #include <Windows.h>
 
-#include <d3d12.h>
-#include "SimpleMath.h"
-#include "define.h" // 매크로, enum
-#include "../Client/stdafx.h"
-
 #include "global.h"
 
 
+//////////////////
 #include <iostream>
 using namespace std;

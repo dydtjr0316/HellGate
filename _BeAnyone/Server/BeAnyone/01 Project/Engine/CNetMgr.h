@@ -1,6 +1,9 @@
 #pragma once
+#include "../Client/ServerHeader.h"
+
 class CScene;
 class CGameObject;
+
 class CNetMgr
 {
 public:
