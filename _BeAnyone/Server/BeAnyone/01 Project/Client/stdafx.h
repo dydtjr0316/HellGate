@@ -34,6 +34,13 @@ using namespace chrono;
 #include <memory.h>
 #include <tchar.h>
 
+#include<d3d12.h>
+#include "SimpleMath.h"
+using DirectX::SimpleMath::Vector2;
+using DirectX::SimpleMath::Vector3;
+using DirectX::SimpleMath::Vector4;
+using DirectX::SimpleMath::Matrix;
+
 #include "../../../../Server/Server/Server/Protocol.h"
 #include "../../../../Server/Server/Server/Enum.h"
 #include "../../../../Server/Server/Server/Struct.h"
