@@ -4,15 +4,18 @@
 #include "stdafx.h"
 #include "main.h"
 
-
 #include "Engine/global.h"
 #include "Engine/Core.h"
+#include "ServerHeader.h"
+
 
 #ifdef _DEBUG
 #pragma comment(lib, "Engine/Engine_debug.lib")
 #else
 #pragma comment(lib, "Engine/Engine.lib")
 #endif
+
+
 
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")

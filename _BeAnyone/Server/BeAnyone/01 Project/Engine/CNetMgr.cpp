@@ -149,6 +149,18 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir)
 	Send_Packet(&m_packet);
 }
 
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector)
+{
+	cs_packet_move m_packet;
+	m_packet.type = CS_MOVE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.direction = dir;
+	m_packet.localVec = local;
+	m_packet.dirVec = dirVector;
+
+	Send_Packet(&m_packet);
+}
+
 void CNetMgr::Send_Attack_Packet()
 {
 	cs_packet_attack m_packet;
@@ -193,17 +205,30 @@ void CNetMgr::Recevie_Data()
 	EXOVER* dataBuf = new EXOVER{};
 	DWORD	 recvByte = 0;
 	DWORD	 flags = 0;
-
 	dataBuf->over = m_overlapped;
-	//cout << g_Socket << endl;
-	//cout << "over : " << m_overlapped.hEvent << endl;
-
-	//auto result = WSARecv(g_Socket, &(dataBuf->wsabuf), 1, &recvByte, &flags, &(dataBuf->over), NULL);
 	char recvbuf[100] = "";
 	int fg = 0;
 
 	int ret = recv(g_Socket, recvbuf, sizeof(recvbuf), fg);
+	if (ret <= 0)return;
+
 	size_t retbytesize = ret;
+	cout << "=====================================" << endl;
+
+	switch (recvbuf[1])
+	{
+	case SC_PACKET_LOGIN_OK:
+		cout << "SC_PACKET_LOGIN_OK" << endl;
+		break;
+	case SC_PACKET_MOVE:
+		cout << "SC_PACKET_MOVE" << endl;
+		break;
+	case SC_PACKET_ENTER:
+		cout << "SC_PACKET_ENTER" << endl;
+		break;
+	default:
+		break;
+	}
 
 	if (ret < 0)
 	{
@@ -218,37 +243,7 @@ void CNetMgr::Recevie_Data()
 	}
 }
 
-void CNetMgr::Recevie_ID_Data()
-{
 
-	EXOVER* dataBuf = new EXOVER{};
-	DWORD	 recvByte = 0;
-	DWORD	 flags = 0;
-
-	dataBuf->over = m_overlapped;
-	//cout << g_Socket << endl;
-	//cout << "over : " << m_overlapped.hEvent << endl;
-
-	//auto result = WSARecv(g_Socket, &(dataBuf->wsabuf), 1, &recvByte, &flags, &(dataBuf->over), NULL);
-	char recvbuf[100] = "";
-	int fg = 0;
-
-	int ret = recv(g_Socket, recvbuf, sizeof(recvbuf), fg);
-	size_t retbytesize = ret;
-
-	if (ret < 0)
-	{
-		if (WSAGetLastError() == WSAEWOULDBLOCK)
-		{
-			int i = 0;
-		}
-	}
-	else
-	{
-		if (recvbuf[1] == SC_PACKET_ID)
-			Process_Data(recvbuf, retbytesize);
-	}
-}
 
 void CNetMgr::ProcessPacket(char* ptr)
 {
@@ -260,9 +255,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		cout << "ok id -> " << p->id << endl;
 		
-		Vector3 a(p->x, p->y, p->z);
 		
-		m_pObj->Transform()->SetLocalPos(Vector3((p->x, p->y, p->z)));
+		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
 
 
 		g_Object.emplace(g_myid, m_pObj);
@@ -308,7 +302,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
-			g_Object.find(g_myid)->second->Transform()->SetLocalPos(Vector3(my_packet->x, my_packet->y, my_packet->z));
+			g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
 			cout << "enter id(" << g_myid << ") packet=================" << endl;
 		}
 		else
@@ -343,6 +337,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
 		Vector3 temp;
+		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
 			switch (packet->dir)
@@ -360,25 +355,37 @@ void CNetMgr::ProcessPacket(char* ptr)
 				cout << "우" << endl;
 				break;
 			default:
-				cout << "디폴트?" << endl;
+				cout << "방향 디폴트?" << endl;
 				break;
 			}
 			switch (packet->dir)
 			{
 			case MV_FRONT:
-			case MV_BACK:
 				cout << "앞뒤" << endl;
-				temp = Vector3(g_Object.find(other_id)->second->Transform()->GetLocalPos().x,
-					g_Object.find(other_id)->second->Transform()->GetLocalPos().y, packet->z + DT * 200.f);
+				/*temp = ObjTrans->GetLocalPos() + (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT) * DT * 200.f);
+
+				temp.z += DT * 200.f;
+				temp = Vector3(ObjTrans->GetLocalPos().x,
+					ObjTrans->GetLocalPos().y, 
+					packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z * DT * 200.f));*/
+				ObjTrans->SetLocalPos(packet->localVec);
+				break;
+			case MV_BACK:
+				/*cout << "앞뒤" << endl;
+				temp = Vector3(ObjTrans->GetLocalPos().x,
+					ObjTrans->GetLocalPos().y, packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z*DT*200.f));*/
+				ObjTrans->SetLocalPos(packet->localVec);
+				
 				break;
 			case MV_LEFT:
 			case MV_RIGHT:
-				temp = Vector3(packet->x + DT * 200.f, 
-					g_Object.find(other_id)->second->Transform()->GetLocalPos().y, g_Object.find(other_id)->second->Transform()->GetLocalPos().z);
 				cout << "좌우" << endl;
+			/*	temp = Vector3(packet->x + DT * 200.f* ObjTrans->GetWorldDir(DIR_TYPE::FRONT).x,
+					ObjTrans->GetLocalPos().y, ObjTrans->GetLocalPos().z);*/
+				ObjTrans->SetLocalPos(packet->localVec);
 				break;
 			default:
-				cout << "디폴트?" << endl;
+				cout << "실제 움직임 디폴트?" << endl;
 				break;
 			}
 
@@ -392,43 +399,43 @@ void CNetMgr::ProcessPacket(char* ptr)
 				
 			case MV_RIGHT:
 				cout << "my move===>" << other_id << ", " << g_myid << endl;
-				g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
-
+				
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
 				cout << endl;
 				break;
 			default:
-				cout << "디폴트?" << endl;
+				cout << "출력 디폴트?" << endl;
+				cout << "--------------" << endl;
 				break;
 			}
 			
 		}
-		else
+		else // 여기 브로드캐스팅하려면 다시수정
 		{
-			//추가
-			if (0 != g_Object.count(other_id))
-			{
-				switch (packet->dir)
-				{
-				case MV_FRONT:
-				case MV_BACK:
-					temp = Vector3(0.f, 0.f, packet->z + DT * 200.f);
-					break;
-				case MV_LEFT:
-				case MV_RIGHT:
-					temp = Vector3(packet->x + DT * 200.f, 0.f, 0.f);
-					break;
-				}
-				cout << "other move===>" << other_id << ", " << g_myid << endl;
-				g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
+			////추가
+			//if (0 != g_Object.count(other_id))
+			//{
+			//	switch (packet->dir)
+			//	{
+			//	case MV_FRONT:
+			//	case MV_BACK:
+			//		temp = Vector3(0.f, 0.f, packet->z + DT * 200.f);
+			//		break;
+			//	case MV_LEFT:
+			//	case MV_RIGHT:
+			//		temp = Vector3(packet->x + DT * 200.f, 0.f, 0.f);
+			//		break;
+			//	}
+			//	cout << "other move===>" << other_id << ", " << g_myid << endl;
+			//	g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
 
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-				cout << endl;
-			}
+			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
+			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
+			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+			//	cout << endl;
+			//}
 		}
 	}
 	break;
@@ -469,6 +476,8 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 	static size_t in_packet_size = 0;
 	static size_t saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF_SIZE];
+	cout << "Process_Data -> " << io_byte << endl;
+	cout << "=====================================" << endl;
 
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];

@@ -2,7 +2,6 @@
 #pragma once
 
 
-
 // 섹터 디파인 값
 constexpr float MOVE_SPEED = 5.f; // 이동패킷 구조변경 성공시 삭제
 

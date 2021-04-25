@@ -1,5 +1,6 @@
 #pragma once
-#include "../Engine/GameObject.h"
+#include <unordered_map>
+#include "GameObject.h"
 #include "CNetMgr.h"
 
 typedef unordered_map<int, CGameObject*> OBJLIST;

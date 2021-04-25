@@ -10,3 +10,10 @@ bool CClient::Is_SameStatus(OBJSTATUS status)
     if (m_status == status)return true;
     else return false;
 }
+
+void CClient::SetFirstPos(const float& x, const float& y, const float& z)
+{
+    m_v3FirstPos.x = x;
+    m_v3FirstPos.y = y;
+    m_v3FirstPos.z = z;
+}
