@@ -35,7 +35,7 @@ void CToolCamScript::update()
 	//vPos.z = vPlayerPos.z - 400;
 
 	vPos = vPlayerPos + (vFront * fDistance);
-	vPos.y = 600;
+	vPos.y = vPlayerPos.y + 450;
 
  	if (KEY_HOLD(KEY_TYPE::KEY_UP))
 	{
