@@ -28,7 +28,7 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
 
-	if (KEY_TAB(KEY_TYPE::KEY_W))
+	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
 		g_netMgr.Send_Move_Packet(MV_FRONT, localPos, -Transform()->GetWorldDir(DIR_TYPE::FRONT)*200.f*DT);	
 		// 델타타임 따로 보낼껀지 결정

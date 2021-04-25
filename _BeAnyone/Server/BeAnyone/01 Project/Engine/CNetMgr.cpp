@@ -52,7 +52,10 @@ void CNetMgr::err_quit(const char* msg)
 	exit(1);
 }
 
-
+void CNetMgr::SetLoginPacket(sc_packet_login_ok* packet)
+{
+	m_loginPacket = packet;
+}
 
 void CNetMgr::Connect()
 {

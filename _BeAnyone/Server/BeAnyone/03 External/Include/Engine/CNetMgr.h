@@ -10,7 +10,8 @@ public:
 	CNetMgr();
 	~CNetMgr() {}
 public:
-	
+	void SetLoginPacket(sc_packet_login_ok* packet);
+	sc_packet_login_ok* GetLoginPacket() { return m_loginPacket; }
 
 public:
 	void SetObj(CGameObject* obj) {
@@ -61,6 +62,7 @@ private:
 
 	CGameObject* m_pObj;
 
+	sc_packet_login_ok* m_loginPacket;
 
 	float x;
 

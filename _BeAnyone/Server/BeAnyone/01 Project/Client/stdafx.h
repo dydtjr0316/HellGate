@@ -15,22 +15,6 @@
 #include <memory.h>
 #include <tchar.h>
 
-<<<<<<< HEAD
-=======
-#include<d3d12.h>
-#include "SimpleMath.h"
-using DirectX::SimpleMath::Vector2;
-using DirectX::SimpleMath::Vector3;
-using DirectX::SimpleMath::Vector4;
-using DirectX::SimpleMath::Matrix;
-
-#include "../../../../Server/Server/Server/Protocol.h"
-#include "../../../../Server/Server/Server/Enum.h"
-#include "../../../../Server/Server/Server/Struct.h"
-
-
-#include "Extern.h"
->>>>>>> 28ea19eafed0606209d4a387ff302cbc8329a72b
 //#include "../Engine/extern.h"
 
 // 여기서 프로그램에 필요한 추가 헤더를 참조합니다.

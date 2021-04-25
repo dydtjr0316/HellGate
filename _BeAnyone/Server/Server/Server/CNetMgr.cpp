@@ -942,14 +942,14 @@ void CNetMgr::Worker_Thread()
                 pClient->SetSocket(c_socket);
 
                 ////////////////////////////////////////////////////////
-                float x = static_cast<float>((rand() % 20));
-                float y = static_cast<float>((rand() % 20));
-                cout << x << ", " << y << endl;
+             
+                
                 pClient->SetPosV(
-                    (float)(rand() % WORLD_WIDTH), // 수정 real float
-                    (float)(rand() % WORLD_WIDTH),
-                    (float)(rand() % WORLD_WIDTH));
+                    (float)(rand() % 1000), // 수정 real float
+                    (float)(0.f),
+                    (float)(rand() % 1000));
 
+                cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
                 ////////////////////////////////////////////////////////
                 
                 pClient->SetFirstPos(pClient->GetLocalPosVector());
