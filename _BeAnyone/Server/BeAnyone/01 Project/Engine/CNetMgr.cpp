@@ -161,6 +161,17 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	Send_Packet(&m_packet);
 }
 
+void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, const Vector3& rotate)
+{
+	cs_packet_rotate packet;
+	packet.type = CS_ROTATE;
+	packet.size = sizeof(packet);
+	packet.dir = dir;
+	packet.dragVec = drag;
+	packet.rotateVec = rotate;
+	Send_Packet(&packet);
+}
+
 void CNetMgr::Send_Attack_Packet()
 {
 	cs_packet_attack m_packet;
@@ -437,6 +448,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//	cout << endl;
 			//}
 		}
+	}
+	break;
+	case SC_PACKET_ROTATE:
+	{
+
 	}
 	break;
 	case SC_PACKET_LEAVE:

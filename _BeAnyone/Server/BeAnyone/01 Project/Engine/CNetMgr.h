@@ -34,6 +34,7 @@ public:
 	void Send_LogIN_Packet();
 	void Send_Move_Packet(unsigned const char& dir);// 아래꺼 완성하면 지워도됨 : 용석
 	void Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector);
+	void Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, const Vector3& rotate);
 	void Send_Attack_Packet();
 
 	void testX(const float& x);

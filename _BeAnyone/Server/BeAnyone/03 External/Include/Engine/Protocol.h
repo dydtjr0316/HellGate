@@ -47,7 +47,7 @@ constexpr int SECTOR_ROW_Length = WORLD_HEIGHT/ SECTOR_ROW;
 
 #pragma pack (push, 1)
 
-// 방향키
+// 이동
 constexpr char MV_UP = 0;
 constexpr char MV_DOWN = 1;
 constexpr char MV_LEFT = 2;
@@ -55,6 +55,9 @@ constexpr char MV_RIGHT = 3;
 constexpr char MV_FRONT = 4;
 constexpr char MV_BACK = 5;
 constexpr char MV_IDLE = 6;
+
+// 회전	// 확장을 생각해서 넣어놓긴하는데 아니면 지우고 함수인자 안받으면됨
+constexpr char Rotate_LBTN = 0;
 
 // 패킷 이벤트 // 추후 수정
 constexpr char SC_PACKET_LOGIN_OK = 0;
@@ -67,6 +70,9 @@ constexpr char SC_PACKET_STAT_CHANGE = 6;
 constexpr char SC_PACKET_ATTACK = 7;
 constexpr char SC_PACKET_LEVEL_UP = 8;
 constexpr char SC_PACKET_ID = 9;
+constexpr char SC_PACKET_ROTATE = 10;
+
+
 
 
 constexpr char CS_LOGIN = 0;
@@ -75,7 +81,7 @@ constexpr char CS_ATTACK = 2;
 constexpr char CS_CHAT = 3;
 constexpr char CS_LOGOUT = 4;
 constexpr char CS_TELEORT = 5;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
-
+constexpr char CS_ROTATE = 6;
 constexpr unsigned char O_PLAYER = 0;
 constexpr unsigned char O_NPC = 1;
 
@@ -114,6 +120,16 @@ struct sc_packet_move {
 	char dir = MV_IDLE;
 	Vector3 localVec;
 	Vector3 dirVec;	//받아올땐 삭제해도되는가?
+};
+
+struct sc_packet_rotate {
+	char size;
+	char type;
+	int id;
+	int move_time;
+	char dir = MV_IDLE;
+	Vector3 dragVec;
+	Vector3 rotateVec;
 };
 
 struct sc_packet_enter {
@@ -193,6 +209,16 @@ struct cs_packet_move {
 	Vector3 localVec;
 	Vector3 dirVec;
 };
+
+struct cs_packet_rotate {
+	char  size;
+	char  type;
+	char  dir;
+	int	  move_time;
+	Vector2 dragVec;
+	Vector3 rotateVec;
+};
+
 
 struct cs_packet_attack {
 	char	size;
