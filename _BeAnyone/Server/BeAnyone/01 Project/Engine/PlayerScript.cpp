@@ -69,22 +69,22 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		// 싱글 프로젝트 회전
-		//Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-		//Vector3 vRot = Transform()->GetLocalRot();
-	
-		////vRot.x -= vDrag.y * DT * 3.f;
-		//vRot.y += vDrag.x * DT * 1.5f;
-
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+		Vector3 vRot = Transform()->GetLocalRot();
+	
+		vRot.x -= vDrag.y * DT * 3.f;
+		vRot.y += vDrag.x * DT * 1.5f;
+
+		/*Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = Transform()->GetLocalRot();
 
 		vRot.x -= vDrag.y * DT * 1.f;
 		vRot.y += vDrag.x * DT * 0.5f;
-		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot);
+		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot);*/
 		//g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot, DT);
 		
 
 		// 싱글 프로젝트 회전
-		//Transform()->SetLocalRot(vRot);
+		Transform()->SetLocalRot(vRot);
 	}
 }
