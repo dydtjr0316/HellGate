@@ -95,6 +95,7 @@ void CPlayerScript::update() {
 	vPos.y -= m_xmf3Velocity.y;
 
 	Transform()->SetLocalPos( vPos );
+	
 	OnPlayerUpdateCallback();
 
 	//Transform()->SetLocalRot( vRot );
@@ -105,13 +106,14 @@ void CPlayerScript::update() {
 void CPlayerScript::OnPlayerUpdateCallback()
 {
 	CTerrain* pTerrain = (CTerrain*)m_pTerrainObj;
-	XMFLOAT3 xmf3Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);/*pTerrain->GetScale();*/
+	Vec2 temp = pTerrain->GetScale();
+	XMFLOAT3 xmf3Scale = pTerrain->Transform()->GetLocalScale();
 	XMFLOAT3 xmf3PlayerPosition = Transform()->GetLocalPos();
 
 	int z = (int)(xmf3PlayerPosition.z / xmf3Scale.z);
 	bool bReverseQuad = ((z % 2) != 0);
-	float fHeight = pTerrain->GetHeight(xmf3PlayerPosition.x, xmf3PlayerPosition.z, bReverseQuad) /*+ 6.0f*/;
-
+	float fHeight = pTerrain->GetHeight(xmf3PlayerPosition.x, xmf3PlayerPosition.z, bReverseQuad) * 1.f + 30.0f;
+		
 	if (xmf3PlayerPosition.y < fHeight)
 	{
 		XMFLOAT3 xmf3PlayerVelocity = GetVelocity();

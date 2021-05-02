@@ -125,10 +125,10 @@ void CSceneMgr::init() {
 	pPlayerObj->AddComponent(new CCollider);
 	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
 	// Script 설정
-	pPlayerObj->AddComponent(new CPlayerScript/*(pTerrainObject->Terrain())*/);
+	pPlayerObj->AddComponent(new CPlayerScript);
 	// Transform 설정
-	pPlayerObj->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
-	pPlayerObj->Transform()->SetLocalScale(Vec3(30.f, 60.f, 30.f));
+	pPlayerObj->Transform()->SetLocalPos(Vec3(500.f, 1000.f, 500.f));
+	pPlayerObj->Transform()->SetLocalScale(Vec3(3.f, 6.f, 3.f));
 	pPlayerObj->Transform()->SetLocalRot(Vec3(/*XM_PI / 2.f*/0.f, XM_PI, 0.f));
 	// MeshRender 설정
 	pPlayerObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
@@ -146,7 +146,7 @@ void CSceneMgr::init() {
 	pMainCam->AddComponent( new CCamera );
 	pMainCam->AddComponent( new CToolCamScript );
 	pMainCam->Camera()->SetProjType( PROJ_TYPE::PERSPECTIVE );
-	pMainCam->Camera()->SetFar( 1000000.f );
+	pMainCam->Camera()->SetFar( 1000000.f );	//	1,000,000.f
 	//pMainCam->Camera()->SetFOV();
 	pMainCam->Camera()->SetLayerAllCheck();
 	pMainCam->Camera()->SetLayerCheck(30, false);
@@ -154,7 +154,7 @@ void CSceneMgr::init() {
 	camScript->SetPlayer(pPlayerObj);
 	m_pCurScene->GetLayer( 0 )->AddGameObject( pMainCam );
 
-
+	 
 	// UI Camera Obj
 	CGameObject* pUICam = new CGameObject;
 	pUICam->SetName(L"MainCam");
@@ -172,13 +172,13 @@ void CSceneMgr::init() {
 	pObject->AddComponent( new CTransform );
 	pObject->AddComponent( new CLight3D );
 
-	pObject->Light3D()->SetLightPos( Vec3( 0.f, 500.f, 1000.f ) );
+	pObject->Light3D()->SetLightPos( Vec3( 0.f, 1000.f, 1000.f ) );
 	pObject->Light3D()->SetLightType( LIGHT_TYPE::DIR );
 	pObject->Light3D()->SetDiffuseColor( Vec3( 1.f, 1.f, 1.f ) );
 	pObject->Light3D()->SetSpecular( Vec3( 0.3f, 0.3f, 0.3f ) );
 	pObject->Light3D()->SetAmbient( Vec3( 0.0f, 0.0f, 0.0f ) );
 	pObject->Light3D()->SetLightDir( Vec3( 1.f, -1.f, 1.f ) );
-	pObject->Light3D()->SetLightRange( 500.f );
+	pObject->Light3D()->SetLightRange( 5000.f );
 	pObject->Transform()->SetLocalPos( Vec3( -1000.f, 1000.f, -1000.f ) );
 	m_pCurScene->GetLayer( 0 )->AddGameObject( pObject );
 	
@@ -189,7 +189,7 @@ void CSceneMgr::init() {
 	pTerrainObject->AddComponent(new CMeshRender);
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
-	pTerrainObject->Transform()->SetLocalPos(Vec3(-1000.f, 0.f, -1000.f));
+	pTerrainObject->Transform()->SetLocalPos(Vec3(0.f, 10.f, 0.f));
 	pTerrainObject->Transform()->SetLocalScale(Vec3(100.f, 300.f, 100.f));
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
@@ -198,12 +198,13 @@ void CSceneMgr::init() {
 	pPlayerObj->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
 	pPlayerObj->GetScript<CPlayerScript>();
 
+	//static CGameObject* g_pTerrainObj = pTerrainObject;
+
 
 	// temp 오브젝트 생성
 	pObject = new CGameObject;
 	pObject->AddComponent( new CTransform );
 	pObject->AddComponent( new CMeshRender );
-	//pObject->AddComponent( new CPlayerScript );
 	// Transform 설정
 	pObject->Transform()->SetLocalPos( Vec3( 300.f, 400.f, 700.f ) );
 	pObject->Transform()->SetLocalScale( Vec3( 150.f, 150.f, 150.f ) );
@@ -226,7 +227,7 @@ void CSceneMgr::init() {
 	// MeshRender 설정
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyboxMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky02.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
 
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);

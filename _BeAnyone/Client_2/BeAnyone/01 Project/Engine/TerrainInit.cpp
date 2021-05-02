@@ -21,8 +21,8 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 	if(_pMap != nullptr)
 		m_pHeightMap = _pMap;
 	else
-		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\hm01.png" );
-		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
+		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
+		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\hm01.png");
 
 	
 	Vec2 vHeightMapRes = Vec2( m_pHeightMap->Width(), m_pHeightMap->Height() );
@@ -36,8 +36,8 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 	pMtrl->SetData( SHADER_PARAM::FLOAT_0, &m_fMaxTess );
 
 	
-	//Ptr<CTexture> pBase = CResMgr::GetInst()->Load<CTexture>(L"BaseTexture", L"Texture\\Terrain\\Base_Texture.jpg");
-	Ptr<CTexture> pBase = CResMgr::GetInst()->Load<CTexture>(L"BaseTexture", L"Texture\\Terrain\\Base_Texture_01.png");
+	//Ptr<CTexture> pBase = CResMgr::GetInst()->Load<CTexture>(L"BaseTexture", L"Texture\\Terrain\\Base_Texture1.jpg");
+	Ptr<CTexture> pBase = CResMgr::GetInst()->Load<CTexture>(L"BaseTexture", L"Texture\\Terrain\\Desert_Base.png");
 	pMtrl->SetData(SHADER_PARAM::TEX_3, pBase.GetPointer());
 
 	
@@ -120,9 +120,6 @@ void CTerrain::CreateHeightmapPixelsInfo()
 
 	BYTE* pHeightMapPixels = new BYTE[m_nWidth * m_nLength];
 
-	wstring fn = CPathMgr::GetResPath();
-	fn += L"Texture\\Terrain\\HeightMap_01.png";
-
 	HANDLE hFile = ::CreateFile(L"C:\\Users\\채영문\\Desktop\\BeAnyone\\BeAnyone\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
 	DWORD dwBytesRead;
@@ -132,25 +129,24 @@ void CTerrain::CreateHeightmapPixelsInfo()
 	m_pHeightMapPixels = new BYTE[m_nWidth * m_nLength];
 	for (int y = 0; y < m_nLength; ++y)
 	{
-		if (y == 2500)
-		{
-			int a = 0;
-		}
 		for (int x = 0; x < m_nWidth; ++x)
 		{
 			m_pHeightMapPixels[x + ((m_nLength - 1 - y) * m_nWidth)] = pHeightMapPixels[x + (y * m_nWidth)];
 		}
 	}
-	auto a = m_pHeightMapPixels;
+
 	if (pHeightMapPixels) 
 		delete[] pHeightMapPixels;
 }
 
-float CTerrain::GetHeight(float fx, float fz, bool _check)
+float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 {
 	//	xmf3Scale :: 교수님 Heightmap resourse는 257 257 크기라 x, z크기 스케일 함
-	/*fx = fx / m_xmf3Scale.x;
-	fz = fz / m_xmf3Scale.z;*/
+
+	//	**4배**
+
+	float fx = _fx / Transform()->GetLocalScale().x * 4 /*/ 100.f*/;
+	float fz = _fz / Transform()->GetLocalScale().z * 4 /*/ 100.f*/;
 	
 	int m_nWidth = m_pHeightMap->Width();
 	int m_nLength = m_pHeightMap->Height();
@@ -191,3 +187,35 @@ float CTerrain::GetHeight(float fx, float fz, bool _check)
 	//return 0.f;
 }
 
+void CTerrain::CreateHeightmapPixelsInfo__()
+{
+	int m_nWidth = m_pHeightMap->Width();
+	int m_nLength = m_pHeightMap->Height();
+
+	UCHAR* pHeightMapPixels = new UCHAR[m_nWidth * m_nLength];
+
+	wstring fn = CPathMgr::GetResPath();
+	fn += L"Texture\\Terrain\\HeightMap_01.png";
+
+	HANDLE hFile = ::CreateFile(L"C:\\Users\\채영문\\Desktop\\BeAnyone\\BeAnyone\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
+		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
+	DWORD dwBytesRead;
+	::ReadFile(hFile, pHeightMapPixels, (m_nWidth * m_nLength), &dwBytesRead, NULL);
+	::CloseHandle(hFile);
+
+	m_pHeightMapPixels = new BYTE[m_nWidth * m_nLength];
+	for (int y = 0; y < m_nLength; ++y)
+	{
+		if (y == 2500)
+		{
+			int a = 0;
+		}
+		for (int x = 0; x < m_nWidth; ++x)
+		{
+			m_pHeightMapPixels[x + ((m_nLength - 1 - y) * m_nWidth)] = pHeightMapPixels[x + (y * m_nWidth)];
+		}
+	}
+	auto a = m_pHeightMapPixels;
+	if (pHeightMapPixels)
+		delete[] pHeightMapPixels;
+}

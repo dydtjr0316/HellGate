@@ -14,9 +14,9 @@
 
 CTerrain::CTerrain()
 	: CComponent( COMPONENT_TYPE::TERRAIN )
-	, m_iFaceX( 512 )	//	64
-	, m_iFaceZ( 512 )	//	64
-	, m_fMaxTess( 16 )	//	4
+	, m_iFaceX( 64 )	//	64
+	, m_iFaceZ( 64 )	//	64
+	, m_fMaxTess( 4 )	//	4
 	, m_vBrushScale( Vec2( 0.1f, 0.1f ) )
 	, m_iBrushIdx( 0 )
 	, m_iTileIdx( 0 )

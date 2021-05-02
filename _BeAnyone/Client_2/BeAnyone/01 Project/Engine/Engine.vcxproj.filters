@@ -178,9 +178,6 @@
     <ClInclude Include="GridScript.h">
       <Filter>04. GameObject\Component\Script</Filter>
     </ClInclude>
-    <ClInclude Include="StructuredBuffer.h">
-      <Filter>03. Device</Filter>
-    </ClInclude>
     <ClInclude Include="MRT.h">
       <Filter>Manager\Rendering\MRT</Filter>
     </ClInclude>
@@ -299,9 +296,6 @@
     </ClCompile>
     <ClCompile Include="GridScript.cpp">
       <Filter>04. GameObject\Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="StructuredBuffer.cpp">
-      <Filter>03. Device</Filter>
     </ClCompile>
     <ClCompile Include="RenderMgrInit.cpp">
       <Filter>Manager\Rendering</Filter>

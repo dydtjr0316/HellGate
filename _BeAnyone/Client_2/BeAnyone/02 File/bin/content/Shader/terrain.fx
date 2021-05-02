@@ -20,8 +20,7 @@
 // g_tex_0 : 출력 텍스쳐
 // g_tex_1 : Nomrlai 텍스쳐
 // g_tex_2 : 높이맵 텍스쳐
-
-// g_tex_3
+// g_tex_3 : 맵 텍스쳐
 // ==========================
 struct VS_INPUT
 {
@@ -67,9 +66,9 @@ PatchTess PatchConstFunc_terrain(InputPatch<VS_OUTPUT, 3> _input, int _iPatchID 
     vSidePos = mul(float4(vSidePos, 1.f), g_matWorld).xyz;
     vUpDownPos = mul(float4(vUpDownPos, 1.f), g_matWorld).xyz;
     
-    float fCenter = CalTessLevel(g_vec4_0.xyz, vCenterPos, 1000.f, 4000.f, 4.f);
-    float fSide = CalTessLevel(g_vec4_0.xyz, vSidePos, 1000.f, 4000.f, 4.f);
-    float fUnDown = CalTessLevel(g_vec4_0.xyz, vUpDownPos, 1000.f, 4000.f, 4.f);
+    float fCenter = CalTessLevel(g_vec4_0.xyz, vCenterPos, 1000.f, 4000.f, 8.f);    //  1000, 4000, 4
+    float fSide = CalTessLevel(g_vec4_0.xyz, vSidePos, 1000.f, 4000.f, 8.f);
+    float fUnDown = CalTessLevel(g_vec4_0.xyz, vUpDownPos, 1000.f, 4000.f, 8.f);
         
   
     output.arrEdgeTess[0] = fUnDown; // 밑, 윗
@@ -175,7 +174,7 @@ PS_OUTPUT PS_Terrain(DS_OUTPUT _in)
     }
     
     //output.vTarget0.xyz = float3(1.f, 1.f, 1.f);
-    output.vTarget0.xyz = g_tex_3.Sample(g_sam_0, _in.vUV).xyz;
+    output.vTarget0.xyz = g_tex_3.Sample(g_sam_0, _in.vUV /*/ (float)g_int_1*/).xyz;
     output.vTarget1.xyz = vViewNormal;
     output.vTarget2.xyz = _in.vViewPos;
     

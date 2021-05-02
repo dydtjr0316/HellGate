@@ -612,7 +612,7 @@ void CResMgr::CreateDefaultShader() {
 	pShader->CreateHullShader( L"Shader\\terrain.fx", "HS_Terrain", "hs_5_0" );
 	pShader->CreateDomainShader( L"Shader\\terrain.fx", "DS_Terrain", "ds_5_0" );
 	pShader->CreatePixelShader( L"Shader\\terrain.fx", "PS_Terrain", "ps_5_0" );
-	pShader->SetRasterizerType( RS_TYPE::CULL_NONE);
+	//pShader->SetRasterizerType( RS_TYPE::WIRE_FRAME);
 	pShader->SetRasterizerType( RS_TYPE::CULL_NONE);
 	pShader->SetDepthStencilType( DEPTH_STENCIL_TYPE::LESS );
 	pShader->Create( SHADER_POV::DEFERRED, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST );

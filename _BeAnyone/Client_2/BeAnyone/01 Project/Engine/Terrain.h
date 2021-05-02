@@ -28,14 +28,16 @@ public:
 	void init(Ptr<CTexture> pMap = nullptr);
 	virtual void update();
 	virtual void finalupdate();
-	float GetHeight(float, float, bool);
 
+	float GetHeight(float, float, bool);
+	Vec2 GetScale() { return Vec2(m_iFaceX, m_iFaceZ); } 
 
 private:
 
 	void ChangeFaceCount( UINT _iFaceX, UINT _iFaceZ );
 	void CreateTerrainMesh();
 	void CreateHeightmapPixelsInfo();
+	void CreateHeightmapPixelsInfo__();
 
 	Vec2 GetCollisionPos();
 

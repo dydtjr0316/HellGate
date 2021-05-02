@@ -63,7 +63,6 @@
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="struct.h" />
-    <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Terrain.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -114,7 +113,6 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Sound.cpp" />
-    <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
