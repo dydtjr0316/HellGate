@@ -22,21 +22,7 @@ int g_myid = -1;
 
 CNetMgr::CNetMgr()
 {
-	//// ===============
-	//	// Test Scene 생성
-	//	// ===============
-	//m_pCurScene = new CScene;
-	//m_pCurScene->SetName(L"Test Scene");
-
-	//// ===============
-	//// Layer 이름 지정
-	//// ===============
-	//m_pCurScene->GetLayer(0)->SetName(L"Default");
-	//m_pCurScene->GetLayer(1)->SetName(L"Player");
-	//m_pCurScene->GetLayer(2)->SetName(L"Monster");
-	//m_pCurScene->GetLayer(3)->SetName(L"Bullet");
 	cout << "net mgr 생성자" << endl;
-
 	m_pObj = nullptr;
 }
 void CNetMgr::err_quit(const char* msg)
@@ -50,11 +36,6 @@ void CNetMgr::err_quit(const char* msg)
 	MessageBox(NULL, (LPCTSTR)lpMsgBuf, (LPCTSTR)msg, MB_ICONERROR);
 	LocalFree(lpMsgBuf);
 	exit(1);
-}
-
-void CNetMgr::SetLoginPacket(sc_packet_login_ok* packet)
-{
-	m_loginPacket = packet;
 }
 
 void CNetMgr::Connect()
@@ -157,7 +138,6 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	m_packet.direction = dir;
 	m_packet.localVec = local;
 	m_packet.dirVec = dirVector;
-	cout << "클라가 무브쐈다" << endl;
 
 	Send_Packet(&m_packet);
 }
@@ -193,37 +173,6 @@ void CNetMgr::Send_Attack_Packet()
 	Send_Packet(&m_packet);
 }
 
-void CNetMgr::testX(const float& _x)
-{
-	x = _x;
-	cout << "test : " << x << endl;
-}
-
-int CNetMgr::recvn(SOCKET s, char* buf, int len, int flags)
-{
-	int received;
-	char* ptr = buf;
-	int left = 38;
-	if (buf[1] == SC_PACKET_LOGIN_OK)
-		left = sizeof(sc_packet_login_ok);
-	//int left = len;
-
-	while (left > 0) {
-		received = recv(g_Socket, ptr, left, flags);
-		if (received == SOCKET_ERROR)
-			return SOCKET_ERROR;
-		else if (received == 0)
-			break;
-		left -= received;
-		ptr += received;
-	}
-
-	return (len - left);
-}
-
-
-
-
 void CNetMgr::Recevie_Data()
 {
 	EXOVER* dataBuf = new EXOVER{};
@@ -249,6 +198,9 @@ void CNetMgr::Recevie_Data()
 		break;
 	case SC_PACKET_ENTER:
 		cout << "SC_PACKET_ENTER" << endl;
+		break;
+	case SC_PACKET_ROTATE:
+		cout << "SC_PACKET_ROTATE" << endl;
 		break;
 	default:
 		break;
@@ -276,13 +228,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_LOGIN_OK:
 	{
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
-
 		cout << "ok id -> " << p->id << endl;
-
-
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
-
-
 		g_Object.emplace(g_myid, m_pObj);
 
 	}
@@ -292,9 +239,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
 		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale.fbx");
-		// ===================
-		// Player 오브젝트 생성
-		// ===================
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
@@ -311,8 +255,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 				pObject->Transform()->SetLocalPos(my_packet->localVec);
 				pObject->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
 				pObject->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
-
-
 				pObject->AddComponent(new CPlayerScript);
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pObject, false);
@@ -408,14 +350,16 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
 		int other_id = packet->id;
-		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
+		//CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
-			cout << "process packet rotate" << endl;
-			ObjTrans->SetLocalRot(packet->rotateVec);
+			cout << "같음 " << other_id << endl;
+			g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
 		}
 		else
 		{
+			cout << "다름 " << other_id << endl;
+			g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
 		}
 	}
 	break;
@@ -437,9 +381,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_ID:
 	{
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
-		// 플레이어스크립트에서 addobj 하는 부분과 어떻게 연결시킬껀지 고민해보기
-		// 아직 테스트용 코드
-		// 이따구로하면 멀티스레드에서 무적권 꼬임
 		g_myid = packet->id;
 
 		cout << "My ID : " << g_myid << endl;

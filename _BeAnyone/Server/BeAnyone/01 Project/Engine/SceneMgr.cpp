@@ -306,7 +306,6 @@ void CSceneMgr::init()
 
 	m_pCurScene->AddGameObject(L"Player", pObject, false);
 
-	g_netMgr.SetObj(pObject);
 
 	// ==================
 	// Camera Object »ý¼º
@@ -333,6 +332,7 @@ void CSceneMgr::init()
 
 	camScript->SetPlayer(pObject);
 
+	g_netMgr.SetObj(pObject);
 
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);

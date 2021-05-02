@@ -48,10 +48,6 @@ public: // 상속 ,, 함수
 	void SetRotateV(const Vector3& rotate) { m_v3RotateVector = rotate; }
 	void SetRotateV(const float& x, const float& y, const float& z);
 
-	//void SetX(const float& x) { m_iX = x; }	// 삭제 용석
-	//void SetY(const float& y) { m_iY = y; } // 삭제 용석
-	//void SetZ(const float& z) { m_iZ = z; } // 삭제 용석
-	//void SetPos(const float& x, const float& y, const float& z) { m_iX = x; m_iY = y; m_iZ = z; }
 	void SetClientTime(const int& t) { m_iclinet_time = t; }
 	void SetPrev_Size(const int& size) { m_prev_size = size; }
 	void SetName(char* name) { strcpy_s(m_name, name); }

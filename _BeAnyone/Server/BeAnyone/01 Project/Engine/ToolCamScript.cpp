@@ -17,74 +17,27 @@ CToolCamScript::~CToolCamScript()
 void CToolCamScript::update()
 {
     Vector3 vPos = Transform()->GetLocalPos();
-    Vector3 vPlayerPos = m_pPlayer->Transform()->GetLocalPos();
+    CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
 
     Vector3 vRot = Transform()->GetLocalRot();
-    Vector3 vPlayerRot = m_pPlayer->Transform()->GetLocalRot();
-    XMMATRIX vPlayerMat = m_pPlayer->Transform()->GetWorldMat();
-    Vector3 vFront = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-    Vector3 vUp = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
-    Vector3 vRight = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+    Vector3 vPlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+    XMMATRIX vPlayerMat = g_Object.find(g_myid)->second->Transform()->GetWorldMat();
+    Vector3 vFront = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+    Vector3 vUp = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::UP);
+    Vector3 vRight = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 
     float fScale = Camera()->GetScale();
     float fSpeed = m_fSpeed;
     float fDistance = 400.f;
-
-    //vPos.x = vPlayerPos.x;
-    //vPos.y = vPlayerPos.y  +450;
-    //vPos.z = vPlayerPos.z - 400;
-
-    vPos = vPlayerPos + (vFront * fDistance);
-    vPos.y = vPlayerPos.y + 450;
-
-    if (KEY_HOLD(KEY_TYPE::KEY_UP))
-    {
-        Vector3 vFronta = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-        vPos += vFronta * DT * 200.f;
-    }
-
-    if (KEY_HOLD(KEY_TYPE::KEY_DOWN))
-    {
-        Vector3 vBacka = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-        vPos += vBacka * DT * 200.f;
-    }
-
-    if (KEY_HOLD(KEY_TYPE::KEY_LEFT))
-    {
-        Vector3 vLefta = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-        vPos += vLefta * DT * 200.f;
-    }
-
-    if (KEY_HOLD(KEY_TYPE::KEY_RIGHT))
-    {
-        Vector3 vRighta = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-        vPos += vRighta * DT * 200.f;
-    }
-
+    vPos = vPlayerPos->GetLocalPos() + (vPlayerPos->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
+    vPos.y = vPlayerPos->GetLocalPos().y + 450.f;
 
     if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
     {
         Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-        //Vector3 vRot = Transform()->GetLocalRot();
-        //Vector3 a;
-
-
-        //Matrix matRot = XMMatrixRotationAxis(vPlayerPos, vDrag.x * 0.0001f);
-        //a = XMVector3TransformNormal(vPos, matRot);
-        //vPos = a;
-
-
-        //vRot.x -= vDrag.y * DT * 2.f;
-        vRot.y += vDrag.x * DT * 1.5f;
-
-
-
-        //Transform()->SetLocalRot(vRot);
-
-
-
+        vRot.y += vDrag.x * DT * 0.1f;
     }
-    Transform()->SetPlayerPosition(vPlayerPos);
+    Transform()->SetPlayerPosition(vPlayerPos->GetLocalPos());
     //Transform()->Set3Camera(true);
     Transform()->SetLocalRot(vRot);
     Transform()->SetLocalPos(vPos);
