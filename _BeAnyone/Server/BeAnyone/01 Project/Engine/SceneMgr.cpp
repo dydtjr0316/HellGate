@@ -507,7 +507,7 @@ void CSceneMgr::init()
 	m_pCurScene->start();
 }
 
-void CSceneMgr::update()
+void CSceneMgr::update() 
 {
 	m_pCurScene->update();
 	m_pCurScene->lateupdate();
