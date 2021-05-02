@@ -157,8 +157,21 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	m_packet.direction = dir;
 	m_packet.localVec = local;
 	m_packet.dirVec = dirVector;
+	cout << "클라가 무브쐈다" << endl;
 
 	Send_Packet(&m_packet);
+}
+
+void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, const Vector3& rotate, const float& dt)
+{
+	cs_packet_rotate packet;
+	packet.type = CS_ROTATE;
+	packet.size = sizeof(packet);
+	packet.dir = dir;
+	packet.dt = dt;
+	packet.dragVec = drag;
+	packet.rotateVec = rotate;
+	Send_Packet(&packet);
 }
 
 void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, const Vector3& rotate)
@@ -265,37 +278,37 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
 
 		cout << "ok id -> " << p->id << endl;
-		
-		
+
+
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
 
 
 		g_Object.emplace(g_myid, m_pObj);
 
-	//	// ==================
-	//// Camera Object 생성
-	//// ==================
-	//// Main Camera
-	//	CGameObject* pMainCam = new CGameObject;
-	//	pMainCam->SetName(L"MainCam");
-	//	pMainCam->AddComponent(new CTransform);
-	//	pMainCam->AddComponent(new CCamera);
-	//	pMainCam->AddComponent(new CToolCamScript);
+		//	// ==================
+		//// Camera Object 생성
+		//// ==================
+		//// Main Camera
+		//	CGameObject* pMainCam = new CGameObject;
+		//	pMainCam->SetName(L"MainCam");
+		//	pMainCam->AddComponent(new CTransform);
+		//	pMainCam->AddComponent(new CCamera);
+		//	pMainCam->AddComponent(new CToolCamScript);
 
-	//	pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));
-	//	pMainCam->Transform()->SetLocalRot(Vector3(XM_PI / 6 /*0.f*/, 0.0f, 0.f));
-	//	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-	//	pMainCam->Camera()->SetFar(100000.f);
-	//	pMainCam->Camera()->SetLayerAllCheck();
-	//	pMainCam->Camera()->SetLayerCheck(30, false);
-	//	//vector<CToolCamScript*> camScript = (CToolCamScript*)(pMainCam->GetScripts())
-	//	////camScript[0]->
-	//	//pMainCam->GetScripts()[0]->SetPlayer();
+		//	pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));
+		//	pMainCam->Transform()->SetLocalRot(Vector3(XM_PI / 6 /*0.f*/, 0.0f, 0.f));
+		//	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+		//	pMainCam->Camera()->SetFar(100000.f);
+		//	pMainCam->Camera()->SetLayerAllCheck();
+		//	pMainCam->Camera()->SetLayerCheck(30, false);
+		//	//vector<CToolCamScript*> camScript = (CToolCamScript*)(pMainCam->GetScripts())
+		//	////camScript[0]->
+		//	//pMainCam->GetScripts()[0]->SetPlayer();
 
-	//	CToolCamScript* camScript = pMainCam->GetScript<CToolCamScript>();
-	//	camScript->SetPlayer(pObject);
+		//	CToolCamScript* camScript = pMainCam->GetScript<CToolCamScript>();
+		//	camScript->SetPlayer(pObject);
 
-	//	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pMainCam);
+		//	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pMainCam);
 
 
 
@@ -377,7 +390,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				temp.z += DT * 200.f;
 				temp = Vector3(ObjTrans->GetLocalPos().x,
-					ObjTrans->GetLocalPos().y, 
+					ObjTrans->GetLocalPos().y,
 					packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z * DT * 200.f));*/
 				ObjTrans->SetLocalPos(packet->localVec);
 				break;
@@ -386,13 +399,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 				temp = Vector3(ObjTrans->GetLocalPos().x,
 					ObjTrans->GetLocalPos().y, packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z*DT*200.f));*/
 				ObjTrans->SetLocalPos(packet->localVec);
-				
+
 				break;
 			case MV_LEFT:
 			case MV_RIGHT:
 				cout << "좌우" << endl;
-			/*	temp = Vector3(packet->x + DT * 200.f* ObjTrans->GetWorldDir(DIR_TYPE::FRONT).x,
-					ObjTrans->GetLocalPos().y, ObjTrans->GetLocalPos().z);*/
+				/*	temp = Vector3(packet->x + DT * 200.f* ObjTrans->GetWorldDir(DIR_TYPE::FRONT).x,
+						ObjTrans->GetLocalPos().y, ObjTrans->GetLocalPos().z);*/
 				ObjTrans->SetLocalPos(packet->localVec);
 				break;
 			default:
@@ -403,14 +416,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 			switch (packet->dir)
 			{
 			case MV_FRONT:
-				
+
 			case MV_BACK:
-				
+
 			case MV_LEFT:
-				
+
 			case MV_RIGHT:
 				cout << "my move===>" << other_id << ", " << g_myid << endl;
-				
+
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
@@ -421,7 +434,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				cout << "--------------" << endl;
 				break;
 			}
-			
+
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -452,7 +465,17 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ROTATE:
 	{
-
+		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
+		int other_id = packet->id;
+		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
+		if (other_id == g_myid)
+		{
+		cout << "process packet rotate" << endl;
+			ObjTrans->SetLocalRot(packet->rotateVec);
+		}
+		else
+		{
+		}
 	}
 	break;
 	case SC_PACKET_LEAVE:

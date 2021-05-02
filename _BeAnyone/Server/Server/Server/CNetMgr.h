@@ -21,6 +21,7 @@ public:
 	void Send_Leave_Packet(  const int& user_id, const int& other_id);
 	void Send_Move_Packet(const int& user_id, const int& mover_id, const char& dir);
 	void Send_Move_Packet(  const int& user_id,   const int& mover_id);
+	void Send_Roate_Packet(const int& user_id, const int& mover_id, const char& dir);
 	//
 public:
 	//void Random_Move_NPC(const int& id);
@@ -28,6 +29,7 @@ public:
 	void Do_Attack(const int& user_id);
 	void Do_Move(const int& user_id, const char& dir);//아래꺼 완성하고 잘돌아가면 없애도 되는 코드 : 용석
 	void Do_Move(const int& user_id, const char& dir, Vector3& localVec, Vector3& dirVec);
+	void Do_Rotate(const int& user_id, const char& dir,  Vector2& dragVec, Vector3& rotateVec, const float& dt);
 	void Disconnect(const int& user_id);
 	void Enter_Game(const int& user_id, char name[]);
 	void Process_Packet(const int& user_id, char* buf);

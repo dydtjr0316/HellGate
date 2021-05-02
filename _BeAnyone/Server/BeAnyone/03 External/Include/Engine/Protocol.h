@@ -128,7 +128,6 @@ struct sc_packet_rotate {
 	int id;
 	int move_time;
 	char dir = MV_IDLE;
-	Vector3 dragVec;
 	Vector3 rotateVec;
 };
 
@@ -215,6 +214,7 @@ struct cs_packet_rotate {
 	char  type;
 	char  dir;
 	int	  move_time;
+	float dt;
 	Vector2 dragVec;
 	Vector3 rotateVec;
 };

@@ -232,6 +232,21 @@ void CNetMgr::Send_Move_Packet( const int& user_id,  const int& mover_id)
     Send_Packet(user_id, &p);
 }
 
+void CNetMgr::Send_Roate_Packet(const int& user_id, const int& mover_id, const char& dir)
+{
+    sc_packet_rotate p;
+    p.id = mover_id;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_ROTATE;
+    p.dir = dir;
+
+    p.rotateVec = Find(mover_id)->GetRoatateVector();
+
+    p.move_time = Find(mover_id)->GetClientTime();
+
+    Send_Packet(user_id, &p);
+}
+
 //void CNetMgr::Random_Move_NPC(const int& id)
 //{
 //    CGameObject* NPCObj = Find( id);
@@ -619,7 +634,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
-                    Send_Move_Packet(ob, user_id);  // 여기서 또 들어옴
+                    Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
             }
         }
         else // 이전에도 있던 아이디 
@@ -632,7 +647,128 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
-                    Send_Move_Packet(ob, user_id);
+                    Send_Move_Packet(ob, user_id, dir);
+            }
+        }
+    }
+    for (auto& ob : old_viewList)
+    {
+        if (new_viewList.count(ob) == 0)
+        {
+            pClient->GetViewList().erase(ob);
+            Send_Leave_Packet(user_id, ob);
+
+            if (IsClient(ob))
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) != 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().erase(user_id);
+                    Send_Leave_Packet(ob, user_id);
+                }
+            }
+        }
+    }
+}
+
+void CNetMgr::Do_Rotate(const int& user_id, const char& dir, Vector2& dragVec, Vector3& rotateVec, const float& dt)
+{
+    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+
+    unordered_set<int> old_viewList = pClient->GetViewList();
+
+    //cout << "세팅 전" << endl;
+    //cout << x <<", "<< y << ", " << z << endl;
+
+    _tSector oldSector = pClient->GetSector();
+    
+    switch (dir)
+    {
+    case Rotate_LBTN:
+        cout << "rotate_lbtn 들어옴" << endl;
+
+        break;
+    default:
+        cout << "Unknown Direction from Client move packet!\n";
+        DebugBreak();
+        exit(-1);
+    }
+    //cout << "세팅 후====" << endl;
+
+    //cout << x << ", " << y << ", " << z << endl;
+
+    pClient->SetRotateV(rotateVec);
+
+
+    pClient->Change_Sector(oldSector);
+
+    unordered_set<int> new_viewList;
+
+    Send_Roate_Packet(user_id, user_id, dir);
+
+    vector<unordered_set<int>> vSectors = pClient->Search_Sector();
+
+    for (auto& vSec : vSectors)
+    {
+        if (vSec.size() != 0)
+        {
+            for (auto& user : vSec)
+            {
+                if (is_near(user_id, user))
+                {
+                    if (!IsClient(user))
+                    {
+                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                        {
+                            if (IsMonster(user))
+                                WakeUp_Monster(user);
+                            else
+                            {
+                                //cout << "do move 함수 호출" << endl;
+                                //cout << Find(user)->GetStatus() << endl;
+                                WakeUp_NPC(user);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //if (Find(user)->GetStatus() != ST_ACTIVE)continue;
+                    }
+                    new_viewList.insert(user);
+                }
+            }
+        }
+    }
+
+    for (auto& ob : new_viewList)
+    {
+        //시야에 새로 들어온 객체 구분
+
+        if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
+        {
+            pClient->GetViewList().insert(ob);
+            Send_Enter_Packet(user_id, ob);
+            if (IsClient(ob) && ob != user_id)
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Send_Enter_Packet(ob, user_id);
+                }
+                else
+                    Send_Roate_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+            }
+        }
+        else // 이전에도 있던 아이디 
+        {
+            if (IsClient(ob) && ob != user_id)
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Send_Enter_Packet(ob, user_id);
+                }
+                else
+                    Send_Roate_Packet(ob, user_id, dir);
             }
         }
     }
@@ -751,10 +887,20 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
         Find( user_id)->SetClientTime(packet->move_time);
+        cout << "클라가 쏜거 받는중" << endl;
         Do_Move(user_id, packet->direction, packet->localVec, packet->dirVec);
 
     }
                 break;
+    case CS_ROTATE:
+    {
+        cs_packet_rotate* packet = reinterpret_cast<cs_packet_rotate*>(buf);
+        Find(user_id)->SetClientTime(packet->move_time);
+        cout << "일단 cs_rotate 들어옴" << endl;
+        Do_Rotate(user_id, packet->dir, packet->dragVec, packet->rotateVec, packet->dt);
+
+    }
+    break;
     case CS_ATTACK:
     {
         cs_packet_attack* packet = reinterpret_cast<cs_packet_attack*>(buf);

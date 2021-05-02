@@ -34,8 +34,14 @@ void CToolCamScript::update()
 	//vPos.y = vPlayerPos.y  +450;
 	//vPos.z = vPlayerPos.z - 400;
 
-	vPos = vPlayerPos + (vFront * fDistance);
-	vPos.y = vPlayerPos.y + 450;
+	vPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos()
+		+ (g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
+
+	vPos.y = g_Object.find(g_myid)->second->Transform()->GetLocalPos().y + 450.f;
+
+
+	/*vPos = vPlayerPos + (vFront * fDistance);
+	vPos.y = vPlayerPos.y + 450;*/
 
  	if (KEY_HOLD(KEY_TYPE::KEY_UP))
 	{

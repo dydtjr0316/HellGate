@@ -76,10 +76,12 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 		//vRot.y += vDrag.x * DT * 1.5f;
 
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-		vDrag.x = vDrag.x * DT * 1.5f;
-		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+		Vector3 vRot = Transform()->GetLocalRot();
 
+		vRot.x -= vDrag.y * DT * 1.f;
+		vRot.y += vDrag.x * DT * 0.5f;
 		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot);
+		//g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot, DT);
 		
 
 		// 싱글 프로젝트 회전

@@ -57,6 +57,8 @@ constexpr char MV_FRONT = 4;
 constexpr char MV_BACK = 5;
 constexpr char MV_IDLE = 6;
 
+constexpr char Rotate_LBTN = 0;
+
 // 패킷 이벤트 // 추후 수정
 constexpr char SC_PACKET_LOGIN_OK = 0;
 constexpr char SC_PACKET_MOVE = 1;
@@ -68,6 +70,8 @@ constexpr char SC_PACKET_STAT_CHANGE = 6;
 constexpr char SC_PACKET_ATTACK = 7;
 constexpr char SC_PACKET_LEVEL_UP = 8;
 constexpr char SC_PACKET_ID = 9;
+constexpr char SC_PACKET_ROTATE = 10;
+
 
 
 constexpr char CS_LOGIN = 0;
@@ -76,7 +80,7 @@ constexpr char CS_ATTACK = 2;
 constexpr char CS_CHAT = 3;
 constexpr char CS_LOGOUT = 4;
 constexpr char CS_TELEORT = 5;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
-
+constexpr char CS_ROTATE = 6;
 constexpr unsigned char O_PLAYER = 0;
 constexpr unsigned char O_NPC = 1;
 
@@ -115,6 +119,15 @@ struct sc_packet_move {
 	char dir = MV_IDLE;
 	Vector3 localVec;
 	Vector3 dirVec;	//받아올땐 삭제해도되는가?
+};
+
+struct sc_packet_rotate {
+	char size;
+	char type;
+	int id;
+	int move_time;// 진짜 필요한가?
+	char dir;
+	Vector3 rotateVec;
 };
 
 struct sc_packet_enter {
@@ -193,6 +206,16 @@ struct cs_packet_move {
 	int	  move_time;
 	Vector3 localVec;
 	Vector3 dirVec;
+};
+
+struct cs_packet_rotate {
+	char  size;
+	char  type;
+	char  dir;
+	int	  move_time;
+	float dt;
+	Vector2 dragVec;
+	Vector3 rotateVec;
 };
 
 struct cs_packet_attack {
