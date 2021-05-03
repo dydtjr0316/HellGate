@@ -191,6 +191,9 @@ void CNetMgr::Send_Roate_Packet(const int& user_id, const int& mover_id, const c
     p.dir = dir;
 
     p.rotateVec = Find(mover_id)->GetRoatateVector();
+    cout << "패킷 사이즈 -> " << p.size << endl;
+    cout << "다시 클라로 보내기전 rotate Y -> " << p.rotateVec.y << endl;
+    cout << "-------------------------" << endl;
 
     p.move_time = Find(mover_id)->GetClientTime();
 
@@ -467,12 +470,13 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
 
 void CNetMgr::Do_Rotate(const int& user_id, const char& dir, Vector2& dragVec, Vector3& rotateVec)
 {
+
     CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
 
     unordered_set<int> old_viewList = pClient->GetViewList();
 
     _tSector oldSector = pClient->GetSector();
-    cout << "rotate_lbtn 들어옴" << endl;
+    //cout << "rotate_lbtn 들어옴" << endl;
     
     switch (dir)
     {
@@ -687,7 +691,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     {
         cs_packet_rotate* packet = reinterpret_cast<cs_packet_rotate*>(buf);
         Find(user_id)->SetClientTime(packet->move_time);
-        cout << "일단 cs_rotate 들어옴" << endl;
+        cout << "클라에서 패킷 받은 후 rotateVec Y -> "<<packet->rotateVec.y << endl;
         Do_Rotate(user_id, packet->dir, packet->dragVec, packet->rotateVec);
 
     }

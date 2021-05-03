@@ -77,7 +77,7 @@ void CNetMgr::Connect()
 	memset(&m_overlapped, 0, sizeof(m_overlapped));
 
 	m_overlapped.hEvent = event;
-	cout << "over : " << m_overlapped.hEvent << endl;
+	//cout << "over : " << m_overlapped.hEvent << endl;
 
 }
 
@@ -158,10 +158,14 @@ void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, 
 {
 	cs_packet_rotate packet;
 	packet.type = CS_ROTATE;
-	packet.size = sizeof(packet);
+	packet.size = sizeof(cs_packet_rotate);
 	packet.dir = dir;
 	packet.dragVec = drag;
 	packet.rotateVec = rotate;
+	packet.move_time = 0;
+
+	cout << "패킷 보내기전 rotate Y -> " << packet.rotateVec.y << endl;
+
 	Send_Packet(&packet);
 }
 
@@ -186,9 +190,9 @@ void CNetMgr::Recevie_Data()
 	if (ret <= 0)return;
 
 	size_t retbytesize = ret;
-	cout << "=====================================" << endl;
+	//cout << "=====================================" << endl;
 
-	switch (recvbuf[1])
+	/*switch (recvbuf[1])
 	{
 	case SC_PACKET_LOGIN_OK:
 		cout << "SC_PACKET_LOGIN_OK" << endl;
@@ -204,7 +208,7 @@ void CNetMgr::Recevie_Data()
 		break;
 	default:
 		break;
-	}
+	}*/
 
 	if (ret < 0)
 	{
@@ -243,7 +247,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (id == g_myid)
 		{
 			g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
-			cout << "enter id(" << g_myid << ") packet=================" << endl;
+			//cout << "enter id(" << g_myid << ") packet=================" << endl;
 		}
 		else
 		{
@@ -259,9 +263,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pObject, false);
 				g_Object.emplace(id, pObject);
-				cout << "packet enter in __ id! = g_myid" << endl;
-				cout << "id -> " << id << endl;
-				cout << "g_Object size -> " << g_Object.size() << endl;
+			//	cout << "packet enter in __ id! = g_myid" << endl;
+			//	cout << "id -> " << id << endl;
+			//	cout << "g_Object size -> " << g_Object.size() << endl;
 			}
 		}
 	}
@@ -353,14 +357,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 		//CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
-			cout << "같음 " << other_id << endl;
+			cout << "내꺼 받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
 			g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
 		}
 		else
 		{
-			cout << "다름 " << other_id << endl;
+			cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
 			g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
 		}
+		cout << "-------------------------" << endl;
 	}
 	break;
 	case SC_PACKET_LEAVE:
@@ -397,8 +402,20 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 	static size_t in_packet_size = 0;
 	static size_t saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF_SIZE];
-	cout << "Process_Data -> " << io_byte << endl;
-	cout << "=====================================" << endl;
+	/*cout << "Process_Data -> " << io_byte << endl;
+	cout << "=====================================" << endl;*/
+
+	if (io_byte > sizeof(cs_packet_rotate))
+	{
+		switch (net_buf[1])
+		{
+		case SC_PACKET_ROTATE:
+			cout << "net buf[1] SC_PACKET_ROTATE" << endl;
+			cout << "net buf[0] size ->" << (int)net_buf[0] << endl;
+			cout << "iobyte     ->    " << io_byte << endl;
+			break;
+		}
+	}
 
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];
