@@ -89,6 +89,7 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 
 		// 싱글 프로젝트 회전
 		//g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
+		
 		/*g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
 
 		cout << "================================================================" << endl;

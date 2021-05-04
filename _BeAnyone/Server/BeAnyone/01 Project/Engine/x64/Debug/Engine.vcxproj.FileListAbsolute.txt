@@ -2,11 +2,6 @@ D:\GitHube\HellGate\_BeAnyone\Client\BeAnyone\03 External\Library\Engine\func.cs
 D:\GitHube\HellGate\_BeAnyone\Client\BeAnyone\03 External\Library\Engine\light.cso
 D:\GitHube\HellGate\_BeAnyone\Client\BeAnyone\03 External\Library\Engine\std.cso
 D:\GitHube\HellGate\_BeAnyone\Client\BeAnyone\03 External\Library\Engine\value.cso
-D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso
-D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso
-D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso
-D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso
-D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
 C:\Users\채영문\Desktop\BeAnyone\서버\BeAnyone\03 External\Library\Engine\compute.cso
 C:\Users\채영문\Desktop\BeAnyone\서버\BeAnyone\03 External\Library\Engine\func.cso
 C:\Users\채영문\Desktop\BeAnyone\서버\BeAnyone\03 External\Library\Engine\light.cso

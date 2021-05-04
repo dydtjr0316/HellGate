@@ -4,17 +4,16 @@
 #include "Scene.h"
 
 #include "Layer.h"
-#include "GameObject.h"
 #include "Camera.h"
 
 #include "Transform.h"
 #include "MeshRender.h"
 
 #include "PlayerScript.h"
-#include "ToolCamScript.h"
 const char ip[] = "127.0.0.1";
 
 CNetMgr g_netMgr;
+
 int testpacket;
 OBJLIST g_Object;
 int g_myid = -1;
@@ -263,9 +262,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pObject, false);
 				g_Object.emplace(id, pObject);
-			//	cout << "packet enter in __ id! = g_myid" << endl;
-			//	cout << "id -> " << id << endl;
-			//	cout << "g_Object size -> " << g_Object.size() << endl;
+				//	cout << "packet enter in __ id! = g_myid" << endl;
+				//	cout << "id -> " << id << endl;
+				//	cout << "g_Object size -> " << g_Object.size() << endl;
 			}
 		}
 	}
@@ -357,8 +356,16 @@ void CNetMgr::ProcessPacket(char* ptr)
 		//CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
-			cout << "내꺼 받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
 			g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
+			/*cout << "*************POS***************" << endl;
+			cout << g_Object.find(g_myid)->second->Transform()->GetLocalPos().x << endl;
+			cout << g_Object.find(g_myid)->second->Transform()->GetLocalPos().y << endl;
+			cout << g_Object.find(g_myid)->second->Transform()->GetLocalPos().z << endl;
+			cout << "*************ROTATE***************" << endl;
+			cout << g_Object.find(g_myid)->second->Transform()->GetLocalRot().x << endl;
+			cout << g_Object.find(g_myid)->second->Transform()->GetLocalRot().y << endl;
+			cout << g_Object.find(g_myid)->second->Transform()->GetLocalRot().z << endl;
+			cout << "*******************************" << endl;*/
 		}
 		else
 		{
@@ -366,6 +373,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
 		}
 		cout << "-------------------------" << endl;
+
+
 	}
 	break;
 	case SC_PACKET_LEAVE:

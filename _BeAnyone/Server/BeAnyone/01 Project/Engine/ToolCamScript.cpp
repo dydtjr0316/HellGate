@@ -16,7 +16,7 @@ CToolCamScript::~CToolCamScript()
 
 void CToolCamScript::update()
 {
-    Vector3 vPos = Transform()->GetLocalPos();
+    /*Vector3 vPos = Transform()->GetLocalPos();
     CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
 
     Vector3 vRot = Transform()->GetLocalRot();
@@ -36,15 +36,27 @@ void CToolCamScript::update()
     {
         Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
         vRot.y += vDrag.x * DT * 0.1f;
+        cout << "*************카메라POS***************" << endl;
+        cout << Transform()->GetLocalPos().x << endl;
+        cout << Transform()->GetLocalPos().y << endl;
+        cout << Transform()->GetLocalPos().z << endl;
+        cout << "*************플레이어POS***************" << endl;
+        cout << vPlayerPos->GetLocalPos().x << endl;
+        cout << vPlayerPos->GetLocalPos().y << endl;
+        cout << vPlayerPos->GetLocalPos().z << endl;
+        cout << "*************ROTATE***************" << endl;
+        cout << Transform()->GetLocalRot().x << endl;
+        cout << Transform()->GetLocalRot().y << endl;
+        cout << Transform()->GetLocalRot().z << endl;
+        cout << "*******************************" << endl;
     }
+
+    
+
     Transform()->SetPlayerPosition(vPlayerPos->GetLocalPos());
-    //Transform()->Set3Camera(true);
     Transform()->SetLocalRot(vRot);
     Transform()->SetLocalPos(vPos);
-    Transform()->SetPlayerWorldMat(vPlayerMat);
-    //Transform()->SetWorldDir(vFront, DIR_TYPE::FRONT);
-    //Transform()->SetWorldDir(vUp, DIR_TYPE::UP);
-    //Transform()->SetWorldDir(vRight, DIR_TYPE::RIGHT);
-    //Transform()->SetPlayerRotation(vPlayerRot);
+    Transform()->SetPlayerWorldMat(vPlayerMat);*/
+
 
 }
