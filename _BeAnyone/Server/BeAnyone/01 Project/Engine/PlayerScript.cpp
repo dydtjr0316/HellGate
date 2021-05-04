@@ -81,6 +81,7 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 		//Vector3 vRot = Transform()->GetLocalRot();
 		vRot.y += vDrag.x * DT * 0.1f;
 		//vDrag.x = vDrag.x * DT * 0.1f;
+		 
 
 		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot);
 

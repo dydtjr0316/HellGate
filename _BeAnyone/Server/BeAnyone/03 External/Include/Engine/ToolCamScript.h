@@ -14,6 +14,7 @@ public:
 	void SetPlayer(CGameObject* _pPlayer) { 
 		m_pPlayer = _pPlayer;
 	}
+	float GetSpeed() { return m_fSpeed; }
 
 public:
 	CLONE(CToolCamScript);

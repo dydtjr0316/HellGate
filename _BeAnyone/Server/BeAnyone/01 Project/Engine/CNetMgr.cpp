@@ -10,6 +10,7 @@
 #include "MeshRender.h"
 
 #include "PlayerScript.h"
+#include "ToolCamScript.h"
 const char ip[] = "127.0.0.1";
 
 CNetMgr g_netMgr;
@@ -147,7 +148,6 @@ void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, 
 	packet.type = CS_ROTATE;
 	packet.size = sizeof(packet);
 	packet.dir = dir;
-	packet.dt = dt;
 	packet.dragVec = drag;
 	packet.rotateVec = rotate;
 	Send_Packet(&packet);
@@ -356,6 +356,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		//CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
+			cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
+
 			g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
 			/*cout << "*************POS***************" << endl;
 			cout << g_Object.find(g_myid)->second->Transform()->GetLocalPos().x << endl;
@@ -374,6 +376,45 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 		cout << "-------------------------" << endl;
 
+		CToolCamScript* camScript = m_pCamObj->GetScript<CToolCamScript>();
+		
+		Vector3 vPos = camScript->Transform()->GetLocalPos();
+		CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
+
+		Vector3 vRot = camScript->Transform()->GetLocalRot();
+		Vector3 vPlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+		XMMATRIX vPlayerMat = g_Object.find(g_myid)->second->Transform()->GetWorldMat();
+		Vector3 vFront = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		Vector3 vUp = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::UP);
+		Vector3 vRight = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+
+		float fScale = camScript->Camera()->GetScale();
+		float fSpeed = camScript->GetSpeed();
+		float fDistance = 400.f;
+		vPos = vPlayerPos->GetLocalPos() + (vPlayerPos->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
+		vPos.y = vPlayerPos->GetLocalPos().y + 450.f;
+
+
+		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+		vRot.y += vDrag.x * DT * 0.1f;
+		/*cout << "*************카메라POS***************" << endl;
+		cout << camScript->Transform()->GetLocalPos().x << endl;
+		cout << camScript->Transform()->GetLocalPos().y << endl;
+		cout << camScript->Transform()->GetLocalPos().z << endl;
+		cout << "*************플레이어POS***************" << endl;
+		cout << vPlayerPos->GetLocalPos().x << endl;
+		cout << vPlayerPos->GetLocalPos().y << endl;
+		cout << vPlayerPos->GetLocalPos().z << endl;
+		cout << "*************ROTATE***************" << endl;
+		cout << camScript->Transform()->GetLocalRot().x << endl;
+		cout << camScript->Transform()->GetLocalRot().y << endl;
+		cout << camScript->Transform()->GetLocalRot().z << endl;
+		cout << "*******************************" << endl;*/
+
+		camScript->Transform()->SetPlayerPosition(vPlayerPos->GetLocalPos());
+		camScript->Transform()->SetLocalRot(vRot);
+		camScript->Transform()->SetLocalPos(vPos);
+		camScript->Transform()->SetPlayerWorldMat(vPlayerMat);
 
 	}
 	break;
