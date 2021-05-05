@@ -345,17 +345,18 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
 		int other_id = packet->id;
 		
-
 		if (other_id == g_myid)
 		{
 			//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
-			g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
-			//m_pCamObj->Transform()->SetLocalRot(packet->rotateVec);
+			//g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
+			/*m_pObj->Transform()->SetLocalRot(packet->rotateVec);
+			m_pCamObj->Transform()->SetLocalRot(packet->rotateVec + Vector3(XM_PI / 6, XM_PI, 0.f));*/
+
 		}
 		else
 		{
 			//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
-			g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
+			//g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
 			//m_pCamObj->Transform()->SetLocalRot(packet->rotateVec);
 		}
 		/*cout << "=================캠 pos=======================" << endl;

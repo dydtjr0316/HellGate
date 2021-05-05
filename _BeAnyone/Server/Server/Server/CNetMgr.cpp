@@ -478,6 +478,8 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, Vector2& dragVec, V
 
     _tSector oldSector = pClient->GetSector();
     //cout << "rotate_lbtn µé¾î¿È" << endl;
+
+    rotateVec.y += dragVec.x;
     
     switch (dir)
     {
