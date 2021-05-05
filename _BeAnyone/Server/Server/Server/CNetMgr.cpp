@@ -189,6 +189,7 @@ void CNetMgr::Send_Roate_Packet(const int& user_id, const int& mover_id, const c
     p.size = sizeof(p);
     p.type = SC_PACKET_ROTATE;
     p.dir = dir;
+    p.posVec = Find(mover_id)->GetLocalPosVector();
 
     p.rotateVec = Find(mover_id)->GetRoatateVector();
     cout << "패킷 사이즈 -> " << p.size << endl;

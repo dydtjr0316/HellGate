@@ -128,6 +128,7 @@ struct sc_packet_rotate {
 	unsigned short move_time;// 진짜 필요한가?
 
 	Vector3 rotateVec;
+	Vector3 posVec;
 
 	char dir;
 };

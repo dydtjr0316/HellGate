@@ -16,7 +16,7 @@ CToolCamScript::~CToolCamScript()
 
 void CToolCamScript::update()
 {
-    /*Vector3 vPos = Transform()->GetLocalPos();
+    Vector3 vPos = Transform()->GetLocalPos();
     CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
 
     Vector3 vRot = Transform()->GetLocalRot();
@@ -35,7 +35,8 @@ void CToolCamScript::update()
     if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
     {
         Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-        vRot.y += vDrag.x * DT * 0.1f;
+        vRot.y += vDrag.x * DT * 0.01f;
+       
         cout << "*************Ä«¸Þ¶óPOS***************" << endl;
         cout << Transform()->GetLocalPos().x << endl;
         cout << Transform()->GetLocalPos().y << endl;
@@ -56,7 +57,7 @@ void CToolCamScript::update()
     Transform()->SetPlayerPosition(vPlayerPos->GetLocalPos());
     Transform()->SetLocalRot(vRot);
     Transform()->SetLocalPos(vPos);
-    Transform()->SetPlayerWorldMat(vPlayerMat);*/
+    Transform()->SetPlayerWorldMat(vPlayerMat);
 
 
 }

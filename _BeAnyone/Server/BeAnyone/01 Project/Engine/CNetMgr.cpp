@@ -121,14 +121,6 @@ void CNetMgr::Send_LogIN_Packet()
 	Send_Packet(&l_packet);
 }
 
-void CNetMgr::Send_Move_Packet(unsigned const char& dir)
-{
-	cs_packet_move m_packet;
-	m_packet.type = CS_MOVE;
-	m_packet.size = sizeof(m_packet);
-	m_packet.direction = dir;
-	Send_Packet(&m_packet);
-}
 
 void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector)
 {
@@ -138,6 +130,11 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	m_packet.direction = dir;
 	m_packet.localVec = local;
 	m_packet.dirVec = dirVector;
+	cout << "*************************" << endl;
+	cout << "보낼때" <<  endl;
+	cout << m_packet.localVec.x << endl;
+	cout << m_packet.localVec.y << endl;
+	cout << m_packet.localVec.z << endl << endl;
 
 	Send_Packet(&m_packet);
 }
@@ -280,7 +277,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 			switch (packet->dir)
 			{
 			case MV_FRONT:
-				cout << "앞뒤" << endl;
 				ObjTrans->SetLocalPos(packet->localVec);
 				break;
 			case MV_BACK:
@@ -288,7 +284,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 				break;
 			case MV_LEFT:
 			case MV_RIGHT:
-				cout << "좌우" << endl;
 				ObjTrans->SetLocalPos(packet->localVec);
 				break;
 			default:
@@ -299,18 +294,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 			switch (packet->dir)
 			{
 			case MV_FRONT:
-
 			case MV_BACK:
-
 			case MV_LEFT:
-
 			case MV_RIGHT:
-				cout << "my move===>" << other_id << ", " << g_myid << endl;
-
+				cout << "받을때" << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-				cout << endl;
+				cout <<"********************************************" <<endl;
 				break;
 			default:
 				cout << "출력 디폴트?" << endl;
@@ -353,69 +344,19 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
 		int other_id = packet->id;
-		//CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
 			cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
-
 			g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
-			/*cout << "*************POS***************" << endl;
-			cout << g_Object.find(g_myid)->second->Transform()->GetLocalPos().x << endl;
-			cout << g_Object.find(g_myid)->second->Transform()->GetLocalPos().y << endl;
-			cout << g_Object.find(g_myid)->second->Transform()->GetLocalPos().z << endl;
-			cout << "*************ROTATE***************" << endl;
-			cout << g_Object.find(g_myid)->second->Transform()->GetLocalRot().x << endl;
-			cout << g_Object.find(g_myid)->second->Transform()->GetLocalRot().y << endl;
-			cout << g_Object.find(g_myid)->second->Transform()->GetLocalRot().z << endl;
-			cout << "*******************************" << endl;*/
+			g_Object.find(g_myid)->second->Transform()->SetLocalPos(packet->posVec);
 		}
 		else
 		{
 			cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
 			g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
+			g_Object.find(other_id)->second->Transform()->SetLocalPos(packet->posVec);
 		}
-		cout << "-------------------------" << endl;
-
-		CToolCamScript* camScript = m_pCamObj->GetScript<CToolCamScript>();
 		
-		Vector3 vPos = camScript->Transform()->GetLocalPos();
-		CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
-
-		Vector3 vRot = camScript->Transform()->GetLocalRot();
-		Vector3 vPlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
-		XMMATRIX vPlayerMat = g_Object.find(g_myid)->second->Transform()->GetWorldMat();
-		Vector3 vFront = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		Vector3 vUp = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::UP);
-		Vector3 vRight = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-
-		float fScale = camScript->Camera()->GetScale();
-		float fSpeed = camScript->GetSpeed();
-		float fDistance = 400.f;
-		vPos = vPlayerPos->GetLocalPos() + (vPlayerPos->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
-		vPos.y = vPlayerPos->GetLocalPos().y + 450.f;
-
-
-		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-		vRot.y += vDrag.x * DT * 0.1f;
-		/*cout << "*************카메라POS***************" << endl;
-		cout << camScript->Transform()->GetLocalPos().x << endl;
-		cout << camScript->Transform()->GetLocalPos().y << endl;
-		cout << camScript->Transform()->GetLocalPos().z << endl;
-		cout << "*************플레이어POS***************" << endl;
-		cout << vPlayerPos->GetLocalPos().x << endl;
-		cout << vPlayerPos->GetLocalPos().y << endl;
-		cout << vPlayerPos->GetLocalPos().z << endl;
-		cout << "*************ROTATE***************" << endl;
-		cout << camScript->Transform()->GetLocalRot().x << endl;
-		cout << camScript->Transform()->GetLocalRot().y << endl;
-		cout << camScript->Transform()->GetLocalRot().z << endl;
-		cout << "*******************************" << endl;*/
-
-		camScript->Transform()->SetPlayerPosition(vPlayerPos->GetLocalPos());
-		camScript->Transform()->SetLocalRot(vRot);
-		camScript->Transform()->SetLocalPos(vPos);
-		camScript->Transform()->SetPlayerWorldMat(vPlayerMat);
-
 	}
 	break;
 	case SC_PACKET_LEAVE:
