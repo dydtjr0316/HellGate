@@ -16,48 +16,40 @@ CToolCamScript::~CToolCamScript()
 
 void CToolCamScript::update()
 {
+    // 공통
     Vector3 vPos = Transform()->GetLocalPos();
     CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
 
-    Vector3 vRot = Transform()->GetLocalRot();
-    Vector3 vPlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
-    XMMATRIX vPlayerMat = g_Object.find(g_myid)->second->Transform()->GetWorldMat();
-    Vector3 vFront = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-    Vector3 vUp = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::UP);
-    Vector3 vRight = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+    
+    //// 필요없는거
+    //float fScale = Camera()->GetScale();
+    //float fSpeed = m_fSpeed;
 
-    float fScale = Camera()->GetScale();
-    float fSpeed = m_fSpeed;
+    // 공통
     float fDistance = 400.f;
+    //cout << "toolcam스크립트트트트트트ㅡ틑 변경전" << endl;
+    //cout << vPos.x << endl;
+    //cout << vPos.y << endl;
+    //cout << vPos.z << endl;
+
     vPos = vPlayerPos->GetLocalPos() + (vPlayerPos->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
     vPos.y = vPlayerPos->GetLocalPos().y + 450.f;
 
-    if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
-    {
-        Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-        vRot.y += vDrag.x * DT * 0.01f;
-       
-        cout << "*************카메라POS***************" << endl;
-        cout << Transform()->GetLocalPos().x << endl;
-        cout << Transform()->GetLocalPos().y << endl;
-        cout << Transform()->GetLocalPos().z << endl;
-        cout << "*************플레이어POS***************" << endl;
-        cout << vPlayerPos->GetLocalPos().x << endl;
-        cout << vPlayerPos->GetLocalPos().y << endl;
-        cout << vPlayerPos->GetLocalPos().z << endl;
-        cout << "*************ROTATE***************" << endl;
-        cout << Transform()->GetLocalRot().x << endl;
-        cout << Transform()->GetLocalRot().y << endl;
-        cout << Transform()->GetLocalRot().z << endl;
-        cout << "*******************************" << endl;
-    }
+    //cout << "toolcam스크립트트트트트트ㅡ틑 변경          후" << endl;
+    //cout << vPos.x << endl;
+    //cout << vPos.y << endl;
+    //cout << vPos.z << endl;
+    Transform()->SetLocalPos(vPos);
+    Transform()->SetLocalRot(vPlayerPos->GetLocalRot() + Vector3(XM_PI / 6, XM_PI, 0.f));
+
+
 
     
 
-    Transform()->SetPlayerPosition(vPlayerPos->GetLocalPos());
-    Transform()->SetLocalRot(vRot);
-    Transform()->SetLocalPos(vPos);
-    Transform()->SetPlayerWorldMat(vPlayerMat);
+    // 공통
+    //Transform()->SetPlayerPosition(vPlayerPos->GetLocalPos());
+    
+    // 이동
 
 
 }

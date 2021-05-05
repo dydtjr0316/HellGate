@@ -72,17 +72,19 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 		//// 싱글 프로젝트 회전
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = Transform()->GetLocalRot();
+		cout << "playerscript연산전=========" << vRot.y <<" >> "<<vDrag.x<<" >> "<<DT<< endl;
 
-		vRot.y += vDrag.x * DT * 0.01f;
+		vRot.y += vDrag.x * DT * 0.5f;
+
+		cout << "playerscript연산 후=========" << vRot.y << " >> " << vDrag.x << " >> " << DT << endl;
 
 
-
-		//g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot);
+		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot);
 		
 
 
 		// 싱글 프로젝트 회전
-		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
+		//g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
 
 
 	}

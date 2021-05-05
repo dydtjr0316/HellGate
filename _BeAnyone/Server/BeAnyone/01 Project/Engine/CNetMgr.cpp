@@ -344,19 +344,34 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
 		int other_id = packet->id;
+		
+
 		if (other_id == g_myid)
 		{
-			cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
+			//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
 			g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
-			g_Object.find(g_myid)->second->Transform()->SetLocalPos(packet->posVec);
+			//m_pCamObj->Transform()->SetLocalRot(packet->rotateVec);
 		}
 		else
 		{
-			cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
+			//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
 			g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
-			g_Object.find(other_id)->second->Transform()->SetLocalPos(packet->posVec);
+			//m_pCamObj->Transform()->SetLocalRot(packet->rotateVec);
 		}
-		
+		/*cout << "=================캠 pos=======================" << endl;
+		cout << m_pCamObj->Transform()->GetLocalPos().x << endl;
+		cout << m_pCamObj->Transform()->GetLocalPos().y << endl;
+		cout << m_pCamObj->Transform()->GetLocalPos().z << endl;
+		cout << "=================obj pos=======================" << endl;
+		cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
+		cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
+		cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+		cout << "===========================================" << endl;*/
+		cout << "=================패킷 pos=======================" << endl;
+		cout << packet->rotateVec.x << endl;
+		cout << packet->rotateVec.y << endl;
+		cout << packet->rotateVec.z << endl;
+		cout << "===========================================" << endl;
 	}
 	break;
 	case SC_PACKET_LEAVE:
@@ -396,17 +411,17 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 	/*cout << "Process_Data -> " << io_byte << endl;
 	cout << "=====================================" << endl;*/
 
-	if (io_byte > sizeof(cs_packet_rotate))
-	{
-		switch (net_buf[1])
-		{
-		case SC_PACKET_ROTATE:
-			cout << "net buf[1] SC_PACKET_ROTATE" << endl;
-			cout << "net buf[0] size ->" << (int)net_buf[0] << endl;
-			cout << "iobyte     ->    " << io_byte << endl;
-			break;
-		}
-	}
+	//if (io_byte > sizeof(cs_packet_rotate))
+	//{
+	//	switch (net_buf[1])
+	//	{
+	//	case SC_PACKET_ROTATE:
+	//		cout << "net buf[1] SC_PACKET_ROTATE" << endl;
+	//		cout << "net buf[0] size ->" << (int)net_buf[0] << endl;
+	//		cout << "iobyte     ->    " << io_byte << endl;
+	//		break;
+	//	}
+	//}
 
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];
