@@ -139,29 +139,13 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	Send_Packet(&m_packet);
 }
 
-void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, const Vector3& rotate, const float& dt)
+void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const float& rotateY)
 {
 	cs_packet_rotate packet;
 	packet.type = CS_ROTATE;
 	packet.size = sizeof(packet);
 	packet.dir = dir;
-	packet.dragVec = drag;
-	packet.rotateVec = rotate;
-	Send_Packet(&packet);
-}
-
-void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, const Vector3& rotate)
-{
-	cs_packet_rotate packet;
-	packet.type = CS_ROTATE;
-	packet.size = sizeof(cs_packet_rotate);
-	packet.dir = dir;
-	packet.dragVec = drag;
-	packet.rotateVec = rotate;
-	packet.move_time = 0;
-
-	cout << "패킷 보내기전 rotate Y -> " << packet.rotateVec.y << endl;
-
+	packet.rotateY = rotateY;
 	Send_Packet(&packet);
 }
 
@@ -186,25 +170,7 @@ void CNetMgr::Recevie_Data()
 	if (ret <= 0)return;
 
 	size_t retbytesize = ret;
-	//cout << "=====================================" << endl;
 
-	/*switch (recvbuf[1])
-	{
-	case SC_PACKET_LOGIN_OK:
-		cout << "SC_PACKET_LOGIN_OK" << endl;
-		break;
-	case SC_PACKET_MOVE:
-		cout << "SC_PACKET_MOVE" << endl;
-		break;
-	case SC_PACKET_ENTER:
-		cout << "SC_PACKET_ENTER" << endl;
-		break;
-	case SC_PACKET_ROTATE:
-		cout << "SC_PACKET_ROTATE" << endl;
-		break;
-	default:
-		break;
-	}*/
 
 	if (ret < 0)
 	{
@@ -340,39 +306,32 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 	}
 	break;
-	case SC_PACKET_ROTATE:
+	case SC_PACKET_MOUSE:
 	{
-		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
-		int other_id = packet->id;
-		
-		if (other_id == g_myid)
+		int other_id;
+		sc_packet_rotate* rotate_packet = nullptr;
+		switch (ptr[2])
 		{
-			//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
-			//g_Object.find(g_myid)->second->Transform()->SetLocalRot(packet->rotateVec);
-			/*m_pObj->Transform()->SetLocalRot(packet->rotateVec);
-			m_pCamObj->Transform()->SetLocalRot(packet->rotateVec + Vector3(XM_PI / 6, XM_PI, 0.f));*/
+		case Rotate_LBTN:
+			rotate_packet = reinterpret_cast<sc_packet_rotate*>(ptr);
+			other_id = rotate_packet->id;
 
+			if (other_id == g_myid)
+			{
+				// 세팅하지 않기
+
+			}
+			else
+			{
+				//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
+				//g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
+				//m_pCamObj->Transform()->SetLocalRot(packet->rotateVec);
+			}
+			break;
+		default:
+			break;
 		}
-		else
-		{
-			//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
-			//g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
-			//m_pCamObj->Transform()->SetLocalRot(packet->rotateVec);
-		}
-		/*cout << "=================캠 pos=======================" << endl;
-		cout << m_pCamObj->Transform()->GetLocalPos().x << endl;
-		cout << m_pCamObj->Transform()->GetLocalPos().y << endl;
-		cout << m_pCamObj->Transform()->GetLocalPos().z << endl;
-		cout << "=================obj pos=======================" << endl;
-		cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
-		cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
-		cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-		cout << "===========================================" << endl;*/
-		cout << "=================패킷 pos=======================" << endl;
-		cout << packet->rotateVec.x << endl;
-		cout << packet->rotateVec.y << endl;
-		cout << packet->rotateVec.z << endl;
-		cout << "===========================================" << endl;
+		
 	}
 	break;
 	case SC_PACKET_LEAVE:
@@ -409,20 +368,7 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 	static size_t in_packet_size = 0;
 	static size_t saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF_SIZE];
-	/*cout << "Process_Data -> " << io_byte << endl;
-	cout << "=====================================" << endl;*/
 
-	//if (io_byte > sizeof(cs_packet_rotate))
-	//{
-	//	switch (net_buf[1])
-	//	{
-	//	case SC_PACKET_ROTATE:
-	//		cout << "net buf[1] SC_PACKET_ROTATE" << endl;
-	//		cout << "net buf[0] size ->" << (int)net_buf[0] << endl;
-	//		cout << "iobyte     ->    " << io_byte << endl;
-	//		break;
-	//	}
-	//}
 
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];

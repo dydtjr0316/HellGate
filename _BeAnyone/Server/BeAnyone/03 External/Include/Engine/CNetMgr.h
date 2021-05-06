@@ -26,8 +26,7 @@ public:		// 패킷 전송부
 	void Send_Packet(void* _packet);
 	void Send_LogIN_Packet();
 	void Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector);
-	void Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, const Vector3& rotate, const float& dt);
-	void Send_Rotate_Packet(unsigned const char& dir, const Vector2& drag, const Vector3& rotate);
+	void Send_Rotate_Packet(unsigned const char& dir, const float& rotateY);
 	void Send_Attack_Packet();
 public:
 	void err_quit(const char* msg);

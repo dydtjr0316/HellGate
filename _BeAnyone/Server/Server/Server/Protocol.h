@@ -66,7 +66,7 @@ constexpr char SC_PACKET_STAT_CHANGE = 6;
 constexpr char SC_PACKET_ATTACK = 7;
 constexpr char SC_PACKET_LEVEL_UP = 8;
 constexpr char SC_PACKET_ID = 9;
-constexpr char SC_PACKET_ROTATE = 10;
+constexpr char SC_PACKET_MOUSE = 10;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -123,14 +123,12 @@ struct sc_packet_move {
 struct sc_packet_rotate {
 	char size;
 	char type;
+	char dir;
 
 	unsigned short id;
 	unsigned short move_time;// 진짜 필요한가?
 
-	Vector3 rotateVec;
-	Vector3 posVec;
-
-	char dir;
+	float rotateY;
 };
 
 struct sc_packet_enter {
@@ -223,9 +221,7 @@ struct cs_packet_rotate {
 	char  type;
 	unsigned short	  move_time;
 
-	Vector2 dragVec;
-
-	Vector3 rotateVec;
+	float rotateY;
 	
 	char  dir;
 };

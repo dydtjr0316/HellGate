@@ -30,6 +30,7 @@ static type* GetInst()\
                             type(const type& _class){assert(nullptr);}
 
 #define MAX_LAYER 32
+#define ROTATE_SPEED 0.05f
 
 //typedef DirectX::SimpleMath::Vector2 Vec2;
 //typedef DirectX::SimpleMath::Vector3 Vec3;

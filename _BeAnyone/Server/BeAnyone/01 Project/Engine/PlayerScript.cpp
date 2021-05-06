@@ -74,14 +74,14 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 		Vector3 vRot = Transform()->GetLocalRot();
 		cout << "playerscript연산전=========" << vRot.y <<" >> "<<vDrag.x<<" >> "<<DT<< endl;
 
-		vRot.y += vDrag.x * DT * 0.01f;
+		vRot.y += vDrag.x * DT * ROTATE_SPEED;
 		
 		//vDrag.x = vDrag.x * DT * 0.01f;
 
 		cout << "playerscript연산 후=========" << vRot.y << " >> " << vDrag.x << " >> " << DT << endl;
 
 
-		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vDrag, vRot);
+		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vRot.y);
 		
 
 		Transform()->SetLocalRot(vRot);

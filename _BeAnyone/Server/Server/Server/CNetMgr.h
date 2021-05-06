@@ -25,7 +25,7 @@ public:		// 角力 按眉 诀单捞飘何
 	//void Random_Move_Monster(const int& id);
 	void Do_Attack(const int& user_id);
 	void Do_Move(const int& user_id, const char& dir, Vector3& localVec, Vector3& dirVec);
-	void Do_Rotate(const int& user_id, const char& dir,  Vector2& dragVec, Vector3& rotateVec);
+	void Do_Rotate(const int& user_id, const char& dir, float& rotateY);
 	void Disconnect(const int& user_id);
 	void Enter_Game(const int& user_id, char name[]);
 public:		// 矫具贸府 累己何

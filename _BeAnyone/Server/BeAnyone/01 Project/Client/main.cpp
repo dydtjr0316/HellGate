@@ -28,6 +28,9 @@ SOCKET g_Socket;
 char name[10];
 
 #define MAX_LOADSTRING 100
+enum class Version { Server, Cliet };
+Version v = Version::Server;    // 서버 버전바꾸는거 
+// 이거는 한번 고민해보기
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -76,22 +79,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
-      while (true)
+    while (true)
     {
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-				break;
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            if (msg.message == WM_QUIT)
+                break;
 
-			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-		}
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
         g_netMgr.Recevie_Data();
-		// Game Running
-		CCore::GetInst()->progress();
+        // Game Running
+        CCore::GetInst()->progress();
     }
 
     return (int)msg.wParam;
