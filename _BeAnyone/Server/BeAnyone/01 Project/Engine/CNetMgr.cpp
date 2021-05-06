@@ -188,9 +188,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
-		m_pCamObj->Transform()->SetLocalPos(m_pObj->Transform()->GetLocalPos());
+
 		g_Object.emplace(g_myid, m_pObj);
-		g_CamObject.emplace(g_myid, m_pCamObj);
 	}
 	break;
 	case SC_PACKET_ENTER:

@@ -31,26 +31,26 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
-		g_netMgr.Send_Move_Packet(MV_FRONT, localPos, -Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
+		g_netMgr.Send_Move_Packet(MV_FRONT, localPos, -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
 		// 델타타임 따로 보낼껀지 결정
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
 	{
 		//vPos.z -= DT * 200.f;
-		g_netMgr.Send_Move_Packet(MV_BACK, localPos, Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
+		g_netMgr.Send_Move_Packet(MV_BACK, localPos, g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_A))
 	{
 		//vPos.x -= DT * 200.f;
-		g_netMgr.Send_Move_Packet(MV_LEFT, localPos, Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
+		g_netMgr.Send_Move_Packet(MV_LEFT, localPos, g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_D))
 	{
 		//vPos.x += DT * 200.f;
-		g_netMgr.Send_Move_Packet(MV_RIGHT, localPos, -Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
+		g_netMgr.Send_Move_Packet(MV_RIGHT, localPos, -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
 	}
 
 	// z 키를 누르면 z 축 회전
