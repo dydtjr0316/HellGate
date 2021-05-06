@@ -42,6 +42,7 @@ public:
 
 	void SetLocalScale(const Vector3& _vScale) { if (m_vLocalScale != _vScale) { m_vLocalScale = _vScale; Changed(); } }
 	void SetLocalRot(const Vector3& _vRot) { if (m_vLocalRot != _vRot) { m_vLocalRot = _vRot; Changed(); } }
+	void SetLocalRot(const float& _vRotY) { if (m_vLocalRot.y != _vRotY) { m_vLocalRot.y = _vRotY; Changed(); } }
 
 	bool IsCasting(const Vector3& _vPos);
 	float GetMaxScale();

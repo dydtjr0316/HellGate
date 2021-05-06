@@ -22,7 +22,6 @@ int g_myid = -1;
 
 CNetMgr::CNetMgr()
 {
-	cout << "net mgr 생성자" << endl;
 	m_pObj = nullptr;
 }
 void CNetMgr::err_quit(const char* msg)
@@ -71,13 +70,11 @@ void CNetMgr::Connect()
 			int i = 0;
 		}
 	}
-	//err_quit("Connect()");
 
 	WSAEVENT event = WSACreateEvent();
 	memset(&m_overlapped, 0, sizeof(m_overlapped));
 
 	m_overlapped.hEvent = event;
-	//cout << "over : " << m_overlapped.hEvent << endl;
 
 }
 
@@ -130,11 +127,6 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	m_packet.direction = dir;
 	m_packet.localVec = local;
 	m_packet.dirVec = dirVector;
-	cout << "*************************" << endl;
-	cout << "보낼때" <<  endl;
-	cout << m_packet.localVec.x << endl;
-	cout << m_packet.localVec.y << endl;
-	cout << m_packet.localVec.z << endl << endl;
 
 	Send_Packet(&m_packet);
 }
@@ -209,7 +201,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (id == g_myid)
 		{
 			g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
-			//cout << "enter id(" << g_myid << ") packet=================" << endl;
 		}
 		else
 		{
@@ -225,9 +216,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pObject, false);
 				g_Object.emplace(id, pObject);
-				//	cout << "packet enter in __ id! = g_myid" << endl;
-				//	cout << "id -> " << id << endl;
-				//	cout << "g_Object size -> " << g_Object.size() << endl;
+
 			}
 		}
 	}
@@ -240,68 +229,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
-			switch (packet->dir)
-			{
-			case MV_FRONT:
-				ObjTrans->SetLocalPos(packet->localVec);
-				break;
-			case MV_BACK:
-				ObjTrans->SetLocalPos(packet->localVec);
-				break;
-			case MV_LEFT:
-			case MV_RIGHT:
-				ObjTrans->SetLocalPos(packet->localVec);
-				break;
-			default:
-				cout << "실제 움직임 디폴트?" << endl;
-				break;
-			}
-
-			switch (packet->dir)
-			{
-			case MV_FRONT:
-			case MV_BACK:
-			case MV_LEFT:
-			case MV_RIGHT:
-				cout << "받을때" << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-				cout <<"********************************************" <<endl;
-				break;
-			default:
-				cout << "출력 디폴트?" << endl;
-				cout << "--------------" << endl;
-				break;
-			}
-
+			ObjTrans->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
 			//추가
 			if (0 != g_Object.count(other_id))
 			{
-				switch (packet->dir)
-				{
-				case MV_FRONT:
-					ObjTrans->SetLocalPos(packet->localVec);
-					break;
-				case MV_BACK:
-					ObjTrans->SetLocalPos(packet->localVec);
-					break;
-				case MV_LEFT:
-				case MV_RIGHT:
-					ObjTrans->SetLocalPos(packet->localVec);
-					break;
-				default:
-					cout << "실제 움직임 디폴트?" << endl;
-					break;
-				}
-				cout << "other move===>" << other_id << ", " << g_myid << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
-				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-				cout << endl;
+				ObjTrans->SetLocalPos(packet->localVec);
 			}
 		}
 	}
@@ -323,9 +258,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			}
 			else
 			{
-				//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
-				//g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
-				//m_pCamObj->Transform()->SetLocalRot(packet->rotateVec);
+				g_Object.find(other_id)->second->Transform()->SetLocalRot(rotate_packet->rotateY);
+
 			}
 			break;
 		default:
@@ -336,12 +270,25 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
+		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
+		int other_id = my_packet->id;
+		if (other_id == g_myid) {
+			delete g_Object.find(g_myid)->second;
+			g_Object.erase(g_myid);
 
+		}
+		else {
+			if (0 != g_Object.count(other_id))
+			{
+				delete g_Object.find(other_id)->second;
+				g_Object.erase(other_id);
+			}
+		}
 	}
 	break;
 	case SC_PACKET_CHAT:
 	{
-
+		
 	}
 	break;
 	case SC_PACKET_ATTACK:

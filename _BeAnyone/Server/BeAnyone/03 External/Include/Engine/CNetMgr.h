@@ -9,12 +9,10 @@ class CNetMgr
 {
 public:
 	CNetMgr();
-	~CNetMgr() {/* delete m_pObj; delete m_pCamObj;*/ }
-	CGameObject* GetCamObj() { return m_pCamObj; }
+	~CNetMgr() {delete m_pObj;}
 public:		// obj객체 설정부
 	void SetObj(CGameObject* obj) { m_pObj = new CGameObject; m_pObj = obj; }
 	//void SetCamObj(CToolCamScript* obj) { m_pCamObj = new CToolCamScript; m_pCamObj = obj; }
-	void SetCamObj(CGameObject* obj) { m_pCamObj = new CGameObject; m_pCamObj = obj; cout << &obj << endl; cout << &m_pCamObj << endl; }
 public:		// 네트워크 연결부
 	void Connect();
 public:		// 패킷 처리부
@@ -33,7 +31,5 @@ public:
 private:
 	OVERLAPPED m_overlapped;
 	CGameObject* m_pObj;
-	CGameObject* m_pCamObj;
-	//CToolCamScript* m_pCamObj;
 };
 
