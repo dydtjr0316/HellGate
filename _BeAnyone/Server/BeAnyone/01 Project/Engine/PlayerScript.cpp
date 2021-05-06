@@ -70,15 +70,13 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-		Vector3 vRot = Transform()->GetLocalRot();
+		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
 
 		vRot.y += vDrag.x * DT * ROTATE_SPEED;
 		
 		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vRot.y);
-		
-		//Transform()->SetLocalRot(vRot);
-		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
 
+		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
 
 	}
 }

@@ -19,17 +19,21 @@ void CToolCamScript::update()
     // 공통
     Vector3 vPos = Transform()->GetLocalPos();
     CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
-   
-
+    
     // 공통
     float fDistance = 400.f;
 
     vPos = vPlayerPos->GetLocalPos() + (vPlayerPos->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
     vPos.y = vPlayerPos->GetLocalPos().y + 450.f;
 
+    // 0506
+   // g_Object.find(g_myid)->second->GetCam()->GetScript<CToolCamScript>()->
+        Transform()->SetLocalPos(vPos);
+   // Transform()->SetLocalRot(vPlayerPos->Transform()->GetLocalRot() + Vector3(XM_PI / 6, XM_PI, 0.f));
+    //Transform()->SetLocalRot(vPlayerPos->GetLocalRot() + Vector3(XM_PI / 6, XM_PI, 0.f));
+  //  g_Object.find(g_myid)->second->GetCam()->GetScript<CToolCamScript>()->
+        Transform()->SetLocalRot(vPlayerPos->GetLocalRot() + Vector3(XM_PI / 6, XM_PI, 0.f));
 
-    Transform()->SetLocalRot(vPlayerPos->Transform()->GetLocalRot() + Vector3(XM_PI / 6, XM_PI, 0.f));
-    Transform()->SetLocalPos(vPos);
 
 
 }

@@ -12,6 +12,8 @@ public:
 	~CNetMgr() {delete m_pObj;}
 public:		// obj객체 설정부
 	void SetObj(CGameObject* obj) { m_pObj = new CGameObject; m_pObj = obj; }
+	void SetCamObj(CGameObject* obj) { m_pCamObj = new CGameObject; m_pCamObj = obj; }
+
 	//void SetCamObj(CToolCamScript* obj) { m_pCamObj = new CToolCamScript; m_pCamObj = obj; }
 public:		// 네트워크 연결부
 	void Connect();
@@ -31,5 +33,6 @@ public:
 private:
 	OVERLAPPED m_overlapped;
 	CGameObject* m_pObj;
+	CGameObject* m_pCamObj;
 };
 

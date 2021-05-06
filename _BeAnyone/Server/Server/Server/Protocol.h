@@ -14,7 +14,7 @@ constexpr auto MAX_PACKET_SIZE = 255;
 constexpr auto MAX_BUF_SIZE = 1024;
 
 // 서버 포트
-constexpr int SERVER_PORT = 3500;
+constexpr int SERVER_PORT = 3389;
 constexpr int MAX_ID_LEN = 10;
 constexpr int MAX_STR_LEN = 100;
 

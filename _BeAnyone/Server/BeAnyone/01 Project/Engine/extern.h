@@ -6,8 +6,12 @@
 typedef unordered_map<int, CGameObject*> OBJLIST;
 typedef OBJLIST::iterator OBJITER;
 
+typedef unordered_map<int, CGameObject*> CAMOBJLIST;
+typedef OBJLIST::iterator CAMOBJITER;
+
 extern CNetMgr g_netMgr;
 extern OBJLIST g_Object;
+extern CAMOBJLIST g_CamObject;
 extern int g_myid;
 extern int testpacket;
 

@@ -537,9 +537,9 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
                 }
                 else
                 {
-                    cout << "새로들어온애가 나한테" << endl;
+                   // cout << "새로들어온애가 나한테" << endl;
                     cout << ob << ", " << user_id << endl;
-                    Send_Roate_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+                    Send_Roate_Packet(ob, user_id, dir);
                 }
             }
         }

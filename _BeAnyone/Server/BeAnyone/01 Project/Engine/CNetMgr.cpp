@@ -18,7 +18,7 @@ CNetMgr g_netMgr;
 int testpacket;
 OBJLIST g_Object;
 int g_myid = -1;
-
+CAMOBJLIST g_CamObject;
 
 CNetMgr::CNetMgr()
 {
@@ -188,8 +188,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
+		m_pCamObj->Transform()->SetLocalPos(m_pObj->Transform()->GetLocalPos());
 		g_Object.emplace(g_myid, m_pObj);
-
+		g_CamObject.emplace(g_myid, m_pCamObj);
 	}
 	break;
 	case SC_PACKET_ENTER:
@@ -254,12 +255,17 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (other_id == g_myid)
 			{
 				// ¼¼ÆÃÇÏÁö ¾Ê±â
-
+				cout << "¾¾~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¹ß" << endl;
+				cout << "¾¾~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¹ß" << endl;
+				cout << "¾¾~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¹ß" << endl;
+				cout << "¾¾~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¹ß" << endl;
+				cout << "¾¾~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¹ß" << endl;
 			}
 			else
 			{
-				g_Object.find(other_id)->second->Transform()->SetLocalRot(rotate_packet->rotateY);
-
+				g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
+				cout << other_id << "¹ø Å¬¶óÀÌ¾ðÆ® ¼¼ÆÃ" << endl;
+				cout << "roatet packet y >> " << rotate_packet->rotateY << endl;
 			}
 			break;
 		default:

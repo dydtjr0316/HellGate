@@ -12,6 +12,7 @@ class CScript;
 // class CLight2D;
 class CLight;
 class CCamera;
+//class CToolCamScript;
 
 class CGameObject :
 	public CEntity
@@ -25,6 +26,10 @@ private:
 	bool					m_bDead;
 	bool					m_bActive;
 	bool					m_bFrustumCheck;
+
+	//0506
+	//CToolCamScript*			m_CamObj;
+	CGameObject* m_pCamObj;
 
 	// UI
 	bool					m_bUiRenderCheck = true;
@@ -56,6 +61,7 @@ public:
 	CMeshRender* MeshRender() { return (CMeshRender*)GetComponent(COMPONENT_TYPE::MESHRENDER); }	// 다운 캐스팅
 	CCamera* Camera() { return (CCamera*)m_arrCom[(UINT)COMPONENT_TYPE::CAMERA]; }
 	CLight* Light() { return (CLight*)m_arrCom[(UINT)COMPONENT_TYPE::LIGHT]; }
+	
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
 	
@@ -72,6 +78,13 @@ public:
 	void SetDead();
 
 	void RegisterToLayer();
+
+	//0506
+	//CToolCamScript* GetCamScript() { return m_CamObj; }
+	//void SetCamScript(CToolCamScript* obj) { m_CamObj = obj; }
+
+	CGameObject* GetCam() { return m_pCamObj; }
+	void SetCam(CGameObject* obj) { m_pCamObj = obj; }
 
 public:
 	CLONE(CGameObject);
