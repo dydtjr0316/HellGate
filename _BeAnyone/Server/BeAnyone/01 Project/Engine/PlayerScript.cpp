@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerScript.h"
+bool checkOnce = true;
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
@@ -30,7 +31,7 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
-		g_netMgr.Send_Move_Packet(MV_FRONT, localPos, -Transform()->GetWorldDir(DIR_TYPE::FRONT)*200.f*DT);	
+		g_netMgr.Send_Move_Packet(MV_FRONT, localPos, -Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
 		// 델타타임 따로 보낼껀지 결정
 	}
 
@@ -68,12 +69,25 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
+		//// 싱글 프로젝트 회전
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = Transform()->GetLocalRot();
-	
-		//vRot.x -= vDrag.y * DT * 3.f;
-		vRot.y += vDrag.x * DT * 1.5f;
-	
+		cout << "playerscript연산전=========" << vRot.y <<" >> "<<vDrag.x<<" >> "<<DT<< endl;
+
+		vRot.y += vDrag.x * DT * ROTATE_SPEED;
+		
+		//vDrag.x = vDrag.x * DT * 0.01f;
+
+		cout << "playerscript연산 후=========" << vRot.y << " >> " << vDrag.x << " >> " << DT << endl;
+
+
+		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vRot.y);
+		
+
 		Transform()->SetLocalRot(vRot);
+		// 싱글 프로젝트 회전
+		//g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
+
+
 	}
 }

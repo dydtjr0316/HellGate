@@ -22,13 +22,8 @@ bool CNetMgr::is_near( const int& p1, const int& p2)
     float dist =
         (Find(p1)->GetLocalPosVector().x - Find(p1)->GetLocalPosVector().x)
         * (Find(p1)->GetLocalPosVector().x - Find(p1)->GetLocalPosVector().x);
-
     dist += (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z)
         * (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z);
-
-    //float dist = (Find(p1)->GetX() - Find(p2)->GetX()) * (Find(p1)->GetX() - Find(p2)->GetX());
-    //dist += (Find(p1)->GetY() - Find(p2)->GetY()) * (Find(p1)->GetY() - Find(p2)->GetY());
-    // 삭제
 
     return dist <= (float)(VIEW_LIMIT * VIEW_LIMIT);
 }
@@ -38,7 +33,6 @@ void CNetMgr::Add(CGameObject* pObj,  const int& id)
 {
     if (pObj != nullptr)
         g_Object.emplace(id, pObj);
-    
 }
 
 CGameObject* CNetMgr::Find(const int& id)
@@ -73,20 +67,14 @@ void CNetMgr::Send_Packet(const int& id, void* packet)
 {
     unsigned char* buf = reinterpret_cast<unsigned char*>(packet);
 
-    
-
     EXOVER* exover = new EXOVER;
     ZeroMemory(&exover->io_buf, sizeof(exover->io_buf));
     memcpy(exover->io_buf, buf, buf[0]);
-
     exover->op = ENUMOP::OP_SEND;
     exover->wsabuf.buf = reinterpret_cast<char*>(exover->io_buf);
     exover->wsabuf.len = buf[0];
     ZeroMemory(&exover->over, sizeof(exover->over));
 
-   // cout << exover->wsabuf.len << endl;
-
-    // ?????왜 터지노
     Find(id)->GetLock().lock();
     WSASend(Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
         &exover->over, NULL);
@@ -100,15 +88,12 @@ void CNetMgr::Send_LevelUP_Packet(const int& id)
     p.id = id;
     p.size = sizeof(sc_packet_level_up);
     p.type = SC_PACKET_LEVEL_UP;
-
-    
     p.max_hp = dynamic_cast<CClient*>(Find( id))->GetMaxHP();
     p.level = dynamic_cast<CClient*>(Find( id))->GetLevel();
     p.attack_damage = dynamic_cast<CClient*>(Find(id))->GetAttackDamage();
     p.hp = dynamic_cast<CClient*>(Find(id))->GetHP();
     p.exp = dynamic_cast<CClient*>(Find( id))->GetEXP();
     p.max_exp = dynamic_cast<CClient*>(Find( id))->GetMaxEXP();;
-
     Send_Packet( id, &p);
 }
 
@@ -150,17 +135,10 @@ void CNetMgr::Send_LoginOK_Packet(const int& user_id)
     p.id = user_id;
     p.size = sizeof(sc_packet_login_ok);
     p.type = SC_PACKET_LOGIN_OK;
-
     p.exp = pClient->GetEXP();
     p.hp = pClient->GetHP();
     p.level = pClient->GetLevel();
-
-    /*p.x = pClient->GetX();
-    p.y = pClient->GetY();
-    p.z = pClient->GetZ();*/
-    // 삭제
     p.localVec = pClient->GetLocalPosVector();
-
     p.iMax_exp = pClient->GetMaxEXP();
     p.Attack_Damage = pClient->GetAttackDamage();
 
@@ -173,11 +151,7 @@ void CNetMgr::Send_Enter_Packet( const int& user_id,  const int& other_id)
     p.id = other_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_ENTER;
-    //p.x = Find(other_id)->GetX();
-    //p.y = Find(other_id)->GetY();
-    //p.z = Find(other_id)->GetZ();
     p.localVec = Find(other_id)->GetLocalPosVector();
-
     strcpy_s(p.name, Find(other_id)->GetName());    // data race???
     p.o_type = O_PLAYER;
 
@@ -200,33 +174,22 @@ void CNetMgr::Send_Move_Packet(const int& user_id, const int& mover_id, const ch
     p.id = mover_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_MOVE;
-   /* p.x = Find(mover_id)->GetX();
-    p.y = Find(mover_id)->GetY();
-    p.z = Find(mover_id)->GetZ();*/
-
     p.localVec = Find(mover_id)->GetLocalPosVector();
     p.dirVec = Find(mover_id)->GetDirVector();
     p.dir = dir;
-
     p.move_time = Find(mover_id)->GetClientTime();
 
     Send_Packet(user_id, &p);
 }
 
-
-
-void CNetMgr::Send_Move_Packet( const int& user_id,  const int& mover_id)
+void CNetMgr::Send_Roate_Packet(const int& user_id, const int& mover_id, const char& dir)
 {
-    sc_packet_move p;
+    sc_packet_rotate p;
     p.id = mover_id;
     p.size = sizeof(p);
-    p.type = SC_PACKET_MOVE;
-    /*p.x = Find(mover_id)->GetX();
-    p.y = Find(mover_id)->GetY();
-    p.z = Find(mover_id)->GetZ();*/
-    p.localVec = Find(mover_id)->GetLocalPosVector();
-    p.dirVec = Find(mover_id)->GetDirVector();
-
+    p.type = SC_PACKET_MOUSE;
+    p.dir = dir;
+    p.rotateY = Find(mover_id)->GetRoatateVector().y;
     p.move_time = Find(mover_id)->GetClientTime();
 
     Send_Packet(user_id, &p);
@@ -372,150 +335,6 @@ void CNetMgr::Do_Attack(const int& user_id)
     /// <param name="user_id"></param>
 }
 
-void CNetMgr::Do_Move(const int& user_id, const char& dir)
-{
-    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
-
-    unordered_set<int> old_viewList = pClient->GetViewList();
-
-    Vector3 LocalPos = pClient->GetLocalPosVector();
-    Vector3 DirPos = pClient->GetDirVector();
-
-    //cout << "세팅 전" << endl;
-    //cout << x <<", "<< y << ", " << z << endl;
-
-    _tSector oldSector = pClient->GetSector();
-
-    switch (dir)
-    {
-    case MV_UP: 
-        if (LocalPos.y > 0) LocalPos += DirPos;
-        break;
-    case MV_DOWN: 
-        if (LocalPos.y < (WORLD_HEIGHT - 1)) LocalPos += DirPos;
-        break;
-    case MV_LEFT: 
-        if (LocalPos.x > 0) LocalPos += DirPos;
-        break;
-    case MV_RIGHT: 
-        if (LocalPos.x < (WORLD_WIDTH - 1)) LocalPos += DirPos;
-        break;
-    case MV_FRONT: 
-        if (LocalPos.z < (WORLD_WIDTH - 1)) LocalPos += DirPos;
-        break;
-    case MV_BACK:
-        if (LocalPos.z > 0) LocalPos += DirPos;
-        break;
-
-    default:
-        cout << "Unknown Direction from Client move packet!\n";
-        DebugBreak();
-        exit(-1);
-    }
-    //cout << "세팅 후====" << endl;
-
-    //cout << x << ", " << y << ", " << z << endl;
-
-
-    pClient->SetPosV(LocalPos);
-    //pClient->SetX(x);
-    //pClient->SetY(y);
-    //pClient->SetZ(z); // 삭제
-
-    pClient->Change_Sector(oldSector);
-
-    unordered_set<int> new_viewList;
-
-    Send_Move_Packet(user_id, user_id, dir);
-
-    vector<unordered_set<int>> vSectors = pClient->Search_Sector();
-    
-    for (auto& vSec : vSectors)
-    {
-        if (vSec.size() != 0)
-        {
-            for (auto& user : vSec)
-            {
-                if (is_near(user_id, user))
-                {
-                    if (!IsClient(user))
-                    {
-                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
-                        {
-                            if (IsMonster(user))
-                                WakeUp_Monster(user);
-                            else 
-                            {
-                                //cout << "do move 함수 호출" << endl;
-                                //cout << Find(user)->GetStatus() << endl;
-                                WakeUp_NPC(user);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //if (Find(user)->GetStatus() != ST_ACTIVE)continue;
-                    }
-                        new_viewList.insert(user);
-                }
-            }
-        }
-    }
-
-    for (auto& ob : new_viewList)
-    {
-        //시야에 새로 들어온 객체 구분
-        
-        if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
-        {
-            pClient->GetViewList().insert(ob);
-            Send_Enter_Packet(user_id, ob);
-            if (IsClient(ob)&&ob!=user_id)
-            {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
-                {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
-                    Send_Enter_Packet(ob, user_id);
-                }
-                else
-                    Send_Move_Packet(ob, user_id);  // 여기서 또 들어옴
-            }
-        }
-        else // 이전에도 있던 아이디 
-        {
-            if (IsClient(ob) && ob != user_id)
-            {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
-                {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
-                    Send_Enter_Packet(ob, user_id);
-                }
-                else
-                    Send_Move_Packet(ob, user_id);
-            }
-        }
-    }
-    for (auto& ob : old_viewList)
-    {
-        if (new_viewList.count(ob) == 0)
-        {
-            pClient->GetViewList().erase(ob);
-            Send_Leave_Packet(user_id, ob);
-
-            if (IsClient(ob))
-            {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) != 0)
-                {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().erase(user_id);
-                    Send_Leave_Packet(ob, user_id);
-                }
-            }
-        }
-    }
-
-
-}
-
 void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Vector3& dirVec)
 {
     CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
@@ -553,21 +372,123 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
         DebugBreak();
         exit(-1);
     }
-    //cout << "세팅 후====" << endl;
-
-    //cout << x << ", " << y << ", " << z << endl;
-
 
     pClient->SetPosV(localVec);
-    //pClient->SetX(x);
-    //pClient->SetY(y);
-    //pClient->SetZ(z); // 삭제
-
     pClient->Change_Sector(oldSector);
-
     unordered_set<int> new_viewList;
 
     Send_Move_Packet(user_id, user_id, dir);
+
+    vector<unordered_set<int>> vSectors = pClient->Search_Sector();
+
+    for (auto& vSec : vSectors)
+    {
+        if (vSec.size() != 0)
+        {
+            for (auto& user : vSec)
+            {
+                if (is_near(user_id, user))
+                {
+                    if (!IsClient(user))
+                    {
+                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                        {
+                            if (IsMonster(user))
+                                WakeUp_Monster(user);
+                            else
+                            {
+                                WakeUp_NPC(user);
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                    new_viewList.insert(user);
+                }
+            }
+        }
+    }
+
+    for (auto& ob : new_viewList)
+    {
+        //시야에 새로 들어온 객체 구분
+
+        if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
+        {
+            pClient->GetViewList().insert(ob);
+            Send_Enter_Packet(user_id, ob);
+            if (IsClient(ob) && ob != user_id)
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Send_Enter_Packet(ob, user_id);
+                }
+                else
+                    Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+            }
+        }
+        else // 이전에도 있던 아이디 
+        {
+            if (IsClient(ob) && ob != user_id)
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Send_Enter_Packet(ob, user_id);
+                }
+                else
+                    Send_Move_Packet(ob, user_id, dir);
+            }
+        }
+    }
+    for (auto& ob : old_viewList)
+    {
+        if (new_viewList.count(ob) == 0)
+        {
+            pClient->GetViewList().erase(ob);
+            Send_Leave_Packet(user_id, ob);
+
+            if (IsClient(ob))
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) != 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().erase(user_id);
+                    Send_Leave_Packet(ob, user_id);
+                }
+            }
+        }
+    }
+}
+
+void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
+{
+
+    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+
+    unordered_set<int> old_viewList = pClient->GetViewList();
+
+    _tSector oldSector = pClient->GetSector();
+    
+    switch (dir)
+    {
+    case Rotate_LBTN:
+        // 굳이 여기에서 처리가 필요한게 있는가?
+        break;
+    default:
+        cout << "Unknown Direction from Client move packet!\n";
+        DebugBreak();
+        exit(-1);
+    }
+
+    pClient->SetRotateY(rotateY);
+    pClient->Change_Sector(oldSector);
+    // 회전에는 섹터관련 처리가 없어도되지않나?
+    unordered_set<int> new_viewList;
+    // cout << "내가 나한테" << endl;
+    // Send_Roate_Packet(user_id, user_id, dir);
 
     vector<unordered_set<int>> vSectors = pClient->Search_Sector();
 
@@ -619,7 +540,11 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
-                    Send_Move_Packet(ob, user_id);  // 여기서 또 들어옴
+                {
+                    cout << "새로들어온애가 나한테" << endl;
+                    cout << ob << ", " << user_id << endl;
+                    Send_Roate_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+                }
             }
         }
         else // 이전에도 있던 아이디 
@@ -632,7 +557,11 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
-                    Send_Move_Packet(ob, user_id);
+                {
+                    cout << "새로들어온애가 나한테 2" << endl;
+                    cout << ob << ", " << user_id << endl;
+                    Send_Roate_Packet(ob, user_id, dir);
+                }
             }
         }
     }
@@ -690,12 +619,9 @@ void CNetMgr::Enter_Game(const int& user_id, char name[])
 {
     CClient* pUser = dynamic_cast<CClient*>(Find(user_id));
     pUser->GetLock().lock();
-
     pUser->SetName(name);
     pUser->GetLock().unlock();
     pUser->GetName()[MAX_ID_LEN] = NULL;
-    //Send_ID_Packet(user_id);
-
     Send_LoginOK_Packet(user_id);
     pUser->Insert_Sector();
 
@@ -755,6 +681,14 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
 
     }
                 break;
+    case CS_ROTATE:
+    {
+        cs_packet_rotate* packet = reinterpret_cast<cs_packet_rotate*>(buf);
+        Find(user_id)->SetClientTime(packet->move_time);
+        Do_Rotate(user_id, packet->dir, packet->rotateY);
+
+    }
+    break;
     case CS_ATTACK:
     {
         cs_packet_attack* packet = reinterpret_cast<cs_packet_attack*>(buf);
@@ -804,7 +738,6 @@ void CNetMgr::Init_Client()
         pObj = new CClient;
         pObj->SetID(i);
         pObj->SetStatus(OBJSTATUS::ST_FREE);
-        //pObj->Insert_Sector(); 엔터 게임에서 넣어줌
         Add(pObj,  i);
     }
 }
@@ -812,10 +745,7 @@ void CNetMgr::Init_Monster()
 {
     CGameObject* pObj = nullptr;
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
-        // 좌표 어캐할지 생각
         pObj = new CMonster;
-        /*pObj->SetX((float)(rand() % WORLD_WIDTH));
-        pObj->SetY((float)(rand() % WORLD_HEIGHT));*/
         pObj->SetPosV((float)(rand() % WORLD_WIDTH), (float)(rand() % WORLD_WIDTH), (float)(rand() % WORLD_WIDTH));
         pObj->SetID(i);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
@@ -831,7 +761,6 @@ void CNetMgr::Init_NPC()
     for (int i = START_NPC; i < END_NPC; ++i)
     {
         pObj = new CNPC;
-        // 좌표 어캐 할지 생각
         pObj->SetPosV((float)(rand() % WORLD_WIDTH), (float)(rand() % WORLD_WIDTH), (float)(rand() % WORLD_WIDTH));
         pObj->SetID(i);
         char npc_name[50];
@@ -942,8 +871,6 @@ void CNetMgr::Worker_Thread()
                 pClient->SetSocket(c_socket);
 
                 ////////////////////////////////////////////////////////
-             
-                
                 pClient->SetPosV(
                     (float)(rand() % 1000), // 수정 real float
                     (float)(0.f),
@@ -970,11 +897,7 @@ void CNetMgr::Worker_Thread()
                     if (ERROR_IO_PENDING != err_no)
                         error_display("recv", err_no);
                 }
-                /*   DWORD flags = 0;
-                   WSARecv(c_socket, &nc.m_recv_over.wsabuf, 1, NULL, &flags, &nc.m_recv_over.over, NULL);
-                */
             }
-
             c_socket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
             exover->c_socket = c_socket;
             ZeroMemory(&exover->over, sizeof(exover->over));
@@ -1054,9 +977,6 @@ void CNetMgr::Timer_Worker()
                 timer_lock.lock();
                 timer_queue.pop();
                 timer_lock.unlock();
-
-               // cout << "timer worker -> objid -> " << ev.obj_id << endl;
-
                 if (ev.event_id == ENUMOP::OP_RAMDON_MOVE_NPC)
                 {
                     EXOVER* over = new EXOVER();
@@ -1082,21 +1002,73 @@ bool CAS(int* addr, int exp, int update)        // cas
 void CNetMgr::WakeUp_NPC(const int& id)
 {
     int status = OBJSTATUS::ST_SLEEP;
-   // cout << "wakeup npc-> " << id << endl;
-    //cout << Find(id)->GetX() << " , " << Find(id)->GetY() << endl;
     if (CAS((int*)(&(Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
     }
-    //cout<<Find(id)->GetStatus()<<endl;
 }
 
 void CNetMgr::WakeUp_Monster(const int& id)
 {
     int status = OBJSTATUS::ST_SLEEP;
-   // cout << "wakeup monster-> " << id << endl;
     if (CAS((int*)(&(Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
     }
 }
+//
+//
+//Vector3 vPos = Transform()->GetLocalPos();
+//CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
+//
+//Vector3 vRot = Transform()->GetLocalRot();
+//Vector3 vPlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+//XMMATRIX vPlayerMat = g_Object.find(g_myid)->second->Transform()->GetWorldMat();
+//Vector3 vFront = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+//Vector3 vUp = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::UP);
+//Vector3 vRight = g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+//
+//float fScale = Camera()->GetScale();
+//float fSpeed = m_fSpeed;
+//float fDistance = 400.f;
+//vPos = vPlayerPos->GetLocalPos() + (vPlayerPos->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
+//vPos.y = vPlayerPos->GetLocalPos().y + 450.f;
+//
+//if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+//{
+//    Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+//    vRot.y += vDrag.x * DT * 0.01f;
+//
+//    cout << "*************카메라POS***************" << endl;
+//    cout << Transform()->GetLocalPos().x << endl;
+//    cout << Transform()->GetLocalPos().y << endl;
+//    cout << Transform()->GetLocalPos().z << endl;
+//    cout << "*************플레이어POS***************" << endl;
+//    cout << vPlayerPos->GetLocalPos().x << endl;
+//    cout << vPlayerPos->GetLocalPos().y << endl;
+//    cout << vPlayerPos->GetLocalPos().z << endl;
+//    cout << "*************ROTATE***************" << endl;
+//    cout << Transform()->GetLocalRot().x << endl;
+//    cout << Transform()->GetLocalRot().y << endl;
+//    cout << Transform()->GetLocalRot().z << endl;
+//    cout << "*******************************" << endl;
+//}
+//
+//
+//
+//Transform()->SetPlayerPosition(vPlayerPos->GetLocalPos());
+//Transform()->SetLocalRot(vRot);
+//Transform()->SetLocalPos(vPos);
+//Transform()->SetPlayerWorldMat(vPlayerMat);
+//
+//
+//
+//// 회전
+//Vector3 vRot = Transform()->GetLocalRot();
+//Vector3 vPlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+//
+//
+//if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+//{
+//    Transform()->SetLocalRot(vPlayerPos->GetLocalRot());
+//}

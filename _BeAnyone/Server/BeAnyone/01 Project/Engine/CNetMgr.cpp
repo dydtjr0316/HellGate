@@ -4,7 +4,6 @@
 #include "Scene.h"
 
 #include "Layer.h"
-#include "GameObject.h"
 #include "Camera.h"
 
 #include "Transform.h"
@@ -15,6 +14,7 @@
 const char ip[] = "127.0.0.1";
 
 CNetMgr g_netMgr;
+
 int testpacket;
 OBJLIST g_Object;
 int g_myid = -1;
@@ -22,21 +22,7 @@ int g_myid = -1;
 
 CNetMgr::CNetMgr()
 {
-	//// ===============
-	//	// Test Scene 생성
-	//	// ===============
-	//m_pCurScene = new CScene;
-	//m_pCurScene->SetName(L"Test Scene");
-
-	//// ===============
-	//// Layer 이름 지정
-	//// ===============
-	//m_pCurScene->GetLayer(0)->SetName(L"Default");
-	//m_pCurScene->GetLayer(1)->SetName(L"Player");
-	//m_pCurScene->GetLayer(2)->SetName(L"Monster");
-	//m_pCurScene->GetLayer(3)->SetName(L"Bullet");
 	cout << "net mgr 생성자" << endl;
-
 	m_pObj = nullptr;
 }
 void CNetMgr::err_quit(const char* msg)
@@ -50,11 +36,6 @@ void CNetMgr::err_quit(const char* msg)
 	MessageBox(NULL, (LPCTSTR)lpMsgBuf, (LPCTSTR)msg, MB_ICONERROR);
 	LocalFree(lpMsgBuf);
 	exit(1);
-}
-
-void CNetMgr::SetLoginPacket(sc_packet_login_ok* packet)
-{
-	m_loginPacket = packet;
 }
 
 void CNetMgr::Connect()
@@ -96,7 +77,7 @@ void CNetMgr::Connect()
 	memset(&m_overlapped, 0, sizeof(m_overlapped));
 
 	m_overlapped.hEvent = event;
-	cout << "over : " << m_overlapped.hEvent << endl;
+	//cout << "over : " << m_overlapped.hEvent << endl;
 
 }
 
@@ -140,14 +121,6 @@ void CNetMgr::Send_LogIN_Packet()
 	Send_Packet(&l_packet);
 }
 
-void CNetMgr::Send_Move_Packet(unsigned const char& dir)
-{
-	cs_packet_move m_packet;
-	m_packet.type = CS_MOVE;
-	m_packet.size = sizeof(m_packet);
-	m_packet.direction = dir;
-	Send_Packet(&m_packet);
-}
 
 void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector)
 {
@@ -157,8 +130,23 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	m_packet.direction = dir;
 	m_packet.localVec = local;
 	m_packet.dirVec = dirVector;
+	cout << "*************************" << endl;
+	cout << "보낼때" <<  endl;
+	cout << m_packet.localVec.x << endl;
+	cout << m_packet.localVec.y << endl;
+	cout << m_packet.localVec.z << endl << endl;
 
 	Send_Packet(&m_packet);
+}
+
+void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const float& rotateY)
+{
+	cs_packet_rotate packet;
+	packet.type = CS_ROTATE;
+	packet.size = sizeof(packet);
+	packet.dir = dir;
+	packet.rotateY = rotateY;
+	Send_Packet(&packet);
 }
 
 void CNetMgr::Send_Attack_Packet()
@@ -168,37 +156,6 @@ void CNetMgr::Send_Attack_Packet()
 	m_packet.size = sizeof(m_packet);
 	Send_Packet(&m_packet);
 }
-
-void CNetMgr::testX(const float& _x)
-{
-	x = _x;
-	cout << "test : " << x << endl;
-}
-
-int CNetMgr::recvn(SOCKET s, char* buf, int len, int flags)
-{
-	int received;
-	char* ptr = buf;
-	int left = 38;
-	if (buf[1] == SC_PACKET_LOGIN_OK)
-		left = sizeof(sc_packet_login_ok);
-	//int left = len;
-
-	while (left > 0) {
-		received = recv(g_Socket, ptr, left, flags);
-		if (received == SOCKET_ERROR)
-			return SOCKET_ERROR;
-		else if (received == 0)
-			break;
-		left -= received;
-		ptr += received;
-	}
-
-	return (len - left);
-}
-
-
-
 
 void CNetMgr::Recevie_Data()
 {
@@ -213,22 +170,7 @@ void CNetMgr::Recevie_Data()
 	if (ret <= 0)return;
 
 	size_t retbytesize = ret;
-	cout << "=====================================" << endl;
 
-	switch (recvbuf[1])
-	{
-	case SC_PACKET_LOGIN_OK:
-		cout << "SC_PACKET_LOGIN_OK" << endl;
-		break;
-	case SC_PACKET_MOVE:
-		cout << "SC_PACKET_MOVE" << endl;
-		break;
-	case SC_PACKET_ENTER:
-		cout << "SC_PACKET_ENTER" << endl;
-		break;
-	default:
-		break;
-	}
 
 	if (ret < 0)
 	{
@@ -252,42 +194,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_LOGIN_OK:
 	{
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
-
 		cout << "ok id -> " << p->id << endl;
-		
-		
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
-
-
 		g_Object.emplace(g_myid, m_pObj);
-
-	//	// ==================
-	//// Camera Object 생성
-	//// ==================
-	//// Main Camera
-	//	CGameObject* pMainCam = new CGameObject;
-	//	pMainCam->SetName(L"MainCam");
-	//	pMainCam->AddComponent(new CTransform);
-	//	pMainCam->AddComponent(new CCamera);
-	//	pMainCam->AddComponent(new CToolCamScript);
-
-	//	pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));
-	//	pMainCam->Transform()->SetLocalRot(Vector3(XM_PI / 6 /*0.f*/, 0.0f, 0.f));
-	//	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-	//	pMainCam->Camera()->SetFar(100000.f);
-	//	pMainCam->Camera()->SetLayerAllCheck();
-	//	pMainCam->Camera()->SetLayerCheck(30, false);
-	//	//vector<CToolCamScript*> camScript = (CToolCamScript*)(pMainCam->GetScripts())
-	//	////camScript[0]->
-	//	//pMainCam->GetScripts()[0]->SetPlayer();
-
-	//	CToolCamScript* camScript = pMainCam->GetScript<CToolCamScript>();
-	//	camScript->SetPlayer(pObject);
-
-	//	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pMainCam);
-
-
-
 
 	}
 	break;
@@ -296,38 +205,29 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
 		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale.fbx");
-		// ===================
-		// Player 오브젝트 생성
-		// ===================
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
 			g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
-			cout << "enter id(" << g_myid << ") packet=================" << endl;
+			//cout << "enter id(" << g_myid << ") packet=================" << endl;
 		}
 		else
 		{
 			if (id < MAX_USER)
 			{
-
-				CGameObject* pObject = new CGameObject;
-
-
 				pObject = pMeshData->Instantiate();
 				pObject->SetName(L"PlayerMale");
 				pObject->FrustumCheck(false);
-				pObject->Transform()->SetLocalPos(Vector3(0.f, 150.f, 300.f));
+				pObject->Transform()->SetLocalPos(my_packet->localVec);
 				pObject->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
 				pObject->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
-
-
 				pObject->AddComponent(new CPlayerScript);
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pObject, false);
 				g_Object.emplace(id, pObject);
-				cout << "packet enter in " << endl;
-				cout << "id -> " << id << endl;
-				cout << "g_Object size -> " << g_Object.size() << endl;
+				//	cout << "packet enter in __ id! = g_myid" << endl;
+				//	cout << "id -> " << id << endl;
+				//	cout << "g_Object size -> " << g_Object.size() << endl;
 			}
 		}
 	}
@@ -343,45 +243,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 			switch (packet->dir)
 			{
 			case MV_FRONT:
-				cout << "앞" << endl;
-				break;
-			case MV_BACK:
-				cout << "뒤" << endl;
-				break;
-			case MV_LEFT:
-				cout << "좌" << endl;
-				break;
-			case MV_RIGHT:
-				cout << "우" << endl;
-				break;
-			default:
-				cout << "방향 디폴트?" << endl;
-				break;
-			}
-			switch (packet->dir)
-			{
-			case MV_FRONT:
-				cout << "앞뒤" << endl;
-				/*temp = ObjTrans->GetLocalPos() + (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT) * DT * 200.f);
-
-				temp.z += DT * 200.f;
-				temp = Vector3(ObjTrans->GetLocalPos().x,
-					ObjTrans->GetLocalPos().y, 
-					packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z * DT * 200.f));*/
 				ObjTrans->SetLocalPos(packet->localVec);
 				break;
 			case MV_BACK:
-				/*cout << "앞뒤" << endl;
-				temp = Vector3(ObjTrans->GetLocalPos().x,
-					ObjTrans->GetLocalPos().y, packet->z + DT * 200.f * (-ObjTrans->GetWorldDir(DIR_TYPE::FRONT).z*DT*200.f));*/
 				ObjTrans->SetLocalPos(packet->localVec);
-				
 				break;
 			case MV_LEFT:
 			case MV_RIGHT:
-				cout << "좌우" << endl;
-			/*	temp = Vector3(packet->x + DT * 200.f* ObjTrans->GetWorldDir(DIR_TYPE::FRONT).x,
-					ObjTrans->GetLocalPos().y, ObjTrans->GetLocalPos().z);*/
 				ObjTrans->SetLocalPos(packet->localVec);
 				break;
 			default:
@@ -392,51 +260,78 @@ void CNetMgr::ProcessPacket(char* ptr)
 			switch (packet->dir)
 			{
 			case MV_FRONT:
-				
 			case MV_BACK:
-				
 			case MV_LEFT:
-				
 			case MV_RIGHT:
-				cout << "my move===>" << other_id << ", " << g_myid << endl;
-				
+				cout << "받을때" << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
 				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-				cout << endl;
+				cout <<"********************************************" <<endl;
 				break;
 			default:
 				cout << "출력 디폴트?" << endl;
 				cout << "--------------" << endl;
 				break;
 			}
-			
+
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
-			////추가
-			//if (0 != g_Object.count(other_id))
-			//{
-			//	switch (packet->dir)
-			//	{
-			//	case MV_FRONT:
-			//	case MV_BACK:
-			//		temp = Vector3(0.f, 0.f, packet->z + DT * 200.f);
-			//		break;
-			//	case MV_LEFT:
-			//	case MV_RIGHT:
-			//		temp = Vector3(packet->x + DT * 200.f, 0.f, 0.f);
-			//		break;
-			//	}
-			//	cout << "other move===>" << other_id << ", " << g_myid << endl;
-			//	g_Object.find(other_id)->second->Transform()->SetLocalPos(temp);
-
-			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
-			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
-			//	cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-			//	cout << endl;
-			//}
+			//추가
+			if (0 != g_Object.count(other_id))
+			{
+				switch (packet->dir)
+				{
+				case MV_FRONT:
+					ObjTrans->SetLocalPos(packet->localVec);
+					break;
+				case MV_BACK:
+					ObjTrans->SetLocalPos(packet->localVec);
+					break;
+				case MV_LEFT:
+				case MV_RIGHT:
+					ObjTrans->SetLocalPos(packet->localVec);
+					break;
+				default:
+					cout << "실제 움직임 디폴트?" << endl;
+					break;
+				}
+				cout << "other move===>" << other_id << ", " << g_myid << endl;
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << endl;
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().y << endl;
+				cout << g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+				cout << endl;
+			}
 		}
+	}
+	break;
+	case SC_PACKET_MOUSE:
+	{
+		int other_id;
+		sc_packet_rotate* rotate_packet = nullptr;
+		switch (ptr[2])
+		{
+		case Rotate_LBTN:
+			rotate_packet = reinterpret_cast<sc_packet_rotate*>(ptr);
+			other_id = rotate_packet->id;
+
+			if (other_id == g_myid)
+			{
+				// 세팅하지 않기
+
+			}
+			else
+			{
+				//cout << "받고 셋팅할 때 rotate Y -> " << packet->rotateVec.y << endl;
+				//g_Object.find(other_id)->second->Transform()->SetLocalRot(packet->rotateVec);
+				//m_pCamObj->Transform()->SetLocalRot(packet->rotateVec);
+			}
+			break;
+		default:
+			break;
+		}
+		
 	}
 	break;
 	case SC_PACKET_LEAVE:
@@ -457,9 +352,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_ID:
 	{
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
-		// 플레이어스크립트에서 addobj 하는 부분과 어떻게 연결시킬껀지 고민해보기
-		// 아직 테스트용 코드
-		// 이따구로하면 멀티스레드에서 무적권 꼬임
 		g_myid = packet->id;
 
 		cout << "My ID : " << g_myid << endl;
@@ -476,8 +368,7 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 	static size_t in_packet_size = 0;
 	static size_t saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF_SIZE];
-	cout << "Process_Data -> " << io_byte << endl;
-	cout << "=====================================" << endl;
+
 
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];

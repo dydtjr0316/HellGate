@@ -33,7 +33,8 @@ class Vector4;
 class Matrix;
 
 //	¹®Á¦
-#include "../Engine/Protocol.h"
+//#include "../Engine/Protocol.h"
+#include "../../../../Server/Server/Server/Protocol.h"
 #include "../Engine/Enum.h"
 #include "../Engine/Struct1.h"
 

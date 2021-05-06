@@ -30,6 +30,13 @@ void CGameObject::SetDirV(const float& x, const float& y, const float& z)
     m_v3DirVector.z = z;
 }
 
+void CGameObject::SetRotateV(const float& x, const float& y, const float& z)
+{
+    m_v3RotateVector.x = x;
+    m_v3RotateVector.y = y;
+    m_v3RotateVector.z = z;
+}
+
 void CGameObject::Insert_Sector()
 {
     SetSector((int)m_v3LocalPosVector.x / SECTOR_ROW_Length, (int)m_v3LocalPosVector.z / SECTOR_COL_Length);

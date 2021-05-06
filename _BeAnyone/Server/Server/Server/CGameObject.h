@@ -24,6 +24,7 @@ public: // 상속 ,, 함수
 	char* Get_Packet_buf() { return m_packet_buf; }
 	Vector3& GetLocalPosVector() { return m_v3LocalPosVector; }
 	Vector3& GetDirVector() { return m_v3DirVector; }
+	Vector3& GetRoatateVector() { return m_v3RotateVector; }
 
 
 	// set
@@ -41,10 +42,12 @@ public: // 상속 ,, 함수
 	void SetDirV(const Vector3& dir) {	m_v3DirVector = dir; }
 	void SetDirV(const float& x, const float& y, const float& z);
 
-	//void SetX(const float& x) { m_iX = x; }	// 삭제 용석
-	//void SetY(const float& y) { m_iY = y; } // 삭제 용석
-	//void SetZ(const float& z) { m_iZ = z; } // 삭제 용석
-	//void SetPos(const float& x, const float& y, const float& z) { m_iX = x; m_iY = y; m_iZ = z; }
+	void SetRotateX(const float& x) { m_v3RotateVector.x = x; }
+	void SetRotateY(const float& y) { m_v3RotateVector.y = y; }
+	void SetRotateZ(const float& z) { m_v3RotateVector.z = z; }
+	void SetRotateV(const Vector3& rotate) { m_v3RotateVector = rotate; }
+	void SetRotateV(const float& x, const float& y, const float& z);
+
 	void SetClientTime(const int& t) { m_iclinet_time = t; }
 	void SetPrev_Size(const int& size) { m_prev_size = size; }
 	void SetName(char* name) { strcpy_s(m_name, name); }
@@ -80,5 +83,7 @@ protected:
 
 	Vector3 m_v3LocalPosVector;
 	Vector3 m_v3DirVector;
+
+	Vector3 m_v3RotateVector;
 };
 
