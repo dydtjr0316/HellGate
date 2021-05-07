@@ -51,7 +51,7 @@ void CPlayerScript::update()
 	{
 		//vPos.x -= DT * 200.f;
 		g_netMgr.Send_Move_Packet(MV_LEFT, localPos, g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 	}
 
