@@ -374,7 +374,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
     pClient->Change_Sector(oldSector);
     unordered_set<int> new_viewList;
 
-    Send_Move_Packet(user_id, user_id, dir);
+    //Send_Move_Packet(user_id, user_id, dir);
 
     vector<unordered_set<int>> vSectors = pClient->Search_Sector();
 
@@ -665,8 +665,6 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     case CS_LOGIN: {
         cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
         cout << packet->name << endl;
-        
-        // 여기에 send id 해보기
         Enter_Game(user_id, packet->name);
     }
                  break;

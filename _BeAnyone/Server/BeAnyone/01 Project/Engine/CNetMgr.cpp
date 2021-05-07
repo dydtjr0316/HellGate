@@ -229,7 +229,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
-			ObjTrans->SetLocalPos(packet->localVec);
+			//ObjTrans->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{

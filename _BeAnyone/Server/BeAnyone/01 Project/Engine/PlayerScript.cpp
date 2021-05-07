@@ -24,8 +24,8 @@ void CPlayerScript::awake()
 
 void CPlayerScript::update()
 {
-	/*Vec3 vPos = Transform()->GetLocalPos();
-Vec3 vRot = Transform()->GetLocalRot();*/
+	//Vector3 vPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
+	////Vector3 vRot = Transform()->GetLocalRot();
 
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
 
@@ -33,24 +33,34 @@ Vec3 vRot = Transform()->GetLocalRot();*/
 	{
 		g_netMgr.Send_Move_Packet(MV_FRONT, localPos, -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
 		// 델타타임 따로 보낼껀지 결정
+	
+		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
+		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
 	{
 		//vPos.z -= DT * 200.f;
 		g_netMgr.Send_Move_Packet(MV_BACK, localPos, g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
+	
+		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
+		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_A))
 	{
 		//vPos.x -= DT * 200.f;
 		g_netMgr.Send_Move_Packet(MV_LEFT, localPos, g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
+		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_D))
 	{
-		//vPos.x += DT * 200.f;
 		g_netMgr.Send_Move_Packet(MV_RIGHT, localPos, -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
+		
+		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 	}
 
 	// z 키를 누르면 z 축 회전
