@@ -16,7 +16,7 @@ private:
 
 	Ptr<CTexture>	m_pHeightMap;
 
-	Vec2			m_vBrushScale;
+	Vector2			m_vBrushScale;
 
 	UINT			m_iBrushIdx;
 	UINT			m_iTileIdx;
@@ -30,7 +30,7 @@ public:
 	virtual void finalupdate();
 
 	float GetHeight(float, float, bool);
-	Vec2 GetScale() { return Vec2(m_iFaceX, m_iFaceZ); } 
+	Vector2 GetScale() { return Vector2(m_iFaceX, m_iFaceZ); } 
 
 private:
 
@@ -39,7 +39,7 @@ private:
 	void CreateHeightmapPixelsInfo();
 	void CreateHeightmapPixelsInfo__();
 
-	Vec2 GetCollisionPos();
+	Vector2 GetCollisionPos();
 
 
 public:

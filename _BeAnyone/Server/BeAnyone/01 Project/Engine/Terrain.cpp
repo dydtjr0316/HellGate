@@ -2,7 +2,7 @@
 #include "Terrain.h"
 
 #include "ResMgr.h"
-#include "MeshRenderer.h"
+#include "MeshRender.h"
 
 #include "KeyMgr.h"
 #include "Texture.h"
@@ -17,7 +17,7 @@ CTerrain::CTerrain()
 	, m_iFaceX( 64 )	//	64
 	, m_iFaceZ( 64 )	//	64
 	, m_fMaxTess( 4 )	//	4
-	, m_vBrushScale( Vec2( 0.1f, 0.1f ) )
+	, m_vBrushScale( Vector2( 0.1f, 0.1f ) )
 	, m_iBrushIdx( 0 )
 	, m_iTileIdx( 0 )
 
@@ -38,7 +38,7 @@ void CTerrain::finalupdate() {
 	CCamera* pMainCam = CRenderMgr::GetInst()->GetMainCam();
 	if (nullptr != pMainCam)
 	{
-		Vec4 vPos = Vec4( pMainCam->Transform()->GetLocalPos(), 0.f );
+		Vector4 vPos = Vector4( pMainCam->Transform()->GetLocalPos(), 0.f );
 		MeshRender()->GetSharedMaterial()->SetData( SHADER_PARAM::VEC4_0, &vPos );
 	}
 

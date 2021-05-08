@@ -58,6 +58,9 @@
     <Filter Include="04. GameObject\Script\UiScript">
       <UniqueIdentifier>{c8d6c2a2-4916-4c69-a775-f93116344c33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. GameObject\Terrain">
+      <UniqueIdentifier>{2223475f-ecf2-4a9d-8aa5-2d65cf6b6983}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h">
@@ -205,6 +208,9 @@
     <ClInclude Include="TemperUiScript.h">
       <Filter>04. GameObject\Script\UiScript</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>04. GameObject\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -336,6 +342,12 @@
     <ClCompile Include="TemperUiScript.cpp">
       <Filter>04. GameObject\Script\UiScript</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>04. GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainInit.cpp">
+      <Filter>04. GameObject\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
@@ -354,6 +366,9 @@
       <Filter>ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="compute.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="terrain.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>
