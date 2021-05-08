@@ -123,7 +123,7 @@ void CSceneMgr::init() {
 	pPlayerObj->AddComponent(new CMeshRender);
 	// Collider 컴포넌트 추가
 	pPlayerObj->AddComponent(new CCollider);
-	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::SPHERE);
 	// Script 설정
 	pPlayerObj->AddComponent(new CPlayerScript);
 	// Transform 설정

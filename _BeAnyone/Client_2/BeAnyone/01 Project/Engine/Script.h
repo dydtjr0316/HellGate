@@ -53,7 +53,7 @@ public:
 	static void EableObject( CGameObject* _pTarget );
 	static void Disable( CGameObject* _pTarget );
 
-//protected:
+protected:
 	virtual void OnCollisionEnter( CCollider* _pOther ) {}
 	virtual void OnCollision( CCollider* _pOther ) {}
 	virtual void OnCollisionExit( CCollider* _pOther ) {}

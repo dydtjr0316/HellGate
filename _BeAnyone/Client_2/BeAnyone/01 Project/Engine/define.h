@@ -47,6 +47,7 @@ enum class COLLIDER_TYPE
 	RECT,
 	CIRCLE,
 	BOX,
+	SPHERE,
 	
 };
 

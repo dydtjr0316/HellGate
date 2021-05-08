@@ -30,6 +30,12 @@ public:
 private:
 	void CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2);
 	bool IsCollision(CCollider* _pCollider1, CCollider* _pCollider2);
+	
+
+private:
+	bool CollisionSphere(CCollider* _pCollider1, CCollider* _pCollider2);
+
+private:
 	bool CollisionRect(CCollider* _pCollider1, CCollider* _pCollider2);
 	bool CollisionCircle(CCollider* _pCollider1, CCollider* _pCollider2);
 	bool CollisionRectCircle(CCollider* _pCollider1, CCollider* _pCollider2);

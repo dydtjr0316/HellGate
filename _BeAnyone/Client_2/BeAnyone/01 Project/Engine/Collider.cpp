@@ -67,6 +67,10 @@ void CCollider::finalupdate()
 
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
+
+	auto i = this;
+
+
 }
 
 void CCollider::render()
@@ -100,6 +104,10 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType)
 	else if (COLLIDER_TYPE::BOX == m_eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColBoxMesh");
+	}
+	else if (COLLIDER_TYPE::SPHERE == m_eType)
+	{
+		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
 	}
 }
 

@@ -485,6 +485,14 @@ void CResMgr::CreateDefaultMesh() {
 	pMesh->SetName( L"SphereMesh" );
 	AddRes<CMesh>( pMesh->GetName(), pMesh );
 
+	pMesh = new CMesh;
+
+	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
+
+	pMesh->SetName(L"ColSphereMesh");
+	AddRes<CMesh>(pMesh->GetName(), pMesh);
+
 	vecVTX.clear();
 	vecIdx.clear();
 }

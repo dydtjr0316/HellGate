@@ -10,7 +10,7 @@ CPlayerScript::CPlayerScript()
 	, m_pOriginMtrl( nullptr )
 	, m_pCloneMtrl( nullptr )
 	, m_xmf3Velocity(XMFLOAT3(0.f, 0.3f, 0.0f))
-{
+{ 
 }
 
 CPlayerScript::CPlayerScript(CTerrain* _terrain)
@@ -102,11 +102,11 @@ void CPlayerScript::update() {
 
 }
 
-// 헤이트맵 충돌처리
+// 하이트맵 충돌처리
 void CPlayerScript::OnPlayerUpdateCallback()
 {
 	CTerrain* pTerrain = (CTerrain*)m_pTerrainObj;
-	Vec2 temp = pTerrain->GetScale();
+
 	XMFLOAT3 xmf3Scale = pTerrain->Transform()->GetLocalScale();
 	XMFLOAT3 xmf3PlayerPosition = Transform()->GetLocalPos();
 
@@ -129,13 +129,3 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		SetVelocity(xmf3PlayerPosition);
 	}
 }
-
-
-
-//CPlayerScript::CPlayerScript(CTerrain* _pTerrain)
-//	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
-//	, m_pOriginMtrl(nullptr)
-//	, m_pCloneMtrl(nullptr)
-//	, m_pTerrainObj(_pTerrain)
-//{
-//}
