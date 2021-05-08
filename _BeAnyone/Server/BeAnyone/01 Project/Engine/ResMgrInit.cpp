@@ -576,47 +576,6 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"TexShader", pShader);
 
-	//// =================
-	//// Collider2D Shader
-	//// =================
-	//pShader = new CShader;
-	//pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Collider2D", "vs_5_0");
-	//pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Collider2D", "ps_5_0");
-	//pShader->Create();
-	//AddRes(L"Collider2DShader", pShader);
-
-	//// =================
-	//// STD2D Shader
-	//// =================
-	//pShader = new CShader;
-	//pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Std2D", "vs_5_0");
-	//pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Std2D", "ps_5_0");
-
-	//// BlendState 설정
-	//pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
-
-	//// Parameter 설정
-	//pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
-	//pShader->AddShaderParam(tShaderParam{ L"Anim Tex", SHADER_PARAM::TEX_3 });
-
-	//pShader->Create();
-	//AddRes(L"Std2DShader", pShader);
-
-	//// =================
-	//// 2DShadow Shader
-	//// =================
-	//pShader = new CShader;
-	//pShader->CreateVertexShader(L"Shader\\std.fx", "VS_2DShadow", "vs_5_0");
-	//pShader->CreatePixelShader(L"Shader\\std.fx", "PS_2DShadow", "ps_5_0");
-
-	//// BlendState 설정
-	//pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
-
-	//// Parameter 설정
-	//pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
-	//pShader->Create();
-	//AddRes(L"2DShadowShader", pShader);
-
 	// ============
 	// Std3D Shader
 	// ============
@@ -720,6 +679,18 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateComputeShader(L"Shader\\compute.fx", "CS_TEST", "cs_5_0");
 	pShader->AddShaderParam(tShaderParam{ L"Test Value", SHADER_PARAM::INT_0 });
 	AddRes(L"CSTestShader", pShader);
+
+	// Terrain Shader
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\terrain.fx", "VS_Terrain", "vs_5_0");
+	pShader->CreateHullShader(L"Shader\\terrain.fx", "HS_Terrain", "hs_5_0");
+	pShader->CreateDomainShader(L"Shader\\terrain.fx", "DS_Terrain", "ds_5_0");
+	pShader->CreatePixelShader(L"Shader\\terrain.fx", "PS_Terrain", "ps_5_0");
+	//pShader->SetRasterizerType( RS_TYPE::WIRE_FRAME);
+	pShader->SetRasterizerType(RS_TYPE::CULL_NONE);
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS);
+	pShader->Create(SHADER_POV::DEFERRED, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	AddRes(L"TerrainShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -838,4 +809,10 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"CSTestShader"));
 	AddRes(L"CSTestMtrl", pMtrl);
+
+	// Terrain Mtrl
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"TerrainShader"));
+	AddRes(L"TerrainMtrl", pMtrl);
 }

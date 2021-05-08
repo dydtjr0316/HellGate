@@ -40,9 +40,9 @@ public:
 	void Create(SHADER_POV _ePOV, D3D_PRIMITIVE_TOPOLOGY _eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	void CreateVertexShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
 	void CreatePixelShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
-	//void CreateHullShader();
-	//void CreateDomainShader();
-	//void CreateGeometryShader();
+	void CreateHullShade(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
+	void CreateDomainShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
+	//void CreateGeometryShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
 	void CreateComputeShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
 
 	void SetBlendState(BLEND_TYPE _eType) { m_eBlendType = _eType; }

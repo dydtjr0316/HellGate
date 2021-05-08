@@ -77,6 +77,48 @@ void CShader::CreatePixelShader(const wstring& _strPath, const string& _strFuncN
 	m_tPipeline.PS = { m_pPSBlob->GetBufferPointer(), m_pPSBlob->GetBufferSize() };
 }
 
+void CShader::CreateHullShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion) {
+	int iFlag = 0;
+#ifdef _DEBUG
+	iFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+	wstring strPath = CPathMgr::GetResPath();
+	strPath += _strPath;
+
+	char* pErr = nullptr;
+
+	if (FAILED(D3DCompileFromFile(strPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, _strFuncName.c_str(), _strhlslVersion.c_str(), iFlag, 0, &m_pHSBlob, &m_pErrBlob)))
+	{
+		pErr = (char*)m_pErrBlob->GetBufferPointer();
+		MessageBoxA(nullptr, pErr, "Shader Create Failed !!!", MB_OK);
+	}
+
+	m_tPipeline.HS = { m_pHSBlob->GetBufferPointer(), m_pHSBlob->GetBufferSize() };
+}
+
+void CShader::CreateDomainShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion) {
+	int iFlag = 0;
+#ifdef _DEBUG
+	iFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+	wstring strPath = CPathMgr::GetResPath();
+	strPath += _strPath;
+
+	char* pErr = nullptr;
+
+	if (FAILED(D3DCompileFromFile(strPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, _strFuncName.c_str(), _strhlslVersion.c_str(), iFlag, 0, &m_pDSBlob, &m_pErrBlob)))
+	{
+		pErr = (char*)m_pErrBlob->GetBufferPointer();
+		MessageBoxA(nullptr, pErr, "Shader Create Failed !!!", MB_OK);
+	}
+
+	m_tPipeline.DS = { m_pDSBlob->GetBufferPointer(), m_pDSBlob->GetBufferSize() };
+}
+
 void CShader::CreateComputeShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion)
 {
 	int iFlag = 0;

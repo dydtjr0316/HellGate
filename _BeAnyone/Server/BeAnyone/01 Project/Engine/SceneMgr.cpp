@@ -19,6 +19,7 @@
 #include "TimeMgr.h"
 #include "KeyMgr.h"
 #include "Camera.h"
+#include "Terrain.h"
 
 //#include "CollisionMgr.h"
 #include "EventMgr.h"
@@ -293,18 +294,19 @@ void CSceneMgr::init()
 	//pMeshData->Save(pMeshData->GetPath());
 	// MeshData 로드
 	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\House.mdat", L"MeshData\\monster.mdat");
+	CGameObject* pPlayerObj = nullptr;
 
-	pObject = pMeshData->Instantiate();
-	pObject->SetName(L"PlayerMale");
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vector3(0.f, 150.f, 300.f));
-	pObject->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-	pObject->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+	pPlayerObj = pMeshData->Instantiate();
+	pPlayerObj->SetName(L"PlayerMale");
+	pPlayerObj->FrustumCheck(false);
+	pPlayerObj->Transform()->SetLocalPos(Vector3(0.f, 150.f, 300.f));
+	pPlayerObj->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
+	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 
 	// Script 설정
-	pObject->AddComponent(new CPlayerScript);
+	pPlayerObj->AddComponent(new CPlayerScript);
 
-	m_pCurScene->AddGameObject(L"Player", pObject, false);
+	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
 
 
 	// ==================
@@ -491,6 +493,23 @@ void CSceneMgr::init()
 
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
+	// Terrain
+	CGameObject* pTerrainObject = new CGameObject;
+	pTerrainObject->SetName(L"Terrain");
+	pTerrainObject->AddComponent(new CTransform);
+	pTerrainObject->AddComponent(new CMeshRender);
+	pTerrainObject->AddComponent(new CTerrain);
+	pTerrainObject->FrustumCheck(false);
+	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 10.f, 0.f));
+	pTerrainObject->Transform()->SetLocalScale(Vector3(100.f, 300.f, 100.f));
+	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
+	pTerrainObject->Terrain()->init();
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
+
+	pPlayerObj->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
+	pPlayerObj->GetScript<CPlayerScript>();
+
 
 	// ====================
 	// Compute Shader Test

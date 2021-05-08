@@ -89,4 +89,41 @@ void CPlayerScript::update()
 		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
 
 	}
+	
+	localPos.y -= m_xmf3Velocity.y;
+
+	g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+
+	OnPlayerUpdateCallback();
+
+}
+
+
+void CPlayerScript::OnPlayerUpdateCallback()
+{
+	CTerrain* pTerrain = (CTerrain*)m_pTerrainObj;
+
+	XMFLOAT3 xmf3Scale = pTerrain->Transform()->GetLocalScale();
+
+	//	영문서버
+	XMFLOAT3 xmf3PlayerPosition = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
+
+	int z = (int)(xmf3PlayerPosition.z / xmf3Scale.z);
+	bool bReverseQuad = ((z % 2) != 0);
+	float fHeight = pTerrain->GetHeight(xmf3PlayerPosition.x, xmf3PlayerPosition.z, bReverseQuad) * 1.f + 30.0f;
+
+	if (xmf3PlayerPosition.y < fHeight)
+	{
+		XMFLOAT3 xmf3PlayerVelocity = GetVelocity();
+		xmf3PlayerVelocity.y = 0.0f;
+		SetVelocity(xmf3PlayerVelocity);
+		xmf3PlayerPosition.y = fHeight;
+		g_Object.find(g_myid)->second->Transform()->SetLocalPos(xmf3PlayerPosition);
+	}
+
+	if (xmf3PlayerPosition.y > fHeight + 6.0f)
+	{
+		m_xmf3Velocity.y = 0.3f;
+		SetVelocity(xmf3PlayerPosition);
+	}
 }
