@@ -13,6 +13,7 @@ class CScript;
 class CLight;
 class CCamera;
 //class CToolCamScript;
+class CTerrain;
 
 class CGameObject :
 	public CEntity

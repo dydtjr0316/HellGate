@@ -58,6 +58,7 @@ public:
 	}
 
 	CCamera* GetCamera(int _iIdx) { return m_vecCam[_iIdx]; }
+	CCamera* GetMainCam() {	return  m_vecCam[0]; }
 	void RegisterCamera(CCamera* _pCam) { m_vecCam.push_back(_pCam); }
 	void ClearCamera() { m_vecCam.clear(); }
 

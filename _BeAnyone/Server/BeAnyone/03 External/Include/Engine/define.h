@@ -127,6 +127,7 @@ enum class COMPONENT_TYPE
 	LIGHT,
 	END,
 	SCRIPT,
+	TERRAIN,
 };
 
 
