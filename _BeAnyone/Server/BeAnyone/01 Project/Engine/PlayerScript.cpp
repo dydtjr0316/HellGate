@@ -114,9 +114,9 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 	if (xmf3PlayerPosition.y < fHeight)
 	{
-		XMFLOAT3 xmf3PlayerVelocity = GetVelocity();
+		XMFLOAT3 xmf3PlayerVelocity = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetVelocity();
 		xmf3PlayerVelocity.y = 0.0f;
-		SetVelocity(xmf3PlayerVelocity);
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(xmf3PlayerVelocity);
 		xmf3PlayerPosition.y = fHeight;
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(xmf3PlayerPosition);
 	}
@@ -124,6 +124,6 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	if (xmf3PlayerPosition.y > fHeight + 6.0f)
 	{
 		m_xmf3Velocity.y = 0.3f;
-		SetVelocity(xmf3PlayerPosition);
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(xmf3PlayerPosition);
 	}
 }

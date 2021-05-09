@@ -299,8 +299,8 @@ void CSceneMgr::init()
 	pPlayerObj = pMeshData->Instantiate();
 	pPlayerObj->SetName(L"PlayerMale");
 	pPlayerObj->FrustumCheck(false);
-	pPlayerObj->Transform()->SetLocalPos(Vector3(500.f, 1000.f, 500.f));
-	pPlayerObj->Transform()->SetLocalScale(Vector3(3.f, 3.f, 3.f));
+	pPlayerObj->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+	pPlayerObj->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
 	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 
 	// Script ¼³Á¤
@@ -332,11 +332,11 @@ void CSceneMgr::init()
 	CToolCamScript* camScript = pMainCam->GetScript<CToolCamScript>();
 
 
-	camScript->SetPlayer(pObject);
+	camScript->SetPlayer(pPlayerObj);
 
 	// pObject->SetCam(pMainCam);
 
-	g_netMgr.SetObj(pObject);
+	g_netMgr.SetObj(pPlayerObj);
 
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);

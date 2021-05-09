@@ -15,3 +15,11 @@ C:\Users\채영문\Documents\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyon
 C:\Users\채영문\Documents\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\tessellation.cso
 C:\Users\채영문\Documents\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\tool.cso
 C:\Users\채영문\Documents\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\value.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\func.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\light.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\std.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\std3d.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\terrain.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\tessellation.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\tool.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Client_2\BeAnyone\03 External\Library\Engine\value.cso

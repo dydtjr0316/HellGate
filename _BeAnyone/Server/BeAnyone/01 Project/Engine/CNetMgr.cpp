@@ -196,6 +196,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
+		//cout << "enter packet recv -> " << my_packet->id << endl;
 		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale.fbx");
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
@@ -216,6 +217,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pObject, false);
 				g_Object.emplace(id, pObject);
+
+				
 
 			}
 		}
@@ -326,11 +329,14 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 		if (0 == in_packet_size) in_packet_size = ptr[0];
 		if (io_byte + saved_packet_size >= in_packet_size) {
 			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
-			ProcessPacket(packet_buffer);
-			ptr += in_packet_size - saved_packet_size;
-			io_byte -= in_packet_size - saved_packet_size;
-			in_packet_size = 0;
-			saved_packet_size = 0;
+	
+				ProcessPacket(packet_buffer);
+				ptr += in_packet_size - saved_packet_size;
+				io_byte -= in_packet_size - saved_packet_size;
+				in_packet_size = 0;
+				saved_packet_size = 0;
+			
+			
 		}
 		else {
 			memcpy(packet_buffer + saved_packet_size, ptr, io_byte);

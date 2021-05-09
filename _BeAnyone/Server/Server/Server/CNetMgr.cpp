@@ -25,6 +25,10 @@ bool CNetMgr::is_near( const int& p1, const int& p2)
     dist += (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z)
         * (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z);
 
+    if (dist <= (float)(VIEW_LIMIT * VIEW_LIMIT)&& p1!=p2)
+    {
+        int i = 0;
+    }
     return dist <= (float)(VIEW_LIMIT * VIEW_LIMIT);
 }
 

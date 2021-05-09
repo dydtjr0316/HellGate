@@ -23,3 +23,9 @@ C:\Users\채영문\Documents\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\
 C:\Users\채영문\Documents\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso
 C:\Users\채영문\Documents\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
 C:\Users\채영문\Documents\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
