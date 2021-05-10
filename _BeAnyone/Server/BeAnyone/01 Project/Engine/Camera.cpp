@@ -72,6 +72,9 @@ void CCamera::finalupdate()
 
 void CCamera::SortGameObject()
 {
+	//	 여기 들어오기 전에 이미 터져있음
+	//	vecDeferred 벡터안에 Terrain 게임 오브젝트 안에 MeshRender 컴포넌트의 vertexData값이 쓰레기값이 됌.
+	auto ab = m_vecDeferred;
 	m_vecDeferred.clear();
 	m_vecForward.clear();
 
@@ -102,6 +105,8 @@ void CCamera::SortGameObject()
 			}
 		}
 	}
+	auto a = m_vecDeferred;
+	auto b = m_vecForward;
 }
 
 void CCamera::render_deferred()

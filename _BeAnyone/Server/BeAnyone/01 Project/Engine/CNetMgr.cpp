@@ -230,9 +230,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				pTerrainObject->Terrain()->init();
 				CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pTerrainObject);
 			
-
 				g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
-				g_Object.find(id)->second->GetScript<CPlayerScript>();
 			}
 		}
 	}
