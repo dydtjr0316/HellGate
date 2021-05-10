@@ -206,7 +206,9 @@ void CGameObject::update()
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
 		if (nullptr != m_arrCom[i])
+		{
 			m_arrCom[i]->update();
+		}
 	}
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)

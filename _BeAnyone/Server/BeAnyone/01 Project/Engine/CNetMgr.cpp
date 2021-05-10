@@ -119,14 +119,13 @@ void CNetMgr::Send_LogIN_Packet()
 }
 
 
-void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector)
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local)
 {
 	cs_packet_move m_packet;
 	m_packet.type = CS_MOVE;
 	m_packet.size = sizeof(m_packet);
 	m_packet.direction = dir;
 	m_packet.localVec = local;
-	m_packet.dirVec = dirVector;
 
 	Send_Packet(&m_packet);
 }
@@ -207,19 +206,33 @@ void CNetMgr::ProcessPacket(char* ptr)
 		{
 			if (id < MAX_USER)
 			{
-				pObject = pMeshData->Instantiate();
-				pObject->SetName(L"PlayerMale");
-				pObject->FrustumCheck(false);
-				pObject->Transform()->SetLocalPos(my_packet->localVec);
-				pObject->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-				pObject->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
-				pObject->AddComponent(new CPlayerScript);
-
-				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pObject, false);
 				g_Object.emplace(id, pObject);
 
-				
+				g_Object.find(id)->second = pMeshData->Instantiate();
+				g_Object.find(id)->second->SetName(L"PlayerMale");
+				g_Object.find(id)->second->FrustumCheck(false);
+				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
+				g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
+				g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+				g_Object.find(id)->second->AddComponent(new CPlayerScript);
 
+				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
+
+				CGameObject* pTerrainObject = new CGameObject;
+				pTerrainObject->SetName(L"Terrain");
+				pTerrainObject->AddComponent(new CTransform);
+				pTerrainObject->AddComponent(new CMeshRender);
+				pTerrainObject->AddComponent(new CTerrain);
+				pTerrainObject->FrustumCheck(false);
+				pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 10.f, 0.f));
+				pTerrainObject->Transform()->SetLocalScale(Vector3(100.f, 300.f, 100.f));
+				pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
+				pTerrainObject->Terrain()->init();
+				CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pTerrainObject);
+			
+
+				g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
+				g_Object.find(id)->second->GetScript<CPlayerScript>();
 			}
 		}
 	}

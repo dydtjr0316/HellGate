@@ -336,7 +336,6 @@ void CSceneMgr::init()
 
 	// pObject->SetCam(pMainCam);
 
-	g_netMgr.SetObj(pPlayerObj);
 
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);
@@ -509,6 +508,8 @@ void CSceneMgr::init()
 
 	pPlayerObj->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
 	pPlayerObj->GetScript<CPlayerScript>();
+
+	g_netMgr.SetObj(pPlayerObj);
 
 
 	// ====================

@@ -207,11 +207,10 @@ struct cs_packet_login {
 
 struct cs_packet_move {
 	char  size;
-	char  type;
+	char  type;		// 정리할때 type이 꼭 필요한지 작성
 	unsigned short  direction;
 
 	Vector3 localVec;
-	Vector3 dirVec;
 	
 	unsigned short	  move_time;
 };

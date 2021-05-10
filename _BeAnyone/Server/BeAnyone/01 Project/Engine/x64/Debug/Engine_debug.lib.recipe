@@ -1,7 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <ProjectOutputs></ProjectOutputs>
-  <ContentFiles>C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso</ContentFiles>
-  <SatelliteDlls></SatelliteDlls>
-  <NonRecipeFileRefs></NonRecipeFileRefs>
+  <ProjectOutputs />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
 </Project>

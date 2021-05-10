@@ -28,8 +28,9 @@ public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
 
-	void OnPlayerUpdateCallback();
+	Vector3 OnPlayerUpdateCallback();
 
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
+	CTerrain* GetTerrain() { return m_pTerrainObj; }
 };
 

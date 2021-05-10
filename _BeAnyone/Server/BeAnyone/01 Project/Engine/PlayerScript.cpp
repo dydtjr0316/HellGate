@@ -29,40 +29,9 @@ void CPlayerScript::update()
 
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
 
-	if (KEY_HOLD(KEY_TYPE::KEY_W))
-	{
-		g_netMgr.Send_Move_Packet(MV_FRONT, localPos, -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
-		// 델타타임 따로 보낼껀지 결정
-	
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-	}
+	OnPlayerUpdateCallback();
 
-	if (KEY_HOLD(KEY_TYPE::KEY_S))
-	{
-		//vPos.z -= DT * 200.f;
-		g_netMgr.Send_Move_Packet(MV_BACK, localPos, g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT);
-	
-		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_A))
-	{
-		//vPos.x -= DT * 200.f;
-		g_netMgr.Send_Move_Packet(MV_LEFT, localPos, g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
-		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_D))
-	{
-		g_netMgr.Send_Move_Packet(MV_RIGHT, localPos, -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT);
-		
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-	}
-
+	// 이부분 필요 없다면 삭제 // 용석
 	// z 키를 누르면 z 축 회전
 	if (KEY_HOLD(KEY_TYPE::KEY_Z))
 	{
@@ -90,40 +59,95 @@ void CPlayerScript::update()
 
 	}
 	
-	localPos.y -= m_xmf3Velocity.y;
+	// 용석
+	// 이건뭔지 영문이한테 물어보기
 
-	g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+	//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 
-	OnPlayerUpdateCallback();
-
+	// 용석
+	// 이자리에 send packet 한번 하면되남? // 아니지 그럼 매프레임 패킷이가는구나
+	// OnPlayerUpdateCallback에서 send 패킷하기 
+	// send패킷에는 local좌표만 남기고 삭제 하는 방식으로 수정
 }
 
 
-void CPlayerScript::OnPlayerUpdateCallback()
+Vector3 CPlayerScript::OnPlayerUpdateCallback()
 {
-	CTerrain* pTerrain = (CTerrain*)m_pTerrainObj;
+	CTerrain* pTerrain = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain();
+	// 용석
+	// 터레인 객체 CGameObject로 바꾸라고 말하기 // 바꾸면 전체적으로 다 수정들어가야됨
 
-	XMFLOAT3 xmf3Scale = pTerrain->Transform()->GetLocalScale();
+	Vector3 xmf3Scale = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
 
 	//	영문서버
-	XMFLOAT3 xmf3PlayerPosition = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
+	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
 
-	int z = (int)(xmf3PlayerPosition.z / xmf3Scale.z);
+	if (KEY_HOLD(KEY_TYPE::KEY_W))
+	{
+		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
+
+
+		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_S))
+	{
+		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
+
+		//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
+
+
+		//OnPlayerUpdateCallback();
+
+
+		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_A))
+	{
+		//vPos.x -= DT * 200.f;
+		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+		//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
+
+		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_D))
+	{
+		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+		//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
+
+
+		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+	}
+
+	localPos.y -= m_xmf3Velocity.y;
+
+	int z = (int)(localPos.z / xmf3Scale.z);
 	bool bReverseQuad = ((z % 2) != 0);
-	float fHeight = pTerrain->GetHeight(xmf3PlayerPosition.x, xmf3PlayerPosition.z, bReverseQuad) * 1.f + 30.0f;
+	float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
 
-	if (xmf3PlayerPosition.y < fHeight)
+	if (localPos.y < fHeight)
 	{
 		XMFLOAT3 xmf3PlayerVelocity = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetVelocity();
 		xmf3PlayerVelocity.y = 0.0f;
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(xmf3PlayerVelocity);
-		xmf3PlayerPosition.y = fHeight;
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(xmf3PlayerPosition);
+		localPos.y = fHeight;
+		
 	}
 
-	if (xmf3PlayerPosition.y > fHeight + 6.0f)
+	if (localPos.y > fHeight + 6.0f)
 	{
 		m_xmf3Velocity.y = 0.3f;
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(xmf3PlayerPosition);
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(localPos);
 	}
+
+	g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+
+	g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+
+	
+	return g_Object.find(g_myid)->second->Transform()->GetLocalPos();
+	// 용석
+	// 이자리에 send packet부분 들어가고 이함수를 wasd키에 넣는게 제일 나을듯
 }

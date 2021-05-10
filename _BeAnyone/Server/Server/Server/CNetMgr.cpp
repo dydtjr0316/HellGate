@@ -25,10 +25,6 @@ bool CNetMgr::is_near( const int& p1, const int& p2)
     dist += (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z)
         * (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z);
 
-    if (dist <= (float)(VIEW_LIMIT * VIEW_LIMIT)&& p1!=p2)
-    {
-        int i = 0;
-    }
     return dist <= (float)(VIEW_LIMIT * VIEW_LIMIT);
 }
 
@@ -339,7 +335,7 @@ void CNetMgr::Do_Attack(const int& user_id)
     /// <param name="user_id"></param>
 }
 
-void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Vector3& dirVec)
+void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
 {
     CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
 
@@ -347,7 +343,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
 
     _tSector oldSector = pClient->GetSector();
 
-    switch (dir)
+    /*switch (dir)
     {
     case MV_UP:
         if (localVec.y > 0) localVec += dirVec;
@@ -372,7 +368,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
         cout << "Unknown Direction from Client move packet!\n";
         DebugBreak();
         exit(-1);
-    }
+    }*/
 
     pClient->SetPosV(localVec);
     pClient->Change_Sector(oldSector);
@@ -390,6 +386,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, Ve
             {
                 if (is_near(user_id, user))
                 {
+                    cout << "isnear Åë°ú" << endl;
                     if (!IsClient(user))
                     {
                         if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
@@ -675,7 +672,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
         Find( user_id)->SetClientTime(packet->move_time);
-        Do_Move(user_id, packet->direction, packet->localVec, packet->dirVec);
+        Do_Move(user_id, packet->direction, packet->localVec);
 
     }
                 break;

@@ -25,7 +25,7 @@ public:		// 菩哦 贸府何
 public:		// 菩哦 傈价何
 	void Send_Packet(void* _packet);
 	void Send_LogIN_Packet();
-	void Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVector);
+	void Send_Move_Packet(unsigned const char& dir, const Vector3& local);
 	void Send_Rotate_Packet(unsigned const char& dir, const float& rotateY);
 	void Send_Attack_Packet();
 public:

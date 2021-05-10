@@ -62,7 +62,9 @@ public:
 	CMeshRender* MeshRender() { return (CMeshRender*)GetComponent(COMPONENT_TYPE::MESHRENDER); }	// 다운 캐스팅
 	CCamera* Camera() { return (CCamera*)m_arrCom[(UINT)COMPONENT_TYPE::CAMERA]; }
 	CLight* Light() { return (CLight*)m_arrCom[(UINT)COMPONENT_TYPE::LIGHT]; }
-	CTerrain* Terrain() { return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN]; }
+	CTerrain* Terrain() { 
+		return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN];
+	}
 
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
