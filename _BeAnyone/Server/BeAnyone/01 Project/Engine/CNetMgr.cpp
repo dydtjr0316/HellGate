@@ -200,6 +200,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
+		
 		//cout << "enter packet recv -> " << my_packet->id << endl;
 		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale@nWalk_F.fbx");
 		CGameObject* pObject = new CGameObject;
@@ -222,23 +223,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 				g_Object.find(id)->second->AddComponent(new CPlayerScript);
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
-
-				/*CGameObject* pTerrainObject = new CGameObject;
-				pTerrainObject->SetName(L"Terrain");
-				pTerrainObject->AddComponent(new CTransform);
-				pTerrainObject->AddComponent(new CMeshRender);
-				pTerrainObject->AddComponent(new CTerrain);
-				pTerrainObject->FrustumCheck(false);
-				pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 10.f, 0.f));
-				pTerrainObject->Transform()->SetLocalScale(Vector3(100.f, 300.f, 100.f));
-				pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
-				pTerrainObject->Terrain()->init();
-				CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pTerrainObject);*/
 			
 				g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 				);
 				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
+				g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
 			}
 		}
 	}
@@ -260,6 +250,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				
 				ObjTrans->SetLocalPos(packet->localVec);
+			
+				
 			}
 		}
 	}
@@ -303,17 +295,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (0 != g_Object.count(other_id))
 			{
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
-				
-
-
-				delete g_Object.find(other_id)->second;
-
-				g_Object.find(other_id)->second = nullptr;
-
-
-
+				CEventMgr::GetInst()->update();
 				g_Object.erase(other_id);
-				
 			}
 		}
 	}
