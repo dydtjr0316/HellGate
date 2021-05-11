@@ -218,7 +218,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
 
-				CGameObject* pTerrainObject = new CGameObject;
+				/*CGameObject* pTerrainObject = new CGameObject;
 				pTerrainObject->SetName(L"Terrain");
 				pTerrainObject->AddComponent(new CTransform);
 				pTerrainObject->AddComponent(new CMeshRender);
@@ -228,9 +228,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 				pTerrainObject->Transform()->SetLocalScale(Vector3(100.f, 300.f, 100.f));
 				pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 				pTerrainObject->Terrain()->init();
-				CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pTerrainObject);
+				CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pTerrainObject);*/
 			
-				g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
+				g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
+				);
+				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 			}
 		}
 	}
@@ -289,7 +292,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
-		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
+		/*sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
 			delete g_Object.find(g_myid)->second;
@@ -302,7 +305,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				delete g_Object.find(other_id)->second;
 				g_Object.erase(other_id);
 			}
-		}
+		}*/
 	}
 	break;
 	case SC_PACKET_CHAT:

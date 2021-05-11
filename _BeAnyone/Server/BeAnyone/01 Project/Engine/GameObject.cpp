@@ -207,6 +207,8 @@ void CGameObject::update()
 	{
 		if (nullptr != m_arrCom[i])
 		{
+			// ¿ë¼®
+			this;
 			m_arrCom[i]->update();
 		}
 	}
