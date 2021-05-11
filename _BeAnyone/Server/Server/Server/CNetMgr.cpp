@@ -865,9 +865,9 @@ void CNetMgr::Worker_Thread()
 
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(
-                    (float)(rand() % (WORLD_WIDTH - 400) + 200.f), // 수정 real float
-                    (float)(141.f),
-                    (float)(rand() % (WORLD_HEIGHT - 400) + 200.f));
+                    (float)(rand() % 1000), // 수정 real float
+                    (float)(140.f),
+                    (float)(rand() % 1000));
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
                 ////////////////////////////////////////////////////////

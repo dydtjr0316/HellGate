@@ -73,11 +73,6 @@ vector<unordered_set<int>> CGameObject::Search_Sector()
     int x2 = ((int)m_v3LocalPosVector.x + VIEW_LIMIT) / SECTOR_COL_Length;
     int z2 = ((int)m_v3LocalPosVector.z + VIEW_LIMIT) / SECTOR_ROW_Length;
 
-    cout << x1 << endl;
-    cout << x2 << endl;
-    cout << z1 << endl;
-    cout << z2 << endl;
-
     // 여기 int 형 으로 그냥 맵 반환해서 int 형 변수로 섹터 검샋해도될거같은대ㅔ?
 
     if (x1 == x2 && z1 == z2) // 섹터 하나 검색

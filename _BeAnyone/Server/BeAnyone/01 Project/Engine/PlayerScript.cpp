@@ -81,8 +81,8 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 	//	영문서버
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	if (isInMap(localPos))
-	{
+	//if (isInMap(localPos))
+	//{
 		if (KEY_HOLD(KEY_TYPE::KEY_W))
 		{
 			localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
@@ -152,7 +152,7 @@ void CPlayerScript::OnPlayerUpdateCallback()
 			g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 			g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 		}
-	}
+	//}
 }
 
 bool CPlayerScript::isInMap(const Vector3& localPos)

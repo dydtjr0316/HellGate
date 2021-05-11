@@ -126,7 +126,6 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local)
 	m_packet.size = sizeof(m_packet);
 	m_packet.direction = dir;
 	m_packet.localVec = local;
-	cout << "무브 보낸다" << endl;
 
 	Send_Packet(&m_packet);
 }
@@ -189,7 +188,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
 
-		cout << m_pObj->Transform()->GetLocalPos().y << endl;
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
 	}
@@ -289,7 +287,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
-		/*sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
+		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
 			delete g_Object.find(g_myid)->second;
@@ -299,10 +297,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else {
 			if (0 != g_Object.count(other_id))
 			{
+				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(g_myid)->second);
 				delete g_Object.find(other_id)->second;
 				g_Object.erase(other_id);
 			}
-		}*/
+		}
 	}
 	break;
 	case SC_PACKET_CHAT:
