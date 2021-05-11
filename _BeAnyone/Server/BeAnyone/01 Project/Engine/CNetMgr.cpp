@@ -276,7 +276,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			}
 			else
 			{
-				g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
+				if (0 != g_Object.count(other_id))
+					g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
 			}
 			break;
 		default:
@@ -290,16 +291,25 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
-			delete g_Object.find(g_myid)->second;
-			g_Object.erase(g_myid);
+			/*delete g_Object.find(g_myid)->second;
+			g_Object.erase(g_myid);*/
 
 		}
 		else {
 			if (0 != g_Object.count(other_id))
 			{
-				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(g_myid)->second);
+				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
+				
+
+
 				delete g_Object.find(other_id)->second;
+
+				g_Object.find(other_id)->second = nullptr;
+
+
+
 				g_Object.erase(other_id);
+				
 			}
 		}
 	}
