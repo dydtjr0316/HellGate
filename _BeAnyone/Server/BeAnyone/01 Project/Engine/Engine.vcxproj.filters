@@ -211,6 +211,12 @@
     <ClInclude Include="Terrain.h">
       <Filter>04. GameObject\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="StructuredBuffer.h">
+      <Filter>03. Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator3D.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -348,6 +354,12 @@
     <ClCompile Include="TerrainInit.cpp">
       <Filter>04. GameObject\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="StructuredBuffer.cpp">
+      <Filter>03. Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator3D.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
@@ -369,6 +381,9 @@
       <Filter>ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="terrain.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="animation.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

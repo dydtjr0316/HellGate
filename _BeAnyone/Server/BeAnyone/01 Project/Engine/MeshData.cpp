@@ -7,7 +7,7 @@
 #include "Material.h"
 #include "Transform.h"
 #include "MeshRender.h"
-//#include "Animator3D.h"
+#include "Animator3D.h"
 #include "GameObject.h"
 
 CMeshData::CMeshData()
@@ -170,15 +170,14 @@ CGameObject* CMeshData::Instantiate()
 		pNewObj->MeshRender()->SetMaterial(m_vecMtrl[i], i);
 	}
 
-	//if (false == m_pMesh->IsAnimMesh())
-	//	return pNewObj;
-	//
-	//CAnimator3D* pAnimator = new CAnimator3D;
-	//pNewObj->AddComponent(pAnimator);
-	//
-	//pAnimator->SetBones(m_pMesh->GetBones());
-	//pAnimator->SetAnimClip(m_pMesh->GetAnimClip());
-	//pAnimator->SetBoneTex(m_pMesh->GetBoneTex());
+	if (false == m_pMesh->IsAnimMesh())
+		return pNewObj;
+
+	CAnimator3D* pAnimator = new CAnimator3D;
+	pNewObj->AddComponent(pAnimator);
+
+	pAnimator->SetBones(m_pMesh->GetBones());
+	pAnimator->SetAnimClip(m_pMesh->GetAnimClip());
 
 	return pNewObj;
 }

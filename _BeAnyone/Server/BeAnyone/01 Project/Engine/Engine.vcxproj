@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animator3D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CNetMgr.h" />
     <ClInclude Include="Component.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="struct.h" />
+    <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TemperUiScript.h" />
     <ClInclude Include="Terrain.h" />
@@ -71,6 +73,7 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CNetMgr.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -111,6 +114,7 @@
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="TemperUiScript.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainInit.cpp" />
@@ -123,6 +127,10 @@
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="animation.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="compute.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

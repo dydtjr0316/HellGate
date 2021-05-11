@@ -72,13 +72,13 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	m_pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::Max);
 
 	// Bone 정보 읽기
-	//LoadSkeleton(m_pScene->GetRootNode());
+	LoadSkeleton(m_pScene->GetRootNode());
 	//
-	//// Animation 이름정보 
-	//m_pScene->FillAnimStackNameArray(m_arrAnimName);
+	// Animation 이름정보 
+	m_pScene->FillAnimStackNameArray(m_arrAnimName);
 	//
-	//// Animation Clip 정보
-	//LoadAnimationClip();
+	// Animation Clip 정보
+	LoadAnimationClip();
 
 	// 삼각화(Triangulate)
 	Triangulate(m_pScene->GetRootNode());
@@ -186,7 +186,7 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 		Container.vecIdx[iSubsetIdx].push_back(arrIdx[1]);
 	}
 
-	//LoadAnimationData(_pFbxMesh, &Container);
+	LoadAnimationData(_pFbxMesh, &Container);
 }
 
 void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)

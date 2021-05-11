@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "PlayerScript.h"
+#include <iostream>
+
+using namespace std;
+
 bool checkOnce = true;
 
 CPlayerScript::CPlayerScript()
@@ -86,7 +90,7 @@ Vector3 CPlayerScript::OnPlayerUpdateCallback()
 	{
 		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
 
-
+		cout << localPos.x << "\t" << localPos.y << "\t" << localPos.z << endl;
 		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 	}
 

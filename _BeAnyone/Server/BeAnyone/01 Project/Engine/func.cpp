@@ -351,3 +351,16 @@ wchar_t* LoadWString(FILE* _pFile)
 
 	return szStr;
 }
+
+Matrix GetMatrix(FbxAMatrix& _mat)
+{
+	Matrix mat;
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			mat.m[i][j] = (float)_mat.Get(i, j);
+		}
+	}
+	return mat;
+}

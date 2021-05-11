@@ -691,6 +691,13 @@ void CResMgr::CreateDefaultShader()
 	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS);
 	pShader->Create(SHADER_POV::DEFERRED, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 	AddRes(L"TerrainShader", pShader);
+
+	// =======================
+	// Animation Update Shader
+	// =======================
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\animation.fx", "CS_Animation3D", "cs_5_0");
+	AddRes(L"Animaion3DUpdateShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -815,4 +822,10 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"TerrainShader"));
 	AddRes(L"TerrainMtrl", pMtrl);
+
+	// Animation Update
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"Animaion3DUpdateShader"));
+	AddRes(L"Animation3DUpdateMtrl", pMtrl);
 }

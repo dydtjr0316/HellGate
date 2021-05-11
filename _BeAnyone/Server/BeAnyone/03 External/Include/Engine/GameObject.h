@@ -7,7 +7,7 @@ class CMeshRender;
 // class CCollider2D;
 // class CCollider3D;
 // class CAnimator2D;
-// class CAnimator3D;
+ class CAnimator3D;
 class CScript;
 // class CLight2D;
 class CLight;
@@ -65,7 +65,7 @@ public:
 	CTerrain* Terrain() { 
 		return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN];
 	}
-
+	CAnimator3D* Animator3D() { return (CAnimator3D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR3D]; }
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
 	

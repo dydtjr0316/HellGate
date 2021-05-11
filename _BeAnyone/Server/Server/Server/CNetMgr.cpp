@@ -671,6 +671,11 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
                  break;
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
+
+        cout << packet->localVec.x << endl;
+        cout << packet->localVec.y << endl;
+        cout << packet->localVec.z << endl<<endl;
+
         Find( user_id)->SetClientTime(packet->move_time);
         Do_Move(user_id, packet->direction, packet->localVec);
 

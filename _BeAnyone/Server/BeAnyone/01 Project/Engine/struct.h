@@ -17,8 +17,9 @@ struct VTX
 	Vector3 vNormal;
 	Vector3 vBinormal;
 
-	Vector4 vWeights;
-	Vector4 vIndices;
+	// animation
+	Vector4 vWeights;		// 가중치
+	Vector4 vIndices;		// 본 인덱스
 };
 
 struct tTransform
@@ -143,3 +144,45 @@ typedef struct _tagContainer
 	}
 
 }tContainer;
+
+// Animation
+struct tFrameTrans
+{
+	Vector4		vScale;
+	Vector4		qRot;
+	Vector4		vTranslate;
+};
+
+struct tMTKeyFrame
+{
+	double		dTime;
+	int			iFrame;
+	Vector3		vTranslate;
+	Vector3		vScale;
+	Vector4		qRot;
+};
+
+struct tMTBone
+{
+	wstring				strBoneName;
+	int					iDepth;
+	int					iParentIndx;
+	Matrix				matOffset;	// Offset 행렬(뼈 -> 루트 까지의 행렬)
+	Matrix				matBone;   // 이거 안씀
+	vector<tMTKeyFrame>	vecKeyFrame;
+};
+
+struct tMTAnimClip
+{
+	wstring		strAnimName;
+	int			iStartFrame;
+	int			iEndFrame;
+	int			iFrameLength;
+
+	double		dStartTime;
+	double		dEndTime;
+	double		dTimeLength;
+	float		fUpdateTime; // 이거 안씀
+
+	FbxTime::EMode eMode;
+};

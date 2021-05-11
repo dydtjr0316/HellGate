@@ -127,6 +127,10 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local)
 	m_packet.direction = dir;
 	m_packet.localVec = local;
 
+	cout << m_packet.localVec.x << endl;
+	cout << m_packet.localVec.y << endl;
+	cout << m_packet.localVec.z << endl;
+
 	Send_Packet(&m_packet);
 }
 
@@ -196,7 +200,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
 		//cout << "enter packet recv -> " << my_packet->id << endl;
-		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale.fbx");
+		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale@nWalk_F.fbx");
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{

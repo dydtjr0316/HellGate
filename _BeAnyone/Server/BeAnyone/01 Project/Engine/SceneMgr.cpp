@@ -290,10 +290,11 @@ void CSceneMgr::init()
 	// =============
    // FBX 파일 로드
    // =============
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale.fbx");
-	//pMeshData->Save(pMeshData->GetPath());
-	// MeshData 로드
-	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\House.mdat", L"MeshData\\monster.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\PlayerMale@nWalk_F.fbx");
+	pMeshData->Save(pMeshData->GetPath());
+
+	//MeshData 로드
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\PlayerMale@nWalk_F.mdat", L"MeshData\\PlayerMale@nWalk_F.mdat");
 	CGameObject* pPlayerObj = nullptr;
 
 	pPlayerObj = pMeshData->Instantiate();
