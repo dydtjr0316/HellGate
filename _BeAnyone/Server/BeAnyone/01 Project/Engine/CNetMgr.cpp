@@ -188,6 +188,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
 
+		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
 	}
 	break;
