@@ -52,7 +52,7 @@ void CNetMgr::Connect()
 
 	if (g_Socket == INVALID_SOCKET)err_quit("WSASocket");
 
-	SOCKADDR_IN recvAddr;
+	SOCKADDR_IN recvAddr; 
 	memset(&recvAddr, 0, sizeof(recvAddr));
 
 	recvAddr.sin_family = AF_INET;
@@ -126,6 +126,7 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local)
 	m_packet.size = sizeof(m_packet);
 	m_packet.direction = dir;
 	m_packet.localVec = local;
+	cout << "무브 보낸다" << endl;
 
 	Send_Packet(&m_packet);
 }
@@ -188,6 +189,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
 
+		cout << m_pObj->Transform()->GetLocalPos().y << endl;
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
 	}
@@ -254,6 +256,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//추가
 			if (0 != g_Object.count(other_id))
 			{
+				
 				ObjTrans->SetLocalPos(packet->localVec);
 			}
 		}
@@ -271,18 +274,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 			if (other_id == g_myid)
 			{
-				// 세팅하지 않기
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
+
 			}
 			else
 			{
 				g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
-				cout << other_id << "번 클라이언트 세팅" << endl;
-				cout << "roatet packet y >> " << rotate_packet->rotateY << endl;
 			}
 			break;
 		default:
