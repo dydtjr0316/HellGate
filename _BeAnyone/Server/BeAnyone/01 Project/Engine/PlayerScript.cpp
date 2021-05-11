@@ -71,7 +71,7 @@ void CPlayerScript::update()
 }
 
 
-Vector3 CPlayerScript::OnPlayerUpdateCallback()
+void CPlayerScript::OnPlayerUpdateCallback()
 {
 	CTerrain* pTerrain = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain();
 	// 용석
@@ -81,80 +81,82 @@ Vector3 CPlayerScript::OnPlayerUpdateCallback()
 
 	//	영문서버
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-
-	if (KEY_HOLD(KEY_TYPE::KEY_W))
+	if (isInMap(localPos))
 	{
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
-
-
-		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_S))
-	{
-		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
-
-		//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
-
-
-		//OnPlayerUpdateCallback();
-
-
-		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_A))
-	{
-		//vPos.x -= DT * 200.f;
-		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
-		//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
-
-		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_D))
-	{
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
-		//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
-
-
-		//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-	}
-
-	
-
-
-
-	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
-	{
-		localPos.y -= m_xmf3Velocity.y;
-
-		int z = (int)(localPos.z / xmf3Scale.z);
-		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
-
-		if (localPos.y < fHeight)
+		if (KEY_HOLD(KEY_TYPE::KEY_W))
 		{
-			XMFLOAT3 xmf3PlayerVelocity = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetVelocity();
-			xmf3PlayerVelocity.y = 0.0f;
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(xmf3PlayerVelocity);
-			localPos.y = fHeight;
+			localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
 
+
+			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		}
 
-		if (localPos.y > fHeight + 6.0f)
+		if (KEY_HOLD(KEY_TYPE::KEY_S))
 		{
-			m_xmf3Velocity.y = 0.3f;
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(localPos);
+			localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
+
+			//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
+
+
+			//OnPlayerUpdateCallback();
+
+
+			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		}
 
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		if (KEY_HOLD(KEY_TYPE::KEY_A))
+		{
+			//vPos.x -= DT * 200.f;
+			localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+			//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
+
+			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+		}
+
+		if (KEY_HOLD(KEY_TYPE::KEY_D))
+		{
+			localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+			//g_netMgr.Send_Move_Packet(MV_BACK, OnPlayerUpdateCallback());
+
+
+			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+		}
+
+
+
+
+
+		if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
+		{
+			localPos.y -= m_xmf3Velocity.y;
+
+			int z = (int)(localPos.z / xmf3Scale.z);
+			bool bReverseQuad = ((z % 2) != 0);
+			float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
+
+			if (localPos.y < fHeight)
+			{
+				XMFLOAT3 xmf3PlayerVelocity = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetVelocity();
+				xmf3PlayerVelocity.y = 0.0f;
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(xmf3PlayerVelocity);
+				localPos.y = fHeight;
+
+			}
+
+			if (localPos.y > fHeight + 6.0f)
+			{
+				m_xmf3Velocity.y = 0.3f;
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(localPos);
+			}
+
+			g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+			g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		}
 	}
+}
 
-	cout << g_Object.find(g_myid)->second->Transform()->GetLocalPos().y << endl;
-
-	return g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	// 용석
-	// 이자리에 send packet부분 들어가고 이함수를 wasd키에 넣는게 제일 나을듯
+bool CPlayerScript::isInMap(const Vector3& localPos)
+{
+	if ((localPos.x > 200 && localPos.x < 6200) && (localPos.z > 200 && localPos.z < 6200))return true;
+	else return false;
 }
