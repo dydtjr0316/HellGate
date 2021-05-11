@@ -386,7 +386,6 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
             {
                 if (is_near(user_id, user))
                 {
-                    cout << "isnear 통과" << endl;
                     if (!IsClient(user))
                     {
                         if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
@@ -555,8 +554,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
                 }
                 else
                 {
-                    cout << "새로들어온애가 나한테 2" << endl;
-                    cout << ob << ", " << user_id << endl;
+
                     Send_Roate_Packet(ob, user_id, dir);
                 }
             }
@@ -873,7 +871,7 @@ void CNetMgr::Worker_Thread()
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(
                     (float)(rand() % 1000), // 수정 real float
-                    (float)(0.f),
+                    (float)(140.f),
                     (float)(rand() % 1000));
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;

@@ -23,7 +23,11 @@ using namespace DirectX::PackedVector;
 using namespace Microsoft::WRL;
 
 // Fbx Loader
+#ifdef _DEBUG
 #include "fbxsdk.h"
+#else
+#include "../../03 External/Include/FBXLoader/fbxsdk.h"
+#endif
 
 #ifdef _DEBUG
 #pragma comment(lib, "FBXLoader/x64/debug/libfbxsdk-md.lib")
@@ -73,8 +77,14 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 using namespace Microsoft::WRL;
 
-// Fbx Loader
+
+ //Fbx Loader
+#ifdef _DEBUG
 #include "fbxsdk.h"
+#else
+#include "../../03 External/Include/FBXLoader/fbxsdk.h"
+#endif
+
 
 #ifdef _DEBUG
 #pragma comment(lib, "FBXLoader/x64/debug/libfbxsdk-md.lib")

@@ -52,7 +52,7 @@ void CNetMgr::Connect()
 
 	if (g_Socket == INVALID_SOCKET)err_quit("WSASocket");
 
-	SOCKADDR_IN recvAddr;
+	SOCKADDR_IN recvAddr; 
 	memset(&recvAddr, 0, sizeof(recvAddr));
 
 	recvAddr.sin_family = AF_INET;
@@ -192,6 +192,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
 
+		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
 	}
 	break;
@@ -257,6 +258,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//추가
 			if (0 != g_Object.count(other_id))
 			{
+				
 				ObjTrans->SetLocalPos(packet->localVec);
 			}
 		}
@@ -274,18 +276,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 			if (other_id == g_myid)
 			{
-				// 세팅하지 않기
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
-				cout << "씨~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~발" << endl;
+
 			}
 			else
 			{
-				g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
-				cout << other_id << "번 클라이언트 세팅" << endl;
-				cout << "roatet packet y >> " << rotate_packet->rotateY << endl;
+				if (0 != g_Object.count(other_id))
+					g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
 			}
 			break;
 		default:
@@ -296,20 +292,30 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
-		/*sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
+		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
-			delete g_Object.find(g_myid)->second;
-			g_Object.erase(g_myid);
+			/*delete g_Object.find(g_myid)->second;
+			g_Object.erase(g_myid);*/
 
 		}
 		else {
 			if (0 != g_Object.count(other_id))
 			{
+				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
+				
+
+
 				delete g_Object.find(other_id)->second;
+
+				g_Object.find(other_id)->second = nullptr;
+
+
+
 				g_Object.erase(other_id);
+				
 			}
-		}*/
+		}
 	}
 	break;
 	case SC_PACKET_CHAT:
