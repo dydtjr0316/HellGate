@@ -275,3 +275,11 @@ enum class SHADER_POV
 	LIGHTING,
 	COMPUTE, // GPGPU
 };
+
+// fbx type
+enum class FBX_TYPE
+{
+	PLAYER,
+	DESERT_MAP,
+	END,
+};

@@ -58,7 +58,7 @@ Ptr<CTexture> CResMgr::CreateTextureFromResource(const wstring& _strName, ComPtr
 	return pNewTexture;
 }
 
-Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
+Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath, FBX_TYPE _fbxType)
 {
 	wstring strFileName = CPathMgr::GetFileName(_strPath.c_str());
 
@@ -70,7 +70,7 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	if (nullptr != pMeshData)
 		return pMeshData;
 
-	pMeshData = CMeshData::LoadFromFBX(_strPath);
+	pMeshData = CMeshData::LoadFromFBX(_strPath, _fbxType);
 	pMeshData->SetName(strName);
 	pMeshData->SetPath(strName);
 	m_mapRes[(UINT)RES_TYPE::MESHDATA].insert(make_pair(strName, pMeshData.GetPointer()));

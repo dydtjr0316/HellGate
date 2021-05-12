@@ -49,8 +49,9 @@ void CFBXLoader::init()
 		assert(NULL);
 }
 
-void CFBXLoader::LoadFbx(const wstring& _strPath)
+void CFBXLoader::LoadFbx(const wstring& _strPath, FBX_TYPE _fbxType)
 {
+	m_fbxType = _fbxType;
 	m_vecContainer.clear();
 
 	m_pImporter = FbxImporter::Create(m_pManager, "");
@@ -363,7 +364,13 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 {
 	string strName;
 	wstring wstrName = CPathMgr::GetResPath();
-	wstrName += L"Texture\\Player\\";
+
+	if (m_fbxType == FBX_TYPE::PLAYER) {
+		wstrName += L"Texture\\Player\\";
+	}
+	else if (m_fbxType == FBX_TYPE::DESERT_MAP) {
+		wstrName += L"Texture\\Desert\\";
+	}
 
 	FbxProperty TextureProperty = _pSurface->FindProperty(_pMtrlProperty);
 	if (TextureProperty.IsValid())
@@ -375,11 +382,20 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 			FbxFileTexture* pFbxTex = TextureProperty.GetSrcObject<FbxFileTexture>(0);
 			if (NULL != pFbxTex) {
 				//strName = "C:\\Users\\HyoRim\\Desktop\\graduation project\\HellGate\\_BeAnyone\\Client\\BeAnyone\\02 File\\bin\\content\\FBX\\PlayerMale02.tga"; //pFbxTex->GetFileName();
-				strName = _pSurface->GetName();
-				strName += ".tga";
-				wstrName += wstring(strName.begin(), strName.end());
+				
+				if (m_fbxType == FBX_TYPE::PLAYER) {
+					strName = _pSurface->GetName();
+					strName += ".tga";
+					wstrName += wstring(strName.begin(), strName.end());
+				}
 			}
 		}
+	}
+
+	if (m_fbxType == FBX_TYPE::DESERT_MAP) {
+		strName = "Colors2";//_pSurface->GetName();
+		strName += ".png";
+		wstrName += wstring(strName.begin(), strName.end());
 	}
 
 	return wstrName; // wstring(strName.begin(), strName.end());

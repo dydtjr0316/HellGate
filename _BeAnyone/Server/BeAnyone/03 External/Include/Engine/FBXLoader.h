@@ -44,10 +44,13 @@ private:
 	FbxArray<FbxString*>			m_arrAnimName;
 	vector<tAnimClip*>				m_vecAnimClip;
 
+	// fbx texture
+	FBX_TYPE						m_fbxType;
+
 
 public:
 	void init();
-	void LoadFbx(const wstring& _strPath);
+	void LoadFbx(const wstring& _strPath, FBX_TYPE _fbxtype);
 
 public:
 	int GetContainerCount() { return (int)m_vecContainer.size(); }
