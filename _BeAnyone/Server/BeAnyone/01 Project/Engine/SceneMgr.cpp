@@ -290,7 +290,7 @@ void CSceneMgr::init()
 	// =============
    // FBX 파일 로드
    // =============
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Tree_05.fbx", FBX_TYPE::DESERT_MAP);
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\PlayerMale@nWalk_F.fbx", FBX_TYPE::DESERT_MAP);
 	pMeshData->Save(pMeshData->GetPath());
 
 	//MeshData 로드

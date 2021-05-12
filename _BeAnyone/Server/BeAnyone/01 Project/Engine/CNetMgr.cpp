@@ -11,7 +11,8 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
-const char ip[] = "192.168.0.3";
+//const char ip[] = "192.168.0.3";
+const char ip[] = "127.0.0.1";
 
 CNetMgr g_netMgr;
 
@@ -198,7 +199,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int id = my_packet->id;
 		
 		//cout << "enter packet recv -> " << my_packet->id << endl;
-		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Tree_05.fbx", FBX_TYPE::DESERT_MAP);
+		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\PlayerMale@nWalk_F.fbx", FBX_TYPE::DESERT_MAP);
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
