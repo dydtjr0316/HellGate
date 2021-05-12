@@ -138,6 +138,8 @@ struct sc_packet_enter {
 
 	Vector3 localVec;
 
+	float RotateY;
+
 	char name[MAX_ID_LEN];
 	char o_type;
 	//float x, y, z; // 보고 삭제

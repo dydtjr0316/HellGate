@@ -152,6 +152,7 @@ void CNetMgr::Send_Enter_Packet( const int& user_id,  const int& other_id)
     p.size = sizeof(p);
     p.type = SC_PACKET_ENTER;
     p.localVec = Find(other_id)->GetLocalPosVector();
+    p.RotateY =  Find(other_id)->GetRoatateVector().y;
     strcpy_s(p.name, Find(other_id)->GetName());    // data race???
     p.o_type = O_PLAYER;
 
