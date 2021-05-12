@@ -51,7 +51,7 @@ public:
 	Ptr<CTexture> CreateTextureFromResource(const wstring& _strName, ComPtr<ID3D12Resource> _pTex2D);
 
 	// FBX
-	Ptr<CMeshData> LoadFBX(const wstring& _strPath);
+	Ptr<CMeshData> LoadFBX(const wstring& _strPath, FBX_TYPE _fbxType);
 };
 
 template<typename T>

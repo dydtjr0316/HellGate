@@ -13,20 +13,25 @@
 CMeshData::CMeshData()
 	: CResource(RES_TYPE::MESHDATA)
 {
+	m_wstring[(int)FBX_TYPE::PLAYER] = L"Player";
+	m_wstring[(int)FBX_TYPE::DESERT_MAP] = L"Desert";
 }
 
 CMeshData::~CMeshData()
 {
 }
 
-CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
+CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, FBX_TYPE _fbxType)
 {
 	wstring strFullPath = CPathMgr::GetResPath();
 	strFullPath += _strPath;
+	
+	// texture path
+	//wstring strTexturePath = m_wstring[(int)_fbxType];
 
 	CFBXLoader loader;
 	loader.init();
-	loader.LoadFbx(strFullPath);
+	loader.LoadFbx(strFullPath, _fbxType);
 
 	// 메쉬 가져오기
 	CMesh* pMesh = CMesh::CreateFromContainer(loader);

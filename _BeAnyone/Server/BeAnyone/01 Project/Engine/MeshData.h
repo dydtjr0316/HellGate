@@ -15,10 +15,11 @@ class CMeshData :
 private:
 	Ptr<CMesh>				m_pMesh;
 	vector<Ptr<CMaterial>>	m_vecMtrl;
+	wstring					m_wstring[(int)FBX_TYPE::END];
 
 	// Animation3D
 public:
-	static CMeshData* LoadFromFBX(const wstring& _strFilePath);
+	static CMeshData* LoadFromFBX(const wstring& _strFilePath, FBX_TYPE _fbxType);
 
 	virtual void Load(const wstring& _strFilePath);
 	virtual void Save(const wstring& _strFilePath);
