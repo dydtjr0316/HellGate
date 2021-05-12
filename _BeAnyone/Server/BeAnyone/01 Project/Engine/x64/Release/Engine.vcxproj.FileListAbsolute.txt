@@ -4,3 +4,4 @@ D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.c
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
+D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso

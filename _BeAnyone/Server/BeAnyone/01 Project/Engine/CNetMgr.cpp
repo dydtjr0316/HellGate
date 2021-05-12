@@ -127,10 +127,6 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local)
 	m_packet.direction = dir;
 	m_packet.localVec = local;
 
-	cout << m_packet.localVec.x << endl;
-	cout << m_packet.localVec.y << endl;
-	cout << m_packet.localVec.z << endl;
-
 	Send_Packet(&m_packet);
 }
 
