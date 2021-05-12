@@ -202,7 +202,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
-			g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
+			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
 		}
 		else
 		{
@@ -223,7 +223,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 				);
-				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
+				//g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 				g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
 			}
 		}
@@ -233,7 +233,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
-		Vector3 temp;
 		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
 		if (other_id == g_myid)
 		{
@@ -244,10 +243,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//추가
 			if (0 != g_Object.count(other_id))
 			{
-				
 				ObjTrans->SetLocalPos(packet->localVec);
-			
-				
 			}
 		}
 	}
@@ -293,6 +289,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 				CEventMgr::GetInst()->update();
 				g_Object.erase(other_id);
+				cout << "leave packet 처리 한다!" << endl;
 			}
 		}
 	}

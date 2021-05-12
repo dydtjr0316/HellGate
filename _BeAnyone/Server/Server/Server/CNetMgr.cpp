@@ -426,7 +426,9 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
+                {
                     Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+                }
             }
         }
         else // 이전에도 있던 아이디 
@@ -439,7 +441,9 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
+                {
                     Send_Move_Packet(ob, user_id, dir);
+                }
             }
         }
     }
@@ -535,7 +539,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
                 if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
                 {
                     dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
-                    Send_Enter_Packet(ob, user_id);
+                    //Send_Enter_Packet(ob, user_id);
                 }
                 else
                 {
@@ -552,7 +556,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
                 if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
                 {
                     dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
-                    Send_Enter_Packet(ob, user_id);
+                    //Send_Enter_Packet(ob, user_id);
                 }
                 else
                 {

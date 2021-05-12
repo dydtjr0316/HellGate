@@ -71,11 +71,14 @@ vector<unordered_set<int>> CGameObject::Search_Sector()
     int x1 = ((int)m_v3LocalPosVector.x - VIEW_LIMIT) / SECTOR_COL_Length;
     int z1 = ((int)m_v3LocalPosVector.z - VIEW_LIMIT) / SECTOR_ROW_Length;
 
-    x1 = x1 < -1 ? 0 : x1;
-    z1 = z1 < -1 ? 0 : z1;
+    x1 = x1 < 0 ? 0 : x1;
+    z1 = z1 < 0 ? 0 : z1;
 
     int x2 = ((int)m_v3LocalPosVector.x + VIEW_LIMIT) / SECTOR_COL_Length;
     int z2 = ((int)m_v3LocalPosVector.z + VIEW_LIMIT) / SECTOR_ROW_Length;
+
+    x2 = x2 > 20 ? SECTOR_ROW : x2;
+    z2 = z2 > 20 ? SECTOR_COL : z2;
     //cout << x1<<", " << z1 << ", " << x2 << ", " << z2 << endl;
 
     // 여기 int 형 으로 그냥 맵 반환해서 int 형 변수로 섹터 검샋해도될거같은대ㅔ?
