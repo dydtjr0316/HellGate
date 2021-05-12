@@ -63,6 +63,7 @@ void CGameObject::Change_Sector(const _tSector& old_sector)
 vector<unordered_set<int>> CGameObject::Search_Sector()
 {
     vector<unordered_set<int>> vSectors;
+    
 
 
    

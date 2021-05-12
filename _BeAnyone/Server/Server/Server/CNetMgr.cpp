@@ -19,6 +19,7 @@ void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 
 bool CNetMgr::is_near( const int& p1, const int& p2)
 {
+    if(p1 == p2)return false;
     float dist =
         (Find(p1)->GetLocalPosVector().x - Find(p1)->GetLocalPosVector().x)
         * (Find(p1)->GetLocalPosVector().x - Find(p1)->GetLocalPosVector().x);
@@ -539,7 +540,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
                 else
                 {
                    // cout << "새로들어온애가 나한테" << endl;
-                    cout << ob << ", " << user_id << endl;
+                   // cout << ob << ", " << user_id << endl;
                     Send_Roate_Packet(ob, user_id, dir);
                 }
             }
@@ -671,9 +672,6 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 
-        cout << packet->localVec.x << endl;
-        cout << packet->localVec.y << endl;
-        cout << packet->localVec.z << endl<<endl;
 
         Find( user_id)->SetClientTime(packet->move_time);
         Do_Move(user_id, packet->direction, packet->localVec);

@@ -45,6 +45,7 @@ public:		// thread 包府何
 	void WakeUp_NPC(const int& id);
 	void WakeUp_Monster(const int& id);
 	void Add_Timer(const int& obj_id, const int& status, system_clock::time_point t);
+
 public:		// 吝俺磊 包府何
 	void Add(CGameObject* pObj, const int& id);
 	CGameObject* Find(const int& id);
