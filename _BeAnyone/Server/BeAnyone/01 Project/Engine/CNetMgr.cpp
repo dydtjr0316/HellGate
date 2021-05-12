@@ -11,7 +11,7 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
-const char ip[] = "127.0.0.1";
+const char ip[] = "192.168.0.3";
 
 CNetMgr g_netMgr;
 
@@ -288,6 +288,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 				CEventMgr::GetInst()->update();
+				
 				g_Object.erase(other_id);
 				cout << "leave packet 처리 한다!" << endl;
 			}
