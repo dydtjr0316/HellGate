@@ -71,7 +71,7 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	{
 
 
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 50.f * DT;
+		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
 		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
