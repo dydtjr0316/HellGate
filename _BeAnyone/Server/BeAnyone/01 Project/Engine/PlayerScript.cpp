@@ -135,26 +135,26 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
 	{
-		localPos.y -= m_xmf3Velocity.y;
+		/*localPos.y -= m_xmf3Velocity.y;*/
 
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
 		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
 
-		if (localPos.y < fHeight)
+		if (localPos.y != fHeight)
 		{
-			XMFLOAT3 xmf3PlayerVelocity = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetVelocity();
+			/*XMFLOAT3 xmf3PlayerVelocity = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetVelocity();
 			xmf3PlayerVelocity.y = 0.0f;
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(xmf3PlayerVelocity);
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(xmf3PlayerVelocity);*/
 			localPos.y = fHeight;
 
 		}
 
-		if (localPos.y > fHeight + 6.0f)
+	/*	if (localPos.y > fHeight + 6.0f)
 		{
 			m_xmf3Velocity.y = 0.3f;
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetVelocity(localPos);
-		}
+		}*/
 
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
