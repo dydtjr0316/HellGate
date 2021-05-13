@@ -3,7 +3,7 @@
 
 #include "Transform.h"
 #include "MeshRender.h"
-//#include "Collider2D.h"
+#include "Collider.h"
 //#include "Animator2D.h"
 //#include "Animation2D.h"
 
@@ -65,9 +65,9 @@ public:
 	virtual void SaveToScene(FILE* _pFile) {}
 	virtual void LoadFromScene(FILE* _pFile) {}
 
-	//virtual void OnCollisoinEnter(CCollider3D* _pOther) {}
-	//virtual void OnCollisoin(CCollider3D* _pOther) {}
-	//virtual void OnCollisoinExit(CCollider3D* _pOther) {}
+	virtual void OnCollisionEnter(CCollider* _pOther) {}
+	virtual void OnCollision(CCollider* _pOther) {}
+	virtual void OnCollisionExit(CCollider* _pOther) {}
 
 
 public:
@@ -75,6 +75,6 @@ public:
 	virtual ~CScript();
 
 	//friend class CCollider2D;
-	//friend class CCOllider3D;
+	friend class CCollider;
 };
 

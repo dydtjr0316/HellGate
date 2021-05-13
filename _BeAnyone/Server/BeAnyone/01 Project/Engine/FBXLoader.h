@@ -47,6 +47,8 @@ private:
 	// fbx texture
 	FBX_TYPE						m_fbxType;
 
+	wstring							m_fileName;
+
 
 public:
 	void init();

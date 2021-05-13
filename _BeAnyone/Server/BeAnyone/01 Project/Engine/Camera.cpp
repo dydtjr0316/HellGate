@@ -12,7 +12,7 @@
 #include "TimeMgr.h"
 
 #include "MeshRender.h"
-//#include "Collider2D.h"
+#include "Collider.h"
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
@@ -123,6 +123,9 @@ void CCamera::render_deferred()
 		if (m_vecDeferred[i]->GetUiRenderCheck() == true) {
 			m_vecDeferred[i]->MeshRender()->render();
 		}
+
+		if (m_vecDeferred[i]->Collider())
+			m_vecDeferred[i]->Collider()->render();
 	}
 }
 
@@ -141,16 +144,10 @@ void CCamera::render_forward()
 			m_vecForward[i]->MeshRender()->render();
 		}
 
-		//if (m_vecForward[i]->Collider2D())
-		//	m_vecForward[i]->Collider2D()->render();
+		if (m_vecForward[i]->Collider())
+			m_vecForward[i]->Collider()->render();
 	}
 
-
-	//for (size_t i = 0; i < m_vecDeferred.size(); ++i)
-	//{
-	//	if (m_vecDeferred[i]->Collider2D())
-	//		m_vecDeferred[i]->Collider2D()->render();
-	//}
 }
 
 void CCamera::render()

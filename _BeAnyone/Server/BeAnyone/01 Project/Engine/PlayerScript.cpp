@@ -67,14 +67,22 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
 	//if (isInMap(localPos))
 	//{
+
+	float speed = 200.f;
+
+	if (KEY_HOLD(KEY_TYPE::KEY_SPACE))
+	{
+		speed = 600.f;
+	}
+
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
 
 
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
+		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * speed * DT;
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
+		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.0f;
 
 		cout << " x :\t" << localPos.x << " y :\t" << localPos.y << " z :\t" << localPos.z <<  "  DT  :\t" << DT <<"  FPS  :\t"<< CTimeMgr::GetInst()->GetFPS()<< endl;
 
@@ -89,11 +97,11 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
 	{
-		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 200.f * DT;
+		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * speed * DT;
 
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
+		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.f;
 
 		if (localPos.y != fHeight)
 		{
@@ -107,11 +115,11 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	if (KEY_HOLD(KEY_TYPE::KEY_A))
 	{
 		//vPos.x -= DT * 200.f;
-		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * speed * DT;
 		
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
+		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.f;
 
 		if (localPos.y != fHeight)
 		{
@@ -124,11 +132,11 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_D))
 	{
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * 200.f * DT;
+		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * speed * DT;
 		
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 1.f + 30.0f;
+		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.f;
 
 		if (localPos.y != fHeight)
 		{

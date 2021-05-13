@@ -217,6 +217,12 @@
     <ClInclude Include="Animator3D.h">
       <Filter>04. GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -359,6 +365,12 @@
     </ClCompile>
     <ClCompile Include="Animator3D.cpp">
       <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionMgr.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

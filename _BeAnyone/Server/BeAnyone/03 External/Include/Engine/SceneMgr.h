@@ -22,7 +22,9 @@ public:
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 	//void FindGameObjectByPoint(POINT _point, vector<CGameObject*>& _vecFindObj, CCamera* _pToolCam = nullptr);
 
+
 public:
 	void CreateTargetUI();
+	void CreateMap(CTerrain*);
 };
 

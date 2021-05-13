@@ -4,12 +4,9 @@
 class CComponent;
 class CTransform;
 class CMeshRender;
-// class CCollider2D;
-// class CCollider3D;
-// class CAnimator2D;
+ class CCollider;
  class CAnimator3D;
 class CScript;
-// class CLight2D;
 class CLight;
 class CCamera;
 //class CToolCamScript;
@@ -62,10 +59,9 @@ public:
 	CMeshRender* MeshRender() { return (CMeshRender*)GetComponent(COMPONENT_TYPE::MESHRENDER); }	// 다운 캐스팅
 	CCamera* Camera() { return (CCamera*)m_arrCom[(UINT)COMPONENT_TYPE::CAMERA]; }
 	CLight* Light() { return (CLight*)m_arrCom[(UINT)COMPONENT_TYPE::LIGHT]; }
-	CTerrain* Terrain() { 
-		return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN];
-	}
+	CTerrain* Terrain() { return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN];}
 	CAnimator3D* Animator3D() { return (CAnimator3D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR3D]; }
+	CCollider* Collider() { return (CCollider*)m_arrCom[(UINT)COMPONENT_TYPE::COLLIDER]; }
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
 	

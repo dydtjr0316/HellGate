@@ -9,7 +9,7 @@ class CNetMgr
 {
 public:
 	CNetMgr();
-	~CNetMgr() {delete m_pObj;}
+	~CNetMgr() {};
 public:		// obj°´Ã¼ ¼³Á¤ºÎ
 	void SetObj(CGameObject* obj) { m_pObj = new CGameObject; m_pObj = obj; }
 	void SetCamObj(CGameObject* obj) { m_pCamObj = new CGameObject; m_pCamObj = obj; }

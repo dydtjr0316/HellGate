@@ -22,6 +22,8 @@
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CNetMgr.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="CollisionMgr.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="Core.h" />
@@ -76,6 +78,8 @@
     <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CNetMgr.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="CollisionMgr.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="Core.cpp" />

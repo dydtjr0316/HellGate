@@ -51,6 +51,8 @@ void CFBXLoader::init()
 
 void CFBXLoader::LoadFbx(const wstring& _strPath, FBX_TYPE _fbxType)
 {
+	m_fileName = CPathMgr::GetFileName(_strPath.c_str());
+
 	m_fbxType = _fbxType;
 	m_vecContainer.clear();
 
@@ -141,11 +143,145 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 
 	FbxVector4* pFbxPos = _pFbxMesh->GetControlPoints();
 
+	float fx = (float)pFbxPos[0].mData[0];
+	float fy = (float)pFbxPos[0].mData[2];
+	float fz = (float)pFbxPos[0].mData[1];
+	Vector4 vecMin{ Vector3(fx,fy,fz),0.f };
+	Vector4 vecMax{ };
+
 	for (int i = 0; i < iVtxCnt; ++i)
 	{
 		Container.vecPos[i].x = (float)pFbxPos[i].mData[0];
 		Container.vecPos[i].y = (float)pFbxPos[i].mData[2];
 		Container.vecPos[i].z = (float)pFbxPos[i].mData[1];
+
+		if (Container.vecPos[i].x < vecMin.x)
+			vecMin.x = Container.vecPos[i].x;
+		if (Container.vecPos[i].y < vecMin.y)
+			vecMin.y = Container.vecPos[i].y;
+		if (Container.vecPos[i].z < vecMin.z)
+			vecMin.z = Container.vecPos[i].z;
+
+		if (Container.vecPos[i].x > vecMax.x)
+			vecMax.x = Container.vecPos[i].x;
+		if (Container.vecPos[i].y > vecMax.y)
+			vecMax.y = Container.vecPos[i].y;
+		if (Container.vecPos[i].z > vecMax.z)
+			vecMax.z = Container.vecPos[i].z;
+	}
+
+	if (CResMgr::GetInst()->FindRes<CMesh>(m_fileName) == nullptr)
+	{
+		// =========
+		// Mesh Extents Collision Mesh
+		// =========
+		VTX arrCube[24] = {};
+		vecMin.x /= 2;
+		vecMax.x /= 2;
+
+		// À­¸é
+		arrCube[0].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+		arrCube[0].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+
+		arrCube[1].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+		arrCube[1].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+
+		arrCube[2].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+		arrCube[2].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+
+		arrCube[3].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
+		arrCube[3].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+
+
+		// ¾Æ·§ ¸é   
+		arrCube[4].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+		arrCube[4].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+
+		arrCube[5].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+		arrCube[5].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+
+		arrCube[6].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+		arrCube[6].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+
+		arrCube[7].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+		arrCube[7].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+
+		// ¿ÞÂÊ ¸é
+		arrCube[8].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+		arrCube[8].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+
+		arrCube[9].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
+		arrCube[9].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+
+		arrCube[10].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+		arrCube[10].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+
+		arrCube[11].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+		arrCube[11].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+
+		// ¿À¸¥ÂÊ ¸é
+		arrCube[12].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+		arrCube[12].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+
+		arrCube[13].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+		arrCube[13].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+
+		arrCube[14].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+		arrCube[14].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+
+		arrCube[15].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+		arrCube[15].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+
+		// µÞ ¸é
+		arrCube[16].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+		arrCube[16].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+
+		arrCube[17].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+		arrCube[17].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+
+		arrCube[18].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+		arrCube[18].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+
+		arrCube[19].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+		arrCube[19].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+
+		// ¾Õ ¸é
+		arrCube[20].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);;
+		arrCube[20].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+
+		arrCube[21].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+		arrCube[21].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+
+		arrCube[22].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+		arrCube[22].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+
+		arrCube[23].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+		arrCube[23].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+
+		vector<VTX> vecVTX;
+		vector<UINT> vecIdx;
+
+		// ÀÎµ¦½º
+		for (int i = 0; i < 12; i += 2)
+		{
+			vecIdx.push_back(i * 2);
+			vecIdx.push_back(i * 2 + 1);
+			vecIdx.push_back(i * 2 + 2);
+
+			vecIdx.push_back(i * 2);
+			vecIdx.push_back(i * 2 + 2);
+			vecIdx.push_back(i * 2 + 3);
+		}
+
+		Ptr<CMesh> pMesh = new CMesh;
+
+		pMesh->Create(sizeof(VTX), 24, (BYTE*)arrCube
+			, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
+
+		//   meshº° ¾ÆÀÌµð ÇÊ¿ä
+		pMesh->SetName(m_fileName);
+		CResMgr::GetInst()->AddRes<CMesh>(pMesh->GetName(), pMesh);
+
 	}
 
 	// Æú¸®°ï °³¼ö
@@ -195,6 +331,12 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 	tFbxMaterial tMtrlInfo{};
 
 	string str = _pMtrlSur->GetName();
+	//string str;
+
+	if (m_fbxType == FBX_TYPE::DESERT_MAP) {
+		str = "Desert1";
+	}
+
 	tMtrlInfo.strMtrlName = wstring(str.begin(), str.end());
 
 	// Diff
@@ -219,8 +361,8 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 
 	// Texture Name
 	tMtrlInfo.strDiff = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sDiffuse);
-	tMtrlInfo.strNormal = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sNormalMap);
-	tMtrlInfo.strSpec = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sSpecular);
+	//tMtrlInfo.strNormal = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sNormalMap);
+	//tMtrlInfo.strSpec = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sSpecular);
 
 	m_vecContainer.back().vecMtrl.push_back(tMtrlInfo);
 }
@@ -393,7 +535,7 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 	}
 
 	if (m_fbxType == FBX_TYPE::DESERT_MAP) {
-		strName = "Colors2";//_pSurface->GetName();
+		strName = "Desert1";//_pSurface->GetName();
 		strName += ".png";
 		wstrName += wstring(strName.begin(), strName.end());
 	}
@@ -467,8 +609,10 @@ void CFBXLoader::CreateMaterial()
 			if (NULL != pTex)
 				pMaterial->SetData(SHADER_PARAM::TEX_2, pTex.GetPointer());
 
-
-			CResMgr::GetInst()->AddRes<CMaterial>(pMaterial->GetName(), pMaterial);
+			if (CResMgr::GetInst()->FindRes<CMaterial>(pMaterial->GetName()) != nullptr)
+				return;
+			else
+				CResMgr::GetInst()->AddRes<CMaterial>(pMaterial->GetName(), pMaterial);
 		}
 	}
 }
