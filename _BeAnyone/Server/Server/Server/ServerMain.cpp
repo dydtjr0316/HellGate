@@ -50,11 +50,13 @@ int main()
     ZeroMemory(&accept_over.over, sizeof(accept_over.over));
     AcceptEx(l_socket, c_socket, accept_over.io_buf, 0, 32, 32, NULL, &accept_over.over);
 
-    cout << "Initializing" << endl;
+  
     Netmgr.Init_Client();
     //Netmgr.Init_Monster();
     //Netmgr.Init_NPC();
-    cout << "Initializing Finish" << endl;
+
+    cout << "**********Play************" << endl;
+
 
     thread time_thread(&CNetMgr::Timer_Worker, &Netmgr);
 

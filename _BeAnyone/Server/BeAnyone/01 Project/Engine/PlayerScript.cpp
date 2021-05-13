@@ -84,7 +84,7 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		bool bReverseQuad = ((z % 2) != 0);
 		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.0f;
 
-		cout << " x :\t" << localPos.x << " y :\t" << localPos.y << " z :\t" << localPos.z <<  "  DT  :\t" << DT <<"  FPS  :\t"<< CTimeMgr::GetInst()->GetFPS()<< endl;
+		//cout << " x :\t" << localPos.x << " y :\t" << localPos.y << " z :\t" << localPos.z <<  "  DT  :\t" << DT <<"  FPS  :\t"<< CTimeMgr::GetInst()->GetFPS()<< endl;
 
 		if (localPos.y != fHeight)
 		{
