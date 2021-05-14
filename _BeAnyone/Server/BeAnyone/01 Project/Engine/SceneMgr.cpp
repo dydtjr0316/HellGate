@@ -558,18 +558,22 @@ void CSceneMgr::init()
 	// Idle
 	CPlayerScript* playerScript = pPlayerObj->GetScript<CPlayerScript>();
 	playerScript->SetAnimationData(pMeshData->GetMesh());
+	g_netMgr.SetAniData(pMeshData->GetMesh());
 
 	// walk_F
 	Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_F.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 
 	// walk_d
 	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_B.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 
 	// run
 	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nRun_F.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 
 	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
 

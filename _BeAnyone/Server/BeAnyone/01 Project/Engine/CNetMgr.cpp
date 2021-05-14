@@ -12,7 +12,7 @@
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
 //const char ip[] = "192.168.0.3";
-const char ip[] = "127.0.0.1";
+const char ip[] = "192.168.0.3";
 
 CNetMgr g_netMgr;
 
@@ -151,10 +151,11 @@ void CNetMgr::Send_Attack_Packet()
 
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 {
-	Ptr<CMesh>& animation = g_Object.find(id)->second->GetScript<CPlayerScript>()->GetAniData(type);
-	g_Object.find(id)->second->Animator3D()->SetBones(animation->GetBones());
-	g_Object.find(id)->second->Animator3D()->SetAnimClip(animation->GetAnimClip());
-	g_Object.find(id)->second->MeshRender()->SetMesh(animation);
+	cout << "------Setani -> " << (int)type << endl;
+	
+	g_Object.find(id)->second->Animator3D()->SetBones(m_aniData[(int)type]->GetBones());
+	g_Object.find(id)->second->Animator3D()->SetAnimClip(m_aniData[(int)type]->GetAnimClip());
+	g_Object.find(id)->second->MeshRender()->SetMesh(m_aniData[(int)type]);
 }
 
 void CNetMgr::Recevie_Data()
