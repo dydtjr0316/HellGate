@@ -39,7 +39,7 @@ void CPlayerScript::update()
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_))
+	if (KEY_HOLD(KEY_TYPE::KEY_LCTRL))
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
@@ -87,7 +87,6 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		Animator3D()->SetAnimClip(m_pAniData[(int)Ani_TYPE::WALK_D]->GetAnimClip());
 		MeshRender()->SetMesh(m_pAniData[(int)Ani_TYPE::WALK_D]);
 	}
-	else if(KEY_TAB)
 
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))

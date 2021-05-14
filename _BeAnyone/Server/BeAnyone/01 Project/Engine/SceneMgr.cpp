@@ -41,7 +41,7 @@
 using namespace std;
 
 default_random_engine dre;
-uniform_real_distribution<float> uid(500, 5000);
+uniform_real_distribution<float> uid(500, 11000);
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -307,7 +307,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	mapY = _terrain->GetHeight(2700.f, 4000.f, bReverseQuad);
 
 	pMapObject->Transform()->SetLocalPos(Vector3(2700.f, mapY * 2 + 50.f, 4000.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 60.f));//(1.0f, 1.0f, 1.0f));
+	pMapObject->Transform()->SetLocalScale(Vector3(80.f, 100.f, 80.f));//(1.0f, 1.0f, 1.0f));
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"CookingFireplace");
@@ -363,9 +363,9 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 	// ³ª¹« 
 
-	for (int i = 0; i < 6; ++i) {
+	for (int i = 0; i < 15; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\JoshuaTree1.fbx", FBX_TYPE::DESERT_MAP);
-		pMeshData->Save(pMeshData->GetPath());
+	//	pMeshData->Save(pMeshData->GetPath());
 
 		pMapObject = new CGameObject;
 
@@ -389,9 +389,9 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
 
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 5; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead1.fbx", FBX_TYPE::DESERT_MAP);
-		pMeshData->Save(pMeshData->GetPath());
+	//	pMeshData->Save(pMeshData->GetPath());
 
 		pMapObject = new CGameObject;
 
@@ -417,7 +417,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 	for (int i = 0; i < 3; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead2.fbx", FBX_TYPE::DESERT_MAP);
-		pMeshData->Save(pMeshData->GetPath());
+		//pMeshData->Save(pMeshData->GetPath());
 
 		pMapObject = new CGameObject;
 
