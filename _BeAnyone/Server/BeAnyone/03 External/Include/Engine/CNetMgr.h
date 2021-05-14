@@ -28,6 +28,9 @@ public:		// 패킷 전송부
 	void Send_Move_Packet(unsigned const char& dir, const Vector3& local);
 	void Send_Rotate_Packet(unsigned const char& dir, const float& rotateY);
 	void Send_Attack_Packet();
+public:		// animation
+	void SetAnimation(int id, const Ani_TYPE& type);
+
 public:
 	void err_quit(const char* msg);
 private:

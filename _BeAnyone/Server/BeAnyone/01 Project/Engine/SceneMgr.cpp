@@ -248,7 +248,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 {
 	// 집1
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\House1.fbx", FBX_TYPE::DESERT_MAP);
-	pMeshData->Save(pMeshData->GetPath());
+	//pMeshData->Save(pMeshData->GetPath());
 
 	CGameObject* pMapObject = nullptr;
 
@@ -271,7 +271,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	// 집 2
 
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\WoodenHouse3.fbx", FBX_TYPE::DESERT_MAP);
-	pMeshData->Save(pMeshData->GetPath());
+	//pMeshData->Save(pMeshData->GetPath());
 
 	pMapObject = new CGameObject;
 
@@ -294,7 +294,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	// 집 3
 
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\CookingFireplace.fbx", FBX_TYPE::DESERT_MAP);
-	pMeshData->Save(pMeshData->GetPath());
+	//pMeshData->Save(pMeshData->GetPath());
 
 	pMapObject = new CGameObject;
 
@@ -317,7 +317,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	// 캠프파이어
 
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Tent1.fbx", FBX_TYPE::DESERT_MAP);
-	pMeshData->Save(pMeshData->GetPath());
+	//pMeshData->Save(pMeshData->GetPath());
 
 	pMapObject = new CGameObject;
 
@@ -341,7 +341,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	// 돌 
 
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\RockGrey2_high.fbx", FBX_TYPE::DESERT_MAP);
-	pMeshData->Save(pMeshData->GetPath());
+	//pMeshData->Save(pMeshData->GetPath());
 
 	pMapObject = new CGameObject;
 
@@ -365,7 +365,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 	for (int i = 0; i < 6; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\JoshuaTree1.fbx", FBX_TYPE::DESERT_MAP);
-		pMeshData->Save(pMeshData->GetPath());
+	//	pMeshData->Save(pMeshData->GetPath());
 
 		pMapObject = new CGameObject;
 
@@ -391,7 +391,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 	for (int i = 0; i < 3; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead1.fbx", FBX_TYPE::DESERT_MAP);
-		pMeshData->Save(pMeshData->GetPath());
+		//pMeshData->Save(pMeshData->GetPath());
 
 		pMapObject = new CGameObject;
 
@@ -417,7 +417,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 	for (int i = 0; i < 3; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead2.fbx", FBX_TYPE::DESERT_MAP);
-		pMeshData->Save(pMeshData->GetPath());
+	//	pMeshData->Save(pMeshData->GetPath());
 
 		pMapObject = new CGameObject;
 
@@ -445,7 +445,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 	for (int i = 0; i < 6; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\CactusSmall.fbx", FBX_TYPE::DESERT_MAP);
-		pMeshData->Save(pMeshData->GetPath());
+	//	pMeshData->Save(pMeshData->GetPath());
 
 		pMapObject = new CGameObject;
 

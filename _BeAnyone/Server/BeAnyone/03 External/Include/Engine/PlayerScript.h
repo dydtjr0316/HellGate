@@ -33,6 +33,9 @@ public:
 
 	void OnPlayerUpdateCallback();
 
+	void SetAnimation(const Ani_TYPE& type);
+	Ptr<CMesh> GetAniData(const Ani_TYPE& type) { return m_pAniData[(int)type]; }
+
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
 	CTerrain* GetTerrain() { return m_pTerrainObj; }
 

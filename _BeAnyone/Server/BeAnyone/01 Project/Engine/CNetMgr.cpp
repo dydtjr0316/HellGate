@@ -149,6 +149,14 @@ void CNetMgr::Send_Attack_Packet()
 	Send_Packet(&m_packet);
 }
 
+void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
+{
+	Ptr<CMesh>& animation = g_Object.find(id)->second->GetScript<CPlayerScript>()->GetAniData(type);
+	g_Object.find(id)->second->Animator3D()->SetBones(animation->GetBones());
+	g_Object.find(id)->second->Animator3D()->SetAnimClip(animation->GetAnimClip());
+	g_Object.find(id)->second->MeshRender()->SetMesh(animation);
+}
+
 void CNetMgr::Recevie_Data()
 {
 	EXOVER* dataBuf = new EXOVER{};
@@ -248,6 +256,24 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (0 != g_Object.count(other_id))
 			{
 				ObjTrans->SetLocalPos(packet->localVec);
+				switch (packet->dir)
+				{
+				case MV_FRONT:
+				case MV_LEFT:
+				case MV_RIGHT:
+					SetAnimation(other_id, Ani_TYPE::WALK_F);
+					break;
+				case MV_BACK:
+					SetAnimation(other_id, Ani_TYPE::WALK_D);
+					break;
+				case MV_IDLE:
+					SetAnimation(other_id, Ani_TYPE::IDLE);
+					break;
+				default:
+					cout << "Unknown Direction from Client move packet!\n";
+					DebugBreak();
+					exit(-1);
+				}
 			}
 		}
 	}
