@@ -291,3 +291,13 @@ enum class FBX_TYPE
 	DESERT_MAP,
 	END,
 };
+\
+enum class Ani_TYPE
+{
+	IDLE,
+	WALK_F,
+	WALK_D,
+	RUN,
+	ATTACK,
+	END
+};

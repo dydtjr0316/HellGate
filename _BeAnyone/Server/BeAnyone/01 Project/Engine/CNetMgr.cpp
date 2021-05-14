@@ -199,7 +199,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int id = my_packet->id;
 		
 		//cout << "enter packet recv -> " << my_packet->id << endl;
-		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_F.fbx", FBX_TYPE::PLAYER);
+		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
+		
+
+		
 		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{

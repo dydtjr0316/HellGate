@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "MeshRender.h"
 #include "Collider.h"
+#include "Animator3D.h"
 //#include "Animator2D.h"
 //#include "Animation2D.h"
 

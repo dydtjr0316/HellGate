@@ -4,8 +4,8 @@
 class CComponent;
 class CTransform;
 class CMeshRender;
- class CCollider;
- class CAnimator3D;
+class CCollider;
+class CAnimator3D;
 class CScript;
 class CLight;
 class CCamera;

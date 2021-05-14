@@ -530,8 +530,12 @@ void CSceneMgr::init()
 	// =============
    // FBX 파일 로드
    // =============
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_F.fbx", FBX_TYPE::PLAYER);
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 	pMeshData->Save(pMeshData->GetPath());
+	
+	// 키 입력에 따른 애니메이션
+	//Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_F.fbx", FBX_TYPE::PLAYER);
+	//Ptr<CMesh> pMeshKey = pMeshDataKey->GetMesh();
 
 	//MeshData 로드
 	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\PlayerMale@nWalk_F.mdat", L"MeshData\\PlayerMale@nWalk_F.mdat");
@@ -544,10 +548,28 @@ void CSceneMgr::init()
 	pPlayerObj->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pPlayerObj->AddComponent(new CCollider);
-	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
+	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nIdle1");
 
 	// Script 설정
 	pPlayerObj->AddComponent(new CPlayerScript);
+
+	// Animaition Data 넘겨주기
+
+	// Idle
+	CPlayerScript* playerScript = pPlayerObj->GetScript<CPlayerScript>();
+	playerScript->SetAnimationData(pMeshData->GetMesh());
+
+	// walk_F
+	Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_F.fbx", FBX_TYPE::PLAYER);
+	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+
+	// walk_d
+	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_B.fbx", FBX_TYPE::PLAYER);
+	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+
+	// run
+	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nRun_F.fbx", FBX_TYPE::PLAYER);
+	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
 
 	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
 

@@ -39,7 +39,7 @@ void CPlayerScript::update()
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+	if (KEY_HOLD(KEY_TYPE::KEY_))
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
@@ -74,6 +74,21 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	{
 		speed = 600.f;
 	}
+
+	if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))
+	{
+		Animator3D()->SetBones(m_pAniData[(int)Ani_TYPE::WALK_F]->GetBones());
+		Animator3D()->SetAnimClip(m_pAniData[(int)Ani_TYPE::WALK_F]->GetAnimClip());
+		MeshRender()->SetMesh(m_pAniData[(int)Ani_TYPE::WALK_F]);
+	}
+	else if (KEY_TAB(KEY_TYPE::KEY_S))
+	{
+		Animator3D()->SetBones(m_pAniData[(int)Ani_TYPE::WALK_D]->GetBones());
+		Animator3D()->SetAnimClip(m_pAniData[(int)Ani_TYPE::WALK_D]->GetAnimClip());
+		MeshRender()->SetMesh(m_pAniData[(int)Ani_TYPE::WALK_D]);
+	}
+	else if(KEY_TAB)
+
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
@@ -116,7 +131,7 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	{
 		//vPos.x -= DT * 200.f;
 		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * speed * DT;
-		
+
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
 		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.f;
@@ -133,7 +148,7 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	if (KEY_HOLD(KEY_TYPE::KEY_D))
 	{
 		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * speed * DT;
-		
+
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
 		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.f;
@@ -147,14 +162,11 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
-
-
-
-
-	//if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
-	//{
-
-	//}
+	if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D) || KEY_AWAY(KEY_TYPE::KEY_S)) {
+		Animator3D()->SetBones(m_pAniData[(int)Ani_TYPE::IDLE]->GetBones());
+		Animator3D()->SetAnimClip(m_pAniData[(int)Ani_TYPE::IDLE]->GetAnimClip());
+		MeshRender()->SetMesh(m_pAniData[(int)Ani_TYPE::IDLE]);
+	}
 }
 
 bool CPlayerScript::isInMap(const Vector3& localPos)
