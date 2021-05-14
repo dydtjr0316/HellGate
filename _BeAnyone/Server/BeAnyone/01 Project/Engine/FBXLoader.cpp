@@ -172,93 +172,99 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 
 	if (CResMgr::GetInst()->FindRes<CMesh>(m_fileName) == nullptr)
 	{
+		vecMin.x /= 2;
+		vecMax.x /= 2;
+		m_vecMMax[0] = vecMin;
+		m_vecMMax[1] = vecMax;
+
 		// =========
 		// Mesh Extents Collision Mesh
 		// =========
 		VTX arrCube[24] = {};
-		vecMin.x /= 2;
-		vecMax.x /= 2;
+		{
+			// À­¸é
+			arrCube[0].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+			arrCube[0].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 
-		// À­¸é
-		arrCube[0].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-		arrCube[0].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+			arrCube[1].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+			arrCube[1].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 
-		arrCube[1].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-		arrCube[1].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+			arrCube[2].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+			arrCube[2].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 
-		arrCube[2].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-		arrCube[2].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
-
-		arrCube[3].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
-		arrCube[3].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+			arrCube[3].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
+			arrCube[3].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 
 
-		// ¾Æ·§ ¸é   
-		arrCube[4].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-		arrCube[4].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+			// ¾Æ·§ ¸é   
+			arrCube[4].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+			arrCube[4].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 
-		arrCube[5].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-		arrCube[5].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+			arrCube[5].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+			arrCube[5].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 
-		arrCube[6].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-		arrCube[6].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+			arrCube[6].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+			arrCube[6].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 
-		arrCube[7].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-		arrCube[7].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+			arrCube[7].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+			arrCube[7].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 
-		// ¿ÞÂÊ ¸é
-		arrCube[8].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-		arrCube[8].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+			// ¿ÞÂÊ ¸é
+			arrCube[8].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+			arrCube[8].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
 
-		arrCube[9].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
-		arrCube[9].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+			arrCube[9].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
+			arrCube[9].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
 
-		arrCube[10].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-		arrCube[10].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+			arrCube[10].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+			arrCube[10].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
 
-		arrCube[11].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-		arrCube[11].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+			arrCube[11].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+			arrCube[11].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
 
-		// ¿À¸¥ÂÊ ¸é
-		arrCube[12].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-		arrCube[12].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+			// ¿À¸¥ÂÊ ¸é
+			arrCube[12].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+			arrCube[12].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
 
-		arrCube[13].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-		arrCube[13].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+			arrCube[13].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+			arrCube[13].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
 
-		arrCube[14].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-		arrCube[14].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+			arrCube[14].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+			arrCube[14].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
 
-		arrCube[15].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-		arrCube[15].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+			arrCube[15].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+			arrCube[15].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
 
-		// µÞ ¸é
-		arrCube[16].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-		arrCube[16].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+			// µÞ ¸é
+			arrCube[16].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+			arrCube[16].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
 
-		arrCube[17].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-		arrCube[17].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+			arrCube[17].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+			arrCube[17].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
 
-		arrCube[18].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-		arrCube[18].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+			arrCube[18].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+			arrCube[18].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
 
-		arrCube[19].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-		arrCube[19].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+			arrCube[19].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+			arrCube[19].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
 
-		// ¾Õ ¸é
-		arrCube[20].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);;
-		arrCube[20].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+			// ¾Õ ¸é
+			arrCube[20].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);;
+			arrCube[20].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
 
-		arrCube[21].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-		arrCube[21].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+			arrCube[21].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+			arrCube[21].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
 
-		arrCube[22].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-		arrCube[22].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+			arrCube[22].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+			arrCube[22].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
 
-		arrCube[23].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-		arrCube[23].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+			arrCube[23].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+			arrCube[23].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
 
-		vector<VTX> vecVTX;
+			m_vecMMax[0] = arrCube[23].vPos;
+			m_vecMMax[1] = arrCube[16].vPos;
+		}
+
 		vector<UINT> vecIdx;
 
 		// ÀÎµ¦½º

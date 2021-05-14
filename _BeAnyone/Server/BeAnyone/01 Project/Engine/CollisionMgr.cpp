@@ -199,7 +199,6 @@ bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollide
 		cout << "Ãæµ¹" << endl;
 	}
 	
-	/*ContainmentType Contains;*/
 	return false;
 }
 

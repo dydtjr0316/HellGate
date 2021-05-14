@@ -4,8 +4,8 @@
 class CComponent;
 class CTransform;
 class CMeshRender;
- class CCollider;
- class CAnimator3D;
+class CCollider;
+class CAnimator3D;
 class CScript;
 class CLight;
 class CCamera;
@@ -16,7 +16,7 @@ class CGameObject :
 	public CEntity
 {
 private:
-	CComponent* m_arrCom[(UINT)COMPONENT_TYPE::END];
+	CComponent*				m_arrCom[(UINT)COMPONENT_TYPE::END];
 	vector<CScript*>		m_vecScript;
 	vector<CGameObject*>	m_vecChild;
 	CGameObject*			m_pParentObj;

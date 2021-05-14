@@ -50,7 +50,7 @@ public:
 	const Matrix& GetColliderWorldMat() { return m_matColWorld; }
 
 public:
-	BoundingBox GetBoundingBox() { return m_bbx; }
+	BoundingBox GetBoundingBox() {		return m_bbx;	}
 	void SetBoundingBox(BoundingBox _b) { m_bbx = _b; }
 
 public:

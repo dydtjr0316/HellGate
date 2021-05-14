@@ -44,7 +44,7 @@ void CPlayerScript::update()
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
 
-		vRot.y += vDrag.x * DT * ROTATE_SPEED;
+		vRot.y += vDrag.x * DT * ROTATE_SPEED * 6;
 		
 		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vRot.y);
 
@@ -52,6 +52,22 @@ void CPlayerScript::update()
 
 	}
 
+	BoundingBox bBox = Collider()->GetBoundingBox();
+
+	//Matrix m_matColWorld = Collider()->GetColliderWorldMat();
+
+	/*cout << bBox.Center.x << "\t" << bBox.Center.y << "\t" << bBox.Center.z << endl;
+	cout << bBox.Extents.x << "\t" << bBox.Extents.y << "\t" << bBox.Extents.z << endl;*/
+
+
+	/*Matrix m_matColWorld = Transform()->GetWorldMat();
+	cout << m_matColWorld._11 << "\t" << m_matColWorld._12 << "\t" << m_matColWorld._13 << "\t" << m_matColWorld._14 << endl;
+	cout << m_matColWorld._21 << "\t" << m_matColWorld._22 << "\t" << m_matColWorld._23 << "\t" << m_matColWorld._24 << endl;
+	cout << m_matColWorld._31 << "\t" << m_matColWorld._32 << "\t" << m_matColWorld._33 << "\t" << m_matColWorld._34 << endl;
+	cout << m_matColWorld._41 << "\t" << m_matColWorld._42 << "\t" << m_matColWorld._43 << "\t" << m_matColWorld._44 << endl;
+	*/
+
+	//system("cls");
 }
 
 
@@ -74,11 +90,15 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	{
 		speed = 600.f;
 	}
+	if (KEY_HOLD(KEY_TYPE::KEY_R))
+	{
+		Vector3 ve = Vector3(0.9f, 0.9f, 0.9f);
+		Transform()->SetLocalScale(ve);
+		
+	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
-
-
 		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * speed * DT;
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
@@ -146,7 +166,6 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
-
 
 
 

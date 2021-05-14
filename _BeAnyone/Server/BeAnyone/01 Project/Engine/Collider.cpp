@@ -144,6 +144,7 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType, wstring _str)
 	}
 	else if (COLLIDER_TYPE::MESH == m_eType)
 	{
+
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(_str);
 	}
 }

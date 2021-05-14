@@ -31,3 +31,4 @@ C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\B
 C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso

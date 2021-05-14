@@ -598,7 +598,6 @@ void CSceneMgr::init()
 
 	CreateTargetUI();
 
-	
 
 	// ====================
 	// 3D Light Object 추가
@@ -618,34 +617,6 @@ void CSceneMgr::init()
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 	
-
-
-	// ===================
-	// Player 오브젝트 생성
-	// ===================
-	//pObject = new CGameObject;
-	//pObject->SetName(L"Player Object");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CMeshRender);
-	//
-	//// Transform 설정
-	//pObject->Transform()->SetLocalPos(Vector3(0.f, 200.f, 1000.f));
-	//pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
-	////pObject->Transform()->SetLocalRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-	//
-	//// MeshRender 설정
-	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-
-	// Script 설정
-	//pObject->AddComponent(new CPlayerScript);
-
-	// AddGameObject
-	//m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
-
-
 	// ====================
 	// Monster1 오브젝트 생성
 	// ====================
@@ -753,7 +724,7 @@ void CSceneMgr::init()
 
 	g_netMgr.SetObj(pPlayerObj);
 
-	CreateMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
+	//CreateMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 
 	// ====================
 	// Compute Shader Test

@@ -8,6 +8,7 @@
 
 #include "Transform.h"
 #include "MeshRender.h"
+#include "Collider.h"
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
@@ -218,6 +219,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 				g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
 				g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 				g_Object.find(id)->second->AddComponent(new CPlayerScript);
+
+				// 0515 영문 추가 CCollider 컴포넌트 없이 PlayerScript에서 Collider의 바운딩 박스 Get하려하다 터짐
+				g_Object.find(id)->second->AddComponent(new CCollider);
+				g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
+
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
 			
