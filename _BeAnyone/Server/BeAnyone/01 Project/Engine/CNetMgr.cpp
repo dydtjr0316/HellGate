@@ -151,7 +151,7 @@ void CNetMgr::Send_Attack_Packet()
 
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 {
-	cout << "------Setani -> " << (int)type << endl;
+	//cout << "------Setani -> " << (int)type << endl;
 	
 	g_Object.find(id)->second->Animator3D()->SetBones(m_aniData[(int)type]->GetBones());
 	g_Object.find(id)->second->Animator3D()->SetAnimClip(m_aniData[(int)type]->GetAnimClip());
@@ -221,23 +221,26 @@ void CNetMgr::ProcessPacket(char* ptr)
 		{
 			if (id < MAX_USER)
 			{
-				g_Object.emplace(id, pObject);
+				if (0 == g_Object.count(id))
+				{
+					g_Object.emplace(id, pObject);
 
-				g_Object.find(id)->second = pMeshData->Instantiate();
-				g_Object.find(id)->second->SetName(L"PlayerMale");
-				g_Object.find(id)->second->FrustumCheck(false);
-				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
-				g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-				g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
-				g_Object.find(id)->second->AddComponent(new CPlayerScript);
+					g_Object.find(id)->second = pMeshData->Instantiate();
+					g_Object.find(id)->second->SetName(L"PlayerMale");
+					g_Object.find(id)->second->FrustumCheck(false);
+					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
+					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
+					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+					g_Object.find(id)->second->AddComponent(new CPlayerScript);
 
-				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
-			
-				g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
-				);
-				//g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
-				g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
+					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
+
+					g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
+					);
+					g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
+				}
+				
 			}
 		}
 	}
