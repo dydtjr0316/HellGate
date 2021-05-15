@@ -75,6 +75,7 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	if (KEY_HOLD(KEY_TYPE::KEY_SPACE))
 	{
 		speed = 600.f;
+
 	}
 
 	//if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))

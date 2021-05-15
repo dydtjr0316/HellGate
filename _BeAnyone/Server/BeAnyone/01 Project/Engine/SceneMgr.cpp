@@ -575,6 +575,7 @@ void CSceneMgr::init()
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
 	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 
+
 	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
 
 
