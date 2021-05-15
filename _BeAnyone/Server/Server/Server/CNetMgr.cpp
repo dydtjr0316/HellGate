@@ -397,7 +397,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
             {
                 if (is_near(user_id, user))
                 {
-                    /*if (!IsClient(user))
+                    if (!IsClient(user))
                     {
                         if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
                         {
@@ -412,7 +412,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
                     else
                     {
 
-                    }*/
+                    }
                     new_viewList.insert(user);
                 }
             }
@@ -647,15 +647,15 @@ void CNetMgr::Enter_Game(const int& user_id, char name[])
         for (auto& id : vSec) {
             if (Find(id)->GetID() == Find(user_id)->GetID())continue;
             if (Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
-            if (is_near(user_id, id))
+            if (is_near(user_id, id)&&user_id!=id)
             {
-                if (Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
+               /* if (Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
                 {
                     if(IsMonster(id))
                         WakeUp_Monster(id);
                     else if (IsNpc(id))
                         WakeUp_NPC(id);
-                }
+                }*/
                 if (IsClient(id))
                 {
                     if (dynamic_cast<CClient*>(Find(id))->GetViewList().count(user_id) == 0)
@@ -894,7 +894,7 @@ void CNetMgr::Worker_Thread()
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
                 if (pClient->GetLocalPosVector().x == 724.f)
-                    cout << "±Í½ÅÀÌ´Ù ½Ã1¹ß" << endl;
+                    cout << "±Í½ÅÀÌ´Ù !!!!" << endl;
                 ////////////////////////////////////////////////////////
                 
                 pClient->SetFirstPos(pClient->GetLocalPosVector());

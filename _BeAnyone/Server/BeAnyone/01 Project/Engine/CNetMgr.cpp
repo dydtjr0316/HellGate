@@ -208,11 +208,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int id = my_packet->id;
 		
 		//cout << "enter packet recv -> " << my_packet->id << endl;
-		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 		
-
-		
-		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
 			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
@@ -223,6 +219,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
+
+					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
 					cout << "아이디 : " << id << "\t방금 들어온 객체의 주소 : " << &g_Object.find(id)->second;
 					cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
@@ -251,7 +250,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
-		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
+		
 		if (other_id == g_myid)
 		{
 			//ObjTrans->SetLocalPos(packet->localVec);
@@ -261,6 +260,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//추가
 			if (0 != g_Object.count(other_id))
 			{
+				CTransform* ObjTrans = ObjTrans = g_Object.find(other_id)->second->Transform();;
+
 				ObjTrans->SetLocalPos(packet->localVec);
 				switch (packet->dir)
 				{
@@ -331,6 +332,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				CEventMgr::GetInst()->update();
 				
 				g_Object.erase(other_id);
+				
 				cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
 
 				
