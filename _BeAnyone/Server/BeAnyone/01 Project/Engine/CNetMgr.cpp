@@ -224,6 +224,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 				if (0 == g_Object.count(id))
 				{
 					g_Object.emplace(id, pObject);
+					cout << "아이디 : " << id << "\t방금 들어온 객체의 주소 : " << &g_Object.find(id)->second;
+					cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"PlayerMale");
@@ -299,7 +301,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 			else
 			{
 				if (0 != g_Object.count(other_id))
+				{
 					g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
+
+				}
 			}
 			break;
 		default:
@@ -320,11 +325,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else {
 			if (0 != g_Object.count(other_id))
 			{
+				cout << "아이디 : "<< other_id <<"\t방금 나간 객체의 주소 : " << &g_Object.find(other_id)->second;
+
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 				CEventMgr::GetInst()->update();
 				
 				g_Object.erase(other_id);
-				cout << "leave packet 처리 한다!" << endl;
+				cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
+
+				
 			}
 		}
 	}
@@ -339,13 +348,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	}
 	break;
-	case SC_PACKET_ID:
+	/*case SC_PACKET_ID:
 	{
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
 		g_myid = packet->id;
 
-		cout << "My ID : " << g_myid << endl;
-	}
+		cout << "Send_ID_Packet My ID : " << g_myid << endl;
+	}*/
 	break;
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);

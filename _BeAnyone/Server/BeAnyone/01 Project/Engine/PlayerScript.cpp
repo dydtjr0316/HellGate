@@ -65,9 +65,11 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 	//	영문서버
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	//if (isInMap(localPos))
-	//{
+	
 
+	
+	char dir = MV_IDLE;
+	
 	float speed = 200.f;
 
 	if (KEY_HOLD(KEY_TYPE::KEY_SPACE))
@@ -75,17 +77,19 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		speed = 600.f;
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))
-	{
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
-		g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	}
+	//if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))
+	//{
+	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
+	//	dir = MV_FRONT;
+	//	//g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+	//}
 
-	else if (KEY_TAB(KEY_TYPE::KEY_S))
-	{
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_D);
-		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	}
+	//else if (KEY_TAB(KEY_TYPE::KEY_S))
+	//{
+	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_D);
+	//	dir = MV_BACK;
+	//	//g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+	//}
 	
 
 
@@ -102,11 +106,12 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		{
 			localPos.y = fHeight;
 		}
-
+		dir = MV_FRONT;
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 
 
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		//g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
@@ -121,9 +126,11 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		{
 			localPos.y = fHeight;
 		}
+		dir = MV_BACK;
 
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_D);
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		//g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_A))
@@ -139,9 +146,10 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		{
 			localPos.y = fHeight;
 		}
-
+		dir = MV_FRONT;
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_LEFT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		//g_netMgr.Send_Move_Packet(MV_LEFT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_D))
@@ -156,14 +164,20 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		{
 			localPos.y = fHeight;
 		}
-
+		dir = MV_FRONT;
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_RIGHT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		//g_netMgr.Send_Move_Packet(MV_RIGHT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
-	if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D) || KEY_AWAY(KEY_TYPE::KEY_S)) {
+	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D) || KEY_HOLD(KEY_TYPE::KEY_S))
+	{
+		g_netMgr.Send_Move_Packet(dir,localPos);
+
+	}
+	else if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D) || KEY_AWAY(KEY_TYPE::KEY_S)) {
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
-		g_netMgr.Send_Move_Packet(MV_IDLE, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		g_netMgr.Send_Move_Packet(dir, localPos);
 	}
 }
 

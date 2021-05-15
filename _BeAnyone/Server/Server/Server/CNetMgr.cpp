@@ -397,7 +397,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
             {
                 if (is_near(user_id, user))
                 {
-                    if (!IsClient(user))
+                    /*if (!IsClient(user))
                     {
                         if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
                         {
@@ -412,7 +412,7 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
                     else
                     {
 
-                    }
+                    }*/
                     new_viewList.insert(user);
                 }
             }
@@ -511,24 +511,24 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
             {
                 if (is_near(user_id, user))
                 {
-                    if (!IsClient(user))
-                    {
-                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
-                        {
-                            if (IsMonster(user))
-                                WakeUp_Monster(user);
-                            else
-                            {
-                                //cout << "do move 함수 호출" << endl;
-                                //cout << Find(user)->GetStatus() << endl;
-                                WakeUp_NPC(user);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //if (Find(user)->GetStatus() != ST_ACTIVE)continue;
-                    }
+                    //if (!IsClient(user))
+                    //{
+                    //    if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                    //    {
+                    //        if (IsMonster(user))
+                    //            WakeUp_Monster(user);
+                    //        else
+                    //        {
+                    //            //cout << "do move 함수 호출" << endl;
+                    //            //cout << Find(user)->GetStatus() << endl;
+                    //            WakeUp_NPC(user);
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //if (Find(user)->GetStatus() != ST_ACTIVE)continue;
+                    //}
                     new_viewList.insert(user);
                 }
             }
@@ -542,7 +542,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
         if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
         {
             pClient->GetViewList().insert(ob);
-            Send_Enter_Packet(user_id, ob);
+            //Send_Enter_Packet(user_id, ob);
             if (IsClient(ob) && ob != user_id)
             {
                 if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
@@ -575,7 +575,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
             }
         }
     }
-    for (auto& ob : old_viewList)
+    /*for (auto& ob : old_viewList)
     {
         if (new_viewList.count(ob) == 0)
         {
@@ -591,7 +591,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
                 }
             }
         }
-    }
+    }*/
 }
 
 void CNetMgr::Disconnect(const int& user_id)
@@ -922,7 +922,7 @@ void CNetMgr::Worker_Thread()
             AcceptEx(l_socket, c_socket, exover->io_buf, NULL,
                 sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
         
-            Send_ID_Packet(user_id);
+            //Send_ID_Packet(user_id);
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_NPC:
