@@ -544,7 +544,7 @@ void CSceneMgr::init()
 	pPlayerObj = pMeshData->Instantiate();
 	pPlayerObj->SetName(L"PlayerMale");
 	pPlayerObj->FrustumCheck(false);
-	pPlayerObj->Transform()->SetLocalPos(Vector3(0.f, 10.f, 0.f));
+	pPlayerObj->Transform()->SetLocalPos(Vector3(0.f, 140.f, 0.f));
 	pPlayerObj->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pPlayerObj->AddComponent(new CCollider);
