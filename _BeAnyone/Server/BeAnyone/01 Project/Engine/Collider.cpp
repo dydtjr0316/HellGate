@@ -24,7 +24,7 @@ CCollider::CCollider()
 {
 	m_pColMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ColMtrl");
 	SetColliderType(m_eType);
-	m_bbx = BoundingBox(XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(150.f, 150.f, 150.f));
+	m_bbx = BoundingBox(XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(1.f, 1.f, 1.f));
 }
 
 CCollider::CCollider(const CCollider& _other)
@@ -69,8 +69,11 @@ void CCollider::finalupdate()
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
 
+
 	m_bbx.Center = Transform()->GetLocalPos();
-	//m_bbx.Extents = (Transform()->GetLocalScale());
+
+	/*m_bbx.Extents = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	m_bbx.Extents = (Transform()->GetLocalScale()) * m_bbx.Extents;*/
 
 	
 }
@@ -115,10 +118,10 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
 	}
-	else if (COLLIDER_TYPE::MESH == m_eType)
+	/*else if (COLLIDER_TYPE::MESH == m_eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"xMesh");
-	}
+	}*/
 }
 
 void CCollider::SetColliderType(COLLIDER_TYPE _eType, wstring _str)
@@ -144,7 +147,6 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType, wstring _str)
 	}
 	else if (COLLIDER_TYPE::MESH == m_eType)
 	{
-
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(_str);
 	}
 }
@@ -162,10 +164,10 @@ void CCollider::OnCollisionEnter(CCollider* _pOther)
 
 void CCollider::OnCollision(CCollider* _pOther)
 {
-	if (0 < m_iCollisionCount)
+	/*if (0 < m_iCollisionCount)
 	{
 		m_pColMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ColliderMtrl_1");
-	}
+	}*/
 
 	const vector<CScript*>& vecScripts = GetObj()->GetScripts();
 	for (size_t i = 0; i < vecScripts.size(); ++i)
@@ -177,8 +179,8 @@ void CCollider::OnCollision(CCollider* _pOther)
 void CCollider::OnCollisionExit(CCollider* _pOther)
 {
 	m_iCollisionCount -= 1;
-	if (m_iCollisionCount == 0)
-		m_pColMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ColliderMtrl_0");
+	//if (m_iCollisionCount == 0)
+	//	m_pColMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ColliderMtrl_0");
 
 	const vector<CScript*>& vecScripts = GetObj()->GetScripts();
 	for (size_t i = 0; i < vecScripts.size(); ++i)

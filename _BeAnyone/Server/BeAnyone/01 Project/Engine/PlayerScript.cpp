@@ -52,14 +52,17 @@ void CPlayerScript::update()
 
 	}
 
-	BoundingBox bBox = Collider()->GetBoundingBox();
+	//	충돌 테스트용 분기문
+	if (KEY_HOLD(KEY_TYPE::KEY_NUM0))
+	{
+		BoundingBox bBox = Collider()->GetBoundingBox();
+		cout << "Ceter :   \t" << bBox.Center.x << "\t" << bBox.Center.y << "\t" << bBox.Center.z << endl;
+		cout << "Extents : \t" << bBox.Extents.x << "\t" << bBox.Extents.y << "\t" << bBox.Extents.z << endl << endl;
+	}
 
 	//Matrix m_matColWorld = Collider()->GetColliderWorldMat();
-
 	/*cout << bBox.Center.x << "\t" << bBox.Center.y << "\t" << bBox.Center.z << endl;
 	cout << bBox.Extents.x << "\t" << bBox.Extents.y << "\t" << bBox.Extents.z << endl;*/
-
-
 	/*Matrix m_matColWorld = Transform()->GetWorldMat();
 	cout << m_matColWorld._11 << "\t" << m_matColWorld._12 << "\t" << m_matColWorld._13 << "\t" << m_matColWorld._14 << endl;
 	cout << m_matColWorld._21 << "\t" << m_matColWorld._22 << "\t" << m_matColWorld._23 << "\t" << m_matColWorld._24 << endl;

@@ -63,8 +63,15 @@ public:
 public:
 	Vector4* GetMinMaxVertex() { return m_vecMMax; }
 	void SetMinMaxVertex(Vector4* _v) { m_vecMMax[0] = _v[0]; m_vecMMax[1] = _v[1];	}
-
-
+	Vector3 GetBoundingBoxExtents() 
+	{
+		//	mesh 최대값이 음수일 수 가 없다는 가정. 최소값만 절대값 함수 넣고 / 2
+		m_vecMMax[0].x = fabs(m_vecMMax[1].x);
+		m_vecMMax[0].y = fabs(m_vecMMax[1].y);
+		m_vecMMax[0].z = fabs(m_vecMMax[1].z);
+		return ((m_vecMMax[1]) + (m_vecMMax[0])) / 2; 
+	}
+	
 public:
 	CMesh();
 	virtual ~CMesh();

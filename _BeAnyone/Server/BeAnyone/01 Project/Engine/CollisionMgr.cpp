@@ -156,15 +156,15 @@ bool CCollisionMgr::IsCollision(CCollider* _pCollider1, CCollider* _pCollider2)
 	if (!_pCollider1->IsActive() || !_pCollider1->GetObj()->IsActive() || !_pCollider2->IsActive() || !_pCollider2->GetObj()->IsActive())
 		return false;
 
-	if (COLLIDER_TYPE::RECT == _pCollider1->GetColliderType() && COLLIDER_TYPE::RECT == _pCollider2->GetColliderType())
+	if (COLLIDER_TYPE::BOX == _pCollider1->GetColliderType() && COLLIDER_TYPE::BOX == _pCollider2->GetColliderType())
 	{
-		return CollisionRect(_pCollider1, _pCollider2);
+		return CollisionSphere(_pCollider1, _pCollider2);
 	}
-	else if (COLLIDER_TYPE::CIRCLE == _pCollider1->GetColliderType() && COLLIDER_TYPE::CIRCLE == _pCollider2->GetColliderType())
+	else if (COLLIDER_TYPE::MESH == _pCollider1->GetColliderType() && COLLIDER_TYPE::MESH == _pCollider2->GetColliderType())
 	{
-		return CollisionCircle(_pCollider1, _pCollider2);
+		return CollisionSphere(_pCollider1, _pCollider2);
 	}
-	else if (COLLIDER_TYPE::BOX == _pCollider1->GetColliderType() && COLLIDER_TYPE::BOX == _pCollider2->GetColliderType())
+	else if (COLLIDER_TYPE::MESH == _pCollider1->GetColliderType() && COLLIDER_TYPE::BOX == _pCollider2->GetColliderType())
 	{
 		return CollisionSphere(_pCollider1, _pCollider2);
 	}
@@ -181,22 +181,16 @@ bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollide
 	BoundingBox bBX1 = _pCollider1->GetBoundingBox();
 	BoundingBox bBX2 = _pCollider2->GetBoundingBox();
 
-	cout << "BX1 x :" << bBX1.Center.x << "\t" << "BX1 y :" << bBX1.Center.y << "\t" << "BX1 z :" << bBX1.Center.z << "\t" << endl;
-	cout << "BX2 x :" << bBX2.Center.x << "\t" << "BX2 y :" << bBX2.Center.y << "\t" << "BX2 z :" << bBX2.Center.z << "\t" << endl << endl;
-	
-	auto a = _pCollider1->GetObj()->GetName();
-	auto b = _pCollider2->GetObj()->GetName();
-
-	if (_pCollider1->GetName() == L"PlayerMale")
-	{
-		
-		int i = 0;
-	}
-
 	if (bBX1.Contains(bBX2) == 1)
 	{
-		int i = 0;
-		cout << "충돌" << endl;
+		//	바운딩 박스 중점, 크기 check용 cout.
+		wstring a = _pCollider1->GetObj()->GetName();
+		wstring b = _pCollider2->GetObj()->GetName();
+		wcout << a << "와 \t" << b << "가 충돌" << endl;
+		cout << "Ceter :   \t" << bBX2.Center.x << "\t" << bBX2.Center.y << "\t" << bBX2.Center.z << endl;
+		cout << "Extents : \t" << bBX2.Extents.x << "\t" << bBX2.Extents.y << "\t" << bBX2.Extents.z << endl << endl;
+
+		return true;
 	}
 	
 	return false;

@@ -628,7 +628,7 @@ void CResMgr::CreateDefaultShader()
     pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Col3D", "ps_5_0");
     //pShader->SetBlendState( BLEND_TYPE::ALPHABLEND );
     pShader->SetRasterizerType(RS_TYPE::WIRE_FRAME);
-    pShader->Create(SHADER_POV::DEFERRED);
+    pShader->Create(SHADER_POV::FORWARD);
     AddRes(L"ColliderShader", pShader);
 
     // ===============
