@@ -31,10 +31,10 @@ bool CNetMgr::is_near( const int& p1, const int& p2)
     dist += (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z)
         * (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z);
 
-    if (dist <= (float)(VIEW_LIMIT * VIEW_LIMIT))
+   /* if (dist <= (float)(VIEW_LIMIT * VIEW_LIMIT))
     {
         cout << "시야에 들어온 섹터  : "<<Find(p1)->Search_Sector().size() << endl;
-    }
+    }*/
 
     return dist <= (float)(VIEW_LIMIT * VIEW_LIMIT);
 }

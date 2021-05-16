@@ -11,8 +11,8 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
-//const char ip[] = "192.168.0.3";
-const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.3";
+//const char ip[] = "192.168.0.7";
 const char KPUIP[] = "192.168.20.138";
 
 CNetMgr g_netMgr;
@@ -224,8 +224,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
-					cout << "아이디 : " << id << "\t방금 들어온 객체의 주소 : " << &g_Object.find(id)->second;
-					cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
+					//cout << "아이디 : " << id << "\t방금 들어온 객체의 주소 : " << &g_Object.find(id)->second;
+					//cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"PlayerMale");
@@ -327,14 +327,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else {
 			if (0 != g_Object.count(other_id))
 			{
-				cout << "아이디 : "<< other_id <<"\t방금 나간 객체의 주소 : " << &g_Object.find(other_id)->second;
+				//cout << "아이디 : "<< other_id <<"\t방금 나간 객체의 주소 : " << &g_Object.find(other_id)->second;
 
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 				CEventMgr::GetInst()->update();
 				
 				g_Object.erase(other_id);
 				
-				cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
+				//cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
 
 				
 			}

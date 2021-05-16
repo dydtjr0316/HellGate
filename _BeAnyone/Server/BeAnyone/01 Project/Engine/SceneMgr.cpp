@@ -484,10 +484,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	for (int i = 0; i < 5; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead1.fbx", FBX_TYPE::DESERT_MAP);
 
-<<<<<<< HEAD
-=======
-		//pMeshData->Save(pMeshData->GetPath());
->>>>>>> 9dc1b91f7da379332fde0901b38b79239aaafa16
+
 
 		pMapObject = new CGameObject;
 
@@ -514,10 +511,6 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	for (int i = 0; i < 3; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead2.fbx", FBX_TYPE::DESERT_MAP);
 
-<<<<<<< HEAD
-=======
-	//	pMeshData->Save(pMeshData->GetPath());
->>>>>>> 9dc1b91f7da379332fde0901b38b79239aaafa16
 
 		pMapObject = new CGameObject;
 
@@ -819,7 +812,7 @@ void CSceneMgr::init()
 	// pObject->AddComponent(new CMonsterScript);
 
 	// AddGameObject
-	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
+	//m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
 
 	// ====================
 	// Skybox 오브젝트 생성
