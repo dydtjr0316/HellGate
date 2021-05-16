@@ -39,11 +39,8 @@ void CPlayerScript::update()
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
 
-<<<<<<< HEAD
-	if (KEY_HOLD(KEY_TYPE::KEY_LCTRL))
-=======
+
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
->>>>>>> ServerAnimation
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
