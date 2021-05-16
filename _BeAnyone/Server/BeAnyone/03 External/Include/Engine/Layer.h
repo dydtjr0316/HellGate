@@ -20,6 +20,7 @@ public:
 	void RegisterObj(CGameObject* _pObj) { m_vecLayerObj.push_back(_pObj); }
 	void CheckParentObj();
 	void RemoveParentObj(CGameObject* _pObject);
+	void FindParentObj(CGameObject* _pObject);
 
 public:
 	void awake();

@@ -57,7 +57,11 @@ void CGameObject::Change_Sector(const _tSector& old_sector)
         g_Sector[m_tSector.x][m_tSector.z].insert(m_id);
         // 
         g_Sector[old_sector.x][old_sector.z].erase(m_id);
+        cout << "ÁÂÇ¥ -> " << m_v3LocalPosVector.x << ", " << m_v3LocalPosVector.z << endl;
+        cout << "¼½ÅÍ -> " << m_tSector.x << ", " << m_tSector.z << endl << endl;
+
     }
+   
 }
 
 vector<unordered_set<int>> CGameObject::Search_Sector()
@@ -101,6 +105,7 @@ vector<unordered_set<int>> CGameObject::Search_Sector()
         vSectors.push_back(g_Sector[x1][z1]);
         vSectors.push_back(g_Sector[x2][z1]);
     }
+
 
     return vSectors;
 }

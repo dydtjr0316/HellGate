@@ -39,11 +39,8 @@ void CPlayerScript::update()
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
 
-<<<<<<< HEAD
-	if (KEY_HOLD(KEY_TYPE::KEY_LCTRL))
-=======
+
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
->>>>>>> ServerAnimation
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
@@ -173,6 +170,8 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		//g_netMgr.Send_Move_Packet(MV_RIGHT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+
+		
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D) || KEY_HOLD(KEY_TYPE::KEY_S))

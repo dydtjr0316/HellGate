@@ -391,11 +391,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 	for (int i = 0; i < 5; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead1.fbx", FBX_TYPE::DESERT_MAP);
-<<<<<<< HEAD
-	//	pMeshData->Save(pMeshData->GetPath());
-=======
-		//pMeshData->Save(pMeshData->GetPath());
->>>>>>> ServerAnimation
+
 
 		pMapObject = new CGameObject;
 
@@ -421,11 +417,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 	for (int i = 0; i < 3; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead2.fbx", FBX_TYPE::DESERT_MAP);
-<<<<<<< HEAD
-		//pMeshData->Save(pMeshData->GetPath());
-=======
-	//	pMeshData->Save(pMeshData->GetPath());
->>>>>>> ServerAnimation
+
 
 		pMapObject = new CGameObject;
 

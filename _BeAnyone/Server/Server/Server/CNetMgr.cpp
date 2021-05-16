@@ -25,10 +25,16 @@ bool CNetMgr::is_near( const int& p1, const int& p2)
 {
     if(p1 == p2)return false;
     float dist =
-        (Find(p1)->GetLocalPosVector().x - Find(p1)->GetLocalPosVector().x)
-        * (Find(p1)->GetLocalPosVector().x - Find(p1)->GetLocalPosVector().x);
+        (Find(p1)->GetLocalPosVector().x - Find(p2)->GetLocalPosVector().x)
+        * (Find(p1)->GetLocalPosVector().x - Find(p2)->GetLocalPosVector().x);
+
     dist += (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z)
         * (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z);
+
+    if (dist <= (float)(VIEW_LIMIT * VIEW_LIMIT))
+    {
+        cout << "시야에 들어온 섹터  : "<<Find(p1)->Search_Sector().size() << endl;
+    }
 
     return dist <= (float)(VIEW_LIMIT * VIEW_LIMIT);
 }
@@ -148,7 +154,7 @@ void CNetMgr::Send_LoginOK_Packet(const int& user_id)
     p.Attack_Damage = pClient->GetAttackDamage();
 
     login++;
-    cout << "Login 갯수 -> " << login <<endl;
+   // cout << "Login 갯수 -> " << login <<endl;
 
     Send_Packet(user_id, &p);
 }
@@ -174,7 +180,7 @@ void CNetMgr::Send_Leave_Packet( const int& user_id, const int& other_id)
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
     cnt++;
-    cout << other_id << "가  " << user_id << "한테서 LEAVE  " << "cnt = " << cnt << endl;
+    //cout << other_id << "가  " << user_id << "한테서 LEAVE  " << "cnt = " << cnt << endl;
 
     Send_Packet(user_id, &p);
 }
@@ -712,7 +718,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();
         exit(-1);
-    }
+    }                       
 }
 
 void CNetMgr::Recv_Packet_Construct(const int& user_id, const int& io_byte)
@@ -849,8 +855,8 @@ void CNetMgr::Worker_Thread()
             break;
         case ENUMOP::OP_ACCEPT:
         {
-            ghost++;
-            cout << "Ghost Cnt -> " << ghost << endl;
+           // ghost++;
+            //cout << "Ghost Cnt -> " << ghost << endl;
             int user_id = -1;
             int i;
             for (i = 0; i < MAX_USER; ++i) {
@@ -893,8 +899,8 @@ void CNetMgr::Worker_Thread()
                     (float)(rand() % 1000));
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
-                if (pClient->GetLocalPosVector().x == 724.f)
-                    cout << "귀신이다 !!!!" << endl;
+               // if (pClient->GetLocalPosVector().x == 724.f)
+                    //cout << "귀신이다 !!!!" << endl;
                 ////////////////////////////////////////////////////////
                 
                 pClient->SetFirstPos(pClient->GetLocalPosVector());

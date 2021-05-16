@@ -1,14 +1,7 @@
+D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
-D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso
-C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso
-C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso
-C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso
-C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso
-C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso
-C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso
-C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
