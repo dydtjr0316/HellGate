@@ -11,8 +11,8 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
-const char ip[] = "192.168.0.3";
-//const char ip[] = "192.168.0.7";
+//const char ip[] = "192.168.0.3";
+const char ip[] = "192.168.0.7";
 const char KPUIP[] = "192.168.20.138";
 
 CNetMgr g_netMgr;
