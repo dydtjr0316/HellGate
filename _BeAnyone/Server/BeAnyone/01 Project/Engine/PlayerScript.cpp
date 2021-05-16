@@ -39,7 +39,11 @@ void CPlayerScript::update()
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
 
+<<<<<<< HEAD
 	if (KEY_HOLD(KEY_TYPE::KEY_LCTRL))
+=======
+	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+>>>>>>> ServerAnimation
 	{
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
@@ -65,34 +69,37 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 	//	영문서버
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	//if (isInMap(localPos))
-	//{
+	
 
+	
+	char dir = MV_IDLE;
+	
 	float speed = 200.f;
 
 	if (KEY_HOLD(KEY_TYPE::KEY_SPACE))
 	{
 		speed = 600.f;
+
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))
-	{
-		Animator3D()->SetBones(m_pAniData[(int)Ani_TYPE::WALK_F]->GetBones());
-		Animator3D()->SetAnimClip(m_pAniData[(int)Ani_TYPE::WALK_F]->GetAnimClip());
-		MeshRender()->SetMesh(m_pAniData[(int)Ani_TYPE::WALK_F]);
-	}
-	else if (KEY_TAB(KEY_TYPE::KEY_S))
-	{
-		Animator3D()->SetBones(m_pAniData[(int)Ani_TYPE::WALK_D]->GetBones());
-		Animator3D()->SetAnimClip(m_pAniData[(int)Ani_TYPE::WALK_D]->GetAnimClip());
-		MeshRender()->SetMesh(m_pAniData[(int)Ani_TYPE::WALK_D]);
-	}
+	//if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))
+	//{
+	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
+	//	dir = MV_FRONT;
+	//	//g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+	//}
+
+	//else if (KEY_TAB(KEY_TYPE::KEY_S))
+	//{
+	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_D);
+	//	dir = MV_BACK;
+	//	//g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+	//}
+	
 
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
-
-
 		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * speed * DT;
 		int z = (int)(localPos.z / xmf3Scale.z);
 		bool bReverseQuad = ((z % 2) != 0);
@@ -104,9 +111,12 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		{
 			localPos.y = fHeight;
 		}
+		dir = MV_FRONT;
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
+
 
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		//g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
@@ -121,9 +131,11 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		{
 			localPos.y = fHeight;
 		}
+		dir = MV_BACK;
 
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_D);
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		//g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_A))
@@ -139,9 +151,10 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		{
 			localPos.y = fHeight;
 		}
-
+		dir = MV_FRONT;
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		//g_netMgr.Send_Move_Packet(MV_LEFT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_D))
@@ -156,16 +169,28 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		{
 			localPos.y = fHeight;
 		}
-
+		dir = MV_FRONT;
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		//g_netMgr.Send_Move_Packet(MV_RIGHT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
 
-	if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D) || KEY_AWAY(KEY_TYPE::KEY_S)) {
-		Animator3D()->SetBones(m_pAniData[(int)Ani_TYPE::IDLE]->GetBones());
-		Animator3D()->SetAnimClip(m_pAniData[(int)Ani_TYPE::IDLE]->GetAnimClip());
-		MeshRender()->SetMesh(m_pAniData[(int)Ani_TYPE::IDLE]);
+	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D) || KEY_HOLD(KEY_TYPE::KEY_S))
+	{
+		g_netMgr.Send_Move_Packet(dir,localPos);
+
 	}
+	else if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D) || KEY_AWAY(KEY_TYPE::KEY_S)) {
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
+		g_netMgr.Send_Move_Packet(dir, localPos);
+	}
+}
+
+void CPlayerScript::SetAnimation(const Ani_TYPE& type)
+{
+	g_Object.find(g_myid)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
+	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
+	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
 }
 
 bool CPlayerScript::isInMap(const Vector3& localPos)

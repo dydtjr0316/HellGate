@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
 
+int cnt = 0;
+int login = 0;
+int ghost = 0;
+
 void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 {
     WCHAR* lpMsgBuf;
@@ -143,6 +147,9 @@ void CNetMgr::Send_LoginOK_Packet(const int& user_id)
     p.iMax_exp = pClient->GetMaxEXP();
     p.Attack_Damage = pClient->GetAttackDamage();
 
+    login++;
+    cout << "Login 갯수 -> " << login <<endl;
+
     Send_Packet(user_id, &p);
 }
 
@@ -166,6 +173,8 @@ void CNetMgr::Send_Leave_Packet( const int& user_id, const int& other_id)
     p.id = other_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
+    cnt++;
+    cout << other_id << "가  " << user_id << "한테서 LEAVE  " << "cnt = " << cnt << endl;
 
     Send_Packet(user_id, &p);
 }
@@ -502,24 +511,24 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
             {
                 if (is_near(user_id, user))
                 {
-                    if (!IsClient(user))
-                    {
-                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
-                        {
-                            if (IsMonster(user))
-                                WakeUp_Monster(user);
-                            else
-                            {
-                                //cout << "do move 함수 호출" << endl;
-                                //cout << Find(user)->GetStatus() << endl;
-                                WakeUp_NPC(user);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //if (Find(user)->GetStatus() != ST_ACTIVE)continue;
-                    }
+                    //if (!IsClient(user))
+                    //{
+                    //    if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                    //    {
+                    //        if (IsMonster(user))
+                    //            WakeUp_Monster(user);
+                    //        else
+                    //        {
+                    //            //cout << "do move 함수 호출" << endl;
+                    //            //cout << Find(user)->GetStatus() << endl;
+                    //            WakeUp_NPC(user);
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //if (Find(user)->GetStatus() != ST_ACTIVE)continue;
+                    //}
                     new_viewList.insert(user);
                 }
             }
@@ -533,7 +542,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
         if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
         {
             pClient->GetViewList().insert(ob);
-            Send_Enter_Packet(user_id, ob);
+            //Send_Enter_Packet(user_id, ob);
             if (IsClient(ob) && ob != user_id)
             {
                 if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
@@ -566,7 +575,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
             }
         }
     }
-    for (auto& ob : old_viewList)
+    /*for (auto& ob : old_viewList)
     {
         if (new_viewList.count(ob) == 0)
         {
@@ -582,7 +591,7 @@ void CNetMgr::Do_Rotate(const int& user_id, const char& dir, float& rotateY)
                 }
             }
         }
-    }
+    }*/
 }
 
 void CNetMgr::Disconnect(const int& user_id)
@@ -591,17 +600,20 @@ void CNetMgr::Disconnect(const int& user_id)
     pUser->SetStatus(OBJSTATUS::ST_ALLOC);
 
     Send_Leave_Packet( user_id, user_id);
+
     pUser->GetLock().lock();
     for (int i = 0; i < MAX_USER; ++i)
     {
         if (Find( i)->GetStatus() == OBJSTATUS::ST_ACTIVE)
         {
-            if (i != user_id)
-            {
-                if(dynamic_cast<CClient*>(Find( i))->GetViewList().count(user_id))
+            if (IsClient(i)) {
+                if (i != user_id)
                 {
-                    dynamic_cast<CClient*>(Find( i))->GetViewList().erase(user_id);
-                    Send_Leave_Packet( i, user_id);
+                    if (dynamic_cast<CClient*>(Find(i))->GetViewList().count(user_id))
+                    {
+                        dynamic_cast<CClient*>(Find(i))->GetViewList().erase(user_id);
+                        Send_Leave_Packet(i, user_id);
+                    }
                 }
             }
         }
@@ -635,15 +647,15 @@ void CNetMgr::Enter_Game(const int& user_id, char name[])
         for (auto& id : vSec) {
             if (Find(id)->GetID() == Find(user_id)->GetID())continue;
             if (Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
-            if (is_near(user_id, id))
+            if (is_near(user_id, id)&&user_id!=id)
             {
-                if (Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
+               /* if (Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
                 {
                     if(IsMonster(id))
                         WakeUp_Monster(id);
                     else if (IsNpc(id))
                         WakeUp_NPC(id);
-                }
+                }*/
                 if (IsClient(id))
                 {
                     if (dynamic_cast<CClient*>(Find(id))->GetViewList().count(user_id) == 0)
@@ -817,6 +829,7 @@ void CNetMgr::Worker_Thread()
 
         EXOVER* exover = reinterpret_cast<EXOVER*>(over);
         int user_id = static_cast<int>(key);
+        
       
         CClient* pUser = dynamic_cast<CClient*>(Find( user_id));
         switch (exover->op) {
@@ -836,6 +849,8 @@ void CNetMgr::Worker_Thread()
             break;
         case ENUMOP::OP_ACCEPT:
         {
+            ghost++;
+            cout << "Ghost Cnt -> " << ghost << endl;
             int user_id = -1;
             int i;
             for (i = 0; i < MAX_USER; ++i) {
@@ -874,10 +889,12 @@ void CNetMgr::Worker_Thread()
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(
                     (float)(rand() % 1000), // 수정 real float
-                    (float)(140.f),
+                    (float)(290.f),
                     (float)(rand() % 1000));
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
+                if (pClient->GetLocalPosVector().x == 724.f)
+                    cout << "귀신이다 !!!!" << endl;
                 ////////////////////////////////////////////////////////
                 
                 pClient->SetFirstPos(pClient->GetLocalPosVector());
@@ -905,7 +922,7 @@ void CNetMgr::Worker_Thread()
             AcceptEx(l_socket, c_socket, exover->io_buf, NULL,
                 sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
         
-            Send_ID_Packet(user_id);
+            //Send_ID_Packet(user_id);
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_NPC:

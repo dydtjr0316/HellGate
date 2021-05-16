@@ -92,7 +92,19 @@ void CLayer::RemoveParentObj(CGameObject* _pObject)
 
 	assert(nullptr);
 }
+void CLayer::FindParentObj(CGameObject* _pObject)
+{
+	vector<CGameObject*>::iterator iter = m_vecParentObj.begin();
+	for (; iter != m_vecParentObj.end(); ++iter) {
+		if ((*iter) == _pObject)
+		{
+			m_vecParentObj.erase(iter);
+			return;
+		}
+	}
 
+	return;
+}
 
 void CLayer::awake()
 {

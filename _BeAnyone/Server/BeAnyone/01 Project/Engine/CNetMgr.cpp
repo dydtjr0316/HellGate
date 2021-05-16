@@ -12,7 +12,8 @@
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
 //const char ip[] = "192.168.0.3";
-const char ip[] = "127.0.0.1";
+const char ip[] = "192.168.0.3";
+const char KPUIP[] = "192.168.20.138";
 
 CNetMgr g_netMgr;
 
@@ -57,7 +58,7 @@ void CNetMgr::Connect()
 	memset(&recvAddr, 0, sizeof(recvAddr));
 
 	recvAddr.sin_family = AF_INET;
-	recvAddr.sin_addr.s_addr = inet_addr(ip);
+	recvAddr.sin_addr.s_addr = inet_addr(KPUIP);
 	recvAddr.sin_port = htons(SERVER_PORT);
 
 	if (connect(g_Socket, (SOCKADDR*)&recvAddr, sizeof(recvAddr)) == SOCKET_ERROR)
@@ -149,6 +150,15 @@ void CNetMgr::Send_Attack_Packet()
 	Send_Packet(&m_packet);
 }
 
+void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
+{
+	//cout << "------Setani -> " << (int)type << endl;
+	
+	g_Object.find(id)->second->Animator3D()->SetBones(m_aniData[(int)type]->GetBones());
+	g_Object.find(id)->second->Animator3D()->SetAnimClip(m_aniData[(int)type]->GetAnimClip());
+	g_Object.find(id)->second->MeshRender()->SetMesh(m_aniData[(int)type]);
+}
+
 void CNetMgr::Recevie_Data()
 {
 	EXOVER* dataBuf = new EXOVER{};
@@ -199,11 +209,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int id = my_packet->id;
 		
 		//cout << "enter packet recv -> " << my_packet->id << endl;
-		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 		
-
-		
-		CGameObject* pObject = new CGameObject;
 		if (id == g_myid)
 		{
 			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
@@ -212,23 +218,31 @@ void CNetMgr::ProcessPacket(char* ptr)
 		{
 			if (id < MAX_USER)
 			{
-				g_Object.emplace(id, pObject);
+				if (0 == g_Object.count(id))
+				{
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 
-				g_Object.find(id)->second = pMeshData->Instantiate();
-				g_Object.find(id)->second->SetName(L"PlayerMale");
-				g_Object.find(id)->second->FrustumCheck(false);
-				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
-				g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-				g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
-				g_Object.find(id)->second->AddComponent(new CPlayerScript);
+					CGameObject* pObject = new CGameObject;
+					g_Object.emplace(id, pObject);
+					cout << "아이디 : " << id << "\t방금 들어온 객체의 주소 : " << &g_Object.find(id)->second;
+					cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
 
-				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
-			
-				g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
-				);
-				//g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
-				g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
+					g_Object.find(id)->second = pMeshData->Instantiate();
+					g_Object.find(id)->second->SetName(L"PlayerMale");
+					g_Object.find(id)->second->FrustumCheck(false);
+					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
+					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
+					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+					g_Object.find(id)->second->AddComponent(new CPlayerScript);
+
+					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
+
+					g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
+					);
+					g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
+				}
+				
 			}
 		}
 	}
@@ -237,7 +251,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
-		CTransform* ObjTrans = g_Object.find(other_id)->second->Transform();
+		
 		if (other_id == g_myid)
 		{
 			//ObjTrans->SetLocalPos(packet->localVec);
@@ -247,7 +261,27 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//추가
 			if (0 != g_Object.count(other_id))
 			{
+				CTransform* ObjTrans = ObjTrans = g_Object.find(other_id)->second->Transform();;
+
 				ObjTrans->SetLocalPos(packet->localVec);
+				switch (packet->dir)
+				{
+				case MV_FRONT:
+				case MV_LEFT:
+				case MV_RIGHT:
+					SetAnimation(other_id, Ani_TYPE::WALK_F);
+					break;
+				case MV_BACK:
+					SetAnimation(other_id, Ani_TYPE::WALK_D);
+					break;
+				case MV_IDLE:
+					SetAnimation(other_id, Ani_TYPE::IDLE);
+					break;
+				default:
+					cout << "Unknown Direction from Client move packet!\n";
+					DebugBreak();
+					exit(-1);
+				}
 			}
 		}
 	}
@@ -269,7 +303,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 			else
 			{
 				if (0 != g_Object.count(other_id))
+				{
 					g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
+
+				}
 			}
 			break;
 		default:
@@ -290,11 +327,16 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else {
 			if (0 != g_Object.count(other_id))
 			{
+				cout << "아이디 : "<< other_id <<"\t방금 나간 객체의 주소 : " << &g_Object.find(other_id)->second;
+
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 				CEventMgr::GetInst()->update();
 				
 				g_Object.erase(other_id);
-				cout << "leave packet 처리 한다!" << endl;
+				
+				cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
+
+				
 			}
 		}
 	}
@@ -309,13 +351,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	}
 	break;
-	case SC_PACKET_ID:
+	/*case SC_PACKET_ID:
 	{
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
 		g_myid = packet->id;
 
-		cout << "My ID : " << g_myid << endl;
-	}
+		cout << "Send_ID_Packet My ID : " << g_myid << endl;
+	}*/
 	break;
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);

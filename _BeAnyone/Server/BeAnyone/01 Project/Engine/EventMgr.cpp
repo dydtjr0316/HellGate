@@ -22,6 +22,8 @@ void CEventMgr::update()
 	for (size_t i = 0; i < m_vecDead.size(); ++i)
 	{
 		m_vecDead[i]->ClearParent();
+
+		CSceneMgr::GetInst()->GetCurScene()->GetLayer(1)->FindParentObj(m_vecDead[i]);
 		SAFE_DELETE(m_vecDead[i]);
 	}
 	m_vecDead.clear();

@@ -44,7 +44,7 @@ void CGameObject::Insert_Sector()
     if (m_id < 2)
     {
         cout << "좌표 -> " << m_v3LocalPosVector.x << ", " << m_v3LocalPosVector.z << endl;
-        cout << "섹터 -> " << m_tSector.x << ", " << m_tSector.z << endl;
+        cout << "섹터 -> " << m_tSector.x << ", " << m_tSector.z << endl << endl;
     }
 }
 
@@ -63,9 +63,6 @@ void CGameObject::Change_Sector(const _tSector& old_sector)
 vector<unordered_set<int>> CGameObject::Search_Sector()
 {
     vector<unordered_set<int>> vSectors;
-    
-
-
    
     // sector로 전부 변경 불가?
     int x1 = ((int)m_v3LocalPosVector.x - VIEW_LIMIT) / SECTOR_COL_Length;
@@ -77,8 +74,8 @@ vector<unordered_set<int>> CGameObject::Search_Sector()
     int x2 = ((int)m_v3LocalPosVector.x + VIEW_LIMIT) / SECTOR_COL_Length;
     int z2 = ((int)m_v3LocalPosVector.z + VIEW_LIMIT) / SECTOR_ROW_Length;
 
-    x2 = x2 > 20 ? SECTOR_ROW : x2;
-    z2 = z2 > 20 ? SECTOR_COL : z2;
+    x2 = x2 > 20 ? SECTOR_ROW-1 : x2;
+    z2 = z2 > 20 ? SECTOR_COL-1 : z2;
     //cout << x1<<", " << z1 << ", " << x2 << ", " << z2 << endl;
 
     // 여기 int 형 으로 그냥 맵 반환해서 int 형 변수로 섹터 검샋해도될거같은대ㅔ?
