@@ -69,6 +69,7 @@ void CCollider::finalupdate()
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
 
+	auto i = GetObj();
 
 	m_bbx.Center = Transform()->GetLocalPos();
 

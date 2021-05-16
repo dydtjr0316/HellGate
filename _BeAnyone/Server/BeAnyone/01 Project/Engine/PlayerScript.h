@@ -27,12 +27,17 @@ private:
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
-
-	void OnPlayerUpdateCallback();
-
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
 	CTerrain* GetTerrain() { return m_pTerrainObj; }
 
+	
+	void OnPlayerUpdateCallback();
+
 	bool isInMap(const Vector3& localPos);
+
+public:
+	virtual void OnCollisionEnter(CCollider* _pOther);
+	virtual void OnCollision(CCollider* _pOther);
+	virtual void OnCollisionExit(CCollider* _pOther);
 };
 

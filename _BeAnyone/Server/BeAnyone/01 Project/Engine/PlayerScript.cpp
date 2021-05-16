@@ -70,7 +70,6 @@ void CPlayerScript::update()
 	cout << m_matColWorld._41 << "\t" << m_matColWorld._42 << "\t" << m_matColWorld._43 << "\t" << m_matColWorld._44 << endl;
 	*/
 
-	//system("cls");
 }
 
 
@@ -184,3 +183,27 @@ bool CPlayerScript::isInMap(const Vector3& localPos)
 	if ((localPos.x > 200 && localPos.x < 6200) && (localPos.z > 200 && localPos.z < 6200))return true;
 	else return false;
 }
+
+void CPlayerScript::OnCollisionEnter(CCollider* _pOther)
+{
+}
+
+void CPlayerScript::OnCollision(CCollider* _pOther)
+{
+	BoundingBox mybBx = Collider()->GetBoundingBox();
+	BoundingBox otherbBx = _pOther->GetBoundingBox();
+	BoundingBox tempbBx{};
+
+	XMFLOAT3 xmf3Min( otherbBx.Center.x + otherbBx.Extents.x, otherbBx.Center.y + otherbBx.Extents.y, otherbBx.Center.z + otherbBx.Extents.z );
+	XMFLOAT3 xmf3Max{ otherbBx.Center.x - otherbBx.Extents.x, otherbBx.Center.y - otherbBx.Extents.y, otherbBx.Center.z - otherbBx.Extents.z };
+	BoundingBox::CreateMerged(tempbBx, mybBx, otherbBx);
+
+	auto i = tempbBx;
+
+
+}
+
+void CPlayerScript::OnCollisionExit(CCollider* _pOther)
+{
+}
+

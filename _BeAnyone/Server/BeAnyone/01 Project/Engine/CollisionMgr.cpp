@@ -114,7 +114,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 					}
 					else
 					{
-						pCollider1->OnCollision(pCollider2);
+ 						pCollider1->OnCollision(pCollider2);
 						pCollider2->OnCollision(pCollider1);
 					}
 				}
@@ -186,7 +186,7 @@ bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollide
 		//	바운딩 박스 중점, 크기 check용 cout.
 		wstring a = _pCollider1->GetObj()->GetName();
 		wstring b = _pCollider2->GetObj()->GetName();
-		wcout << a << "와 \t" << b << "가 충돌" << endl;
+		wcout << a << L"와 \t" << b << L"가 충돌" << endl;
 		cout << "Ceter :   \t" << bBX2.Center.x << "\t" << bBX2.Center.y << "\t" << bBX2.Center.z << endl;
 		cout << "Extents : \t" << bBX2.Extents.x << "\t" << bBX2.Extents.y << "\t" << bBX2.Extents.z << endl << endl;
 

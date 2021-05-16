@@ -265,6 +265,8 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House1");
+	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+
 
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
@@ -288,6 +290,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"WoodenHouse3");
+	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
@@ -311,6 +314,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"CookingFireplace");
+	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
@@ -334,6 +338,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tent1");
+	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
@@ -358,6 +363,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"RockGrey2_high");
+	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()* pMapObject->Transform()->GetLocalScale()));
 
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
@@ -385,6 +391,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
+		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
@@ -411,6 +418,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"TreeDead1");
+		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
@@ -437,6 +445,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"TreeDead2");
+		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
@@ -465,6 +474,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"CactusSmall");
+		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()* pMapObject->Transform()->GetLocalScale()));
 
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
@@ -706,7 +716,8 @@ void CSceneMgr::init()
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
 	pPlayerObj->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
 	g_netMgr.SetObj(pPlayerObj);
-	//CreateMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
+	
+	CreateMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 
 
 	// ====================
@@ -720,6 +731,8 @@ void CSceneMgr::init()
 
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
+
 	
 
 	m_pCurScene->awake();
