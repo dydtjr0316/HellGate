@@ -626,12 +626,7 @@ void CSceneMgr::init()
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 	pMeshData->Save(pMeshData->GetPath());
 	
-	// 키 입력에 따른 애니메이션
-	//Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_F.fbx", FBX_TYPE::PLAYER);
-	//Ptr<CMesh> pMeshKey = pMeshDataKey->GetMesh();
-
-	//MeshData 로드
-	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\PlayerMale@nWalk_F.mdat", L"MeshData\\PlayerMale@nWalk_F.mdat");
+	
 	CGameObject* pPlayerObj = nullptr;
 
 	pPlayerObj = pMeshData->Instantiate();
@@ -671,6 +666,23 @@ void CSceneMgr::init()
 
 	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
 
+	// 무기 
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale_Weapon_Sword.fbx", FBX_TYPE::PLAYER);
+	//pMeshData->Save(pMeshData->GetPath());
+
+
+	CGameObject* pSword = nullptr;
+
+	pSword = pMeshData->Instantiate();
+	pSword->SetName(L"sword");
+	pSword->FrustumCheck(false);
+	pSword->Transform()->SetLocalPos(Vector3(0.f, 140.f, 0.f));
+	pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+	pSword->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+	pSword->AddComponent(new CCollider);
+	pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
+
+	m_pCurScene->AddGameObject(L"Player", pSword, false);
 
 	// ==================
 	// Camera Object 생성
