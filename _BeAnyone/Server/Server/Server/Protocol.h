@@ -120,6 +120,8 @@ struct sc_packet_move {
 
 	Vector3 localVec;
 	Vector3 dirVec;	//받아올땐 삭제해도되는가?
+
+	float rotateY;
 };
 
 struct sc_packet_rotate {
@@ -213,6 +215,8 @@ struct cs_packet_move {
 	char  size;
 	char  type;		// 정리할때 type이 꼭 필요한지 작성
 	unsigned short  direction;
+
+	float rotateY;
 
 	Vector3 localVec;
 	

@@ -11,6 +11,8 @@ CPlayerScript::CPlayerScript()
 	, m_pOriginMtrl(nullptr)
 	, m_pCloneMtrl(nullptr)
 {
+	m_fSpeed = PLAYER_SPEED_IDLE;
+	m_eAniType = Ani_TYPE::IDLE;
 }
 
 CPlayerScript::~CPlayerScript()
@@ -28,7 +30,86 @@ void CPlayerScript::awake()
 
 void CPlayerScript::update()
 {
-	OnPlayerUpdateCallback();
+	CTerrain* pTerrain = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain();
+	CPlayerScript* player = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	const Vector3& xmf3Scale = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
+	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
+	CTransform* playerTrans = g_Object.find(g_myid)->second->Transform();
+	Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+	Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+
+	char dir = MV_IDLE;
+	bool moveKeyInput = false;
+
+	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+	{
+		vRot.y += vDrag.x * DT * ROTATE_SPEED;
+
+		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
+	{
+		player->SetChangeSpeed();
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_W))
+	{
+		localPos += -playerTrans->GetWorldDir(DIR_TYPE::FRONT) * player->GetSpeed() * DT;
+
+		dir = MV_FRONT;
+		player->SetAnimation(Ani_TYPE::WALK_F);
+		moveKeyInput = true;
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_S))
+	{
+		localPos += playerTrans->GetWorldDir(DIR_TYPE::FRONT) * player->GetSpeed() * DT;
+
+		dir = MV_BACK;
+		player->SetAnimation(Ani_TYPE::WALK_D);
+		moveKeyInput = true;
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_A))
+	{
+		localPos += playerTrans->GetWorldDir(DIR_TYPE::RIGHT) * player->GetSpeed() * DT;
+
+		dir = MV_LEFT;
+		player->SetAnimation(Ani_TYPE::WALK_F);
+		moveKeyInput = true;
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_D))
+	{
+		localPos += -playerTrans->GetWorldDir(DIR_TYPE::RIGHT) * player->GetSpeed() * DT;
+
+		dir = MV_RIGHT;
+		player->SetAnimation(Ani_TYPE::WALK_F);
+		moveKeyInput = true;
+	}
+
+
+
+	if (moveKeyInput)
+	{
+		int z = (int)(localPos.z / xmf3Scale.z);
+		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, ((z % 2) != 0)) * 2.f + 100.f;
+
+		if (localPos.y != fHeight)
+			localPos.y = fHeight;
+
+		playerTrans->SetLocalPos(localPos);
+		g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
+	}
+	else
+	{
+		player->SetAnimation(Ani_TYPE::IDLE);
+		g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
+	}
+
+
+
 
 	if (KEY_HOLD(KEY_TYPE::KEY_Z))
 	{
@@ -40,149 +121,13 @@ void CPlayerScript::update()
 	}
 
 
-	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
-	{
-		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
-
-		vRot.y += vDrag.x * DT * ROTATE_SPEED;
-		
-		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vRot.y);
-
-		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
-
-	}
 
 }
 
 
 void CPlayerScript::OnPlayerUpdateCallback()
 {
-	CTerrain* pTerrain = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain();
-	// 용석
-	// 터레인 객체 CGameObject로 바꾸라고 말하기 // 바꾸면 전체적으로 다 수정들어가야됨
-
-	Vector3 xmf3Scale = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
-
-	//	영문서버
-	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
 	
-
-	
-	char dir = MV_IDLE;
-	
-	float speed = 200.f;
-
-	if (KEY_HOLD(KEY_TYPE::KEY_SPACE))
-	{
-		speed = 600.f;
-
-	}
-
-	//if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))
-	//{
-	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
-	//	dir = MV_FRONT;
-	//	//g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	//}
-
-	//else if (KEY_TAB(KEY_TYPE::KEY_S))
-	//{
-	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_D);
-	//	dir = MV_BACK;
-	//	//g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	//}
-	
-
-
-	if (KEY_HOLD(KEY_TYPE::KEY_W))
-	{
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * speed * DT;
-		int z = (int)(localPos.z / xmf3Scale.z);
-		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.0f;
-
-		//cout << " x :\t" << localPos.x << " y :\t" << localPos.y << " z :\t" << localPos.z <<  "  DT  :\t" << DT <<"  FPS  :\t"<< CTimeMgr::GetInst()->GetFPS()<< endl;
-
-		if (localPos.y != fHeight)
-		{
-			localPos.y = fHeight;
-		}
-		dir = MV_FRONT;
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
-
-
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		//g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_S))
-	{
-		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * speed * DT;
-
-		int z = (int)(localPos.z / xmf3Scale.z);
-		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.f;
-
-		if (localPos.y != fHeight)
-		{
-			localPos.y = fHeight;
-		}
-		dir = MV_BACK;
-
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_D);
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		//g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_A))
-	{
-		//vPos.x -= DT * 200.f;
-		localPos += g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * speed * DT;
-
-		int z = (int)(localPos.z / xmf3Scale.z);
-		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.f;
-
-		if (localPos.y != fHeight)
-		{
-			localPos.y = fHeight;
-		}
-		dir = MV_FRONT;
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		//g_netMgr.Send_Move_Packet(MV_LEFT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_D))
-	{
-		localPos += -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * speed * DT;
-
-		int z = (int)(localPos.z / xmf3Scale.z);
-		bool bReverseQuad = ((z % 2) != 0);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, bReverseQuad) * 2.f + 100.f;
-
-		if (localPos.y != fHeight)
-		{
-			localPos.y = fHeight;
-		}
-		dir = MV_FRONT;
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
-		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
-		//g_netMgr.Send_Move_Packet(MV_RIGHT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-
-		
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D) || KEY_HOLD(KEY_TYPE::KEY_S))
-	{
-		g_netMgr.Send_Move_Packet(dir,localPos);
-
-	}
-	else if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D) || KEY_AWAY(KEY_TYPE::KEY_S)) {
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
-		g_netMgr.Send_Move_Packet(dir, localPos);
-	}
 }
 
 void CPlayerScript::SetAnimation(const Ani_TYPE& type)
@@ -190,6 +135,7 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
 	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
+	m_eAniType = type;
 }
 
 bool CPlayerScript::isInMap(const Vector3& localPos)

@@ -24,7 +24,7 @@ public:		// 실제 객체 업데이트부
 	//void Random_Move_NPC(const int& id);
 	//void Random_Move_Monster(const int& id);
 	void Do_Attack(const int& user_id);
-	void Do_Move(const int& user_id, const char& dir, Vector3& localVec);
+	void Do_Move(const int& user_id, const char& dir, Vector3& localVec, const float& rotateY);
 	void Do_Rotate(const int& user_id, const char& dir, float& rotateY);
 	void Disconnect(const int& user_id);
 	void Enter_Game(const int& user_id, char name[]);

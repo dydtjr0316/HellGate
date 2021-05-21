@@ -25,6 +25,7 @@ public: // 상속 ,, 함수
 	Vector3& GetLocalPosVector() { return m_v3LocalPosVector; }
 	Vector3& GetDirVector() { return m_v3DirVector; }
 	Vector3& GetRoatateVector() { return m_v3RotateVector; }
+	float GetRotateY() { return m_v3RotateVector.y; }
 
 
 	// set

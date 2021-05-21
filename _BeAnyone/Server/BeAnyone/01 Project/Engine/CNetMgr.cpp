@@ -11,9 +11,9 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
-//const char ip[] = "192.168.0.3";
+const char ip[] = "192.168.0.3";
 //const char ip[] = "192.168.0.7";
-const char ip[] = "192.168.140.59";
+//const char ip[] = "192.168.140.59";
 const char KPUIP[] = "192.168.20.138";
 
 CNetMgr g_netMgr;
@@ -91,6 +91,8 @@ void CNetMgr::Send_Packet(void* _packet)
 	dataBuf.over = m_overlapped;
 
 	testpacket = dataBuf.wsabuf.len;
+
+
 	if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() == WSA_IO_PENDING)
@@ -131,6 +133,19 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local)
 	m_packet.localVec = local;
 
 	Send_Packet(&m_packet);
+}
+
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const float& rotateY)
+{
+	cs_packet_move m_packet;
+	m_packet.type = CS_MOVE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.direction = dir;
+	m_packet.localVec = local;
+	m_packet.rotateY = rotateY;
+
+	Send_Packet(&m_packet);
+
 }
 
 void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const float& rotateY)
@@ -263,7 +278,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (0 != g_Object.count(other_id))
 			{
 				CTransform* ObjTrans = ObjTrans = g_Object.find(other_id)->second->Transform();;
-
+				g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, packet->rotateY, 0.f));
 				ObjTrans->SetLocalPos(packet->localVec);
 				switch (packet->dir)
 				{
@@ -305,7 +320,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 != g_Object.count(other_id))
 				{
-					g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
 
 				}
 			}

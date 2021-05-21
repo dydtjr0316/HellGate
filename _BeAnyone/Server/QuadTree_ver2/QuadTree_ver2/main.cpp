@@ -75,6 +75,11 @@ public:
 
 			//이자리에 부모노드 세팅과 자료 넘겨주는 부분이 필요함
 
+			if (parent != nullptr)
+			{
+
+			}
+
 			if(nw->insert(p))return true;
 			else if(ne->insert(p))return true;
 			else if(sw->insert(p))return true;
@@ -92,6 +97,10 @@ public:
 		ne = new QuadTRee(ner, 4);
 		sw = new QuadTRee(swr, 4);
 		se = new QuadTRee(ser, 4);
+		nw->setParent(this);
+		ne->setParent(this);
+		sw->setParent(this);
+		se->setParent(this);
 		divide = true;
 	}
 	vector<Point> search(Rectanlge& range)	// 인자로 vector<Point> found 넣는 방식 생각해보기
@@ -139,10 +148,13 @@ public:
 	QuadTRee* getsw() { return sw; }
 	QuadTRee* getse() { return se; }
 	vector<Point> getPoint() { return points; }
+	void setParent(QuadTRee* obj) { parent = obj; }
+	QuadTRee* getParent() { return parent; }
 private:
 	Rectanlge boundary;
 	int capacity;
 	vector<Point> points;
+	QuadTRee* parent;
 	QuadTRee* nw;
 	QuadTRee* ne;
 	QuadTRee* sw;

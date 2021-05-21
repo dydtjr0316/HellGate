@@ -26,8 +26,13 @@ public:
 private:
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;
-
+	float m_fSpeed;
+	Ani_TYPE m_eAniType;
 public:
+	void SetChangeSpeed() { m_fSpeed = m_fSpeed == PLAYER_SPEED_IDLE ? PLAYER_SPEED_DASH : PLAYER_SPEED_IDLE; }
+	float GetSpeed() { return m_fSpeed; }
+
+
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
 

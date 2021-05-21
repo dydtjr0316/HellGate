@@ -195,6 +195,7 @@ void CNetMgr::Send_Move_Packet(const int& user_id, const int& mover_id, const ch
     p.dirVec = Find(mover_id)->GetDirVector();
     p.dir = dir;
     p.move_time = Find(mover_id)->GetClientTime();
+    p.rotateY = Find(mover_id)->GetRotateY();
 
     Send_Packet(user_id, &p);
 }
@@ -352,7 +353,7 @@ void CNetMgr::Do_Attack(const int& user_id)
     /// <param name="user_id"></param>
 }
 
-void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
+void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, const float& rotateY)
 {
     CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
 
@@ -388,6 +389,8 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec)
     }*/
 
     pClient->SetPosV(localVec);
+    pClient->SetRotateY(rotateY);
+    
     pClient->Change_Sector(oldSector);
     unordered_set<int> new_viewList;
 
@@ -696,7 +699,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
 
 
         Find( user_id)->SetClientTime(packet->move_time);
-        Do_Move(user_id, packet->direction, packet->localVec);
+        Do_Move(user_id, packet->direction, packet->localVec, packet->rotateY);
 
     }
                 break;
@@ -705,6 +708,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
         cs_packet_rotate* packet = reinterpret_cast<cs_packet_rotate*>(buf);
         Find(user_id)->SetClientTime(packet->move_time);
         Do_Rotate(user_id, packet->dir, packet->rotateY);
+        cout << "여기들어오나?" << endl;
 
     }
     break;

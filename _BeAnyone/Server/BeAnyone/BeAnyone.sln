@@ -10,8 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "01 Project\Client
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "01 Project\Engine\Engine.vcxproj", "{41891F1D-7DD7-4E69-8EB6-BAA9C38489BD}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "BeAnyone", "BeAnyone\BeAnyone.vdproj", "{1F08945E-979E-44DA-BC64-E4DC4CDCD700}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -36,10 +34,6 @@ Global
 		{41891F1D-7DD7-4E69-8EB6-BAA9C38489BD}.Release|x64.Build.0 = Release|x64
 		{41891F1D-7DD7-4E69-8EB6-BAA9C38489BD}.Release|x86.ActiveCfg = Release|Win32
 		{41891F1D-7DD7-4E69-8EB6-BAA9C38489BD}.Release|x86.Build.0 = Release|Win32
-		{1F08945E-979E-44DA-BC64-E4DC4CDCD700}.Debug|x64.ActiveCfg = Debug
-		{1F08945E-979E-44DA-BC64-E4DC4CDCD700}.Debug|x86.ActiveCfg = Debug
-		{1F08945E-979E-44DA-BC64-E4DC4CDCD700}.Release|x64.ActiveCfg = Release
-		{1F08945E-979E-44DA-BC64-E4DC4CDCD700}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
