@@ -30,6 +30,9 @@
     <Filter Include="03. SimpleMath">
       <UniqueIdentifier>{af61c17b-0f05-4c3a-b1f0-5856f76fb4a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04TimeMgr">
+      <UniqueIdentifier>{b2908859-e62c-4bbb-aee3-6c798a57362d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ServerMain.cpp">
@@ -55,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
       <Filter>03. SimpleMath</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimeMgr.cpp">
+      <Filter>04TimeMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +102,9 @@
     </ClInclude>
     <ClInclude Include="SimpleMath.h">
       <Filter>03. SimpleMath</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimeMgr.h">
+      <Filter>04TimeMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

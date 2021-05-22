@@ -240,8 +240,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
-					//cout << "아이디 : " << id << "\t방금 들어온 객체의 주소 : " << &g_Object.find(id)->second;
-					//cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"PlayerMale");
@@ -302,56 +300,19 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 	}
 	break;
-	case SC_PACKET_MOUSE:
-	{
-		int other_id;
-		sc_packet_rotate* rotate_packet = nullptr;
-		switch (ptr[2])
-		{
-		case Rotate_LBTN:
-			rotate_packet = reinterpret_cast<sc_packet_rotate*>(ptr);
-			other_id = rotate_packet->id;
-
-			if (other_id == g_myid)
-			{
-
-			}
-			else
-			{
-				if (0 != g_Object.count(other_id))
-				{
-
-				}
-			}
-			break;
-		default:
-			break;
-		}
-		
-	}
-	break;
+	
 	case SC_PACKET_LEAVE:
 	{
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
-			/*delete g_Object.find(g_myid)->second;
-			g_Object.erase(g_myid);*/
-
 		}
 		else {
 			if (0 != g_Object.count(other_id))
 			{
-				//cout << "아이디 : "<< other_id <<"\t방금 나간 객체의 주소 : " << &g_Object.find(other_id)->second;
-
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 				CEventMgr::GetInst()->update();
-				
 				g_Object.erase(other_id);
-				
-				//cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
-
-				
 			}
 		}
 	}

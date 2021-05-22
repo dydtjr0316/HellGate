@@ -18,3 +18,13 @@ void SafeDeleteArr(T& ptr)
         ptr = nullptr;
     }
 }
+
+#define SINGLE(type) private: type(); ~type();\
+public:\
+static type* GetInst()\
+{\
+	static type mgr;\
+	return &mgr;\
+}
+
+#define DeltaTime CTimeMgr::GetInst()->GetDeltaTime()
