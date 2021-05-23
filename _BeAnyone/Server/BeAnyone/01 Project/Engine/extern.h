@@ -15,6 +15,7 @@ extern CAMOBJLIST g_CamObject;
 extern int g_myid;
 extern int testpacket;
 extern int frameCnt;
+extern int movePacketSendCnt;
 
 extern system_clock::time_point MoveStart;
 extern system_clock::time_point MoveEnd;

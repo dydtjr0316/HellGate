@@ -5,6 +5,7 @@
 using namespace std;
 
 bool checkOnce = true;
+int movePacketSendCnt;
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
@@ -37,9 +38,12 @@ void CPlayerScript::update()
 	CTransform* playerTrans = g_Object.find(g_myid)->second->Transform();
 	Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 	Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+	Vector3 worldDir;
 
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
+
+
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
@@ -55,42 +59,45 @@ void CPlayerScript::update()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
-		localPos += -playerTrans->GetWorldDir(DIR_TYPE::FRONT) * player->GetSpeed() * DT;
+		worldDir = -playerTrans->GetWorldDir(DIR_TYPE::FRONT);
+		localPos += worldDir * player->GetSpeed() * DT;
 
 		dir = MV_FRONT;
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
+
 	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_S))
+	else if (KEY_HOLD(KEY_TYPE::KEY_S))
 	{
-		localPos += playerTrans->GetWorldDir(DIR_TYPE::FRONT) * player->GetSpeed() * DT;
+		worldDir = playerTrans->GetWorldDir(DIR_TYPE::FRONT);
+
+		localPos += worldDir * player->GetSpeed() * DT;
 
 		dir = MV_BACK;
 		player->SetAnimation(Ani_TYPE::WALK_D);
 		moveKeyInput = true;
 	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_A))
+	else if (KEY_HOLD(KEY_TYPE::KEY_A))
 	{
-		localPos += playerTrans->GetWorldDir(DIR_TYPE::RIGHT) * player->GetSpeed() * DT;
+		worldDir = playerTrans->GetWorldDir(DIR_TYPE::RIGHT);
+		localPos += worldDir * player->GetSpeed() * DT;
 
 		dir = MV_LEFT;
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
 	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_D))
+	else if (KEY_HOLD(KEY_TYPE::KEY_D))
 	{
-		localPos += -playerTrans->GetWorldDir(DIR_TYPE::RIGHT) * player->GetSpeed() * DT;
+		worldDir = -playerTrans->GetWorldDir(DIR_TYPE::RIGHT);
+		localPos += worldDir * player->GetSpeed() * DT;
 
 		dir = MV_RIGHT;
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
 	}
-
-
-
 	if (moveKeyInput)
 	{
 		int z = (int)(localPos.z / xmf3Scale.z);
@@ -100,14 +107,39 @@ void CPlayerScript::update()
 			localPos.y = fHeight;
 
 		playerTrans->SetLocalPos(localPos);
-		g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
+		//g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
 	}
 	else
 	{
 		player->SetAnimation(Ani_TYPE::IDLE);
-		g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
+		//g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
 	}
+	if (KEY_HOLD(KEY_TYPE::KEY_W)|| KEY_HOLD(KEY_TYPE::KEY_A)|| KEY_HOLD(KEY_TYPE::KEY_S)|| KEY_HOLD(KEY_TYPE::KEY_D))
+		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
 
+
+	if (player->GetReckoner()->isFollowing())
+	{
+		system_clock::time_point start = system_clock::now();
+		 movePacketSendCnt++;
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start);
+		player->GetReckoner()->SetDirVec(worldDir);
+		player->GetReckoner()->SetRotateY(vRot.y);
+		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+
+		Vector2 real(g_Object.find(g_myid)->second->Transform()->GetLocalPos().x, g_Object.find(g_myid)->second->Transform()->GetLocalPos().z);
+		Vector2 follower(player->GetReckoner()->GetLocalPos().x, player->GetReckoner()->GetLocalPos().z);
+		
+		float distance = (real.x - follower.x) * (real.x - follower.x) + (real.y - follower.y) * (real.y - follower.y);
+		cout << "***********recokner***********" << endl;
+		cout << player->GetReckoner()->GetLocalPos().x << ", " << player->GetReckoner()->GetLocalPos().z << endl;
+		cout << "***********REAL***********" << endl;
+		cout << real.x << ", " << real.y << endl;
+
+		cout << "거리 : " << distance << endl;
+		cout << "오차 : " << (m_fSpeed * DT) * (m_fSpeed * DT) << endl;
+		cout << "클라 송신 횟수 : " << movePacketSendCnt << endl << endl;
+	}
 
 
 

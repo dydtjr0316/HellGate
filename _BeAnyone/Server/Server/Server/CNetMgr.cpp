@@ -569,7 +569,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
 
 
         Find( user_id)->SetClientTime(packet->move_time);
-        Do_Move(user_id, packet->direction, packet->localVec, packet->rotateY);
+        Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
 
     }
                 break;
@@ -794,7 +794,7 @@ void CNetMgr::Worker_Thread()
             AcceptEx(l_socket, c_socket, exover->io_buf, NULL,
                 sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
         
-            //Send_ID_Packet(user_id);
+            Send_ID_Packet(user_id);
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_NPC:

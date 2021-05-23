@@ -1,9 +1,11 @@
 #pragma once
 #include "Script.h"
 #include "Terrain.h"
+#include "CDeadReckoner.h"
 //
 #include "Mesh.h"
 
+class CDeadReckoner;
 class CPlayerScript
 	: public CScript
 {
@@ -26,11 +28,20 @@ public:
 private:
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;
-
+	float m_fSpeed;
+	Ani_TYPE m_eAniType;
+	CDeadReckoner* m_pDeadReckoner;
 public:
+	void SetChangeSpeed() { m_fSpeed = m_fSpeed == PLAYER_SPEED_IDLE ? PLAYER_SPEED_DASH : PLAYER_SPEED_IDLE; }
+	float GetSpeed() { return m_fSpeed; }
+
+
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
 
+	
+	void initDeadReckoner(){ m_pDeadReckoner = new CDeadReckoner(g_myid); }
+	CDeadReckoner* GetReckoner() { return m_pDeadReckoner; }
 	void OnPlayerUpdateCallback();
 
 	void SetAnimation(const Ani_TYPE& type);

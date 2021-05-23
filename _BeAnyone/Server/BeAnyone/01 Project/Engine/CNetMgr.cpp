@@ -126,44 +126,49 @@ void CNetMgr::Send_LogIN_Packet()
 
 void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local)
 {
-	cs_packet_move m_packet;
-	m_packet.type = CS_MOVE;
-	m_packet.size = sizeof(m_packet);
-	m_packet.direction = dir;
-	m_packet.localVec = local;
+	cs_packet_move p;
+	p.type = CS_MOVE;
+	p.size = sizeof(p);
+	p.dir = dir;
+	p.localVec = local;
 
-	Send_Packet(&m_packet);
+	Send_Packet(&p);
 }
 
 void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const float& rotateY)
 {
-	cs_packet_move m_packet;
-	m_packet.type = CS_MOVE;
-	m_packet.size = sizeof(m_packet);
-	m_packet.direction = dir;
-	m_packet.localVec = local;
-	m_packet.rotateY = rotateY;
+	cs_packet_move p;
+	p.type = CS_MOVE;
+	p.size = sizeof(p);
+	p.dir = dir;
+	p.localVec = local;
+	p.rotateY = rotateY;
 
-	Send_Packet(&m_packet);
+	Send_Packet(&p);
 
 }
 
-void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const float& rotateY)
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVec, const float& rotateY, const system_clock::time_point& startTime)
 {
-	cs_packet_rotate packet;
-	packet.type = CS_ROTATE;
-	packet.size = sizeof(packet);
-	packet.dir = dir;
-	packet.rotateY = rotateY;
-	Send_Packet(&packet);
+	cs_packet_move p;
+	p.type = CS_MOVE;
+	p.size = sizeof(p);
+	p.dir = dir;
+	p.localVec = local;
+	p.DirVec = dirVec;
+	p.rotateY = rotateY;
+	p.Start = startTime;
+
+	Send_Packet(&p);
 }
+
 
 void CNetMgr::Send_Attack_Packet()
 {
-	cs_packet_attack m_packet;
-	m_packet.type = CS_ATTACK;
-	m_packet.size = sizeof(m_packet);
-	Send_Packet(&m_packet);
+	cs_packet_attack p;
+	p.type = CS_ATTACK;
+	p.size = sizeof(p);
+	Send_Packet(&p);
 }
 
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
@@ -217,12 +222,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->initDeadReckoner();
 	}
 	break;
 	case SC_PACKET_ENTER:
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
+
+
 		
 		//cout << "enter packet recv -> " << my_packet->id << endl;
 		
@@ -327,13 +335,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	}
 	break;
-	/*case SC_PACKET_ID:
+	case SC_PACKET_ID:
 	{
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
 		g_myid = packet->id;
 
 		cout << "Send_ID_Packet My ID : " << g_myid << endl;
-	}*/
+	}
 	break;
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);

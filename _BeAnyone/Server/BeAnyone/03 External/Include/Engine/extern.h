@@ -14,6 +14,11 @@ extern OBJLIST g_Object;
 extern CAMOBJLIST g_CamObject;
 extern int g_myid;
 extern int testpacket;
+extern int frameCnt;
+extern int movePacketSendCnt;
+
+extern system_clock::time_point MoveStart;
+extern system_clock::time_point MoveEnd;
 
 // State Description
 extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];
