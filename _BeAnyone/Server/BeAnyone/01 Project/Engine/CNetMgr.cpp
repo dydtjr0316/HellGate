@@ -14,6 +14,7 @@
 const char ip[] = "192.168.0.3";
 //const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.140.59";
+const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.20.138";
 
 CNetMgr g_netMgr;
@@ -229,11 +230,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
-
-
-		
-		//cout << "enter packet recv -> " << my_packet->id << endl;
-		
+		cout << "enter ÇÔ" << endl;
 		if (id == g_myid)
 		{
 			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
@@ -254,7 +251,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->FrustumCheck(false);
 					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f,my_packet->RotateY, 0.f));
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
@@ -283,27 +280,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//Ãß°¡
 			if (0 != g_Object.count(other_id))
 			{
-				CTransform* ObjTrans = ObjTrans = g_Object.find(other_id)->second->Transform();;
-				g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, packet->rotateY, 0.f));
-				ObjTrans->SetLocalPos(packet->localVec);
-				switch (packet->dir)
-				{
-				case MV_FRONT:
-				case MV_LEFT:
-				case MV_RIGHT:
-					SetAnimation(other_id, Ani_TYPE::WALK_F);
-					break;
-				case MV_BACK:
-					SetAnimation(other_id, Ani_TYPE::WALK_D);
-					break;
-				case MV_IDLE:
-					SetAnimation(other_id, Ani_TYPE::IDLE);
-					break;
-				default:
-					cout << "Unknown Direction from Client move packet!\n";
-					DebugBreak();
-					exit(-1);
-				}
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet);
 			}
 		}
 	}

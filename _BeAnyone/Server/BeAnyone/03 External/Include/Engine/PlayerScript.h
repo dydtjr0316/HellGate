@@ -31,6 +31,7 @@ private:
 	float m_fSpeed;
 	Ani_TYPE m_eAniType;
 	CDeadReckoner* m_pDeadReckoner;
+	sc_packet_move* m_movePacketTemp = nullptr;
 public:
 	void SetChangeSpeed() { m_fSpeed = m_fSpeed == PLAYER_SPEED_IDLE ? PLAYER_SPEED_DASH : PLAYER_SPEED_IDLE; }
 	float GetSpeed() { return m_fSpeed; }
@@ -42,9 +43,21 @@ public:
 	
 	void initDeadReckoner(){ m_pDeadReckoner = new CDeadReckoner(g_myid); }
 	CDeadReckoner* GetReckoner() { return m_pDeadReckoner; }
+	void op_Move();
+	void SetOtherMovePacket(sc_packet_move* p) { m_movePacketTemp = new sc_packet_move; m_movePacketTemp = p; }
+	void DeleteOherMovePaacket()
+	{
+		if (m_movePacketTemp != nullptr) {
+	
+			m_movePacketTemp = nullptr;
+		}
+	}
+	sc_packet_move* GetOtherMovePacket() { return m_movePacketTemp; }
+
 	void OnPlayerUpdateCallback();
 
 	void SetAnimation(const Ani_TYPE& type);
+	void SetAnimation(const int& other_id, const Ani_TYPE& type);
 	Ptr<CMesh> GetAniData(const Ani_TYPE& type) { return m_pAniData[(int)type]; }
 
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }

@@ -43,7 +43,7 @@ void CPlayerScript::update()
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
 
-
+	op_Move();
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
@@ -117,28 +117,26 @@ void CPlayerScript::update()
 	if (KEY_HOLD(KEY_TYPE::KEY_W)|| KEY_HOLD(KEY_TYPE::KEY_A)|| KEY_HOLD(KEY_TYPE::KEY_S)|| KEY_HOLD(KEY_TYPE::KEY_D))
 		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
 
-
-	if (player->GetReckoner()->isFollowing())
+	if (player->GetReckoner()->isFollowing() /*|| frameCnt % 10 == 0*/)
 	{
-		system_clock::time_point start = system_clock::now();
-		 movePacketSendCnt++;
-		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start);
+		movePacketSendCnt++;
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, system_clock::now());
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
 		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 
 		Vector2 real(g_Object.find(g_myid)->second->Transform()->GetLocalPos().x, g_Object.find(g_myid)->second->Transform()->GetLocalPos().z);
 		Vector2 follower(player->GetReckoner()->GetLocalPos().x, player->GetReckoner()->GetLocalPos().z);
-		
-		float distance = (real.x - follower.x) * (real.x - follower.x) + (real.y - follower.y) * (real.y - follower.y);
-		cout << "***********recokner***********" << endl;
-		cout << player->GetReckoner()->GetLocalPos().x << ", " << player->GetReckoner()->GetLocalPos().z << endl;
-		cout << "***********REAL***********" << endl;
-		cout << real.x << ", " << real.y << endl;
 
-		cout << "거리 : " << distance << endl;
-		cout << "오차 : " << (m_fSpeed * DT) * (m_fSpeed * DT) << endl;
-		cout << "클라 송신 횟수 : " << movePacketSendCnt << endl << endl;
+		//float distance = (real.x - follower.x) * (real.x - follower.x) + (real.y - follower.y) * (real.y - follower.y);
+		//cout << "***********recokner***********" << endl;
+		//cout << player->GetReckoner()->GetLocalPos().x << ", " << player->GetReckoner()->GetLocalPos().z << endl;
+		//cout << "***********REAL***********" << endl;
+		//cout << real.x << ", " << real.y << endl;
+
+		//cout << "거리 : " << distance << endl;
+		//cout << "오차 : " << (m_fSpeed * DT) * (m_fSpeed * DT) << endl;
+		//cout << "클라 송신 횟수 : " << movePacketSendCnt << endl << endl;
 	}
 
 
@@ -157,6 +155,39 @@ void CPlayerScript::update()
 }
 
 
+void CPlayerScript::op_Move()
+{
+	sc_packet_move* p = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
+	//cout <<"op MOVE  :  "<< p->id << endl;
+	if (p == nullptr)
+		return;
+	if (g_Object.count(p->id) == 0)return;
+
+
+	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+	ObjTrans->SetLocalPos(p->localVec);
+	switch (p->dir)
+	{
+	case MV_FRONT:
+	case MV_LEFT:
+	case MV_RIGHT:
+		SetAnimation(p->id, Ani_TYPE::WALK_F);
+		break;
+	case MV_BACK:
+		SetAnimation(p->id, Ani_TYPE::WALK_D);
+		break;
+	case MV_IDLE:
+		SetAnimation(p->id, Ani_TYPE::IDLE);
+		break;
+	default:
+		cout << "Unknown Direction from Client move packet!\n";
+		DebugBreak();
+		exit(-1);
+	}
+	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+}
+
 void CPlayerScript::OnPlayerUpdateCallback()
 {
 	
@@ -168,6 +199,13 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
 	m_eAniType = type;
+}
+
+void CPlayerScript::SetAnimation(const int& other_id, const Ani_TYPE& type)
+{
+	g_Object.find(other_id)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
+	g_Object.find(other_id)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
+	g_Object.find(other_id)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
 }
 
 bool CPlayerScript::isInMap(const Vector3& localPos)
