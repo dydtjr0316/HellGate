@@ -175,8 +175,27 @@ bool CCollisionMgr::IsCollision(CCollider* _pCollider1, CCollider* _pCollider2)
 
 	return false;
 }
-// 3D
 bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollider2)
+{
+	BoundingSphere bBX1 = _pCollider1->GetBoundingSphere();
+	BoundingSphere bBX2 = _pCollider2->GetBoundingSphere();
+
+	if (bBX1.Contains(bBX2) == 1)
+	{
+		//	바운딩 박스 중점, 크기 check용 cout.
+		wstring a = _pCollider1->GetObj()->GetName();
+		wstring b = _pCollider2->GetObj()->GetName();
+
+		wcout << a << L"와 \t" << b << L"가 충돌" << endl;
+		cout << "중점 :   \t" << bBX2.Center.x << "\t" << bBX2.Center.y << "\t" << bBX2.Center.z << endl;
+		cout << "반지름 : \t" << bBX2.Radius << endl << endl;
+
+		return true;
+	}
+	return false;
+}
+// 3D
+bool CCollisionMgr::CollisionBox(CCollider* _pCollider1, CCollider* _pCollider2)
 {
 	BoundingBox bBX1 = _pCollider1->GetBoundingBox();
 	BoundingBox bBX2 = _pCollider2->GetBoundingBox();

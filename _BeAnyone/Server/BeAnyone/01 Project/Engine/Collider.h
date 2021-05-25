@@ -25,6 +25,7 @@ private:
 	UINT			m_iColID;			// 충돌체 고유 ID 값
 
 	BoundingBox		m_bbx;
+	BoundingSphere	m_bSp;
 
 public:
 	virtual void update();
@@ -50,8 +51,10 @@ public:
 	const Matrix& GetColliderWorldMat() { return m_matColWorld; }
 
 public:
-	BoundingBox GetBoundingBox() {		return m_bbx;	}
+	BoundingBox GetBoundingBox() { return m_bbx; }
+	BoundingSphere GetBoundingSphere() { return m_bSp; }
 	void SetBoundingBox(BoundingBox _b) { m_bbx = _b; }
+	void SetBoundingSphere(BoundingSphere _b) {	m_bSp = _b;}
 
 public:
 	CLONE(CCollider);

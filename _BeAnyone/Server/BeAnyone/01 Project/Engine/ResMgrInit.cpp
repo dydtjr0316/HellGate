@@ -543,6 +543,10 @@ void CResMgr::CreateDefaultMesh()
     pMesh->SetName(L"SphereMesh");
     AddRes<CMesh>(pMesh->GetName(), pMesh);
 
+
+    pMesh->SetName(L"ColSphereMesh");
+    AddRes<CMesh>(pMesh->GetName(), pMesh);
+
     vecVTX.clear();
     vecIdx.clear();
 }

@@ -196,9 +196,8 @@ void CPlayerScript::OnCollision(CCollider* _pOther)
 
 	XMFLOAT3 xmf3Min( otherbBx.Center.x + otherbBx.Extents.x, otherbBx.Center.y + otherbBx.Extents.y, otherbBx.Center.z + otherbBx.Extents.z );
 	XMFLOAT3 xmf3Max{ otherbBx.Center.x - otherbBx.Extents.x, otherbBx.Center.y - otherbBx.Extents.y, otherbBx.Center.z - otherbBx.Extents.z };
-	BoundingBox::CreateMerged(tempbBx, mybBx, otherbBx);
-
-	auto i = tempbBx;
+	//BoundingBox::CreateMerged(tempbBx, mybBx, otherbBx);
+	
 
 
 }

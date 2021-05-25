@@ -24,7 +24,9 @@ CCollider::CCollider()
 {
 	m_pColMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ColMtrl");
 	SetColliderType(m_eType);
+
 	m_bbx = BoundingBox(XMFLOAT3(0.f, 0.f, 0.f), XMFLOAT3(1.f, 1.f, 1.f));
+	m_bSp = BoundingSphere(XMFLOAT3(0.f, 0.f, 0.f), 1.f);
 }
 
 CCollider::CCollider(const CCollider& _other)

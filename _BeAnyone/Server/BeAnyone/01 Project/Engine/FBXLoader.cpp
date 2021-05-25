@@ -172,121 +172,130 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 
 	if (CResMgr::GetInst()->FindRes<CMesh>(m_fileName) == nullptr)
 	{
-		vecMin.x /= 2;
-		vecMax.x /= 2;
+		//	플레이어 X값 스키닝 매쉬라 줫나커서 나누기 2
+		//vecMin.x /= 2;
+		//vecMax.x /= 2;
+
 		m_vecMMax[0] = vecMin;
 		m_vecMMax[1] = vecMax;
 
 		// =========
-		// Mesh Extents Collision Mesh
-		// =========
-		VTX arrCube[24] = {};
-		{
-			// 윗면
-			arrCube[0].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-			arrCube[0].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+		// Mesh Extents Collision Mesh (Box)
+		// 바운딩 박스 콜리젼 매쉬 등록
 
-			arrCube[1].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-			arrCube[1].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+		/*{
+			VTX arrCube[24] = {};
+			{
+				// 윗면
+				arrCube[0].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+				arrCube[0].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 
-			arrCube[2].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-			arrCube[2].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+				arrCube[1].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+				arrCube[1].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 
-			arrCube[3].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
-			arrCube[3].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+				arrCube[2].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+				arrCube[2].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+
+				arrCube[3].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
+				arrCube[3].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 
 
-			// 아랫 면   
-			arrCube[4].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-			arrCube[4].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+				// 아랫 면
+				arrCube[4].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+				arrCube[4].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 
-			arrCube[5].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-			arrCube[5].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+				arrCube[5].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+				arrCube[5].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 
-			arrCube[6].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-			arrCube[6].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+				arrCube[6].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+				arrCube[6].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 
-			arrCube[7].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-			arrCube[7].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+				arrCube[7].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+				arrCube[7].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 
-			// 왼쪽 면
-			arrCube[8].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-			arrCube[8].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+				// 왼쪽 면
+				arrCube[8].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+				arrCube[8].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
 
-			arrCube[9].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
-			arrCube[9].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+				arrCube[9].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
+				arrCube[9].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
 
-			arrCube[10].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-			arrCube[10].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+				arrCube[10].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+				arrCube[10].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
 
-			arrCube[11].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-			arrCube[11].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
+				arrCube[11].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+				arrCube[11].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
 
-			// 오른쪽 면
-			arrCube[12].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-			arrCube[12].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+				// 오른쪽 면
+				arrCube[12].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+				arrCube[12].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
 
-			arrCube[13].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-			arrCube[13].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+				arrCube[13].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+				arrCube[13].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
 
-			arrCube[14].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-			arrCube[14].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+				arrCube[14].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+				arrCube[14].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
 
-			arrCube[15].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-			arrCube[15].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
+				arrCube[15].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+				arrCube[15].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
 
-			// 뒷 면
-			arrCube[16].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-			arrCube[16].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+				// 뒷 면
+				arrCube[16].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
+				arrCube[16].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
 
-			arrCube[17].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-			arrCube[17].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+				arrCube[17].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
+				arrCube[17].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
 
-			arrCube[18].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-			arrCube[18].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+				arrCube[18].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
+				arrCube[18].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
 
-			arrCube[19].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-			arrCube[19].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
+				arrCube[19].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
+				arrCube[19].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
 
-			// 앞 면
-			arrCube[20].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);;
-			arrCube[20].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+				// 앞 면
+				arrCube[20].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);;
+				arrCube[20].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
 
-			arrCube[21].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-			arrCube[21].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+				arrCube[21].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
+				arrCube[21].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
 
-			arrCube[22].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-			arrCube[22].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+				arrCube[22].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
+				arrCube[22].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
 
-			arrCube[23].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-			arrCube[23].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
+				arrCube[23].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
+				arrCube[23].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
 
-			m_vecMMax[0] = arrCube[23].vPos;
-			m_vecMMax[1] = arrCube[16].vPos;
-		}
+				m_vecMMax[0] = arrCube[23].vPos;
+				m_vecMMax[1] = arrCube[16].vPos;
+			}
 
-		vector<UINT> vecIdx;
+			vector<UINT> vecIdx;
 
-		// 인덱스
-		for (int i = 0; i < 12; i += 2)
-		{
-			vecIdx.push_back(i * 2);
-			vecIdx.push_back(i * 2 + 1);
-			vecIdx.push_back(i * 2 + 2);
+			// 인덱스
+			for (int i = 0; i < 12; i += 2)
+			{
+				vecIdx.push_back(i * 2);
+				vecIdx.push_back(i * 2 + 1);
+				vecIdx.push_back(i * 2 + 2);
 
-			vecIdx.push_back(i * 2);
-			vecIdx.push_back(i * 2 + 2);
-			vecIdx.push_back(i * 2 + 3);
-		}
+				vecIdx.push_back(i * 2);
+				vecIdx.push_back(i * 2 + 2);
+				vecIdx.push_back(i * 2 + 3);
+			}
 
-		Ptr<CMesh> pMesh = new CMesh;
+			Ptr<CMesh> pMesh = new CMesh;
 
-		pMesh->Create(sizeof(VTX), 24, (BYTE*)arrCube
-			, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
+			pMesh->Create(sizeof(VTX), 24, (BYTE*)arrCube
+				, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
 
-		//   mesh별 아이디 필요
-		pMesh->SetName(m_fileName);
-		CResMgr::GetInst()->AddRes<CMesh>(pMesh->GetName(), pMesh);
+			//   mesh별 아이디 필요
+			pMesh->SetName(m_fileName);
+			CResMgr::GetInst()->AddRes<CMesh>(pMesh->GetName(), pMesh);
+		}*/
+
+		// 바운딩 구 콜리젼 매쉬 등록
+		
+
 
 	}
 
