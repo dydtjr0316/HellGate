@@ -10,7 +10,7 @@ private:
 	CGameObject*	m_pPlayer;
 
 	//	임시 카메라 기준 변수		//	false 기존, true 캐릭터 고정
-	bool bCameraTag = false;
+	bool bCameraTag = true;
 
 public:
 	virtual void update();
