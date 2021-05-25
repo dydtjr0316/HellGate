@@ -119,7 +119,7 @@ void CPlayerScript::update()
 
 
 
-	if (player->GetReckoner()->isFollowing() || frameCnt % 8 == 0)
+	if (player->GetReckoner()->isFollowing() || frameCnt % (((int)CTimeMgr::GetInst()->GetFPS()>>3)+1) == 0)
 	{
 		movePacketSendCnt++;
 		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, system_clock::now());
@@ -162,34 +162,102 @@ void CPlayerScript::update()
 void CPlayerScript::op_Move()
 {
 	sc_packet_move* p = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
+	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
 	//cout <<"op MOVE  :  "<< p->id << endl;
 	if (p == nullptr)
 		return;
 	if (g_Object.count(p->id) == 0)return;
 
+	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+	pScript->Compute_Bezier( pScript->GetOriginPoint(), pScript->GetInterpolationPoint());
 
 	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
 	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
-	ObjTrans->SetLocalPos(p->localVec);
-	switch (p->dir)
+	ObjTrans->SetLocalPos(Vector3(pScript->GetInterpolationPoint()[pScript->GetInterpolationCnt()].x,
+		p->localVec.y, 
+		pScript->GetInterpolationPoint()[pScript->GetInterpolationCnt()].y));
+
+	pScript->InterpolationCnt_PP();
+
+	if (pScript->GetInterpolationCnt() == 4)
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+
+
+	//CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+	//ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+	//ObjTrans->SetLocalPos(p->localVec);
+	//switch (p->dir)
+	//{
+	//case MV_FRONT:
+	//case MV_LEFT:
+	//case MV_RIGHT:
+	//	SetAnimation(p->id, Ani_TYPE::WALK_F);
+	//	break;
+	//case MV_BACK:
+	//	SetAnimation(p->id, Ani_TYPE::WALK_D);
+	//	break;
+	//case MV_IDLE:
+	//	SetAnimation(p->id, Ani_TYPE::IDLE);
+	//	break;
+	//default:
+	//	cout << "Unknown Direction from Client move packet!\n";
+	//	DebugBreak();
+	//	exit(-1);
+	//}
+}
+
+void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
+{
+	 m_movePacketTemp = new sc_packet_move;
+	 m_movePacketTemp = p; 
+	 m_fRTT = rtt;
+}
+
+
+void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
+{
+	CTransform* ObjTrans = g_Object.find(id)->second->Transform();
+	Vector3 tempLocalPos = ObjTrans->GetLocalPos();
+	float tempSpeed = g_Object.find(id)->second->GetScript<CPlayerScript>()->GetSpeed();
+	Vector3 tempWorldDir;
+	Vector3 tempARR_WorldDir[3];
+
+	Matrix matRot = DirectX::XMMatrixRotationX(0.f);
+	matRot *= DirectX::XMMatrixRotationY(m_movePacketTemp->rotateY);
+	matRot *= DirectX::XMMatrixRotationZ(0.f);
+
+	static Vector3 arrDefault[(UINT)DIR_TYPE::END] = { Vector3::Right, Vector3::Up, Vector3::Front };
+
+	for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
+	{
+		tempARR_WorldDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
+	}
+
+	switch (m_movePacketTemp->dir)
 	{
 	case MV_FRONT:
+		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
+		break;
 	case MV_LEFT:
+		tempWorldDir = tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
+		break;
 	case MV_RIGHT:
-		SetAnimation(p->id, Ani_TYPE::WALK_F);
+		tempWorldDir = tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
 		break;
 	case MV_BACK:
-		SetAnimation(p->id, Ani_TYPE::WALK_D);
+		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
 		break;
 	case MV_IDLE:
-		SetAnimation(p->id, Ani_TYPE::IDLE);
 		break;
 	default:
 		cout << "Unknown Direction from Client move packet!\n";
 		DebugBreak();
 		exit(-1);
 	}
-	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+	for (int i = 4; i < 1; i--) {
+		tempLocalPos += tempWorldDir * tempSpeed * rtt / i;
+		g_Object.find(id)->second->GetScript<CPlayerScript>()->SetInterpolation_Point(4 - i, tempLocalPos.x, tempLocalPos.z);
+	}
 }
 
 Vector2 CPlayerScript::Search_Interpolation_Points(Vector2* points, float time)
@@ -218,11 +286,12 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 {
 	float dt;
 	int i;
-	dt = 1.f / 3;
+	dt = DT / 3.f;
 
 	for (i = 0; i < 4; i++)
 	{
-		dest[i] = Search_Interpolation_Points(points, i * dt);
+		dest[i] = g_Object.find(g_myid)->second->
+			GetScript<CPlayerScript>()->Search_Interpolation_Points(points, i * dt);
 	}
 }
 

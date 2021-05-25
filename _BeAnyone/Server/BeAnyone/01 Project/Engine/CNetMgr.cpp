@@ -280,7 +280,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//Ãß°¡
 			if (0 != g_Object.count(other_id))
 			{
-				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet);
+				system_clock::time_point end = system_clock::now();
+				duration<float> rtt = end - packet->End;
+				
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count());
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 			}
 		}
 	}

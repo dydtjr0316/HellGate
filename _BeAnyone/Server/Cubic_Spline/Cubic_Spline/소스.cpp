@@ -1,6 +1,7 @@
 #include <iostream>
+#include <chrono>
 using namespace std;
-
+using namespace chrono;
 typedef struct { float x, y; }Point;
 
 Point PointOnCubicBezier(Point* cp, float t)
@@ -39,6 +40,7 @@ void ComputeBezier(Point* cp, Point* curve)
 
 int main()
 {
+	system_clock::time_point start = system_clock::now();
 	Point temp[4];
 	Point curve[4];
 	int i = 0;
@@ -61,6 +63,13 @@ int main()
 		cout << "지나는 점 : " << t.x << ", " << t.y << endl;
 	}
 
+	system_clock::time_point end = system_clock::now();
+	milliseconds mill = duration_cast<milliseconds>(end - start);
+	//static_cast<float>(mill);
+	duration<double> DefaultSec = end - start;
+
+	cout << "default : " << DefaultSec.count() << endl;
+	cout << "milli : " << (float)mill.count() << endl;
 
 
 	return 0;
