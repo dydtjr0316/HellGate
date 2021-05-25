@@ -117,7 +117,9 @@ void CPlayerScript::update()
 	if (KEY_HOLD(KEY_TYPE::KEY_W)|| KEY_HOLD(KEY_TYPE::KEY_A)|| KEY_HOLD(KEY_TYPE::KEY_S)|| KEY_HOLD(KEY_TYPE::KEY_D))
 		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
 
-	if (player->GetReckoner()->isFollowing() /*|| frameCnt % 10 == 0*/)
+
+
+	if (player->GetReckoner()->isFollowing() || frameCnt % 8 == 0)
 	{
 		movePacketSendCnt++;
 		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, system_clock::now());
@@ -127,6 +129,8 @@ void CPlayerScript::update()
 
 		Vector2 real(g_Object.find(g_myid)->second->Transform()->GetLocalPos().x, g_Object.find(g_myid)->second->Transform()->GetLocalPos().z);
 		Vector2 follower(player->GetReckoner()->GetLocalPos().x, player->GetReckoner()->GetLocalPos().z);
+
+
 
 		//float distance = (real.x - follower.x) * (real.x - follower.x) + (real.y - follower.y) * (real.y - follower.y);
 		//cout << "***********recokner***********" << endl;
@@ -186,6 +190,40 @@ void CPlayerScript::op_Move()
 		exit(-1);
 	}
 	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+}
+
+Vector2 CPlayerScript::Search_Interpolation_Points(Vector2* points, float time)
+{
+	float ax, bx, cx, ay, by, cy, time_Double, time_Triple;
+	Vector2 result;
+
+	cx = 3.0f * (points[1].x - points[0].x);
+	bx = 3.0f * (points[2].x - points[1].x) - cx;
+	ax = (points[3].x - points[0].x) - cx - bx;
+
+	cy = 3.0f * (points[1].y - points[0].y);
+	by = 3.0f * (points[2].y - points[1].y) - cy;
+	ay = (points[3].y - points[0].y) - cy - by;
+
+	time_Double = time * time;
+	time_Triple = time_Double * time;
+
+	result.x = (ax * time_Triple) + (bx * time_Double) + (cx * time) + points[0].x;
+	result.y = (ay * time_Triple) + (bx * time_Double) + (cy * time) + points[0].y;
+
+	return result;
+}
+
+void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
+{
+	float dt;
+	int i;
+	dt = 1.f / 3;
+
+	for (i = 0; i < 4; i++)
+	{
+		dest[i] = Search_Interpolation_Points(points, i * dt);
+	}
 }
 
 void CPlayerScript::OnPlayerUpdateCallback()
