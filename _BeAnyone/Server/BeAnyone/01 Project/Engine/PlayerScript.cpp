@@ -119,14 +119,13 @@ void CPlayerScript::update()
 
 
 
-	if ((player->GetReckoner()->isFollowing() || frameCnt % (((int)CTimeMgr::GetInst()->GetFPS()/10)+1) == 0)
+	if (/*(player->GetReckoner()->isFollowing() ||*/ frameCnt % 4/*(((int)CTimeMgr::GetInst()->GetFPS()/10)+1)*/ == 0//)
 		&& (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
 		// 1. 예측모델과의 오차가 커질때(얼마나 커졌을때할지는 다시 : 아직은 ㄱㅊ)
 		// 2. 1초에 8번 보냄( 아직 판단 불가 )
 		// 3. 키를 눌러야만 가능 - 이게 중요한듯 - but 뗄때도 보내주던가해야 idle 상태로 복귀 가능할듯
 		)
 	{
-		movePacketSendCnt++;
 		system_clock::time_point start = system_clock::now();
 		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y,start );
 		player->GetReckoner()->SetDirVec(worldDir);
@@ -135,18 +134,6 @@ void CPlayerScript::update()
 
 		Vector2 real(g_Object.find(g_myid)->second->Transform()->GetLocalPos().x, g_Object.find(g_myid)->second->Transform()->GetLocalPos().z);
 		Vector2 follower(player->GetReckoner()->GetLocalPos().x, player->GetReckoner()->GetLocalPos().z);
-
-
-
-		//float distance = (real.x - follower.x) * (real.x - follower.x) + (real.y - follower.y) * (real.y - follower.y);
-		//cout << "***********recokner***********" << endl;
-		//cout << player->GetReckoner()->GetLocalPos().x << ", " << player->GetReckoner()->GetLocalPos().z << endl;
-		//cout << "***********REAL***********" << endl;
-		//cout << real.x << ", " << real.y << endl;
-
-		//cout << "거리 : " << distance << endl;
-		//cout << "오차 : " << (m_fSpeed * DT) * (m_fSpeed * DT) << endl;
-		//cout << "클라 송신 횟수 : " << movePacketSendCnt << endl << endl;
 	}
 
 
@@ -269,8 +256,8 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 		cout << "time stamp : " << (float)(rtt / i) << endl;
 		cout << "calc       : " << (tempWorldDir.z * tempSpeed * (float)(rtt / i)) << endl;*/
 
-		tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(rtt * i));
-		tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(rtt * i));
+		tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+		tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
 		g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
 		
 	}
