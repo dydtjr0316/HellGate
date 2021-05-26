@@ -159,6 +159,7 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	p.DirVec = dirVec;
 	p.rotateY = rotateY;
 	p.Start = startTime;
+	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
 
 	Send_Packet(&p);
 }

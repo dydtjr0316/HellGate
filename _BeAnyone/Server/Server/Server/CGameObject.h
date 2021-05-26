@@ -26,6 +26,7 @@ public: // 상속 ,, 함수
 	Vector3& GetDirVector() { return m_v3DirVector; }
 	Vector3& GetRoatateVector() { return m_v3RotateVector; }
 	float GetRotateY() { return m_v3RotateVector.y; }
+	float GetSpeed() { return m_fspeed; }
 
 
 	// set
@@ -58,7 +59,7 @@ public: // 상속 ,, 함수
 
 	void SetSocket_Zero() { m_s = 0; }
 	void SetSocket(const SOCKET& s) { m_s = s; }
-
+	void SetSpeed(const float& speed) { m_fspeed = speed; }
 public:
 	void Insert_Sector();
 	void Change_Sector(const _tSector& old_sector);
@@ -74,6 +75,7 @@ protected:
 	char  m_name[MAX_ID_LEN + 1]{"",};
 	char  m_packet_buf[MAX_PACKET_SIZE]{};
 	int	  m_iclinet_time;
+	float m_fspeed;
 
 	// 구조체
 	OBJSTATUS m_status;

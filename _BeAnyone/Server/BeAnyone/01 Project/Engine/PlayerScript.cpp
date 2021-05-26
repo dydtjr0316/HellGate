@@ -119,7 +119,12 @@ void CPlayerScript::update()
 
 
 
-	if (player->GetReckoner()->isFollowing() || frameCnt % (((int)CTimeMgr::GetInst()->GetFPS()>>3)+1) == 0)
+	if ((player->GetReckoner()->isFollowing() || frameCnt % (((int)CTimeMgr::GetInst()->GetFPS()>>3)+1) == 0)
+		&& (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
+		// 1. 예측모델과의 오차가 커질때(얼마나 커졌을때할지는 다시 : 아직은 ㄱㅊ)
+		// 2. 1초에 8번 보냄( 아직 판단 불가 )
+		// 3. 키를 눌러야만 가능 - 이게 중요한듯 - but 뗄때도 보내주던가해야 idle 상태로 복귀 가능할듯
+		)
 	{
 		movePacketSendCnt++;
 		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, system_clock::now());
@@ -169,6 +174,8 @@ void CPlayerScript::op_Move()
 	if (g_Object.count(p->id) == 0)return;
 
 	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+
+
 	pScript->Compute_Bezier( pScript->GetOriginPoint(), pScript->GetInterpolationPoint());
 
 	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
@@ -216,9 +223,11 @@ void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
-	CTransform* ObjTrans = g_Object.find(id)->second->Transform();
-	Vector3 tempLocalPos = ObjTrans->GetLocalPos();
-	float tempSpeed = g_Object.find(id)->second->GetScript<CPlayerScript>()->GetSpeed();
+	sc_packet_move* recvPacket = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
+	Vector3 tempLocalPos = recvPacket->localVec;
+	
+	float tempSpeed = recvPacket->speed;
+	
 	Vector3 tempWorldDir;
 	Vector3 tempARR_WorldDir[3];
 
@@ -287,10 +296,10 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 	float dt;
 	int i;
 	dt = DT / 3.f;
-
+	sc_packet_move* recvPacket = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
 	for (i = 0; i < 4; i++)
 	{
-		dest[i] = g_Object.find(g_myid)->second->
+		dest[i] = g_Object.find(recvPacket->id)->second->
 			GetScript<CPlayerScript>()->Search_Interpolation_Points(points, i * dt);
 	}
 }

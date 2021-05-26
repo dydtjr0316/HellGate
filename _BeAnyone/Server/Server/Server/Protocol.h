@@ -119,7 +119,7 @@ struct sc_packet_move {
 	Vector3 localVec;
 	Vector3 dirVec;	//받아올땐 삭제해도되는가?
 
-
+	float speed;
 	float rotateY;
 	system_clock::time_point End;
 
