@@ -121,7 +121,7 @@ struct sc_packet_move {
 
 	float speed;
 	float rotateY;
-	system_clock::time_point End;
+	system_clock::time_point Start;
 
 };
 

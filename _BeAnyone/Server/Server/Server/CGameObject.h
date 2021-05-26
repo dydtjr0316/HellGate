@@ -27,6 +27,7 @@ public: // 상속 ,, 함수
 	Vector3& GetRoatateVector() { return m_v3RotateVector; }
 	float GetRotateY() { return m_v3RotateVector.y; }
 	float GetSpeed() { return m_fspeed; }
+	system_clock::time_point GetHalfRTT() { return m_halfRTT; }
 
 
 	// set
@@ -60,6 +61,7 @@ public: // 상속 ,, 함수
 	void SetSocket_Zero() { m_s = 0; }
 	void SetSocket(const SOCKET& s) { m_s = s; }
 	void SetSpeed(const float& speed) { m_fspeed = speed; }
+	void SetHalfRTT(const system_clock::time_point hrtt) { m_halfRTT = hrtt; }
 public:
 	void Insert_Sector();
 	void Change_Sector(const _tSector& old_sector);
@@ -88,5 +90,7 @@ protected:
 	Vector3 m_v3DirVector;
 
 	Vector3 m_v3RotateVector;
+
+	system_clock::time_point m_halfRTT;
 };
 

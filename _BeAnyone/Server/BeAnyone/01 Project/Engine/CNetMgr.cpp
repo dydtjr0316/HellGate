@@ -11,8 +11,8 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
-const char ip[] = "192.168.0.3";
-//const char ip[] = "192.168.0.7";
+//const char ip[] = "192.168.0.3";
+const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.20.138";
@@ -282,10 +282,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (0 != g_Object.count(other_id))
 			{
 				system_clock::time_point end = system_clock::now();
-				duration<float> rtt = end - packet->End;
+				nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 				
-				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count());
-				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
+				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 			}
 		}
 	}

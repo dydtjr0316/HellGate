@@ -197,6 +197,7 @@ void CNetMgr::Send_Move_Packet(const int& user_id, const int& mover_id, const ch
     p.move_time = Find(mover_id)->GetClientTime();
     p.rotateY = Find(mover_id)->GetRotateY();
     p.speed = Find(mover_id)->GetSpeed();
+    p.Start = Find(mover_id)->GetHalfRTT();
 
     Send_Packet(user_id, &p);
 }
@@ -571,6 +572,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
 
         Find( user_id)->SetClientTime(packet->move_time);
         Find(user_id)->SetSpeed(packet->speed);
+        Find(user_id)->SetHalfRTT(packet->Start);
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
 
     }

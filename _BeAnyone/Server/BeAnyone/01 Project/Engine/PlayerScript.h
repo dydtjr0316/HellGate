@@ -63,7 +63,8 @@ public: //¿ë¼®
 	void InterpolationCnt_PP() { m_iInterpolationCnt++; }
 	void Set_InterpolationCnt_Zero() { m_iInterpolationCnt = 0; }
 
-	void SetInterpolation_Point(const int& index, const float& x, const float& y) { m_v2Origin_Point[index].x = x; m_v2Origin_Point[index].y = y;}
+	void SetOrigin_Point(const int& index, const float& x, const float& y);
+	void SetInterpolation_Point(const int& index, const float& x, const float& y);
 
 	void Search_Origin_Points(const int& id, const float& rtt);
 	Vector2 Search_Interpolation_Points(Vector2* points, float time);
