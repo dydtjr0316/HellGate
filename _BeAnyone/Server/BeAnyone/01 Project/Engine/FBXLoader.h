@@ -47,8 +47,9 @@ private:
 	// fbx texture
 	FBX_TYPE						m_fbxType;
 
+private:
 	wstring							m_fileName;
-
+	Vector4							m_vecMMax[2];
 
 public:
 	void init();
@@ -92,6 +93,10 @@ private:
 	FbxAMatrix GetTransform(FbxNode* _pNode);
 
 	void CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer);
+
+public:
+	Vector4* GetMinMaxVertex() { return m_vecMMax; }
+
 public:
 	CFBXLoader();
 	~CFBXLoader();

@@ -8,6 +8,7 @@
 
 #include "Transform.h"
 #include "MeshRender.h"
+#include "Collider.h"
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
@@ -242,7 +243,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					);
 					g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
 				}
-				
+			
 			}
 		}
 	}

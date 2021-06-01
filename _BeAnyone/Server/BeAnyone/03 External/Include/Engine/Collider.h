@@ -25,6 +25,7 @@ private:
 	UINT			m_iColID;			// 충돌체 고유 ID 값
 
 	BoundingBox		m_bbx;
+	BoundingSphere	m_bSp;
 
 public:
 	virtual void update();
@@ -51,7 +52,22 @@ public:
 
 public:
 	BoundingBox GetBoundingBox() { return m_bbx; }
-	void SetBoundingBox(BoundingBox _b) { m_bbx = _b; }
+	BoundingSphere GetBoundingSphere() { return m_bSp; }
+	void SetBoundingBox(BoundingBox _b, float _fRadius = 1.f)
+	{
+		m_bbx = _b;
+
+		/*XMFLOAT3 fPoint = _b.Center;
+		m_bSp.Center = fPoint;
+		m_bSp.Radius = _fRadius;
+		m_bSp.Center.y += m_bSp.Radius;*/
+
+	}
+	void SetBoundingSphere(BoundingSphere _b) 
+	{	
+		m_bSp = _b;
+		m_bSp.Center.y += m_bSp.Radius;
+	}
 
 public:
 	CLONE(CCollider);

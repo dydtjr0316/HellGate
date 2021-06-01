@@ -36,6 +36,9 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, FBX_TYPE _fbxType)
 	// 메쉬 가져오기
 	CMesh* pMesh = CMesh::CreateFromContainer(loader);
 
+	//	매쉬 최소 최대 Vertex 저장
+	pMesh->SetMinMaxVertex(loader.GetMinMaxVertex());
+
 	// Animation 이 있는 Mesh 경우 BoneTexture 만들어두기
 	//if (pMesh->IsAnimMesh())
 	//{

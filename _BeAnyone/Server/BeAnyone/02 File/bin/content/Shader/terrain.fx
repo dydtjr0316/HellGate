@@ -50,8 +50,8 @@ VS_OUTPUT VS_Terrain(VS_INPUT _in)
 
 struct PatchTess
 {
-    float fInsideTess : SV_InsideTessFactor;
-    float arrEdgeTess[3] : SV_TessFactor;
+    float fInsideTess : SV_InsideTessFactor;    //  내부 분할 레벨
+    float arrEdgeTess[3] : SV_TessFactor;       //  표면 분할 레벨
 };
 
 PatchTess PatchConstFunc_terrain(InputPatch<VS_OUTPUT, 3> _input, int _iPatchID : SV_PrimitiveID)
@@ -66,9 +66,9 @@ PatchTess PatchConstFunc_terrain(InputPatch<VS_OUTPUT, 3> _input, int _iPatchID 
     vSidePos = mul(float4(vSidePos, 1.f), g_matWorld).xyz;
     vUpDownPos = mul(float4(vUpDownPos, 1.f), g_matWorld).xyz;
 
-    float fCenter = CalTessLevel(g_vec4_0.xyz, vCenterPos, 1000.f, 4000.f, 8.f);    //  1000, 4000, 4
-    float fSide = CalTessLevel(g_vec4_0.xyz, vSidePos, 1000.f, 4000.f, 8.f);
-    float fUnDown = CalTessLevel(g_vec4_0.xyz, vUpDownPos, 1000.f, 4000.f, 8.f);
+    float fCenter = CalTessLevel(g_vec4_0.xyz, vCenterPos, 1000.f, 4000.f, 4.f);    //  1000, 4000, 4
+    float fSide = CalTessLevel(g_vec4_0.xyz, vSidePos, 1000.f, 4000.f, 2.f);
+    float fUnDown = CalTessLevel(g_vec4_0.xyz, vUpDownPos, 1000.f, 4000.f, 4.f);
 
 
     output.arrEdgeTess[0] = fUnDown; // 밑, 윗

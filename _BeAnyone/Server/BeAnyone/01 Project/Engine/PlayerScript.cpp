@@ -45,13 +45,15 @@ void CPlayerScript::update()
 		Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
 
-		vRot.y += vDrag.x * DT * ROTATE_SPEED;
+		vRot.y += vDrag.x * DT * ROTATE_SPEED * 6;
 		
 		g_netMgr.Send_Rotate_Packet(Rotate_LBTN, vRot.y);
 
 		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
 
 	}
+
+	
 
 }
 
@@ -78,22 +80,12 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		speed = 600.f;
 
 	}
-
-	//if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))
-	//{
-	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
-	//	dir = MV_FRONT;
-	//	//g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	//}
-
-	//else if (KEY_TAB(KEY_TYPE::KEY_S))
-	//{
-	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_D);
-	//	dir = MV_BACK;
-	//	//g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-	//}
-	
-
+	if (KEY_HOLD(KEY_TYPE::KEY_R))
+	{
+		Vector3 ve = Vector3(0.9f, 0.9f, 0.9f);
+		Transform()->SetLocalScale(ve);
+		
+	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
 	{
@@ -114,6 +106,10 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		//g_netMgr.Send_Move_Packet(MV_FRONT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+
+		//	충돌체크시 방향벡터 한개만 우선 체크
+		m_vecPlayerDir = -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * speed * DT;
+
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
@@ -190,10 +186,35 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
 	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
+		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+	
 }
+	
+
 
 bool CPlayerScript::isInMap(const Vector3& localPos)
 {
 	if ((localPos.x > 200 && localPos.x < 6200) && (localPos.z > 200 && localPos.z < 6200))return true;
 	else return false;
 }
+
+void CPlayerScript::OnCollisionEnter(CCollider* _pOther)
+{
+}
+
+void CPlayerScript::OnCollision(CCollider* _pOther)
+{
+	BoundingSphere myBS = Collider()->GetBoundingSphere();
+	BoundingSphere otherBS = _pOther->Collider()->GetBoundingSphere();
+
+	
+	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
+	localPos += -m_vecPlayerDir;
+	g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+
+}
+
+void CPlayerScript::OnCollisionExit(CCollider* _pOther)
+{
+}
+
