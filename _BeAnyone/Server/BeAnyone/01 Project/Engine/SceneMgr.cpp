@@ -732,7 +732,7 @@ void CSceneMgr::init()
 	pUICam->SetName(L"MainCam");
 	pUICam->AddComponent(new CTransform);
 	pUICam->AddComponent(new CCamera);
-	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHGRAPHIC);
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 	pUICam->Camera()->SetFar(100.f);
 	pUICam->Camera()->SetLayerCheck(30, true);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pUICam);

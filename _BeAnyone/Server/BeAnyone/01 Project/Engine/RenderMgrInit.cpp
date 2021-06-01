@@ -98,4 +98,26 @@ void CRenderMgr::CreateMRT()
 		m_arrMRT[(UINT)MRT_TYPE::LIGHT] = new CMRT;
 		m_arrMRT[(UINT)MRT_TYPE::LIGHT]->Create(2, arrRT, pDSTex); // 깊이 텍스쳐는 SwapChain 것을 사용한다.
 	}
+
+	// ===============
+	// SHADOWMAP MRT
+	// ===============
+	{
+		tRT arrRT[8] = {};
+
+		arrRT[0].vClearColor = Vector4(0.f, 0.f, 0.f, 0.f);
+		arrRT[0].pTarget = CResMgr::GetInst()->CreateTexture(L"ShadowMapTargetTex"
+			, 4096, 4096
+			, DXGI_FORMAT_R32_FLOAT, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
+			, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, arrRT[0].vClearColor);
+
+		// 별도의 깊이버퍼를 가짐
+		Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"ShadowMapDepthTex"
+			, 4096, 4096
+			, DXGI_FORMAT_D32_FLOAT, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
+			, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+
+		m_arrMRT[(UINT)MRT_TYPE::SHADOWMAP] = new CMRT;
+		m_arrMRT[(UINT)MRT_TYPE::SHADOWMAP]->Create(1, arrRT, pDSTex); // 별도의 깊이버퍼 를 가짐
+	}
 }

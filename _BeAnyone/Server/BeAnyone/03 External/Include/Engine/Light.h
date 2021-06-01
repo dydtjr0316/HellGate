@@ -16,6 +16,8 @@ private:
 
 	int				m_iArrIdx;
 
+	CGameObject*	m_pCamObj;
+
 public:
 	void SetLightType(LIGHT_TYPE _eType);
 	void SetLightPos(const Vector3& _vPos);
@@ -29,6 +31,7 @@ public:
 public:
 	virtual void finalupdate();
 	void render();
+	void Render_Shadowmap();
 
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);

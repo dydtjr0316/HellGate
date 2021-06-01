@@ -23,8 +23,9 @@ CCamera::CCamera()
 	, m_fNear(1.f)
 	, m_fFOV(XM_PI / 4.f)
 	, m_fScale(1.f)
-	, m_eProjType(PROJ_TYPE::ORTHGRAPHIC)
+	, m_eProjType(PROJ_TYPE::ORTHOGRAPHIC)
 	, m_iLayerCheck(0)
+	, m_bModule(false)
 {
 }
 
@@ -69,7 +70,8 @@ void CCamera::finalupdate()
 
 	m_frustum.finalupdate();
 
-	CRenderMgr::GetInst()->RegisterCamera(this);
+	if(!m_bModule)
+		CRenderMgr::GetInst()->RegisterCamera(this);
 
 	//	충돌 테스트용 분기문
 	if (KEY_HOLD(KEY_TYPE::KEY_NUM0))
