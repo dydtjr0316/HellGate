@@ -36,6 +36,11 @@ void CGameObject::SetRotateV(const float& x, const float& y, const float& z)
     m_v3RotateVector.z = z;
 }
 
+void CGameObject::SetIsMoving(const bool& isMoving)
+{
+    m_bisMoving = isMoving;
+}
+
 void CGameObject::Insert_Sector()
 {
     SetSector((int)m_v3LocalPosVector.x / SECTOR_ROW_Length, (int)m_v3LocalPosVector.z / SECTOR_COL_Length);

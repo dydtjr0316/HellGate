@@ -28,6 +28,7 @@ public: // 상속 ,, 함수
 	float GetRotateY() { return m_v3RotateVector.y; }
 	float GetSpeed() { return m_fspeed; }
 	system_clock::time_point GetHalfRTT() { return m_halfRTT; }
+	bool GetIsMoving() { return m_bisMoving; }
 
 
 	// set
@@ -62,6 +63,7 @@ public: // 상속 ,, 함수
 	void SetSocket(const SOCKET& s) { m_s = s; }
 	void SetSpeed(const float& speed) { m_fspeed = speed; }
 	void SetHalfRTT(const system_clock::time_point hrtt) { m_halfRTT = hrtt; }
+	void SetIsMoving(const bool& isMoving);
 public:
 	void Insert_Sector();
 	void Change_Sector(const _tSector& old_sector);
@@ -73,6 +75,7 @@ protected:
 	//float		m_iX, m_iY, m_iZ; // 좌표
 	int   m_prev_size;
 
+	bool m_bisMoving;
 	// CHAR
 	char  m_name[MAX_ID_LEN + 1]{"",};
 	char  m_packet_buf[MAX_PACKET_SIZE]{};

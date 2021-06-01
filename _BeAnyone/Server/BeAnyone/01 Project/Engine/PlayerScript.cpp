@@ -107,27 +107,21 @@ void CPlayerScript::update()
 			localPos.y = fHeight;
 
 		playerTrans->SetLocalPos(localPos);
-		//g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
 	}
 	else
 	{
 		player->SetAnimation(Ani_TYPE::IDLE);
-		//g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_W)|| KEY_HOLD(KEY_TYPE::KEY_A)|| KEY_HOLD(KEY_TYPE::KEY_S)|| KEY_HOLD(KEY_TYPE::KEY_D))
 		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
 
 
 
-	if (/*(player->GetReckoner()->isFollowing() ||*/ frameCnt % 4/*(((int)CTimeMgr::GetInst()->GetFPS()/10)+1)*/ == 0//)
-		&& (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
-		// 1. 예측모델과의 오차가 커질때(얼마나 커졌을때할지는 다시 : 아직은 ㄱㅊ)
-		// 2. 1초에 8번 보냄( 아직 판단 불가 )
-		// 3. 키를 눌러야만 가능 - 이게 중요한듯 - but 뗄때도 보내주던가해야 idle 상태로 복귀 가능할듯
-		)
+	if ((player->GetReckoner()->isFollowing() && 
+		((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))))
 	{
 		system_clock::time_point start = system_clock::now();
-		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y,start );
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y,start, DT, true);
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
 		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
@@ -135,6 +129,9 @@ void CPlayerScript::update()
 		Vector2 real(g_Object.find(g_myid)->second->Transform()->GetLocalPos().x, g_Object.find(g_myid)->second->Transform()->GetLocalPos().z);
 		Vector2 follower(player->GetReckoner()->GetLocalPos().x, player->GetReckoner()->GetLocalPos().z);
 	}
+
+	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))
+		g_netMgr.Send_Stop_Packet(false);
 
 
 
@@ -155,36 +152,44 @@ void CPlayerScript::update()
 void CPlayerScript::op_Move()
 {
 	sc_packet_move* p = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
-	//cout <<"op MOVE  :  "<< p->id << endl;
-	if (p == nullptr)
-		return;
-	if (g_Object.count(p->id) == 0)return;
-
-	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
 	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+	CTransform* playerTrans = g_Object.find(p->id)->second->Transform();
+	//cout <<"op MOVE  :  "<< p->id << endl;
+	if (p == nullptr)return;
+	if (g_Object.count(p->id) == 0)return;
+	if (!p->isMoving)return;
+
+	player->GetReckoner()->SetDirVec(p->dirVec);
+	player->GetReckoner()->SetRotateY(p->rotateY);
+	player->GetReckoner()->SetLocalPos(playerTrans->GetLocalPos() + p->dirVec * p->speed * DT);
+
+	//CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	//CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 
 
-	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+	//pScript->Search_Origin_Points(p->id, pScript->GetRTT());
 
 
-	pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
+	//pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
 
-	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
-	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+	//CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+	//ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
 
-	if (player->GetInterpolationCnt() != 4)
-	{
-		ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
-			p->localVec.y,
-			player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
-		cout << ObjTrans->GetLocalPos().x << endl;
-		cout << ObjTrans->GetLocalPos().z << endl<<endl;
-		player->InterpolationCnt_PP();
-	}
-	else
-	{
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-	}
+
+
+	//if (player->GetInterpolationCnt() != 4)
+	//{
+	//	ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
+	//		p->localVec.y,
+	//		player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
+	//	cout << ObjTrans->GetLocalPos().x << endl;
+	//	cout << ObjTrans->GetLocalPos().z << endl<<endl;
+	//	player->InterpolationCnt_PP();
+	//}
+	//else
+	//{
+	//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+	//}
 
 }
 

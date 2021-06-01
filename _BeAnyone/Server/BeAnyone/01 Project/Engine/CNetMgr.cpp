@@ -149,7 +149,9 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 
 }
 
-void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVec, const float& rotateY, const system_clock::time_point& startTime)
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, 
+	const Vector3& dirVec, const float& rotateY, const system_clock::time_point& startTime,
+	const float& delta, const bool& isMoving)
 {
 	cs_packet_move p;
 	p.type = CS_MOVE;
@@ -160,8 +162,18 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	p.rotateY = rotateY;
 	p.Start = startTime;
 	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
+	p.deltaTime = delta;
+	p.isMoving = isMoving;
 
 	Send_Packet(&p);
+}
+
+void CNetMgr::Send_Stop_Packet(const bool& isMoving)
+{
+	cs_packet_stop p;
+	p.type = CS_STOP;
+	p.size = sizeof(p);
+	p.isMoving = isMoving;
 }
 
 
@@ -290,7 +302,21 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 	}
 	break;
-	
+	case SC_PACKET_STOP:
+	{
+		sc_packet_stop* packet = reinterpret_cast<sc_packet_stop*>(ptr);
+		int other_id = packet->id;
+
+		if (other_id == g_myid)
+		{
+			//ObjTrans->SetLocalPos(packet->localVec);
+		}
+		else // 여기 브로드캐스팅하려면 다시수정
+		{
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+		}
+	}
+	break;
 	case SC_PACKET_LEAVE:
 	{
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
