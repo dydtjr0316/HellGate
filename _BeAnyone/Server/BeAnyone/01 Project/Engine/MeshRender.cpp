@@ -7,6 +7,7 @@
 
 CMeshRender::CMeshRender()
 	:CComponent(COMPONENT_TYPE::MESHRENDER)
+	, m_bDynamicShadow(false)
 {
 }
 
@@ -44,17 +45,34 @@ void CMeshRender::render()
 		m_vecMtrl[i]->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh 알리기
 	}
 
-	//for (size_t i = 0; i < m_vecMtrl.size(); ++i)
-	//{
-	//	if (nullptr == m_vecMtrl[i] || nullptr == m_vecMtrl[i]->GetShader())
-	//		continue;
-
-	//	Transform()->UpdateData();
-	//	m_vecMtrl[i]->UpdateData();
-	//	//m_pMesh->render();
-	//	m_pMesh->render((UINT)i);
-	//}
 }
+
+void CMeshRender::render_shadowmap()
+{
+	int a = 1;
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+
+	for (UINT i = 0; i < m_pMesh->GetSubsetCount(); ++i)
+	{
+		if (Animator3D())
+		{
+			Animator3D()->UpdateData();
+			pMtrl->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh 알리기
+		}
+
+		Transform()->UpdateData();
+		pMtrl->UpdateData();
+		m_pMesh->render(i);
+	}
+
+	// 정리
+	if (Animator3D())
+	{
+		a = 0;
+		pMtrl->SetData(SHADER_PARAM::INT_0, &a);
+	}
+}
+
 Ptr<CMaterial> CMeshRender::GetCloneMaterial(UINT _iSubSet)
 {
 	if (nullptr == m_vecMtrl[_iSubSet])

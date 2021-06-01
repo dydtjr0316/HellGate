@@ -15,9 +15,6 @@
 #include "Texture.h"
 #include "Transform.h"
 #include "MeshRender.h"
-// #include "Animator2D.h"
-// #include "Animation2D.h"
-// #include "Light2D.h"
 #include "Light.h"
 
 #include "TimeMgr.h"
@@ -66,40 +63,43 @@ CSceneMgr::~CSceneMgr()
 
 void CSceneMgr::CreateTargetUI()
 {
-	//Vector3 vScale(150.f, 150.f, 1.f);
-	//
-	//Ptr<CTexture> arrTex[5] = { CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex")
-	//	, CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex")
-	//	, CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex")
-	//	, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseLightTargetTex")
-	//	, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularLightTargetTex") };
-	//
-	//for (UINT i = 0; i < 5; ++i)
-	//{
-	//	CGameObject* pObject = new CGameObject;
-	//	pObject->SetName(L"UI Object");
-	//	pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-	//	pObject->AddComponent(new CTransform);
-	//	pObject->AddComponent(new CMeshRender);
-	//
-	//	// Transform 설정
-	//	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	//
-	//	pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x)
-	//		, (res.fHeight / 2.f) - (vScale.y / 2.f)
-	//		, 1.f));
-	//
-	//	pObject->Transform()->SetLocalScale(vScale);
-	//
-	//	// MeshRender 설정
-	//	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-	//	pObject->MeshRender()->SetMaterial(pMtrl->Clone());
-	//	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, arrTex[i].GetPointer());
-	//
-	//	// AddGameObject
-	//	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
-	//}
+#ifdef _DEBUG
+	Vector3 vScale(150.f, 150.f, 1.f);
+	
+	Ptr<CTexture> arrTex[5] = { CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex")
+		, CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex")
+		, CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex")
+		, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseLightTargetTex")
+		, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularLightTargetTex") };
+	
+	for (UINT i = 0; i < 5; ++i)
+	{
+		CGameObject* pObject = new CGameObject;
+		pObject->SetName(L"UI Object");
+		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
+	
+		// Transform 설정
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+	
+		pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x)
+			, (res.fHeight / 2.f) - (vScale.y / 2.f)
+			, 1.f));
+	
+		pObject->Transform()->SetLocalScale(vScale);
+	
+		// MeshRender 설정
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, arrTex[i].GetPointer());
+	
+		// AddGameObject
+		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+	}
+
+#else
 
 	Ptr<CTexture> UiTexture[2] = {
 		CResMgr::GetInst()->FindRes<CTexture>(L"UiHug"),
@@ -241,7 +241,7 @@ void CSceneMgr::CreateTargetUI()
 		// AddGameObject
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
-
+#endif
 }
 
 void CSceneMgr::CreateMap(CTerrain* _terrain)
@@ -631,6 +631,7 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(1)->SetName(L"Player");
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
 	m_pCurScene->GetLayer(3)->SetName(L"Map");
+
 	m_pCurScene->GetLayer(30)->SetName(L"UI");
 
 	CGameObject* pObject = nullptr;
@@ -655,6 +656,7 @@ void CSceneMgr::init()
 	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	pPlayerObj->MeshRender()->SetDynamicShadow(true);
 
 	// Script 설정
 	pPlayerObj->AddComponent(new CPlayerScript);
@@ -736,6 +738,8 @@ void CSceneMgr::init()
 	pUICam->Camera()->SetFar(100.f);
 	pUICam->Camera()->SetLayerCheck(30, true);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pUICam);
+	pUICam->Camera()->SetWidth(CRenderMgr::GetInst()->GetResolution().fWidth);
+	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
 	CreateTargetUI();
 
 
@@ -752,7 +756,8 @@ void CSceneMgr::init()
 	pObject->Light()->SetSpecular(Vector3(0.3f, 0.3f, 0.3f));
 	pObject->Light()->SetAmbient(Vector3(0.1f, 0.1f, 0.1f));
 	pObject->Light()->SetLightDir(Vector3(1.f, -1.f, 1.f));
-	pObject->Light()->SetLightRange(500.f);
+	pObject->Light()->SetLightRange(1000.f);
+	pObject->Transform()->SetLocalPos(Vector3(-1000.f, 1000.f, -1000.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 	

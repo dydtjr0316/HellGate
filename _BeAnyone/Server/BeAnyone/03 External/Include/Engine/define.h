@@ -283,6 +283,7 @@ enum class SHADER_POV
 	POST_EFFECT,
 	LIGHTING,
 	COMPUTE, // GPGPU
+	SHADOW,
 };
 
 // fbx type

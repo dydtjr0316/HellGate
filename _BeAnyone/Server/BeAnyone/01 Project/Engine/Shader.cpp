@@ -185,8 +185,6 @@ void CShader::Create(SHADER_POV _ePOV, D3D_PRIMITIVE_TOPOLOGY _eTopology)
 	m_tPipeline.DepthStencilState = g_arrDepthStencilDesc[(UINT)m_eDSType];
 
 	m_tPipeline.SampleMask = UINT_MAX;
-	//m_tPipeline.NumRenderTargets = 1;
-	//m_tPipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	m_tPipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	m_tPipeline.SampleDesc.Count = 1;
 

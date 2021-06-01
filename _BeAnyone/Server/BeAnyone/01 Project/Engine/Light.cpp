@@ -62,6 +62,9 @@ void CLight::SetLightDir(const Vector3& _vDir)
 {
 	m_tLightInfo.vLightDir = _vDir;
 	m_tLightInfo.vLightDir.Normalize();
+
+	Transform()->LookAt(Vector3(m_tLightInfo.vLightDir.x, m_tLightInfo.vLightDir.y, m_tLightInfo.vLightDir.z));
+
 }
 
 void CLight::finalupdate()
