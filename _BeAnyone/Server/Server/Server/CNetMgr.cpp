@@ -210,6 +210,7 @@ void CNetMgr::Send_Stop_Packet(const unsigned short& user_id, const bool& isMovi
     p.type = SC_PACKET_STOP;
     p.id = user_id;
     p.isMoving = isMoving;
+    Send_Packet(user_id, &p);
 }
 
 
@@ -676,6 +677,9 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
         Find(user_id)->SetClientTime(packet->move_time);
         Find(user_id)->SetSpeed(packet->speed);
         Find(user_id)->SetHalfRTT(packet->Start);
+        Find(user_id)->SetDirV(packet->DirVec);
+        
+
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
 
     }
@@ -684,6 +688,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         Find(user_id)->SetIsMoving(packet->isMoving);
+        Do_Stop(user_id, packet->isMoving);
     }
     break;
     case CS_LOGIN: {

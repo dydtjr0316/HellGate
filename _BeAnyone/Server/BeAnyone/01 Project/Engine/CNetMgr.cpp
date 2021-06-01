@@ -165,6 +165,7 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local,
 	p.deltaTime = delta;
 	p.isMoving = isMoving;
 
+
 	Send_Packet(&p);
 }
 
@@ -174,6 +175,7 @@ void CNetMgr::Send_Stop_Packet(const bool& isMoving)
 	p.type = CS_STOP;
 	p.size = sizeof(p);
 	p.isMoving = isMoving;
+	Send_Packet(&p);
 }
 
 
@@ -313,7 +315,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
 		}
 	}
 	break;

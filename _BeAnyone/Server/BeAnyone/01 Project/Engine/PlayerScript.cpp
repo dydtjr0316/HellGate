@@ -122,6 +122,7 @@ void CPlayerScript::update()
 	{
 		system_clock::time_point start = system_clock::now();
 		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y,start, DT, true);
+
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
 		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
@@ -131,6 +132,23 @@ void CPlayerScript::update()
 	}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))
+	{
+		system_clock::time_point start = system_clock::now();
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, true);
+		cout << "³» ÁÂÇ¥" << endl;
+		cout << playerTrans->GetLocalPos().x << endl;
+		cout << playerTrans->GetLocalPos().y << endl;
+		cout << playerTrans->GetLocalPos().z << endl << endl;
+
+		player->GetReckoner()->SetDirVec(worldDir);
+		player->GetReckoner()->SetRotateY(vRot.y);
+		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+
+		Vector2 real(g_Object.find(g_myid)->second->Transform()->GetLocalPos().x, g_Object.find(g_myid)->second->Transform()->GetLocalPos().z);
+		Vector2 follower(player->GetReckoner()->GetLocalPos().x, player->GetReckoner()->GetLocalPos().z);
+	}
+
+	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
 		g_netMgr.Send_Stop_Packet(false);
 
 
@@ -152,16 +170,24 @@ void CPlayerScript::update()
 void CPlayerScript::op_Move()
 {
 	sc_packet_move* p = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
-	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
-	CTransform* playerTrans = g_Object.find(p->id)->second->Transform();
-	//cout <<"op MOVE  :  "<< p->id << endl;
+
 	if (p == nullptr)return;
 	if (g_Object.count(p->id) == 0)return;
+	if (g_myid == p->id)return;
 	if (!p->isMoving)return;
+	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+	CTransform* playerTrans = g_Object.find(p->id)->second->Transform();
 
-	player->GetReckoner()->SetDirVec(p->dirVec);
-	player->GetReckoner()->SetRotateY(p->rotateY);
-	player->GetReckoner()->SetLocalPos(playerTrans->GetLocalPos() + p->dirVec * p->speed * DT);
+	cout << "»ó´ë¹æÀÇ ÁÂÇ¥" << endl;
+	cout << playerTrans->GetLocalPos().x << endl;
+	cout << playerTrans->GetLocalPos().y << endl;
+	cout << playerTrans->GetLocalPos().z << endl << endl;
+
+
+	Vector3 temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
+	
+	playerTrans->SetLocalRot(p->rotateY);
+	playerTrans->SetLocalPos(temp);
 
 	//CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
 	//CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
@@ -195,9 +221,11 @@ void CPlayerScript::op_Move()
 
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 {
-	 m_movePacketTemp = new sc_packet_move;
-	 m_movePacketTemp = p; 
-	 m_fRTT = rtt;
+	m_movePacketTemp = new sc_packet_move;
+	m_movePacketTemp = p;
+	m_fRTT = rtt;
+	if (m_movePacketTemp->isMoving)cout << "¹ÞÀ»¶© Æ®·ç·¡" << endl;
+	else cout << "¹ÞÀ»¶© flase·¡" << endl;
 }
 
 
