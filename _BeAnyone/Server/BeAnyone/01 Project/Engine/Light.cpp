@@ -99,10 +99,10 @@ void CLight::render()
 	m_pVolumeMesh->render();
 }
 
-void CLight::Render_Shadowmap()
+void CLight::render_shadowmap()
 {
-	//m_pCamObj->Camera()->SortShadowObject();
-	//m_pCamObj->Camera()->render_shadowmap();
+	m_pCamObj->Camera()->SortShadowObject();
+	m_pCamObj->Camera()->render_shadowmap();
 }
 
 void CLight::SaveToScene(FILE* _pFile)

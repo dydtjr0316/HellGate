@@ -13,6 +13,9 @@ private:
 	Ptr<CMesh>		m_pMesh;
 	vector<Ptr<CMaterial>>  m_vecMtrl;
 
+	bool					m_bDynamicShadow;
+
+
 public:
 	Ptr<CMesh> GetMesh() { return m_pMesh; }
 	void SetMesh(Ptr<CMesh> _pMesh) { m_pMesh = _pMesh; }
@@ -20,6 +23,7 @@ public:
 	Ptr<CMaterial> GetCloneMaterial(UINT _iSubset = 0);
 	Ptr<CMaterial> GetSharedMaterial(UINT _iSubSet = 0) { return m_vecMtrl[_iSubSet]; }
 	void SetMaterial(Ptr<CMaterial> _pMtrl, UINT _iSubset = 0);
+	bool IsDynamicShadow() { return m_bDynamicShadow; }
 
 public:
 	void render();

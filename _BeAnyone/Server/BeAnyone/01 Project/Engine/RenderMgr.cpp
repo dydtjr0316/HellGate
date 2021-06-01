@@ -84,8 +84,7 @@ void CRenderMgr::render_tool()
 	//Clear(arrColor);
 
 	// 광원 정보 업데이트
-	//UpdateLight2D();
-	//UpdateLight3D();
+	UpdateLight();
 }
 
 void CRenderMgr::UpdateLight()
@@ -147,7 +146,7 @@ void CRenderMgr::render_shadowmap()
 		if (m_vecLight[i]->GetLightInfo().iLightType != (UINT)LIGHT_TYPE::DIR)
 			continue;
 
-		//m_vecLight[i]->render_shadowmap();
+		m_vecLight[i]->render_shadowmap();
 	}
 
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SHADOWMAP)->TargetToResBarrier();

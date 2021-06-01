@@ -117,6 +117,10 @@ void CCamera::SortGameObject()
 	auto b = m_vecForward;
 }
 
+void CCamera::SortShadowObject()
+{
+}
+
 void CCamera::render_deferred()
 {
 	g_transform.matView = GetViewMat();
@@ -156,6 +160,10 @@ void CCamera::render_forward()
 			m_vecForward[i]->Collider()->render();
 	}
 
+}
+
+void CCamera::render_shadowmap()
+{
 }
 
 void CCamera::render()

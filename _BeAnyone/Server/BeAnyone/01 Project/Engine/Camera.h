@@ -38,9 +38,14 @@ private:
 
 public:
 	virtual void finalupdate();
+
 	void SortGameObject(); // 렌더링 시점 분류
+	void SortShadowObject();
+
 	void render_deferred();
 	void render_forward();
+	void render_shadowmap();
+
 	void render();
 
 public:

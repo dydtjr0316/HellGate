@@ -723,6 +723,14 @@ void CResMgr::CreateDefaultShader()
     pShader = new CShader;
     pShader->CreateComputeShader(L"Shader\\animation.fx", "CS_Animation3D", "cs_5_0");
     AddRes(L"Animaion3DUpdateShader", pShader);
+
+    // ShadowMap Shader
+    pShader = new CShader;
+    pShader->CreateVertexShader(L"Shader\\light.fx", "VS_ShadowMap", "vs_5_0");
+    pShader->CreatePixelShader(L"Shader\\light.fx", "PS_ShadowMap", "ps_5_0");
+    pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS);
+    pShader->Create(SHADER_POV::SHADOW);
+    AddRes(L"ShadowMapShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -744,22 +752,10 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->SetShader(FindRes<CShader>(L"ColliderShader"));
     AddRes(L"ColMtrl", pMtrl);
 
-    /*
-    pMtrl = new CMaterial;
-    pMtrl->DisableFileSave();
-    pMtrl->SetShader(FindRes<CShader>(L"Std2DShader"));
-    AddRes(L"Std2DMtrl", pMtrl);
-
-    pMtrl = new CMaterial;
-    pMtrl->DisableFileSave();
-    pMtrl->SetShader(FindRes<CShader>(L"DirShader"));
-    AddRes(L"DirMtrl", pMtrl);*/
-
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"Std3DShader"));
     AddRes(L"Std3DMtrl", pMtrl);
-
 
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
@@ -773,14 +769,7 @@ void CResMgr::CreateDefaultMaterial()
     //pMtrl->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
     AddRes(L"GridMtrl", pMtrl);
 
-
-
-    //pMtrl = new CMaterial;
-    ////pMtrl->DisableFileSave();
-    //pMtrl->SetShader(FindRes<CShader>(L"2DShadowShader"));
-    //pMtrl->SetPath(L"Material\\2DShadowMtrl.mtrl");
-    //AddRes(L"Material\\2DShadowMtrl.mtrl", pMtrl);
-
+    //  ¹æÇâ ±¤
     {
         pMtrl = new CMaterial;
         pMtrl->DisableFileSave();
@@ -795,6 +784,7 @@ void CResMgr::CreateDefaultMaterial()
         AddRes(L"DirLightMtrl", pMtrl);
     }
 
+    //  Á¡ ±¤
     {
         pMtrl = new CMaterial;
         pMtrl->DisableFileSave();
@@ -812,6 +802,7 @@ void CResMgr::CreateDefaultMaterial()
         AddRes(L"PointLightMtrl", pMtrl);
     }
 
+    //  ±¤ÇÕ
     {
         pMtrl = new CMaterial;
         pMtrl->DisableFileSave();
@@ -845,4 +836,10 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"Animaion3DUpdateShader"));
     AddRes(L"Animation3DUpdateMtrl", pMtrl);
+
+    // ShadowMap Material
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"ShadowMapShader"));
+    AddRes(L"ShadowMapMtrl", pMtrl);
 }

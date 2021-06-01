@@ -31,7 +31,7 @@ public:
 public:
 	virtual void finalupdate();
 	void render();
-	void Render_Shadowmap();
+	void render_shadowmap();
 
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);
