@@ -34,6 +34,7 @@
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
 #include "GridScript.h"
+#include "SwordScript.h"
 
 // UI
 #include "TemperUiScript.h"
@@ -631,6 +632,7 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(1)->SetName(L"Player");
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
 	m_pCurScene->GetLayer(3)->SetName(L"Map");
+	m_pCurScene->GetLayer(4)->SetName(L"Weapone");
 	m_pCurScene->GetLayer(30)->SetName(L"UI");
 
 	CGameObject* pObject = nullptr;
@@ -681,10 +683,17 @@ void CSceneMgr::init()
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
 	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 
+	// ATTACK
+	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@Skill2.fbx", FBX_TYPE::PLAYER);
+	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+
+	
 
 	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
 
+	// =============
 	// 무기 
+	// =============
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale_Weapon_Sword.fbx", FBX_TYPE::PLAYER);
 	//pMeshData->Save(pMeshData->GetPath());
 
@@ -700,7 +709,13 @@ void CSceneMgr::init()
 	pSword->AddComponent(new CCollider);
 	pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
 
-	m_pCurScene->AddGameObject(L"Player", pSword, false);
+
+	// Script 설정
+	pSword->AddComponent(new CSwordScript);
+	CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
+	SwordScript->SetBoneFinalMat(pPlayerObj->Animator3D()->GetFinalBoneMat());
+
+	m_pCurScene->AddGameObject(L"Weapone", pSword, false);
 
 	// ==================
 	// Camera Object 생성

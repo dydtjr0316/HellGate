@@ -147,6 +147,17 @@ VS_STD3D_OUTPUT VS_Std3D(VS_STD3D_INPUT _in)
             , _in.vWeight, _in.vIndices, 0);
     }
 
+    float4 weight = float4(1.f, 0.f, 0.f, 0.f);
+    float4 indices = float4(38.f, 0.f, 0.f, 0.f);
+    float3 a = float3(1.f, 0.f, 0.f);
+
+    if (g_int_3)
+    {
+        Skinning(_in.vPos, _in.vTangent
+            , _in.vBinormal, _in.vNormal
+            , weight, indices, 0);
+    }
+
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
 
     output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV).xyz;

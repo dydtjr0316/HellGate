@@ -223,6 +223,9 @@
     <ClInclude Include="CollisionMgr.h">
       <Filter>Manager</Filter>
     </ClInclude>
+    <ClInclude Include="SwordScript.h">
+      <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -371,6 +374,9 @@
     </ClCompile>
     <ClCompile Include="CollisionMgr.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

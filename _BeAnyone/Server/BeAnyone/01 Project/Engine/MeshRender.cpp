@@ -4,6 +4,8 @@
 #include "Transform.h"
 #include "ResMgr.h"
 #include "Animator3D.h"
+#include "GameObject.h"
+#include "SwordScript.h"
 
 CMeshRender::CMeshRender()
 	:CComponent(COMPONENT_TYPE::MESHRENDER)
@@ -37,11 +39,22 @@ void CMeshRender::render()
 			m_vecMtrl[i]->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh 알리기
 		}
 
+		//Sword인 경우
+		if (GetObj()->GetName() == L"sword")
+		{
+			CSwordScript* swordScript = GetObj()->GetScript<CSwordScript>();
+			//CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
+			swordScript->BoneMatrender();
+			a = 1;
+			m_vecMtrl[i]->SetData(SHADER_PARAM::INT_3, &a); // Animation Mesh 알리기
+		}
+
 		m_vecMtrl[i]->UpdateData();
 		m_pMesh->render((UINT)i);
 
 		a = 0;
 		m_vecMtrl[i]->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh 알리기
+		m_vecMtrl[i]->SetData(SHADER_PARAM::INT_3, &a); // Animation Mesh 알리기
 	}
 
 	//for (size_t i = 0; i < m_vecMtrl.size(); ++i)

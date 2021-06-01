@@ -32,7 +32,8 @@ public:
 	void UpdateData();
 	void SetClipTime(int _iClipIdx, float _fTime) { m_vecClipUpdateTime[_iClipIdx] = _fTime; }
 
-	vector<Matrix>& GetFinalBoneMat() { return m_vecFinalBoneMat; }// ¾È ¾¸
+	// vector<Matrix>& GetFinalBoneMat() { return m_vecFinalBoneMat; }// ¾È ¾¸
+	CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMat; }
 
 private:
 	void check_mesh(Ptr<CMesh> _pMesh);
