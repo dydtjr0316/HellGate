@@ -14,6 +14,8 @@
 #include "MeshRender.h"
 #include "Collider.h"
 
+#define COLLIDER_RENDERER 0
+
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
 	, m_frustum(this)
@@ -68,6 +70,10 @@ void CCamera::finalupdate()
 	m_frustum.finalupdate();
 
 	CRenderMgr::GetInst()->RegisterCamera(this);
+
+	//	충돌 테스트용 분기문
+	if (KEY_HOLD(KEY_TYPE::KEY_NUM0))
+		COLLIDER_RENDERER != COLLIDER_RENDERER; 
 }
 
 void CCamera::SortGameObject()
@@ -124,7 +130,7 @@ void CCamera::render_deferred()
 			m_vecDeferred[i]->MeshRender()->render();
 		}
 
-		if (m_vecDeferred[i]->Collider())
+		if (m_vecDeferred[i]->Collider() && COLLIDER_RENDERER)
 			m_vecDeferred[i]->Collider()->render();
 	}
 }
@@ -144,7 +150,7 @@ void CCamera::render_forward()
 			m_vecForward[i]->MeshRender()->render();
 		}
 
-		if (m_vecForward[i]->Collider())
+		if (m_vecForward[i]->Collider() && COLLIDER_RENDERER)
 			m_vecForward[i]->Collider()->render();
 	}
 

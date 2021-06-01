@@ -41,5 +41,10 @@ private:
 	bool CollisionRect(CCollider* _pCollider1, CCollider* _pCollider2);
 	bool CollisionCircle(CCollider* _pCollider1, CCollider* _pCollider2);
 	bool CollisionRectCircle(CCollider* _pCollider1, CCollider* _pCollider2);
+
+public:
+	void SetBoundingSphereCollisionMesh(float, wstring );
+	void SetBoundingCubeCollisionMesh(Vector4* , wstring );
+
 };
 

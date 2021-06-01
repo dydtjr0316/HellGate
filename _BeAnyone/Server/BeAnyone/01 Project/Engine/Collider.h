@@ -53,8 +53,21 @@ public:
 public:
 	BoundingBox GetBoundingBox() { return m_bbx; }
 	BoundingSphere GetBoundingSphere() { return m_bSp; }
-	void SetBoundingBox(BoundingBox _b) { m_bbx = _b; }
-	void SetBoundingSphere(BoundingSphere _b) {	m_bSp = _b;}
+	void SetBoundingBox(BoundingBox _b, float _fRadius = 1.f)
+	{
+		m_bbx = _b;
+
+		/*XMFLOAT3 fPoint = _b.Center;
+		m_bSp.Center = fPoint;
+		m_bSp.Radius = _fRadius;
+		m_bSp.Center.y += m_bSp.Radius;*/
+
+	}
+	void SetBoundingSphere(BoundingSphere _b) 
+	{	
+		m_bSp = _b;
+		m_bSp.Center.y += m_bSp.Radius;
+	}
 
 public:
 	CLONE(CCollider);

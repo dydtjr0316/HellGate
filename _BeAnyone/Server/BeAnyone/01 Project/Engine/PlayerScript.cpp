@@ -52,23 +52,7 @@ void CPlayerScript::update()
 
 	}
 
-	//	충돌 테스트용 분기문
-	if (KEY_HOLD(KEY_TYPE::KEY_NUM0))
-	{
-		BoundingBox bBox = Collider()->GetBoundingBox();
-		cout << "Ceter :   \t" << bBox.Center.x << "\t" << bBox.Center.y << "\t" << bBox.Center.z << endl;
-		cout << "Extents : \t" << bBox.Extents.x << "\t" << bBox.Extents.y << "\t" << bBox.Extents.z << endl << endl;
-	}
-
-	//Matrix m_matColWorld = Collider()->GetColliderWorldMat();
-	/*cout << bBox.Center.x << "\t" << bBox.Center.y << "\t" << bBox.Center.z << endl;
-	cout << bBox.Extents.x << "\t" << bBox.Extents.y << "\t" << bBox.Extents.z << endl;*/
-	/*Matrix m_matColWorld = Transform()->GetWorldMat();
-	cout << m_matColWorld._11 << "\t" << m_matColWorld._12 << "\t" << m_matColWorld._13 << "\t" << m_matColWorld._14 << endl;
-	cout << m_matColWorld._21 << "\t" << m_matColWorld._22 << "\t" << m_matColWorld._23 << "\t" << m_matColWorld._24 << endl;
-	cout << m_matColWorld._31 << "\t" << m_matColWorld._32 << "\t" << m_matColWorld._33 << "\t" << m_matColWorld._34 << endl;
-	cout << m_matColWorld._41 << "\t" << m_matColWorld._42 << "\t" << m_matColWorld._43 << "\t" << m_matColWorld._44 << endl;
-	*/
+	
 
 }
 
@@ -115,6 +99,10 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+
+		//	충돌체크시 방향벡터 한개만 우선 체크
+		m_vecPlayerDir = -g_Object.find(g_myid)->second->Transform()->GetWorldDir(DIR_TYPE::FRONT) * speed * DT;
+
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_S))
@@ -168,14 +156,9 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	}
+	
+	
 
-
-
-
-	//if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
-	//{
-
-	//}
 }
 
 bool CPlayerScript::isInMap(const Vector3& localPos)
@@ -190,15 +173,13 @@ void CPlayerScript::OnCollisionEnter(CCollider* _pOther)
 
 void CPlayerScript::OnCollision(CCollider* _pOther)
 {
-	BoundingBox mybBx = Collider()->GetBoundingBox();
-	BoundingBox otherbBx = _pOther->GetBoundingBox();
-	BoundingBox tempbBx{};
+	BoundingSphere myBS = Collider()->GetBoundingSphere();
+	BoundingSphere otherBS = _pOther->Collider()->GetBoundingSphere();
 
-	XMFLOAT3 xmf3Min( otherbBx.Center.x + otherbBx.Extents.x, otherbBx.Center.y + otherbBx.Extents.y, otherbBx.Center.z + otherbBx.Extents.z );
-	XMFLOAT3 xmf3Max{ otherbBx.Center.x - otherbBx.Extents.x, otherbBx.Center.y - otherbBx.Extents.y, otherbBx.Center.z - otherbBx.Extents.z };
-	//BoundingBox::CreateMerged(tempbBx, mybBx, otherbBx);
 	
-
+	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
+	localPos += -m_vecPlayerDir;
+	g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 
 }
 

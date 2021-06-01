@@ -20,9 +20,12 @@ public:
 	CPlayerScript();
 	virtual ~CPlayerScript();
 
+
 private:
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;
+
+	Vector3 m_vecPlayerDir;
 
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }

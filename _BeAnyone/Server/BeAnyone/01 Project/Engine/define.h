@@ -137,6 +137,7 @@ enum class COLLIDER_TYPE
 	BOX,
 	SPHERE,
 	MESH,
+	SPHEREMESH,
 };
 
 enum class SHADER_PARAM

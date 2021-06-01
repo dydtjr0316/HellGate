@@ -71,9 +71,11 @@ void CCollider::finalupdate()
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
 
-	auto i = GetObj();
 
 	m_bbx.Center = Transform()->GetLocalPos();
+
+	m_bSp.Center = Transform()->GetLocalPos();
+	m_bSp.Center.y = Transform()->GetLocalPos().y + m_bSp.Radius;
 
 	/*m_bbx.Extents = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_bbx.Extents = (Transform()->GetLocalScale()) * m_bbx.Extents;*/
@@ -90,8 +92,10 @@ void CCollider::render()
 	}
 
 	static CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
-
+	m_matColWorld._42 += m_bSp.Radius;
 	g_transform.matWorld = m_matColWorld;
+	
+
 	CDevice::GetInst()->SetConstBufferToRegister(pCB, pCB->AddData(&g_transform));
 
 	m_pColMtrl->UpdateData();
@@ -146,12 +150,16 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType, wstring _str)
 	}
 	else if (COLLIDER_TYPE::SPHERE == m_eType)
 	{
-		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
+		//m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
 	}
 	else if (COLLIDER_TYPE::MESH == m_eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(_str);
 	}
+	/*else if (COLLIDER_TYPE::SPHEREMESH == m_eType)
+	{
+		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(_str + L"_Sphere");
+	}*/
 }
 
 void CCollider::OnCollisionEnter(CCollider* _pOther)

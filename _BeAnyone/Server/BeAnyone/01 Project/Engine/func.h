@@ -44,3 +44,8 @@ void SaveWString(FILE* _pFile, const wstring& _str);
 wchar_t* LoadWString(FILE* _pFile);
 
 Matrix GetMatrix(FbxAMatrix& _mat);
+
+//	д©╫╨ер
+void CreateBoundingSphereCollisionMesh(float _fRadius, wstring _fName);
+
+void CreateBoundingCubeCollisionMesh(Vector4* vecMMax, wstring _fName);

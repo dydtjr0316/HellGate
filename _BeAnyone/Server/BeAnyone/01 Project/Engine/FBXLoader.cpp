@@ -4,6 +4,7 @@
 
 #include "ResMgr.h"
 #include "PathMgr.h"
+#include "CollisionMgr.h"
 
 #include "Material.h"
 
@@ -120,7 +121,7 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 			LoadMaterial(pMtrlSur);
 		}
 	}
-	
+
 	// 자식 노드 정보 읽기
 	int iChildCnt = _pNode->GetChildCount();
 	for (int i = 0; i < iChildCnt; ++i)
@@ -155,6 +156,7 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 		Container.vecPos[i].y = (float)pFbxPos[i].mData[2];
 		Container.vecPos[i].z = (float)pFbxPos[i].mData[1];
 
+		//	메쉬 별 최소, 최대 vertex 좌표값 찾기
 		if (Container.vecPos[i].x < vecMin.x)
 			vecMin.x = Container.vecPos[i].x;
 		if (Container.vecPos[i].y < vecMin.y)
@@ -172,6 +174,9 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 
 	if (CResMgr::GetInst()->FindRes<CMesh>(m_fileName) == nullptr)
 	{
+		// Mesh Extents Collision Mesh
+		// 바운딩 박스 콜리젼 매쉬 등록
+
 		//	플레이어 X값 스키닝 매쉬라 줫나커서 나누기 2
 		//vecMin.x /= 2;
 		//vecMax.x /= 2;
@@ -179,122 +184,19 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 		m_vecMMax[0] = vecMin;
 		m_vecMMax[1] = vecMax;
 
-		// =========
-		// Mesh Extents Collision Mesh (Box)
-		// 바운딩 박스 콜리젼 매쉬 등록
+		//CreateBoundingCubeCollisionMesh(m_vecMMax, m_fileName);
 
-		/*{
-			VTX arrCube[24] = {};
-			{
-				// 윗면
-				arrCube[0].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-				arrCube[0].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+		//구형
+		m_vecMMax[0].x = fabs(m_vecMMax[0].x);
+		m_vecMMax[0].y = fabs(m_vecMMax[0].y);
+		m_vecMMax[0].z = fabs(m_vecMMax[0].z);
 
-				arrCube[1].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-				arrCube[1].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+		//	x,y,z축 평균 벡터들
+		Vector3 vecAver = (m_vecMMax[1] + m_vecMMax[0]) / 2.f;
 
-				arrCube[2].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-				arrCube[2].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
-
-				arrCube[3].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
-				arrCube[3].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
-
-
-				// 아랫 면
-				arrCube[4].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-				arrCube[4].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
-
-				arrCube[5].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-				arrCube[5].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
-
-				arrCube[6].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-				arrCube[6].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
-
-				arrCube[7].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-				arrCube[7].vColor = Vector4(1.f, 0.f, 0.f, 1.f);
-
-				// 왼쪽 면
-				arrCube[8].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-				arrCube[8].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
-
-				arrCube[9].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);
-				arrCube[9].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
-
-				arrCube[10].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-				arrCube[10].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
-
-				arrCube[11].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-				arrCube[11].vColor = Vector4(0.f, 1.f, 0.f, 1.f);
-
-				// 오른쪽 면
-				arrCube[12].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-				arrCube[12].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
-
-				arrCube[13].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-				arrCube[13].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
-
-				arrCube[14].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-				arrCube[14].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
-
-				arrCube[15].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-				arrCube[15].vColor = Vector4(0.f, 0.f, 1.f, 1.f);
-
-				// 뒷 면
-				arrCube[16].vPos = Vector3(vecMax.x, vecMax.y, vecMax.z);
-				arrCube[16].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
-
-				arrCube[17].vPos = Vector3(vecMin.x, vecMax.y, vecMax.z);
-				arrCube[17].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
-
-				arrCube[18].vPos = Vector3(vecMin.x, vecMin.y, vecMax.z);
-				arrCube[18].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
-
-				arrCube[19].vPos = Vector3(vecMax.x, vecMin.y, vecMax.z);
-				arrCube[19].vColor = Vector4(1.f, 1.f, 0.f, 1.f);
-
-				// 앞 면
-				arrCube[20].vPos = Vector3(vecMin.x, vecMax.y, vecMin.z);;
-				arrCube[20].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
-
-				arrCube[21].vPos = Vector3(vecMax.x, vecMax.y, vecMin.z);
-				arrCube[21].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
-
-				arrCube[22].vPos = Vector3(vecMax.x, vecMin.y, vecMin.z);
-				arrCube[22].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
-
-				arrCube[23].vPos = Vector3(vecMin.x, vecMin.y, vecMin.z);
-				arrCube[23].vColor = Vector4(1.f, 0.f, 1.f, 1.f);
-
-				m_vecMMax[0] = arrCube[23].vPos;
-				m_vecMMax[1] = arrCube[16].vPos;
-			}
-
-			vector<UINT> vecIdx;
-
-			// 인덱스
-			for (int i = 0; i < 12; i += 2)
-			{
-				vecIdx.push_back(i * 2);
-				vecIdx.push_back(i * 2 + 1);
-				vecIdx.push_back(i * 2 + 2);
-
-				vecIdx.push_back(i * 2);
-				vecIdx.push_back(i * 2 + 2);
-				vecIdx.push_back(i * 2 + 3);
-			}
-
-			Ptr<CMesh> pMesh = new CMesh;
-
-			pMesh->Create(sizeof(VTX), 24, (BYTE*)arrCube
-				, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
-
-			//   mesh별 아이디 필요
-			pMesh->SetName(m_fileName);
-			CResMgr::GetInst()->AddRes<CMesh>(pMesh->GetName(), pMesh);
-		}*/
-
-		// 바운딩 구 콜리젼 매쉬 등록
-		
+		//	각 평균벡터들로 평균내서 충돌 반지름 길이 평균값 대충 계산
+		float fRadiusAver = (vecAver.x + vecAver.y + vecAver.z) / 3;
+		CreateBoundingSphereCollisionMesh(fRadiusAver, m_fileName);
 
 
 	}
@@ -444,9 +346,9 @@ void CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx
 	//
 	//FbxVector4 vBinormal = pBinormal->GetDirectArray().GetAt(iBinormalIdx);
 
-	_pContainer->vecBinormal[_iIdx].x =0.f;//(float)vBinormal.mData[0];
-	_pContainer->vecBinormal[_iIdx].y =0.f;//(float)vBinormal.mData[2];
-	_pContainer->vecBinormal[_iIdx].z =0.f;//(float)vBinormal.mData[1];
+	_pContainer->vecBinormal[_iIdx].x = 0.f;//(float)vBinormal.mData[0];
+	_pContainer->vecBinormal[_iIdx].y = 0.f;//(float)vBinormal.mData[2];
+	_pContainer->vecBinormal[_iIdx].z = 0.f;//(float)vBinormal.mData[1];
 }
 
 void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder)
@@ -454,11 +356,11 @@ void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, 
 	int iNormalCnt = _pMesh->GetElementNormalCount();
 	if (1 != iNormalCnt)
 		assert(NULL); // 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
-	
+
 					  // 종법선 data 의 시작 주소
 	FbxGeometryElementNormal* pNormal = _pMesh->GetElementNormal();
 	UINT iNormalIdx = 0;
-	
+
 	if (pNormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
 	{
 		if (pNormal->GetReferenceMode() == FbxGeometryElement::eDirect)
@@ -473,7 +375,7 @@ void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, 
 		else
 			iNormalIdx = pNormal->GetIndexArray().GetAt(_iIdx);
 	}
-	
+
 	FbxVector4 vNormal = pNormal->GetDirectArray().GetAt(iNormalIdx);
 
 	_pContainer->vecNormal[_iIdx].x = (float)vNormal.mData[0];
@@ -484,13 +386,13 @@ void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, 
 void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iUVIndex)
 {
 	FbxGeometryElementUV* pUV = _pMesh->GetElementUV();
-	
+
 	UINT iUVIdx = 0;
 	if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
 		iUVIdx = _iIdx;
 	else
 		iUVIdx = pUV->GetIndexArray().GetAt(_iIdx);
-	
+
 	iUVIdx = _iUVIndex;
 	FbxVector2 vUV = pUV->GetDirectArray().GetAt(iUVIdx);
 	_pContainer->vecUV[_iIdx].x = (float)vUV.mData[0];
@@ -539,7 +441,7 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 			FbxFileTexture* pFbxTex = TextureProperty.GetSrcObject<FbxFileTexture>(0);
 			if (NULL != pFbxTex) {
 				//strName = "C:\\Users\\HyoRim\\Desktop\\graduation project\\HellGate\\_BeAnyone\\Client\\BeAnyone\\02 File\\bin\\content\\FBX\\PlayerMale02.tga"; //pFbxTex->GetFileName();
-				
+
 				if (m_fbxType == FBX_TYPE::PLAYER) {
 					strName = _pSurface->GetName();
 					strName += ".tga";

@@ -63,13 +63,42 @@ public:
 public:
 	Vector4* GetMinMaxVertex() { return m_vecMMax; }
 	void SetMinMaxVertex(Vector4* _v) { m_vecMMax[0] = _v[0]; m_vecMMax[1] = _v[1];	}
-	Vector3 GetBoundingBoxExtents() 
+
+public:
+	Vector3 GetBoundingBoxExtents(Vector3 _vec = { 1.f, 1.f, 1.f })
 	{
 		//	mesh 최대값이 음수일 수 가 없다는 가정. 최소값만 절대값 함수 넣고 / 2
-		m_vecMMax[0].x = fabs(m_vecMMax[1].x);
-		m_vecMMax[0].y = fabs(m_vecMMax[1].y);
-		m_vecMMax[0].z = fabs(m_vecMMax[1].z);
-		return ((m_vecMMax[1]) + (m_vecMMax[0])) / 2; 
+		Vector3 vecmin{}, vecmax{m_vecMMax[1]};
+		vecmin.x = fabs(m_vecMMax[0].x);
+		vecmin.y = fabs(m_vecMMax[0].y);
+		vecmin.z = fabs(m_vecMMax[0].z);
+
+		Vector3 a = ((vecmax + vecmin) / 2.f );
+		a.x *= _vec.x; a.y *= _vec.y; a.z *= _vec.z;
+
+
+
+		/*m_vecMMax[0].x = fabs(m_vecMMax[0].x);
+		m_vecMMax[0].y = fabs(m_vecMMax[0].y);
+		m_vecMMax[0].z = fabs(m_vecMMax[0].z);
+		auto a = ((m_vecMMax[1] + m_vecMMax[0]) / 2.f) * _vec);
+		return (((m_vecMMax[1]) + (m_vecMMax[0])) / 2.f); */
+		return a;
+	}
+
+	float GetBoundingSphereRadius()
+	{
+		m_vecMMax[0].x = fabs(m_vecMMax[0].x);
+		m_vecMMax[0].y = fabs(m_vecMMax[0].y);
+		m_vecMMax[0].z = fabs(m_vecMMax[0].z);
+		
+		//	x,y,z축 평균 벡터들
+		Vector3 vecAver = (m_vecMMax[1] + m_vecMMax[0]) / 2.f;
+
+		//	각 평균벡터들로 평균내서 충돌 반지름 길이 평균값 대충 계산
+		float fAver = (vecAver.x + vecAver.y + vecAver.z) / 3;
+
+		return fAver;
 	}
 	
 public:

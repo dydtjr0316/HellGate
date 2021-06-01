@@ -265,13 +265,12 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House1");
-	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-
-
+	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents( pMapObject->Transform()->GetLocalScale() )));
+	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f ));
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
-	// 집 2
 
+	// 집 2
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\WoodenHouse3.fbx", FBX_TYPE::DESERT_MAP);
 	pMeshData->Save(pMeshData->GetPath());
 
@@ -291,7 +290,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"WoodenHouse3");
 	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-
+	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 	// 집 3
@@ -315,6 +314,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"CookingFireplace");
 	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
 
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
@@ -339,6 +339,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tent1");
 	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
 
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
@@ -364,6 +365,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	pMapObject->AddComponent(new CCollider);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"RockGrey2_high");
 	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()* pMapObject->Transform()->GetLocalScale()));
+	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 70.f));
 
 	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
@@ -392,6 +394,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
 
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
@@ -419,6 +422,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"TreeDead1");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
 
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
@@ -446,6 +450,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"TreeDead2");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
 
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
@@ -475,6 +480,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"CactusSmall");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()* pMapObject->Transform()->GetLocalScale()));
+		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
 
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
@@ -554,7 +560,7 @@ void CSceneMgr::init()
 	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pPlayerObj->AddComponent(new CCollider);
 	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
-	//pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
 
 	// Script 설정
@@ -635,6 +641,8 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CCollider);
 	pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
 	pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f,2.f,2.f)));
+	pObject->Collider()->SetBoundingSphere(BoundingSphere(pObject->Transform()->GetLocalPos(), 50.f));
+
 	// Script 설정
 	// pObject->AddComponent(new CMonsterScript);
 	// AddGameObject
@@ -650,7 +658,7 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CMeshRender);
 	// Transform 설정
 	pObject->Transform()->SetLocalPos(Vector3(500.f, 300.f, 500.f));
-	pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 200.f));
+	pObject->Transform()->SetLocalScale(Vector3(140.f, 166.f, 54.f));
 	// MeshRender 설정
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
