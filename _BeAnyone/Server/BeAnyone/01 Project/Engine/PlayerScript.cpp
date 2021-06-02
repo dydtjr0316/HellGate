@@ -65,6 +65,7 @@ void CPlayerScript::update()
 		worldDir = -playerTrans->GetWorldDir(DIR_TYPE::FRONT);
 		localPos += worldDir * player->GetSpeed() * DT;
 		dir = MV_FRONT;
+		player->SetPlayerDir(worldDir * player->GetSpeed() * DT);
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
 	}
@@ -147,7 +148,6 @@ void CPlayerScript::update()
 
 }
 
-
 void CPlayerScript::op_Move()
 {
 	sc_packet_move* p = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
@@ -190,7 +190,6 @@ void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 	 m_movePacketTemp = p; 
 	 m_fRTT = rtt;
 }
-
 
 void CPlayerScript::SetOrigin_Point(const int& index, const float& x, const float& y)
 {
@@ -299,7 +298,6 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 	}
 }
 
-
 void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 {
 	g_Object.find(g_myid)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
@@ -315,8 +313,6 @@ void CPlayerScript::SetAnimation(const int& other_id, const Ani_TYPE& type)
 	g_Object.find(other_id)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(other_id)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
 }
-	
-
 
 bool CPlayerScript::isInMap(const Vector3& localPos)
 {
@@ -335,7 +331,7 @@ void CPlayerScript::OnCollision(CCollider* _pOther)
 
 	
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	//localPos += -m_vecPlayerDir;
+	localPos += -g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetPlayerDir();
 	g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 
 }

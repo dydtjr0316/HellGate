@@ -41,7 +41,11 @@ public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
 
-public: //용석
+	Vector3 GetPlayerDir() { return m_vecPlayerDir; }
+	void SetPlayerDir(Vector3 _a) { m_vecPlayerDir = _a; }
+
+public: 
+	//용석
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const Ani_TYPE& type);
 	void SetAnimation(const int& other_id, const Ani_TYPE& type);
