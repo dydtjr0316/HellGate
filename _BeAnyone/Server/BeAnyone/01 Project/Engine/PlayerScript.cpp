@@ -344,7 +344,7 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
 	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
-	m_eAniType = type;
+	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimationType(type);
 }
 
 void CPlayerScript::SetAnimation(const int& other_id, const Ani_TYPE& type)

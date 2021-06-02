@@ -46,6 +46,7 @@ public: //¿ë¼®
 	void SetAnimation(const Ani_TYPE& type);
 	void SetAnimation(const int& other_id, const Ani_TYPE& type);
 	Ptr<CMesh> GetAniData(const Ani_TYPE& type) { return m_pAniData[(int)type]; }
+	void SetAnimationType(const Ani_TYPE& type) { m_eAniType = type; }
 
 	void initDeadReckoner() { m_pDeadReckoner = new CDeadReckoner(g_myid); }
 	CDeadReckoner* GetReckoner() { return m_pDeadReckoner; }
