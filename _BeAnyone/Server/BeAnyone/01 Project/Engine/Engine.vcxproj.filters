@@ -49,76 +49,76 @@
       <Filter>03. Device\00. ConstantBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>04.GameObject\00. Component\00. Camera</Filter>
+      <Filter>04.GameObject\Component\00. Camera</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
-      <Filter>04.GameObject\00. Component\00. Camera</Filter>
+      <Filter>04.GameObject\Component\00. Camera</Filter>
     </ClCompile>
     <ClCompile Include="Animator3D.cpp">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Collider.cpp">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="MeshRender.cpp">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Script.cpp">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="EnergeUiScript.cpp">
-      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+      <Filter>04.GameObject\Script\00.UIScript</Filter>
     </ClCompile>
     <ClCompile Include="HpUiScript.cpp">
-      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+      <Filter>04.GameObject\Script\00.UIScript</Filter>
     </ClCompile>
     <ClCompile Include="HugUiScript.cpp">
-      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+      <Filter>04.GameObject\Script\00.UIScript</Filter>
     </ClCompile>
     <ClCompile Include="TemperUiScript.cpp">
-      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+      <Filter>04.GameObject\Script\00.UIScript</Filter>
     </ClCompile>
     <ClCompile Include="GridScript.cpp">
-      <Filter>04.GameObject\01. Script</Filter>
+      <Filter>04.GameObject\Script</Filter>
     </ClCompile>
     <ClCompile Include="PlayerScript.cpp">
-      <Filter>04.GameObject\01. Script</Filter>
+      <Filter>04.GameObject\Script</Filter>
     </ClCompile>
     <ClCompile Include="SwordScript.cpp">
-      <Filter>04.GameObject\01. Script</Filter>
+      <Filter>04.GameObject\Script</Filter>
     </ClCompile>
     <ClCompile Include="ToolCamScript.cpp">
-      <Filter>04.GameObject\01. Script</Filter>
+      <Filter>04.GameObject\Script</Filter>
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
-      <Filter>04.GameObject\02.Terrain</Filter>
+      <Filter>04.GameObject\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="TerrainInit.cpp">
-      <Filter>04.GameObject\02.Terrain</Filter>
+      <Filter>04.GameObject\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="CNetMgr.cpp">
       <Filter>05. NetMgr</Filter>
     </ClCompile>
     <ClCompile Include="CDeadReckoner.cpp">
-      <Filter>05. NetMgr\00. DeadReckoner</Filter>
+      <Filter>05. NetMgr\DeadReckoner</Filter>
     </ClCompile>
     <ClCompile Include="Layer.cpp">
-      <Filter>06. Manager\01. SceneMgr</Filter>
+      <Filter>06. Manager\SceneMgr</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>06. Manager\01. SceneMgr</Filter>
+      <Filter>06. Manager\SceneMgr</Filter>
     </ClCompile>
     <ClCompile Include="SceneMgr.cpp">
-      <Filter>06. Manager\01. SceneMgr</Filter>
+      <Filter>06. Manager\SceneMgr</Filter>
     </ClCompile>
     <ClCompile Include="CollisionMgr.cpp">
       <Filter>06. Manager</Filter>
@@ -139,7 +139,7 @@
       <Filter>07. Module</Filter>
     </ClCompile>
     <ClCompile Include="MRT.cpp">
-      <Filter>08. Rendering\00.MRT</Filter>
+      <Filter>08. Rendering\MRT</Filter>
     </ClCompile>
     <ClCompile Include="RenderMgr.cpp">
       <Filter>08. Rendering</Filter>
@@ -172,10 +172,16 @@
       <Filter>04.GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ResMgr.cpp">
-      <Filter>06. Manager\00. ResMgr</Filter>
+      <Filter>06. Manager\ResMgr</Filter>
     </ClCompile>
     <ClCompile Include="ResMgrInit.cpp">
-      <Filter>06. Manager\00. ResMgr</Filter>
+      <Filter>06. Manager\ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletScript.cpp">
+      <Filter>04.GameObject\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterScript.cpp">
+      <Filter>04.GameObject\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,73 +223,73 @@
       <Filter>03. Device\00. ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>04.GameObject\00. Component\00. Camera</Filter>
+      <Filter>04.GameObject\Component\00. Camera</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h">
-      <Filter>04.GameObject\00. Component\00. Camera</Filter>
+      <Filter>04.GameObject\Component\00. Camera</Filter>
     </ClInclude>
     <ClInclude Include="Animator3D.h">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="MeshRender.h">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Script.h">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
-      <Filter>04.GameObject\00. Component</Filter>
+      <Filter>04.GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="EnergeUiScript.h">
-      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+      <Filter>04.GameObject\Script\00.UIScript</Filter>
     </ClInclude>
     <ClInclude Include="HpUiScript.h">
-      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+      <Filter>04.GameObject\Script\00.UIScript</Filter>
     </ClInclude>
     <ClInclude Include="HugUiScript.h">
-      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+      <Filter>04.GameObject\Script\00.UIScript</Filter>
     </ClInclude>
     <ClInclude Include="TemperUiScript.h">
-      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+      <Filter>04.GameObject\Script\00.UIScript</Filter>
     </ClInclude>
     <ClInclude Include="GridScript.h">
-      <Filter>04.GameObject\01. Script</Filter>
+      <Filter>04.GameObject\Script</Filter>
     </ClInclude>
     <ClInclude Include="PlayerScript.h">
-      <Filter>04.GameObject\01. Script</Filter>
+      <Filter>04.GameObject\Script</Filter>
     </ClInclude>
     <ClInclude Include="SwordScript.h">
-      <Filter>04.GameObject\01. Script</Filter>
+      <Filter>04.GameObject\Script</Filter>
     </ClInclude>
     <ClInclude Include="ToolCamScript.h">
-      <Filter>04.GameObject\01. Script</Filter>
+      <Filter>04.GameObject\Script</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
-      <Filter>04.GameObject\02.Terrain</Filter>
+      <Filter>04.GameObject\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="CNetMgr.h">
       <Filter>05. NetMgr</Filter>
     </ClInclude>
     <ClInclude Include="CDeadReckoner.h">
-      <Filter>05. NetMgr\00. DeadReckoner</Filter>
+      <Filter>05. NetMgr\DeadReckoner</Filter>
     </ClInclude>
     <ClInclude Include="Layer.h">
-      <Filter>06. Manager\01. SceneMgr</Filter>
+      <Filter>06. Manager\SceneMgr</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>06. Manager\01. SceneMgr</Filter>
+      <Filter>06. Manager\SceneMgr</Filter>
     </ClInclude>
     <ClInclude Include="SceneMgr.h">
-      <Filter>06. Manager\01. SceneMgr</Filter>
+      <Filter>06. Manager\SceneMgr</Filter>
     </ClInclude>
     <ClInclude Include="CollisionMgr.h">
       <Filter>06. Manager</Filter>
@@ -304,7 +310,7 @@
       <Filter>07. Module</Filter>
     </ClInclude>
     <ClInclude Include="MRT.h">
-      <Filter>08. Rendering\00.MRT</Filter>
+      <Filter>08. Rendering\MRT</Filter>
     </ClInclude>
     <ClInclude Include="RenderMgr.h">
       <Filter>08. Rendering</Filter>
@@ -343,7 +349,13 @@
       <Filter>04.GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ResMgr.h">
-      <Filter>06. Manager\00. ResMgr</Filter>
+      <Filter>06. Manager\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletScript.h">
+      <Filter>04.GameObject\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterScript.h">
+      <Filter>04.GameObject\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -398,32 +410,32 @@
     <Filter Include="03. Device\02.StructuredBuffer">
       <UniqueIdentifier>{ba314dca-1db8-45fe-bb39-b7b73d5a6524}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameObject\00. Component">
+    <Filter Include="04.GameObject\Component">
       <UniqueIdentifier>{48f08812-6b98-421e-8cec-9b71c8b83e6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameObject\00. Component\00. Camera">
+    <Filter Include="04.GameObject\Component\00. Camera">
       <UniqueIdentifier>{7dabe267-7b01-4845-aef2-e47d0aa21928}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameObject\01. Script">
+    <Filter Include="04.GameObject\Script">
       <UniqueIdentifier>{77f525c7-0238-4a31-833e-fc853e3cd946}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameObject\01. Script\00.UIScript">
+    <Filter Include="04.GameObject\Script\00.UIScript">
       <UniqueIdentifier>{ffb0ee64-e9f0-4f70-89bc-637788daa088}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameObject\02.Terrain">
+    <Filter Include="04.GameObject\Terrain">
       <UniqueIdentifier>{4930b5dd-5f73-4a2f-abe1-15e99dfe491c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. NetMgr\00. DeadReckoner">
+    <Filter Include="05. NetMgr\DeadReckoner">
       <UniqueIdentifier>{9d4462cc-4fe7-4c9d-8833-f4ac783bdc0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="08. Rendering\00.MRT">
-      <UniqueIdentifier>{87cd5bd4-a5f6-4e41-9ba5-4a24cb076c5f}</UniqueIdentifier>
+    <Filter Include="06. Manager\ResMgr">
+      <UniqueIdentifier>{62dcf552-387a-4e8c-be8d-39ffb2681930}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. Manager\01. SceneMgr">
+    <Filter Include="06. Manager\SceneMgr">
       <UniqueIdentifier>{1dee0397-3fd3-46d8-b40c-351194c59ecd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. Manager\00. ResMgr">
-      <UniqueIdentifier>{62dcf552-387a-4e8c-be8d-39ffb2681930}</UniqueIdentifier>
+    <Filter Include="08. Rendering\MRT">
+      <UniqueIdentifier>{87cd5bd4-a5f6-4e41-9ba5-4a24cb076c5f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
