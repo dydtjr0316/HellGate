@@ -1,73 +1,202 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Manager">
-      <UniqueIdentifier>{80b68363-ed43-4234-ba67-ce23449ec03e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{6a3704f2-d1c2-4b94-8e89-441a2d97e034}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Header">
-      <UniqueIdentifier>{857d3332-93f1-4dcc-a505-d90166a4a655}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Device">
-      <UniqueIdentifier>{1026a325-8458-4ee0-bb91-74371f2e5fc6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. Core">
-      <UniqueIdentifier>{22a0fde8-15aa-43e2-9237-9f3b744c7850}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="0. Default">
-      <UniqueIdentifier>{d2e24bf9-92c8-4509-b194-c63b43ce5623}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ShaderCode">
-      <UniqueIdentifier>{14a150d9-85d5-4695-b874-2eb7522e6959}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="zBasic">
-      <UniqueIdentifier>{e559ce56-8229-468b-bfe6-cb95a2f06ee6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. GameObject">
-      <UniqueIdentifier>{5f8000b1-aed3-41a8-b192-e5020df3a292}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. GameObject\Component">
-      <UniqueIdentifier>{0118067e-2349-429c-b9b3-30cef68265a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\SceneMgr">
-      <UniqueIdentifier>{ac97bbfd-6e56-4e94-9f6a-5cb23bdead17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering">
-      <UniqueIdentifier>{b1ac74c8-9be7-4ccf-8e03-54d2810b0248}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. GameObject\Component\Camera">
-      <UniqueIdentifier>{12f79666-406d-4364-88e9-88d94d905bbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. GameObject\Script">
-      <UniqueIdentifier>{8e5c6fbb-2b16-455b-8077-9f1c4b5074ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\ResMgr">
-      <UniqueIdentifier>{bdf3f6d3-61c2-47fe-9b6b-9cca60403810}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\MRT">
-      <UniqueIdentifier>{8c8887f6-bb59-4c3e-8d0a-b6d862afb811}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Module">
-      <UniqueIdentifier>{dd89d460-9ea1-45c3-bb52-b0b26ad902c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05. NetMgr">
-      <UniqueIdentifier>{232ad2e1-f9b0-4098-beb6-87f280c4fe7f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. GameObject\Script\UiScript">
-      <UniqueIdentifier>{c8d6c2a2-4916-4c69-a775-f93116344c33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. GameObject\Terrain">
-      <UniqueIdentifier>{2223475f-ecf2-4a9d-8aa5-2d65cf6b6983}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05. NetMgr\00. DeadReckoner">
-      <UniqueIdentifier>{3122e557-71bc-49a4-968c-fb6c7523eec0}</UniqueIdentifier>
-    </Filter>
+    <FxCompile Include="animation.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="compute.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="func.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="light.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="std.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="terrain.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="value.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Device.h">
-      <Filter>03. Device</Filter>
+    <ClCompile Include="desc.cpp">
+      <Filter>00. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>00. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>00. Default\00.SimpleMath</Filter>
+    </ClCompile>
+    <ClCompile Include="func.cpp">
+      <Filter>01. Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>02. Core</Filter>
+    </ClCompile>
+    <ClCompile Include="StructuredBuffer.cpp">
+      <Filter>03. Device\02.StructuredBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>03. Device\01. Device</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>03. Device\00. ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>04.GameObject\00. Component\00. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>04.GameObject\00. Component\00. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator3D.cpp">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRender.cpp">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="EnergeUiScript.cpp">
+      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HpUiScript.cpp">
+      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+    </ClCompile>
+    <ClCompile Include="HugUiScript.cpp">
+      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+    </ClCompile>
+    <ClCompile Include="TemperUiScript.cpp">
+      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+    </ClCompile>
+    <ClCompile Include="GridScript.cpp">
+      <Filter>04.GameObject\01. Script</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>04.GameObject\01. Script</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordScript.cpp">
+      <Filter>04.GameObject\01. Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolCamScript.cpp">
+      <Filter>04.GameObject\01. Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>04.GameObject\02.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainInit.cpp">
+      <Filter>04.GameObject\02.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="CNetMgr.cpp">
+      <Filter>05. NetMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CDeadReckoner.cpp">
+      <Filter>05. NetMgr\00. DeadReckoner</Filter>
+    </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>06. Manager\01. SceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>06. Manager\01. SceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMgr.cpp">
+      <Filter>06. Manager\01. SceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionMgr.cpp">
+      <Filter>06. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyMgr.cpp">
+      <Filter>06. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="PathMgr.cpp">
+      <Filter>06. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMgr.cpp">
+      <Filter>06. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>06. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>07. Module</Filter>
+    </ClCompile>
+    <ClCompile Include="MRT.cpp">
+      <Filter>08. Rendering\00.MRT</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMgr.cpp">
+      <Filter>08. Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMgrInit.cpp">
+      <Filter>08. Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>09. Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>09. Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshData.cpp">
+      <Filter>09. Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>09. Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>09. Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>09. Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>11. zBasic</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>04.GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ResMgr.cpp">
+      <Filter>06. Manager\00. ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ResMgrInit.cpp">
+      <Filter>06. Manager\00. ResMgr</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="Entity.h">
+      <Filter>00. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>00. Default\00.SimpleMath</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="extern.h">
+      <Filter>01. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="func.h">
+      <Filter>01. Header</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
       <Filter>01. Header</Filter>
@@ -75,352 +204,231 @@
     <ClInclude Include="struct.h">
       <Filter>01. Header</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="define.h">
-      <Filter>01. Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>0. Default</Filter>
-    </ClInclude>
     <ClInclude Include="Core.h">
       <Filter>02. Core</Filter>
     </ClInclude>
+    <ClInclude Include="StructuredBuffer.h">
+      <Filter>03. Device\01. Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>03. Device\01. Device</Filter>
+    </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
-      <Filter>03. Device</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>zBasic</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>zBasic</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>zBasic</Filter>
-    </ClInclude>
-    <ClInclude Include="func.h">
-      <Filter>01. Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="PathMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="resource1.h" />
-    <ClInclude Include="Texture.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>01. Header</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>04. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>04. GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>04. GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshRender.h">
-      <Filter>04. GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Ptr.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleMath.h">
-      <Filter>0. Default</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Manager\SceneMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Manager\SceneMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneMgr.h">
-      <Filter>Manager\SceneMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderMgr.h">
-      <Filter>Rendering</Filter>
+      <Filter>03. Device\00. ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>04. GameObject\Component\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Script.h">
-      <Filter>04. GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="EventMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerScript.h">
-      <Filter>04. GameObject\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="ToolCamScript.h">
-      <Filter>04. GameObject\Script</Filter>
+      <Filter>04.GameObject\00. Component\00. Camera</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h">
-      <Filter>04. GameObject\Component\Camera</Filter>
+      <Filter>04.GameObject\00. Component\00. Camera</Filter>
     </ClInclude>
-    <ClInclude Include="extern.h">
-      <Filter>01. Header</Filter>
+    <ClInclude Include="Animator3D.h">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>04.GameObject\00. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>04.GameObject\00. Component</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>04. GameObject\Component</Filter>
+      <Filter>04.GameObject\00. Component</Filter>
     </ClInclude>
-    <ClInclude Include="ResMgr.h">
-      <Filter>Manager\ResMgr</Filter>
+    <ClInclude Include="MeshRender.h">
+      <Filter>04.GameObject\00. Component</Filter>
     </ClInclude>
-    <ClInclude Include="MRT.h">
-      <Filter>Rendering\MRT</Filter>
+    <ClInclude Include="Script.h">
+      <Filter>04.GameObject\00. Component</Filter>
     </ClInclude>
-    <ClInclude Include="FBXLoader.h">
-      <Filter>Module</Filter>
+    <ClInclude Include="Transform.h">
+      <Filter>04.GameObject\00. Component</Filter>
     </ClInclude>
-    <ClInclude Include="MeshData.h">
-      <Filter>Resource</Filter>
+    <ClInclude Include="EnergeUiScript.h">
+      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HpUiScript.h">
+      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+    </ClInclude>
+    <ClInclude Include="HugUiScript.h">
+      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
+    </ClInclude>
+    <ClInclude Include="TemperUiScript.h">
+      <Filter>04.GameObject\01. Script\00.UIScript</Filter>
     </ClInclude>
     <ClInclude Include="GridScript.h">
-      <Filter>04. GameObject\Script</Filter>
+      <Filter>04.GameObject\01. Script</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>04.GameObject\01. Script</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordScript.h">
+      <Filter>04.GameObject\01. Script</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolCamScript.h">
+      <Filter>04.GameObject\01. Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>04.GameObject\02.Terrain</Filter>
     </ClInclude>
     <ClInclude Include="CNetMgr.h">
       <Filter>05. NetMgr</Filter>
     </ClInclude>
-    <ClInclude Include="EnergeUiScript.h">
-      <Filter>04. GameObject\Script\UiScript</Filter>
-    </ClInclude>
-    <ClInclude Include="HpUiScript.h">
-      <Filter>04. GameObject\Script\UiScript</Filter>
-    </ClInclude>
-    <ClInclude Include="HugUiScript.h">
-      <Filter>04. GameObject\Script\UiScript</Filter>
-    </ClInclude>
-    <ClInclude Include="TemperUiScript.h">
-      <Filter>04. GameObject\Script\UiScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>04. GameObject\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="StructuredBuffer.h">
-      <Filter>03. Device</Filter>
-    </ClInclude>
-    <ClInclude Include="Animator3D.h">
-      <Filter>04. GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Collider.h">
-      <Filter>04. GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="SwordScript.h">
-      <Filter>04. GameObject\Script</Filter>
-=======
     <ClInclude Include="CDeadReckoner.h">
       <Filter>05. NetMgr\00. DeadReckoner</Filter>
->>>>>>> 41d594f2a60
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Device.cpp">
-      <Filter>03. Device</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>0. Default</Filter>
-    </ClCompile>
-    <ClCompile Include="Core.cpp">
-      <Filter>02. Core</Filter>
-    </ClCompile>
-    <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>03. Device</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>zBasic</Filter>
-    </ClCompile>
-    <ClCompile Include="func.cpp">
-      <Filter>01. Header</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="PathMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="desc.cpp">
-      <Filter>0. Default</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>04. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>04. GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>04. GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshRender.cpp">
-      <Filter>04. GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="SimpleMath.cpp">
-      <Filter>0. Default</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Layer.cpp">
-      <Filter>Manager\SceneMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Manager\SceneMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneMgr.cpp">
-      <Filter>Manager\SceneMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderMgr.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderMgrInit.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>04. GameObject\Component\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Script.cpp">
-      <Filter>04. GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="EventMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerScript.cpp">
-      <Filter>04. GameObject\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="ToolCamScript.cpp">
-      <Filter>04. GameObject\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Frustum.cpp">
-      <Filter>04. GameObject\Component\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>04. GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="ResMgr.cpp">
-      <Filter>Manager\ResMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="ResMgrInit.cpp">
-      <Filter>Manager\ResMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="MRT.cpp">
-      <Filter>Rendering\MRT</Filter>
-    </ClCompile>
-    <ClCompile Include="FBXLoader.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshData.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="GridScript.cpp">
-      <Filter>04. GameObject\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CNetMgr.cpp">
-      <Filter>05. NetMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="EnergeUiScript.cpp">
-      <Filter>04. GameObject\Script\UiScript</Filter>
-    </ClCompile>
-    <ClCompile Include="HpUiScript.cpp">
-      <Filter>04. GameObject\Script\UiScript</Filter>
-    </ClCompile>
-    <ClCompile Include="HugUiScript.cpp">
-      <Filter>04. GameObject\Script\UiScript</Filter>
-    </ClCompile>
-    <ClCompile Include="TemperUiScript.cpp">
-      <Filter>04. GameObject\Script\UiScript</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>04. GameObject\Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="TerrainInit.cpp">
-      <Filter>04. GameObject\Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="StructuredBuffer.cpp">
-      <Filter>03. Device</Filter>
-    </ClCompile>
-    <ClCompile Include="Animator3D.cpp">
-      <Filter>04. GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Collider.cpp">
-      <Filter>04. GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="SwordScript.cpp">
-      <Filter>04. GameObject\Script</Filter>
-=======
-    <ClCompile Include="CDeadReckoner.cpp">
-      <Filter>05. NetMgr\00. DeadReckoner</Filter>
->>>>>>> 41d594f2a60
-    </ClCompile>
+    <ClInclude Include="Layer.h">
+      <Filter>06. Manager\01. SceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>06. Manager\01. SceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMgr.h">
+      <Filter>06. Manager\01. SceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMgr.h">
+      <Filter>06. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMgr.h">
+      <Filter>06. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMgr.h">
+      <Filter>06. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="PathMgr.h">
+      <Filter>06. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>06. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>07. Module</Filter>
+    </ClInclude>
+    <ClInclude Include="MRT.h">
+      <Filter>08. Rendering\00.MRT</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderMgr.h">
+      <Filter>08. Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Ptr.h">
+      <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>11. zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>11. zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>11. zBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>04.GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ResMgr.h">
+      <Filter>06. Manager\00. ResMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="std.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="func.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="value.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="light.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="compute.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="terrain.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="animation.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
+    <Filter Include="00. Default">
+      <UniqueIdentifier>{ca540dc0-f533-4e22-b70b-308ddec4e958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Header">
+      <UniqueIdentifier>{bb415882-579d-40d5-b7e7-62f3f07836cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Core">
+      <UniqueIdentifier>{dbb6e258-9e06-438e-880f-eab1c397db14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Device">
+      <UniqueIdentifier>{859dc41a-3f75-462a-9271-073d22c1a898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameObject">
+      <UniqueIdentifier>{7f000671-7bea-4243-8e15-c9842eb4cc89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. NetMgr">
+      <UniqueIdentifier>{d67fae14-1555-4244-ab4d-4e4b19722635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Manager">
+      <UniqueIdentifier>{8612ff70-6e7b-4be5-a881-af1f29248340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Module">
+      <UniqueIdentifier>{ebf0b9cc-59ba-4c04-b2ce-9e404ea51e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Rendering">
+      <UniqueIdentifier>{4fde36ca-1628-42a9-95d9-d4b619796912}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09. Resource">
+      <UniqueIdentifier>{8ada191a-7d83-4f19-8c33-f220781e291f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. ShaderCode">
+      <UniqueIdentifier>{a9a472ce-fa4c-45ef-8e9c-bb058cee8e74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. zBasic">
+      <UniqueIdentifier>{f5e2eb4c-a59e-4dd7-b79e-984ae2f7082c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Default\00.SimpleMath">
+      <UniqueIdentifier>{84c686a6-671b-46f4-9802-105e0c4d8977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Device\00. ConstantBuffer">
+      <UniqueIdentifier>{6a36f575-7ac8-49db-8e4a-f994144be872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Device\01. Device">
+      <UniqueIdentifier>{486a03c4-3a32-40b6-b939-4c1ccbd014af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Device\02.StructuredBuffer">
+      <UniqueIdentifier>{ba314dca-1db8-45fe-bb39-b7b73d5a6524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameObject\00. Component">
+      <UniqueIdentifier>{48f08812-6b98-421e-8cec-9b71c8b83e6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameObject\00. Component\00. Camera">
+      <UniqueIdentifier>{7dabe267-7b01-4845-aef2-e47d0aa21928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameObject\01. Script">
+      <UniqueIdentifier>{77f525c7-0238-4a31-833e-fc853e3cd946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameObject\01. Script\00.UIScript">
+      <UniqueIdentifier>{ffb0ee64-e9f0-4f70-89bc-637788daa088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameObject\02.Terrain">
+      <UniqueIdentifier>{4930b5dd-5f73-4a2f-abe1-15e99dfe491c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. NetMgr\00. DeadReckoner">
+      <UniqueIdentifier>{9d4462cc-4fe7-4c9d-8833-f4ac783bdc0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Rendering\00.MRT">
+      <UniqueIdentifier>{87cd5bd4-a5f6-4e41-9ba5-4a24cb076c5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Manager\01. SceneMgr">
+      <UniqueIdentifier>{1dee0397-3fd3-46d8-b40c-351194c59ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Manager\00. ResMgr">
+      <UniqueIdentifier>{62dcf552-387a-4e8c-be8d-39ffb2681930}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
-      <Filter>0. Default</Filter>
+      <Filter>00. Default\00.SimpleMath</Filter>
     </None>
   </ItemGroup>
 </Project>
