@@ -68,11 +68,11 @@ void CPlayerScript::OnPlayerUpdateCallback()
 
 	//	영문서버
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	
 
-	
+
+
 	char dir = MV_IDLE;
-	
+
 	float speed = 200.f;
 
 	if (KEY_HOLD(KEY_TYPE::KEY_SPACE))
@@ -82,9 +82,8 @@ void CPlayerScript::OnPlayerUpdateCallback()
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_R))
 	{
-		Vector3 ve = Vector3(0.9f, 0.9f, 0.9f);
-		Transform()->SetLocalScale(ve);
-		
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
+
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
@@ -167,15 +166,15 @@ void CPlayerScript::OnPlayerUpdateCallback()
 		g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 		//g_netMgr.Send_Move_Packet(MV_RIGHT, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 
-		
+
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D) || KEY_HOLD(KEY_TYPE::KEY_S))
 	{
-		g_netMgr.Send_Move_Packet(dir,localPos);
+		g_netMgr.Send_Move_Packet(dir, localPos);
 
 	}
-	else if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D) || KEY_AWAY(KEY_TYPE::KEY_S)) {
+	else if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_R)) {
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 		g_netMgr.Send_Move_Packet(dir, localPos);
 	}
@@ -186,7 +185,7 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
 	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
-		g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+	g_netMgr.Send_Move_Packet(MV_BACK, g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 	
 }
 	
