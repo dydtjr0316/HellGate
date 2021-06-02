@@ -173,6 +173,7 @@ void CPlayerScript::op_Move()
 		ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
 			p->localVec.y,
 			player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
+
 		cout << ObjTrans->GetLocalPos().x << endl;
 		cout << ObjTrans->GetLocalPos().z << endl<<endl;
 		player->InterpolationCnt_PP();

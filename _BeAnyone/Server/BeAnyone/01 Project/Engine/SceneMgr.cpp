@@ -909,7 +909,7 @@ void CSceneMgr::update()
 	m_pCurScene->finalupdate();
 
 	// 충돌 처리
-	CCollisionMgr::GetInst()->update();
+	//CCollisionMgr::GetInst()->update();
 }
 
 void CSceneMgr::update_tool()
