@@ -61,6 +61,9 @@
     <Filter Include="04. GameObject\Terrain">
       <UniqueIdentifier>{2223475f-ecf2-4a9d-8aa5-2d65cf6b6983}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. NetMgr\00. DeadReckoner">
+      <UniqueIdentifier>{3122e557-71bc-49a4-968c-fb6c7523eec0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h">
@@ -223,8 +226,13 @@
     <ClInclude Include="CollisionMgr.h">
       <Filter>Manager</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="SwordScript.h">
       <Filter>04. GameObject\Script</Filter>
+=======
+    <ClInclude Include="CDeadReckoner.h">
+      <Filter>05. NetMgr\00. DeadReckoner</Filter>
+>>>>>>> 41d594f2a60
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -375,8 +383,13 @@
     <ClCompile Include="CollisionMgr.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="SwordScript.cpp">
       <Filter>04. GameObject\Script</Filter>
+=======
+    <ClCompile Include="CDeadReckoner.cpp">
+      <Filter>05. NetMgr\00. DeadReckoner</Filter>
+>>>>>>> 41d594f2a60
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

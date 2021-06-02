@@ -57,5 +57,7 @@ using DirectX::SimpleMath::Matrix;
 #include "struct.h"
 #include "Global.h" 
 #include "Template.h"
+#include "CTimeMgr.h"
+
 
 

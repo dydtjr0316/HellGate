@@ -16,7 +16,6 @@ public:		// 패킷 전송부
 	void Send_Enter_Packet(  const int& user_id,   const int& other_id );
 	void Send_Leave_Packet(  const int& user_id, const int& other_id);
 	void Send_Move_Packet(const int& user_id, const int& mover_id, const char& dir);
-	void Send_Roate_Packet(const int& user_id, const int& mover_id, const char& dir);
 public:		// 패킷 수신부
 	void Process_Packet(const int& user_id, char* buf);
 	void Recv_Packet_Construct(const int& user_id, const int& io_byte);
@@ -24,8 +23,7 @@ public:		// 실제 객체 업데이트부
 	//void Random_Move_NPC(const int& id);
 	//void Random_Move_Monster(const int& id);
 	void Do_Attack(const int& user_id);
-	void Do_Move(const int& user_id, const char& dir, Vector3& localVec);
-	void Do_Rotate(const int& user_id, const char& dir, float& rotateY);
+	void Do_Move(const int& user_id, const char& dir, Vector3& localVec, const float& rotateY);
 	void Disconnect(const int& user_id);
 	void Enter_Game(const int& user_id, char name[]);
 public:		// 시야처리 작성부

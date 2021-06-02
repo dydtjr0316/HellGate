@@ -12,9 +12,12 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
-//const char ip[] = "192.168.0.3";
-const char ip[] = "192.168.0.7";
-//const char KPUIP[] = "192.168.20.138";
+
+const char ip[] = "192.168.0.3";
+//const char ip[] = "192.168.0.7";
+//const char ip[] = "192.168.140.59";
+const char office[] = "192.168.102.43";
+const char KPUIP[] = "192.168.20.138";
 
 CNetMgr g_netMgr;
 
@@ -91,6 +94,8 @@ void CNetMgr::Send_Packet(void* _packet)
 	dataBuf.over = m_overlapped;
 
 	testpacket = dataBuf.wsabuf.len;
+
+
 	if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() == WSA_IO_PENDING)
@@ -124,31 +129,50 @@ void CNetMgr::Send_LogIN_Packet()
 
 void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local)
 {
-	cs_packet_move m_packet;
-	m_packet.type = CS_MOVE;
-	m_packet.size = sizeof(m_packet);
-	m_packet.direction = dir;
-	m_packet.localVec = local;
+	cs_packet_move p;
+	p.type = CS_MOVE;
+	p.size = sizeof(p);
+	p.dir = dir;
+	p.localVec = local;
 
-	Send_Packet(&m_packet);
+	Send_Packet(&p);
 }
 
-void CNetMgr::Send_Rotate_Packet(unsigned const char& dir, const float& rotateY)
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const float& rotateY)
 {
-	cs_packet_rotate packet;
-	packet.type = CS_ROTATE;
-	packet.size = sizeof(packet);
-	packet.dir = dir;
-	packet.rotateY = rotateY;
-	Send_Packet(&packet);
+	cs_packet_move p;
+	p.type = CS_MOVE;
+	p.size = sizeof(p);
+	p.dir = dir;
+	p.localVec = local;
+	p.rotateY = rotateY;
+
+	Send_Packet(&p);
+
 }
+
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVec, const float& rotateY, const system_clock::time_point& startTime)
+{
+	cs_packet_move p;
+	p.type = CS_MOVE;
+	p.size = sizeof(p);
+	p.dir = dir;
+	p.localVec = local;
+	p.DirVec = dirVec;
+	p.rotateY = rotateY;
+	p.Start = startTime;
+	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
+
+	Send_Packet(&p);
+}
+
 
 void CNetMgr::Send_Attack_Packet()
 {
-	cs_packet_attack m_packet;
-	m_packet.type = CS_ATTACK;
-	m_packet.size = sizeof(m_packet);
-	Send_Packet(&m_packet);
+	cs_packet_attack p;
+	p.type = CS_ATTACK;
+	p.size = sizeof(p);
+	Send_Packet(&p);
 }
 
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
@@ -202,15 +226,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->initDeadReckoner();
 	}
 	break;
 	case SC_PACKET_ENTER:
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
-		
-		//cout << "enter packet recv -> " << my_packet->id << endl;
-		
+		cout << "enter 함" << endl;
 		if (id == g_myid)
 		{
 			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
@@ -225,15 +248,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
-					//cout << "아이디 : " << id << "\t방금 들어온 객체의 주소 : " << &g_Object.find(id)->second;
-					//cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"PlayerMale");
 					g_Object.find(id)->second->FrustumCheck(false);
 					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f,my_packet->RotateY, 0.f));
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
@@ -262,82 +283,28 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//추가
 			if (0 != g_Object.count(other_id))
 			{
-				CTransform* ObjTrans = ObjTrans = g_Object.find(other_id)->second->Transform();;
-
-				ObjTrans->SetLocalPos(packet->localVec);
-				switch (packet->dir)
-				{
-				case MV_FRONT:
-				case MV_LEFT:
-				case MV_RIGHT:
-					SetAnimation(other_id, Ani_TYPE::WALK_F);
-					break;
-				case MV_BACK:
-					SetAnimation(other_id, Ani_TYPE::WALK_D);
-					break;
-				case MV_IDLE:
-					SetAnimation(other_id, Ani_TYPE::IDLE);
-					break;
-				default:
-					cout << "Unknown Direction from Client move packet!\n";
-					DebugBreak();
-					exit(-1);
-				}
+				system_clock::time_point end = system_clock::now();
+				nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
+				
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
+				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 			}
 		}
 	}
 	break;
-	case SC_PACKET_MOUSE:
-	{
-		int other_id;
-		sc_packet_rotate* rotate_packet = nullptr;
-		switch (ptr[2])
-		{
-		case Rotate_LBTN:
-			rotate_packet = reinterpret_cast<sc_packet_rotate*>(ptr);
-			other_id = rotate_packet->id;
-
-			if (other_id == g_myid)
-			{
-
-			}
-			else
-			{
-				if (0 != g_Object.count(other_id))
-				{
-					g_Object.find(other_id)->second->Transform()->SetLocalRot(Vector3(0.f, rotate_packet->rotateY, 0.f));
-
-				}
-			}
-			break;
-		default:
-			break;
-		}
-		
-	}
-	break;
+	
 	case SC_PACKET_LEAVE:
 	{
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
-			/*delete g_Object.find(g_myid)->second;
-			g_Object.erase(g_myid);*/
-
 		}
 		else {
 			if (0 != g_Object.count(other_id))
 			{
-				//cout << "아이디 : "<< other_id <<"\t방금 나간 객체의 주소 : " << &g_Object.find(other_id)->second;
-
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 				CEventMgr::GetInst()->update();
-				
 				g_Object.erase(other_id);
-				
-				//cout << "g_OBJ size -> " << g_Object.size() << endl << endl;
-
-				
 			}
 		}
 	}
@@ -352,13 +319,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	}
 	break;
-	/*case SC_PACKET_ID:
+	case SC_PACKET_ID:
 	{
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
 		g_myid = packet->id;
 
 		cout << "Send_ID_Packet My ID : " << g_myid << endl;
-	}*/
+	}
 	break;
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);

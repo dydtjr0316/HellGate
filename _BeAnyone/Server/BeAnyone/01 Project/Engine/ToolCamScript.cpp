@@ -105,11 +105,6 @@ void CToolCamScript::SetPlayerFixedCamera()
     vPos = vPlayerPos->GetLocalPos() + (vPlayerPos->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
     vPos.y = vPlayerPos->GetLocalPos().y + 450.f; // 200.f;
 
-    // 0506
-   // g_Object.find(g_myid)->second->GetCam()->GetScript<CToolCamScript>()->
     Transform()->SetLocalPos(vPos);
-    // Transform()->SetLocalRot(vPlayerPos->Transform()->GetLocalRot() + Vector3(XM_PI / 6, XM_PI, 0.f));
-     //Transform()->SetLocalRot(vPlayerPos->GetLocalRot() + Vector3(XM_PI / 6, XM_PI, 0.f));
-   //  g_Object.find(g_myid)->second->GetCam()->GetScript<CToolCamScript>()->
-    Transform()->SetLocalRot(vPlayerPos->GetLocalRot() + Vector3(XM_PI / 8.5, XM_PI, 0.f)); //(XM_PI / 6, XM_PI, 0.f));
+    Transform()->SetLocalRot(vPlayerPos->GetLocalRot() + Vector3(XM_PI / 8.5, XM_PI, 0.f));
 }
