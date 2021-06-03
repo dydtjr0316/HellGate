@@ -3,6 +3,7 @@
   <ProjectOutputs />
   <ContentFiles>
     <ContentFile>
+<<<<<<< HEAD
       <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso</FullPath>
     </ContentFile>
     <ContentFile>
@@ -22,6 +23,27 @@
     </ContentFile>
     <ContentFile>
       <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso</FullPath>
+=======
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso</FullPath>
+>>>>>>> a73f7caa07e6e7f77c36ab67394251a08eca4e38
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
