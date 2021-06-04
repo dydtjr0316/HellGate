@@ -26,6 +26,10 @@ public:
 	virtual ~CPlayerScript();
 
 private:
+	float m_ftimeCount = 0.f;
+	float m_fDelayTime = 1.f;
+	bool FirstPacket = false;
+
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;
 	float m_fSpeed;
@@ -40,6 +44,10 @@ public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
 	void OnPlayerUpdateCallback();
+	bool GetBisFrist() { return FirstPacket; }
+	void SetBisFrist(const bool& bis) { FirstPacket = bis; }
+	void CountTime() { m_ftimeCount += DT; }
+	void SetTime_Zero() { m_ftimeCount = 0.f; }
 
 public: //용석
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
@@ -52,7 +60,9 @@ public: //용석
 	CDeadReckoner* GetReckoner() { return m_pDeadReckoner; }
 	void op_Move();
 	void SetOtherMovePacket(sc_packet_move* p, const float& rtt);
-	void SetOtherMovePacket__IsMoving(const bool& isMoving) { m_movePacketTemp->isMoving = isMoving; }
+	void SetOtherMovePacket__IsMoving(const bool& isMoving) { 
+		m_movePacketTemp->isMoving = isMoving;
+	}
 	void DeleteOherMovePaacket() { if (m_movePacketTemp != nullptr) { m_movePacketTemp = nullptr; } }
 	sc_packet_move* GetOtherMovePacket() { return m_movePacketTemp; }
 

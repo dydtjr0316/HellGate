@@ -113,31 +113,46 @@ void CPlayerScript::update()
 	{
 		player->SetAnimation(Ani_TYPE::IDLE);
 	}
-	if (KEY_HOLD(KEY_TYPE::KEY_W)|| KEY_HOLD(KEY_TYPE::KEY_A)|| KEY_HOLD(KEY_TYPE::KEY_S)|| KEY_HOLD(KEY_TYPE::KEY_D))
+	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
 		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
 
+	
 
 
-	if (((player->GetReckoner()->isFollowing()|| !ReckonerMove) &&
+
+	if (((player->GetReckoner()->isFollowing() || !ReckonerMove) &&
 		((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))))
 	{
 		ReckonerMove = true;
 		system_clock::time_point start = system_clock::now();
-		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y,start, DT, ReckonerMove);
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
 
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
 		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
-
-		Vector2 real(g_Object.find(g_myid)->second->Transform()->GetLocalPos().x, g_Object.find(g_myid)->second->Transform()->GetLocalPos().z);
-		Vector2 follower(player->GetReckoner()->GetLocalPos().x, player->GetReckoner()->GetLocalPos().z);
 	}
+
+
 
 
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
 	{
 		ReckonerMove = false;
 		g_netMgr.Send_Stop_Packet(ReckonerMove);
+		SetTime_Zero();
+	}
+
+
+	CountTime();
+	if (m_ftimeCount >= m_fDelayTime)
+	{
+		system_clock::time_point start = system_clock::now();
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
+
+		player->GetReckoner()->SetDirVec(worldDir);
+		player->GetReckoner()->SetRotateY(vRot.y);
+		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		SetTime_Zero();
 	}
 
 
@@ -167,24 +182,33 @@ void CPlayerScript::op_Move()
 
 	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 	CTransform* playerTrans = g_Object.find(p->id)->second->Transform();
+	CTerrain* pTerrain = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->GetTerrain();
+	const Vector3& xmf3Scale = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
+	Vector3 temp;
 
-	cout << "µ¨Å¸ °è»ê Àü******" << endl;
-	cout << playerTrans->GetLocalPos().x << endl;
-	cout << playerTrans->GetLocalPos().y << endl;
-	cout << playerTrans->GetLocalPos().z << endl;
-	cout << "*************************" << endl;
-
-
-	Vector3 temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
+	if (player->GetBisFrist())
+	{
+		temp = p->localVec + p->dirVec * p->speed * DT;
+		player->SetBisFrist(false);
+	}
+	else
+		temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
 
 	playerTrans->SetLocalRot(p->rotateY);
+
+	int z = (int)(temp.z / xmf3Scale.z);
+	float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f + 100.f;
+
+	if (temp.y != fHeight)
+		temp.y = fHeight;
+
 	playerTrans->SetLocalPos(temp);
 
-	cout << "µ¨Å¸ °è»ê ÈÄ" << endl;
-	cout << playerTrans->GetLocalPos().x << endl;
-	cout << playerTrans->GetLocalPos().y << endl;
-	cout << playerTrans->GetLocalPos().z << endl;
-	cout << "*************************" << endl;
+	//cout << "µ¨Å¸ °è»ê ÈÄ" << endl;
+	//cout << playerTrans->GetLocalPos().x << endl;
+	//cout << playerTrans->GetLocalPos().y << endl;
+	//cout << playerTrans->GetLocalPos().z << endl;
+	//cout << "*************************" << endl;
 
 
 	{
@@ -223,8 +247,6 @@ void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 	m_movePacketTemp = new sc_packet_move;
 	m_movePacketTemp = p;
 	m_fRTT = rtt;
-	if (m_movePacketTemp->isMoving)cout << "¹ÞÀ»¶© Æ®·ç·¡" << endl;
-	else cout << "¹ÞÀ»¶© flase·¡" << endl;
 }
 
 

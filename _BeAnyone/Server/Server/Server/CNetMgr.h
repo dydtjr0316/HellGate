@@ -16,7 +16,7 @@ public:		// 패킷 전송부
 	void Send_Enter_Packet(  const int& user_id,   const int& other_id );
 	void Send_Leave_Packet(  const int& user_id, const int& other_id);
 	void Send_Move_Packet(const int& user_id, const int& mover_id, const char& dir);
-	void Send_Stop_Packet(const unsigned short& user_id, const bool& isMoving);
+	void Send_Stop_Packet(const unsigned short& user_id, const int& mover_id, const bool& isMoving);
 public:		// 패킷 수신부
 	void Process_Packet(const int& user_id, char* buf);
 	void Recv_Packet_Construct(const int& user_id, const int& io_byte);

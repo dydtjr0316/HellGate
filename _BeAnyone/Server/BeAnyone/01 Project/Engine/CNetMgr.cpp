@@ -297,7 +297,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				system_clock::time_point end = system_clock::now();
 				nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
-				
+				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
+				if(packet->isMoving)
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
+				else
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+
 				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 			}
@@ -315,7 +320,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
-			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
 		}
 	}
 	break;

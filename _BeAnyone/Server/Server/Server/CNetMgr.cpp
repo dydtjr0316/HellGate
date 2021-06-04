@@ -235,12 +235,12 @@ void CNetMgr::Send_Move_Packet(const int& user_id, const int& mover_id, const ch
     Send_Packet(user_id, &p);
 }
 
-void CNetMgr::Send_Stop_Packet(const unsigned short& user_id, const bool& isMoving)
+void CNetMgr::Send_Stop_Packet(const unsigned short& user_id, const int& mover_id,  const bool& isMoving)
 {
     sc_packet_stop p;
     p.size = sizeof(p);
     p.type = SC_PACKET_STOP;
-    p.id = user_id;
+    p.id = mover_id;
     p.isMoving = isMoving;
     Send_Packet(user_id, &p);
 }
@@ -577,7 +577,7 @@ void CNetMgr::Do_Stop(const unsigned short& user_id, const bool& isMoving)
                 }
                 else
                 {
-                    Send_Stop_Packet(ob, isMoving);  // 여기서 또 들어옴
+                    Send_Stop_Packet(ob, user_id, isMoving);  // 여기서 또 들어옴
                 }
             }
         }
@@ -592,7 +592,7 @@ void CNetMgr::Do_Stop(const unsigned short& user_id, const bool& isMoving)
                 }
                 else
                 {
-                    Send_Stop_Packet(ob, isMoving);  // 여기서 또 들어옴
+                    Send_Stop_Packet(ob, user_id,  isMoving);  // 여기서 또 들어옴
                 }
             }
         }
@@ -706,6 +706,7 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
     switch (buf[1]) {
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
+
 
         Find(user_id)->SetIsMoving(packet->isMoving);
         Find(user_id)->SetClientTime(packet->move_time);
@@ -1024,16 +1025,20 @@ void CNetMgr::DeadReckoning_Thread()
 {
     if (g_Reckoner.size() == 0)return;
     CGameObject* obj = nullptr;
+    cs_packet_move* drmPacket = nullptr;
     while (true)
     {
         for (auto& reckoner : g_Reckoner)
         {
             obj = Find(reckoner);
-            if (obj->GetDeadReckoningPacket()->isMoving)
+            drmPacket = obj->GetDeadReckoningPacket();
+            if (drmPacket->isMoving)
             {
-                obj->SetRotateY(obj->GetDeadReckoningPacket()->rotateY);
-                obj->SetPosV(obj->GetLocalPosVector() + obj->GetDeadReckoningPacket()->DirVec * obj->GetSpeed() * DeltaTime);
+                obj->SetRotateY(drmPacket->rotateY);
+                obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
+                //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
             }
+
         }
     }
     cout << "deadReckoning_ Thread Working" << endl;
