@@ -288,13 +288,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 				CGameObject* monster = g_Object.find(id)->second;
 				Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
 				pMeshData->Save(pMeshData->GetPath());
-
-
 				
 				monster =  pMeshData->Instantiate();
 				monster->SetName(L"FireMonster");
 				monster->FrustumCheck(false);
-				monster->Transform()->SetLocalPos(Vector3(500.f, 200, 500.f));
+				monster->Transform()->SetLocalPos(my_packet->localVec);
+				cout << my_packet->localVec.x << endl;
+				cout << my_packet->localVec.z << endl;
+				cout << "***************************" << endl << endl;
 				monster->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 				monster->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
 				monster->AddComponent(new CCollider);
@@ -306,6 +307,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 				monster->AddComponent(new CMonsterScript);
 
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", monster, false);
+
+				monster->GetScript<CMonsterScript>()->SetID(id);
 			}
 		}
 	}

@@ -393,7 +393,7 @@ void CPlayerScript::OnCollision(CCollider* _pOther)
 
 	
 	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	localPos += -g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetPlayerDir();
+	localPos += -g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetPlayerDir() * 2;
 	g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
 
 }
