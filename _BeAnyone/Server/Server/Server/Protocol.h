@@ -92,7 +92,7 @@ struct sc_packet_id
 	unsigned short  id;
 };
 struct sc_packet_login_ok {
-
+	
 	char size;
 	char type;
 	// id제거해도 되는데 일단 두고 나중에 최적화 할때 지우자 // 다시확인
