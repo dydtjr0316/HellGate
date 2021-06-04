@@ -1,15 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <ProjectOutputs>
-    <ProjectOutput>
-<<<<<<< HEAD
-      <FullPath>D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\02 File\bin_debug\Client.exe</FullPath>
-=======
-      <FullPath>C:\Users\HyoRim\Desktop\graduation project\HellGate\_BeAnyone\Server\BeAnyone\02 File\bin_debug\Client.exe</FullPath>
->>>>>>> a73f7caa07e6e7f77c36ab67394251a08eca4e38
-    </ProjectOutput>
-  </ProjectOutputs>
-  <ContentFiles />
-  <SatelliteDlls />
-  <NonRecipeFileRefs />
+  <ProjectOutputs>C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\02 File\bin_debug\Client.exe</ProjectOutputs>
+  <ContentFiles></ContentFiles>
+  <SatelliteDlls></SatelliteDlls>
+  <NonRecipeFileRefs></NonRecipeFileRefs>
 </Project>

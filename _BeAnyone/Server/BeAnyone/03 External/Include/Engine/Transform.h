@@ -24,6 +24,8 @@ private:
 	Matrix m_mPlayerWolrd;
 	Vector3 m_vPlayerDir[(UINT)DIR_TYPE::END];
 
+	Matrix m_matWVP;
+
 public:
 	const Vector3& GetLocalPos() { return m_vLocalPos; }
 	Vector3 GetWorldPos() { return m_matWorld.Translation(); }
@@ -46,6 +48,9 @@ public:
 
 	bool IsCasting(const Vector3& _vPos);
 	float GetMaxScale();
+
+	// monster ui 배치
+	Matrix GetMatWVP() { return m_matWVP; }
 
 	// Transform 정보를 상수데이터 및 레지스터로 전달한다.
 	void UpdateData();

@@ -774,8 +774,8 @@ void CSceneMgr::init()
 	m_pCurScene->AddGameObject(L"Weapone", pSword, false);
 
 	// =============
-   // Monster 파일 로드
-   // =============
+    // Monster 파일 로드
+    // =============
 	// 몬스터
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
 	pMeshData->Save(pMeshData->GetPath());
@@ -792,10 +792,8 @@ void CSceneMgr::init()
 	pMonsterObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_walking");
 	pMonsterObj->Collider()->SetBoundingBox(BoundingBox(pMonsterObj->Transform()->GetLocalPos(), pMonsterObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pMonsterObj->Collider()->SetBoundingSphere(BoundingSphere(pMonsterObj->Transform()->GetLocalPos(), pMonsterObj->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-
 	// Script 설정
 	pMonsterObj->AddComponent(new CMonsterScript);
-
 	m_pCurScene->AddGameObject(L"Monster", pMonsterObj, false);
 
 	// ==================
@@ -873,7 +871,6 @@ void CSceneMgr::init()
 	//pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
 	//pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f,2.f,2.f)));
 	//pObject->Collider()->SetBoundingSphere(BoundingSphere(pObject->Transform()->GetLocalPos(), 50.f));
-
 	// Script 설정
 	//pObject->AddComponent(new CMonsterScript);
 	// AddGameObject
@@ -898,7 +895,6 @@ void CSceneMgr::init()
 	//pObject->AddComponent(new CCollider);
 	//pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
 	//pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f, 2.f, 2.f)));
-
 	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pNormalTargetTex.GetPointer());	
 	// Script 설정
 //	pObject->AddComponent(new CMonsterScript);
