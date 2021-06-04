@@ -41,16 +41,25 @@ public:
 	void error_display(const char* msg, int err_no);
 public:		// thread 包府何
 	void Worker_Thread();
+	void DeadReckoning_Thread();
 	void Timer_Worker();
 	void WakeUp_NPC(const int& id);
 	void WakeUp_Monster(const int& id);
 	void Add_Timer(const int& obj_id, const int& status, system_clock::time_point t);
 
-public:		// 吝俺磊 包府何
+public:		//  object 吝俺磊 包府何
 	void Add(CGameObject* pObj, const int& id);
 	CGameObject* Find(const int& id);
 	void Delete_Obj(const int& id);
 	const size_t Count(const int& id);
 	const size_t Size();
+
+public:
+	void ReckonerAdd(const int& id);
+	int ReckonerFind(const int& id);
+	void Delete_Reckoner(const int& id);
+	const size_t ReckonerCount(const int& id);
+	const size_t ReckonerSize();
+
 };
 

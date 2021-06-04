@@ -74,6 +74,38 @@ const size_t CNetMgr::Size()
     return g_Object.size();
 }
 
+void CNetMgr::ReckonerAdd(const int& id)
+{
+    if (g_Reckoner.count(id) == 0)
+        g_Reckoner.emplace(id);
+}
+
+int CNetMgr::ReckonerFind(const int& id)
+{
+    if (g_Reckoner.count(id) != 0)
+    {
+        return  id;
+    }
+}
+
+void CNetMgr::Delete_Reckoner(const int& id)
+{
+    if (g_Reckoner.count(id) != 0)
+    {
+        g_Reckoner.erase(id);
+    }
+}
+
+const size_t CNetMgr::ReckonerCount(const int& id)
+{
+    return g_Reckoner.count(id);
+}
+
+const size_t CNetMgr::ReckonerSize()
+{
+    return g_Reckoner.size();
+}
+
 void CNetMgr::Send_Packet(const int& id, void* packet)
 {
     unsigned char* buf = reinterpret_cast<unsigned char*>(packet);
@@ -179,8 +211,8 @@ void CNetMgr::Send_Leave_Packet( const int& user_id, const int& other_id)
     p.id = other_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
-    cnt++;
-    //cout << other_id << "가  " << user_id << "한테서 LEAVE  " << "cnt = " << cnt << endl;
+    
+
 
     Send_Packet(user_id, &p);
 }
@@ -590,6 +622,8 @@ void CNetMgr::Disconnect(const int& user_id)
     CGameObject* pUser = Find( user_id);
     pUser->SetStatus(OBJSTATUS::ST_ALLOC);
 
+    Delete_Reckoner(user_id);
+
     Send_Leave_Packet( user_id, user_id);
 
     pUser->GetLock().lock();
@@ -678,7 +712,9 @@ void CNetMgr::Process_Packet(const int& user_id, char* buf)
         Find(user_id)->SetSpeed(packet->speed);
         Find(user_id)->SetHalfRTT(packet->Start);
         Find(user_id)->SetDirV(packet->DirVec);
-        
+        Find(user_id)->SetDeadReckoningPacket(packet);
+
+        ReckonerAdd(user_id);
 
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
 
@@ -831,7 +867,10 @@ void CNetMgr::Worker_Thread()
         CClient* pUser = dynamic_cast<CClient*>(Find( user_id));
         switch (exover->op) {
         case ENUMOP::OP_RECV:
-            if (0 == io_byte) Disconnect(user_id);
+            if (0 == io_byte) {
+                Disconnect(user_id);
+                
+            }
             else {
                 CClient* pClient = dynamic_cast<CClient*>(Find( user_id));
                 Recv_Packet_Construct(user_id, io_byte);
@@ -979,6 +1018,24 @@ void CNetMgr::Worker_Thread()
    
     }
 
+}
+
+void CNetMgr::DeadReckoning_Thread()
+{
+    if (g_Reckoner.size() == 0)return;
+    CGameObject* obj = nullptr;
+    while (true)
+    {
+        for (auto& reckoner : g_Reckoner)
+        {
+            obj = Find(reckoner);
+            if (obj->GetDeadReckoningPacket()->isMoving)
+            {
+                obj->SetRotateY(obj->GetDeadReckoningPacket()->rotateY);
+                obj->SetPosV(obj->GetLocalPosVector() + obj->GetDeadReckoningPacket()->DirVec * obj->GetSpeed() * DeltaTime);
+            }
+        }
+    }
 }
 
 void CNetMgr::Timer_Worker()

@@ -13,6 +13,12 @@ CGameObject::CGameObject()
     m_tSector;
     m_lock;
     m_Exover;
+    m_deadReckoning_Packet = nullptr;
+}
+
+void CGameObject::SetDeadReckoningPacket(cs_packet_move* p)
+{
+    m_deadReckoning_Packet = p;
 }
 
 void CGameObject::SetPosV(const float& x, const float& y, const float& z)

@@ -15,6 +15,11 @@ typedef OBJLIST::iterator OBJITER;
 
 extern OBJLIST g_Object;
 
+typedef unordered_set<int> RECKONER;
+typedef RECKONER::iterator RECKONER_ITER;
+
+extern RECKONER g_Reckoner;
+
 // mutex
 extern mutex timer_lock;
 extern mutex wakeup_lock;

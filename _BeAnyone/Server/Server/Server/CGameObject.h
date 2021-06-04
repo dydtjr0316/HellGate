@@ -29,6 +29,8 @@ public: // 상속 ,, 함수
 	float GetSpeed() { return m_fspeed; }
 	system_clock::time_point GetHalfRTT() { return m_halfRTT; }
 	bool GetIsMoving() { return m_bisMoving; }
+	void SetDeadReckoningPacket(cs_packet_move* p);
+	cs_packet_move* GetDeadReckoningPacket() { return m_deadReckoning_Packet; }
 
 
 	// set
@@ -95,5 +97,7 @@ protected:
 	Vector3 m_v3RotateVector;
 
 	system_clock::time_point m_halfRTT;
+
+	cs_packet_move* m_deadReckoning_Packet;
 };
 
