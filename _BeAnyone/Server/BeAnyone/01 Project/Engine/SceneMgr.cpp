@@ -770,6 +770,7 @@ void CSceneMgr::init()
 				, 1.f));
 		}
 		pMonsterUi->Transform()->SetLocalScale(vScale);
+		pMonsterUi->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 
 		// MeshRender ¼³Á¤
 		Ptr<CMesh> hp = new CMesh;
