@@ -6,6 +6,7 @@ using namespace std;
 
 bool checkOnce = true;
 int movePacketSendCnt;
+bool ReckonerMove = false;
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
@@ -117,11 +118,12 @@ void CPlayerScript::update()
 
 
 
-	if ((player->GetReckoner()->isFollowing() && 
+	if (((player->GetReckoner()->isFollowing()|| !ReckonerMove) &&
 		((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))))
 	{
+		ReckonerMove = true;
 		system_clock::time_point start = system_clock::now();
-		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y,start, DT, true);
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y,start, DT, ReckonerMove);
 
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
@@ -133,7 +135,10 @@ void CPlayerScript::update()
 
 
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
-		g_netMgr.Send_Stop_Packet(false);
+	{
+		ReckonerMove = false;
+		g_netMgr.Send_Stop_Packet(ReckonerMove);
+	}
 
 
 

@@ -1036,6 +1036,7 @@ void CNetMgr::DeadReckoning_Thread()
             }
         }
     }
+    cout << "deadReckoning_ Thread Working" << endl;
 }
 
 void CNetMgr::Timer_Worker()
