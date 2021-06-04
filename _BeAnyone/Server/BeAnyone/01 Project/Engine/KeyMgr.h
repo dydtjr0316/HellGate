@@ -21,6 +21,7 @@ enum class KEY_TYPE
 	KEY_S,
 	KEY_A,
 	KEY_D,
+	KEY_E,
 	KEY_R,
 	KEY_Z,
 
