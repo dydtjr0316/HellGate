@@ -40,7 +40,7 @@ void CPlayerScript::update()
 	Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 	Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
 	Vector3 worldDir;
-
+	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
 
@@ -156,10 +156,24 @@ void CPlayerScript::op_Move()
 	if (p == nullptr)
 		return;
 	if (g_Object.count(p->id) == 0)return;
-
 	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
 	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 
+	//switch (p->dir)
+	//{
+	//case MV_FRONT: 
+	//case MV_RIGHT:
+	//case MV_LEFT:
+	//	player->SetAnimation(p->id, Ani_TYPE::WALK_F);
+	//	break;
+	//case MV_BACK:
+	//	player->SetAnimation(p->id, Ani_TYPE::WALK_D);
+	//	break;
+	//default:
+	//	break;
+	//}
+
+	
 
 	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
 
@@ -168,6 +182,7 @@ void CPlayerScript::op_Move()
 
 	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
 	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+
 
 	if (player->GetInterpolationCnt() != 4)
 	{

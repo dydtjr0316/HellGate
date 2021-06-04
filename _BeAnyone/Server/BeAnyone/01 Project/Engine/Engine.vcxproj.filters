@@ -213,9 +213,6 @@
     <ClInclude Include="Core.h">
       <Filter>02. Core</Filter>
     </ClInclude>
-    <ClInclude Include="StructuredBuffer.h">
-      <Filter>03. Device\01. Device</Filter>
-    </ClInclude>
     <ClInclude Include="Device.h">
       <Filter>03. Device\01. Device</Filter>
     </ClInclude>
@@ -356,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="MonsterScript.h">
       <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="StructuredBuffer.h">
+      <Filter>03. Device\02.StructuredBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -292,6 +292,7 @@ enum class FBX_TYPE
 {
 	PLAYER,
 	DESERT_MAP,
+	MONSTER,
 	END,
 };
 \
