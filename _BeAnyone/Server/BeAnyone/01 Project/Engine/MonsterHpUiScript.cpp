@@ -21,23 +21,35 @@ void CMonsterHpUiScript::update()
 	Vector3 MonsterPos = m_pMonster->Transform()->GetLocalPos();
 	Vector3 UiPos = m_pObject->Transform()->GetLocalPos();
 
-	Matrix MonsterMatWVP = m_pMonster->Transform()->GetMatWVP();
+	Vector3 uiFront = m_pObject->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vector3 PlayerFront = m_pPlayer->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	
+	//Vector3 UiRot = XMVector3Dot(uiFront, -MonsterFront);
+	//float radian = acos();
 
-	//UiPos = MonsterPos;
-	//UiPos.y = MonsterPos.y + 500.f;
-	//UiPos.z = 1.f;
-	Vector3 a = XMVector3TransformNormal(MonsterPos, MonsterMatWVP);
+	float UiDot = XMVectorGetY(XMVector3Dot(uiFront, -PlayerFront));	// 두 벡터의 내적
+	float UiRot = acos(UiDot);
+	//cout << UiRot.x << "\t" << UiRot.y << "\t" << UiRot.z  << endl;
+	//Matrix MonsterMatWVP = m_pMonster->Transform()->GetMatWVP();
 
-	UiPos.y = 150.f;
-	UiPos.x = a.x;
+	cout << "--------------------------------------------" << endl;
+	cout << "UiFront: " << uiFront.x << "\t" << uiFront.y << "\t" << uiFront.z << endl;
+	cout << "PlayerFront: " << PlayerFront.x << "\t" << PlayerFront.y << "\t" << PlayerFront.z << endl;
+	cout << "UiRot: "<< UiRot << endl;
+	cout << "UiDot: " << UiDot << endl;
+	cout << "--------------------------------------------" << endl << endl;
 
-	//cout << MonsterMatWVP._11 << "\t" << MonsterMatWVP._12 << "\t" << MonsterMatWVP._13 << "\n" <<
-	//	MonsterMatWVP._21 << "\t" << MonsterMatWVP._22 << "\t" << MonsterMatWVP._23 << "\n" <<
-	//	MonsterMatWVP._31 << "\t" << MonsterMatWVP._32 << "\t" << MonsterMatWVP._33 << "\n" << endl;
 
-	//cout << a.x << "\t" << a.y << "\t" << a.z << "\t" << endl;
+	UiPos = MonsterPos;
+	UiPos.y = MonsterPos.y + 50.f;
+	UiPos.z = 1.f;
+	// 
+	//Vector3 a = XMVector3TransformNormal(MonsterPos, MonsterMatWVP);
+
+
 	
 		
 
 	m_pObject->Transform()->SetLocalPos(UiPos);
+	m_pObject->Transform()->SetLocalRot(Vector3(0.f, UiRot, 0.f));
 }

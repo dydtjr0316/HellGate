@@ -67,7 +67,7 @@ CSceneMgr::~CSceneMgr()
 	SAFE_DELETE(m_pCurScene);
 }
 
-void CSceneMgr::CreateTargetUI(CGameObject* _pMonster)
+void CSceneMgr::CreateTargetUI()
 {
 	//Vector3 vScale(150.f, 150.f, 1.f);
 	//
@@ -244,59 +244,6 @@ void CSceneMgr::CreateTargetUI(CGameObject* _pMonster)
 		// AddGameObject
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
-
-	//----------------
-	// monster hp ui
-	//----------------
-
-	for (int i = 0; i < 2; ++i) {
-		CGameObject* pMonsterUi = new CGameObject;
-		pMonsterUi->SetName(L"UI Object");
-		pMonsterUi->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-		pMonsterUi->AddComponent(new CTransform);
-		pMonsterUi->AddComponent(new CMeshRender);
-		
-
-		tResolution res = CRenderMgr::GetInst()->GetResolution();
-
-		if (i == 0) {
-			if (i == 1) {
-				vScale = Vector3(350.f, 20.f, 1.f);
-			}
-			pMonsterUi->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
-				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
-				, 1.f));
-		}
-		else if (i == 1) {
-			vScale = Vector3(360.f, 2.f, 1.f);
-			pMonsterUi->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
-				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
-				, 1.f));
-		}
-
-		pMonsterUi->Transform()->SetLocalScale(vScale);
-
-		// MeshRender 설정
-		Ptr<CMesh> hp = new CMesh;
-		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-
-
-		pMonsterUi->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-		pMonsterUi->MeshRender()->SetMaterial(pMtrl->Clone());
-
-		if (i == 0) {
-			pMonsterUi->AddComponent(new CMonsterHpUiScript);
-			CMonsterHpUiScript* uiScript = pMonsterUi->GetScript<CMonsterHpUiScript>();
-			uiScript->SetObject(pMonsterUi);
-			uiScript->SetMonsterObject(_pMonster);
-		}
-
-		// AddGameObject
-		m_pCurScene->FindLayer(L"UI")->AddGameObject(pMonsterUi);
-	}
-
-
 
 }
 
@@ -796,6 +743,55 @@ void CSceneMgr::init()
 	pMonsterObj->AddComponent(new CMonsterScript);
 	m_pCurScene->AddGameObject(L"Monster", pMonsterObj, false);
 
+	//----------------
+	// monster hp ui
+	//----------------
+	Vector3 vScale(350.f, 10.f, 1.f);
+
+	for (int i = 0; i < 2; ++i) {
+		CGameObject* pMonsterUi = new CGameObject;
+		pMonsterUi->SetName(L"UI Object");
+		pMonsterUi->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pMonsterUi->AddComponent(new CTransform);
+		pMonsterUi->AddComponent(new CMeshRender);
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+		if (i == 0) {
+			if (i == 1) {
+				vScale = Vector3(350.f, 20.f, 1.f);
+			}
+			pMonsterUi->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
+				, 1.f));
+		}
+		else if (i == 1) {
+			vScale = Vector3(360.f, 2.f, 1.f);
+			pMonsterUi->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
+				, 1.f));
+		}
+		pMonsterUi->Transform()->SetLocalScale(vScale);
+
+		// MeshRender 설정
+		Ptr<CMesh> hp = new CMesh;
+		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+
+
+		pMonsterUi->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pMonsterUi->MeshRender()->SetMaterial(pMtrl->Clone());
+
+		if (i == 0) {
+			pMonsterUi->AddComponent(new CMonsterHpUiScript);
+			CMonsterHpUiScript* uiScript = pMonsterUi->GetScript<CMonsterHpUiScript>();
+			uiScript->SetObject(pMonsterUi);
+			uiScript->SetMonsterObject(pMonsterObj);
+			uiScript->SetPlayerObject(pPlayerObj);
+		}
+
+		// AddGameObject
+		m_pCurScene->FindLayer(L"Monster")->AddGameObject(pMonsterUi);
+	}
+
 	// ==================
 	// Camera Object 생성
 	// ==================
@@ -830,7 +826,7 @@ void CSceneMgr::init()
 	pUICam->Camera()->SetFar(100.f);
 	pUICam->Camera()->SetLayerCheck(30, true);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pUICam);
-	CreateTargetUI(pMonsterObj);
+	CreateTargetUI();
 
 
 

@@ -15,8 +15,8 @@
 #include "MonsterScript.h"
 
 
-const char ip[] = "192.168.0.11";
-//const char ip[] = "192.168.0.7";
+//const char ip[] = "192.168.0.11";
+const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.20.138";

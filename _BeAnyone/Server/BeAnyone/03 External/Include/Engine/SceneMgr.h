@@ -24,7 +24,7 @@ public:
 
 
 public:
-	void CreateTargetUI(CGameObject* _pMonster);
+	void CreateTargetUI();
 	void CreateMap(CTerrain*);
 };
 
