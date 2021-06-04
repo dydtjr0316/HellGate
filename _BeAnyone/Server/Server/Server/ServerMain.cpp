@@ -53,7 +53,7 @@ int main()
 
   
     Netmgr.Init_Client();
-    //Netmgr.Init_Monster();
+    Netmgr.Init_Monster();
     //Netmgr.Init_NPC();
 
     cout << "**********Play************" << endl;

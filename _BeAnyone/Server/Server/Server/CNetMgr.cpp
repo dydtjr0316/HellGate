@@ -791,9 +791,10 @@ void CNetMgr::Init_Client()
 void CNetMgr::Init_Monster()
 {
     CGameObject* pObj = nullptr;
+    srand((unsigned int)time(NULL));
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
         pObj = new CMonster;
-        pObj->SetPosV((float)(rand() % WORLD_WIDTH), (float)(rand() % WORLD_WIDTH), (float)(rand() % WORLD_WIDTH));
+        pObj->SetPosV((float)(rand() % 700), 300.f, (float)(rand() % 700));
         pObj->SetID(i);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->Insert_Sector();
