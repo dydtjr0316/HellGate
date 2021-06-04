@@ -35,7 +35,7 @@ void CMonsterHpUiScript::update()
 	//	MonsterMatWVP._21 << "\t" << MonsterMatWVP._22 << "\t" << MonsterMatWVP._23 << "\n" <<
 	//	MonsterMatWVP._31 << "\t" << MonsterMatWVP._32 << "\t" << MonsterMatWVP._33 << "\n" << endl;
 
-	cout << a.x << "\t" << a.y << "\t" << a.z << "\t" << endl;
+	//cout << a.x << "\t" << a.y << "\t" << a.z << "\t" << endl;
 	
 		
 
