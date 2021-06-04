@@ -794,11 +794,14 @@ void CNetMgr::Init_Monster()
     srand((unsigned int)time(NULL));
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
         pObj = new CMonster;
-        pObj->SetPosV((float)(rand() % 700), 300.f, (float)(rand() % 700));
+        pObj->SetPosV((float)(rand() % 1000+(i-1000)*100), 300.f, (float)(rand() % 1000+ (i - 1000) * 100));
         pObj->SetID(i);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->Insert_Sector();
         Add(pObj, i);
+        cout << pObj->GetLocalPosVector().x << endl;
+        cout << pObj->GetLocalPosVector().z << endl;
+        cout << "999999999999999999999999" << endl << endl;
   
     }
 }

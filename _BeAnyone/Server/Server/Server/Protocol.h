@@ -23,7 +23,7 @@ constexpr int MAX_USER = 1000;
 constexpr int END_USER = MAX_USER;
 
 constexpr int START_MONSTER = MAX_USER;
-constexpr int MAX_MONSTER = 2;
+constexpr int MAX_MONSTER = 10;
 constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
 constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
 
@@ -92,7 +92,7 @@ struct sc_packet_id
 	unsigned short  id;
 };
 struct sc_packet_login_ok {
-
+	
 	char size;
 	char type;
 	// id제거해도 되는데 일단 두고 나중에 최적화 할때 지우자 // 다시확인
