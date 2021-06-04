@@ -12,6 +12,7 @@
 
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
+#include "MonsterScript.h"
 
 //const char ip[] = "192.168.0.11";
 const char ip[] = "192.168.0.7";
@@ -264,7 +265,32 @@ void CNetMgr::ProcessPacket(char* ptr)
 					);
 					g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
 				}
-			
+			}
+			if (id >= START_MONSTER && id < END_MONSTER)
+			{
+				CGameObject* pObject = new CGameObject;
+				g_Object.emplace(id, pObject);
+				CGameObject* monster = g_Object.find(id)->second;
+				Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+				pMeshData->Save(pMeshData->GetPath());
+
+
+				
+				monster =  pMeshData->Instantiate();
+				monster->SetName(L"FireMonster");
+				monster->FrustumCheck(false);
+				monster->Transform()->SetLocalPos(Vector3(500.f, 200, 500.f));
+				monster->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+				monster->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
+				monster->AddComponent(new CCollider);
+				monster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_walking");
+				monster->Collider()->SetBoundingBox(BoundingBox(monster->Transform()->GetLocalPos(), monster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+				monster->Collider()->SetBoundingSphere(BoundingSphere(monster->Transform()->GetLocalPos(), monster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+
+				// Script ¼³Á¤
+				monster->AddComponent(new CMonsterScript);
+
+				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", monster, false);
 			}
 		}
 	}

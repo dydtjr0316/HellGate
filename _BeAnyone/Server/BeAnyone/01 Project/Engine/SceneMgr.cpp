@@ -39,6 +39,7 @@
 
 // UI
 #include "TemperUiScript.h"
+#include "MonsterHpUiScript.h"
 
 using namespace std;
 
@@ -66,7 +67,7 @@ CSceneMgr::~CSceneMgr()
 	SAFE_DELETE(m_pCurScene);
 }
 
-void CSceneMgr::CreateTargetUI()
+void CSceneMgr::CreateTargetUI(CGameObject* _pMonster)
 {
 	//Vector3 vScale(150.f, 150.f, 1.f);
 	//
@@ -243,6 +244,59 @@ void CSceneMgr::CreateTargetUI()
 		// AddGameObject
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
+
+	//----------------
+	// monster hp ui
+	//----------------
+
+	for (int i = 0; i < 2; ++i) {
+		CGameObject* pMonsterUi = new CGameObject;
+		pMonsterUi->SetName(L"UI Object");
+		pMonsterUi->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pMonsterUi->AddComponent(new CTransform);
+		pMonsterUi->AddComponent(new CMeshRender);
+		
+
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+		if (i == 0) {
+			if (i == 1) {
+				vScale = Vector3(350.f, 20.f, 1.f);
+			}
+			pMonsterUi->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
+				, 1.f));
+		}
+		else if (i == 1) {
+			vScale = Vector3(360.f, 2.f, 1.f);
+			pMonsterUi->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
+				, 1.f));
+		}
+
+		pMonsterUi->Transform()->SetLocalScale(vScale);
+
+		// MeshRender 설정
+		Ptr<CMesh> hp = new CMesh;
+		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+
+
+		pMonsterUi->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pMonsterUi->MeshRender()->SetMaterial(pMtrl->Clone());
+
+		if (i == 0) {
+			pMonsterUi->AddComponent(new CMonsterHpUiScript);
+			CMonsterHpUiScript* uiScript = pMonsterUi->GetScript<CMonsterHpUiScript>();
+			uiScript->SetObject(pMonsterUi);
+			uiScript->SetMonsterObject(_pMonster);
+		}
+
+		// AddGameObject
+		m_pCurScene->FindLayer(L"UI")->AddGameObject(pMonsterUi);
+	}
+
+
 
 }
 
@@ -721,6 +775,7 @@ void CSceneMgr::init()
 	// =============
    // Monster 파일 로드
    // =============
+	// 몬스터
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
 	pMeshData->Save(pMeshData->GetPath());
 
@@ -729,7 +784,7 @@ void CSceneMgr::init()
 	pMonsterObj = pMeshData->Instantiate();
 	pMonsterObj->SetName(L"FireMonster");
 	pMonsterObj->FrustumCheck(false);
-	pMonsterObj->Transform()->SetLocalPos(Vector3(500.f, 200, 0.f));
+	pMonsterObj->Transform()->SetLocalPos(Vector3(200.f, 200, 200.f));
 	pMonsterObj->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 	pMonsterObj->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
 	pMonsterObj->AddComponent(new CCollider);
@@ -776,7 +831,7 @@ void CSceneMgr::init()
 	pUICam->Camera()->SetFar(100.f);
 	pUICam->Camera()->SetLayerCheck(30, true);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pUICam);
-	CreateTargetUI();
+	CreateTargetUI(pMonsterObj);
 
 
 
@@ -796,26 +851,26 @@ void CSceneMgr::init()
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 	
-	// ====================
-	// Monster1 오브젝트 생성
-	// ====================
-	pObject = new CGameObject;
-	pObject->SetName(L"Monster Object 1");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	// Transform 설정
-	pObject->Transform()->SetLocalPos(Vector3(1000.f, 300.f, 500.f));
-	pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
-	// MeshRender 설정
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-	// Collider 설정
-	pObject->AddComponent(new CCollider);
-	pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
-	pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f,2.f,2.f)));
-	pObject->Collider()->SetBoundingSphere(BoundingSphere(pObject->Transform()->GetLocalPos(), 50.f));
+	//// ====================
+	//// Monster1 오브젝트 생성
+	//// ====================
+	//pObject = new CGameObject;
+	//pObject->SetName(L"Monster Object 1");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//// Transform 설정
+	//pObject->Transform()->SetLocalPos(Vector3(1000.f, 300.f, 500.f));
+	//pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
+	//// MeshRender 설정
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
+	//// Collider 설정
+	//pObject->AddComponent(new CCollider);
+	//pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	//pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f,2.f,2.f)));
+	//pObject->Collider()->SetBoundingSphere(BoundingSphere(pObject->Transform()->GetLocalPos(), 50.f));
 
 	// Script 설정
 	// pObject->AddComponent(new CMonsterScript);
@@ -826,21 +881,21 @@ void CSceneMgr::init()
 	// ====================
 	// Monster2 오브젝트 생성(comput shader test)
 	// ====================
-	pObject = new CGameObject;
-	pObject->SetName(L"Monster Object 2");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	// Transform 설정
-	pObject->Transform()->SetLocalPos(Vector3(500.f, 300.f, 500.f));
-	pObject->Transform()->SetLocalScale(Vector3(140.f, 166.f, 54.f));
-	// MeshRender 설정
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTestUAVTexture.GetPointer());
-	// Collider 설정
-	pObject->AddComponent(new CCollider);
-	pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
-	pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f, 2.f, 2.f)));
+	//pObject = new CGameObject;
+	//pObject->SetName(L"Monster Object 2");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//// Transform 설정
+	//pObject->Transform()->SetLocalPos(Vector3(500.f, 300.f, 500.f));
+	//pObject->Transform()->SetLocalScale(Vector3(140.f, 166.f, 54.f));
+	//// MeshRender 설정
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTestUAVTexture.GetPointer());
+	//// Collider 설정
+	//pObject->AddComponent(new CCollider);
+	//pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	//pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f, 2.f, 2.f)));
 	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pNormalTargetTex.GetPointer());	
 	// Script 설정
 	// pObject->AddComponent(new CMonsterScript);

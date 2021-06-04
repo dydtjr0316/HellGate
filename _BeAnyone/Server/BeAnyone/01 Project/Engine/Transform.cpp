@@ -106,6 +106,8 @@ void CTransform::UpdateData()
 	g_transform.matWV = g_transform.matWorld * g_transform.matView;
 	g_transform.matWVP = g_transform.matWV * g_transform.matProj;
 
+	m_matWVP = g_transform.matWVP;
+
 	UINT iOffsetPos = pCB->AddData(&g_transform);
 	CDevice::GetInst()->SetConstBufferToRegister(pCB, iOffsetPos);
 }
