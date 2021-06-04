@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerScript.h"
+#include "BulletScript.h"
 #include <iostream>
 
 using namespace std;
@@ -39,7 +40,7 @@ void CPlayerScript::update()
 	Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 	Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
 	Vector3 worldDir;
-
+	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
 
@@ -47,6 +48,8 @@ void CPlayerScript::update()
 	if (KEY_HOLD(KEY_TYPE::KEY_R))
 	{
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
+
+		Attack_Default();
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
@@ -116,7 +119,6 @@ void CPlayerScript::update()
 		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
 
 
-
 	if (/*(player->GetReckoner()->isFollowing() ||*/ (frameCnt+1) % 10/*(((int)CTimeMgr::GetInst()->GetFPS()/10)+1)*/ == 0//)
 		&& (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
 		// 1. 예측모델과의 오차가 커질때(얼마나 커졌을때할지는 다시 : 아직은 ㄱㅊ)
@@ -132,7 +134,6 @@ void CPlayerScript::update()
 
 		
 	}
-
 
 
 	if (KEY_HOLD(KEY_TYPE::KEY_Z))
@@ -155,10 +156,24 @@ void CPlayerScript::op_Move()
 	if (p == nullptr)
 		return;
 	if (g_Object.count(p->id) == 0)return;
-
 	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
 	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 
+	//switch (p->dir)
+	//{
+	//case MV_FRONT: 
+	//case MV_RIGHT:
+	//case MV_LEFT:
+	//	player->SetAnimation(p->id, Ani_TYPE::WALK_F);
+	//	break;
+	//case MV_BACK:
+	//	player->SetAnimation(p->id, Ani_TYPE::WALK_D);
+	//	break;
+	//default:
+	//	break;
+	//}
+
+	
 
 	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
 
@@ -167,6 +182,7 @@ void CPlayerScript::op_Move()
 
 	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
 	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+
 
 	if (player->GetInterpolationCnt() != 4)
 	{
@@ -339,5 +355,37 @@ void CPlayerScript::OnCollision(CCollider* _pOther)
 
 void CPlayerScript::OnCollisionExit(CCollider* _pOther)
 {
+}
+
+void CPlayerScript::Attack_Default()
+{
+	CPlayerScript* player = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	Vector3 vPos = player->Transform()->GetLocalPos();
+
+	vector<CGameObject*> vecObj;
+	CSceneMgr::GetInst()->FindGameObjectByTag(L"Attack Object", vecObj);
+
+	if (!vecObj.empty())
+	{
+		cout << "총알 객체 생성 안됌" << endl;
+		return;
+	}
+	else
+		cout << "생성" << endl << endl;
+
+	CGameObject* pBullet = new CGameObject;
+	pBullet->SetName(L"Attack Object");
+
+	vPos += -player->Transform()->GetWorldDir(DIR_TYPE::FRONT) * player->Collider()->GetBoundingSphere().Radius;
+	pBullet->AddComponent(new CTransform());
+	pBullet->Transform()->SetLocalPos(vPos);
+
+	pBullet->AddComponent(new CCollider);
+	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
+
+	pBullet->AddComponent(new CBulletScript);
+
+	CreateObject(pBullet, L"Bullet");
 }
 

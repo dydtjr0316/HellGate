@@ -23,7 +23,7 @@ void CMonsterScript::update()
 void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 {
 	// 충돌이 발생하고, 상대 물체가 총일이면 스스로를 삭제
-	if (L"Bullet Object" == _pOther->GetObj()->GetName())
+	if (L"Attack Object" == _pOther->GetObj()->GetName())
 	{
 		DeleteObject(GetObj());	// -->삭제 이벤트 등록	
 	}
