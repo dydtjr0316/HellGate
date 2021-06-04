@@ -13,6 +13,12 @@ CGameObject::CGameObject()
     m_tSector;
     m_lock;
     m_Exover;
+    m_deadReckoning_Packet = nullptr;
+}
+
+void CGameObject::SetDeadReckoningPacket(cs_packet_move* p)
+{
+    m_deadReckoning_Packet = p;
 }
 
 void CGameObject::SetPosV(const float& x, const float& y, const float& z)
@@ -34,6 +40,11 @@ void CGameObject::SetRotateV(const float& x, const float& y, const float& z)
     m_v3RotateVector.x = x;
     m_v3RotateVector.y = y;
     m_v3RotateVector.z = z;
+}
+
+void CGameObject::SetIsMoving(const bool& isMoving)
+{
+    m_bisMoving = isMoving;
 }
 
 void CGameObject::Insert_Sector()

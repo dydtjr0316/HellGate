@@ -7,6 +7,7 @@ using namespace std;
 
 bool checkOnce = true;
 int movePacketSendCnt;
+bool ReckonerMove = false;
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
@@ -58,7 +59,7 @@ void CPlayerScript::update()
 		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
 	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
+	if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
 	{
 		player->SetChangeSpeed();
 	}
@@ -113,26 +114,49 @@ void CPlayerScript::update()
 	else
 	{
 		player->SetAnimation(Ani_TYPE::IDLE);
-		//g_netMgr.Send_Move_Packet(dir, localPos, vRot.y);
 	}
-	if (KEY_HOLD(KEY_TYPE::KEY_W)|| KEY_HOLD(KEY_TYPE::KEY_A)|| KEY_HOLD(KEY_TYPE::KEY_S)|| KEY_HOLD(KEY_TYPE::KEY_D))
+	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
 		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
 
+	
 
-	if (/*(player->GetReckoner()->isFollowing() ||*/ (frameCnt+1) % 10/*(((int)CTimeMgr::GetInst()->GetFPS()/10)+1)*/ == 0//)
-		&& (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
-		// 1. 예측모델과의 오차가 커질때(얼마나 커졌을때할지는 다시 : 아직은 ㄱㅊ)
-		// 2. 1초에 8번 보냄( 아직 판단 불가 )
-		// 3. 키를 눌러야만 가능 - 이게 중요한듯 - but 뗄때도 보내주던가해야 idle 상태로 복귀 가능할듯
-		)
+
+
+
+	if (((player->GetReckoner()->isFollowing() || !ReckonerMove) &&
+		((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))))
 	{
+		ReckonerMove = true;
 		system_clock::time_point start = system_clock::now();
-		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y,start );
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
+
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
 		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+	}
 
-		
+
+
+
+	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
+	{
+		ReckonerMove = false;
+		g_netMgr.Send_Stop_Packet(ReckonerMove);
+		SetTime_Zero();
+	}
+
+
+	CountTime();
+	if (m_ftimeCount >= m_fDelayTime)
+	{
+		system_clock::time_point start = system_clock::now();
+		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
+
+
+		player->GetReckoner()->SetDirVec(worldDir);
+		player->GetReckoner()->SetRotateY(vRot.y);
+		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		SetTime_Zero();
 	}
 
 
@@ -152,60 +176,81 @@ void CPlayerScript::update()
 void CPlayerScript::op_Move()
 {
 	sc_packet_move* p = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
-	//cout <<"op MOVE  :  "<< p->id << endl;
-	if (p == nullptr)
-		return;
+
+	if (p == nullptr)return;
 	if (g_Object.count(p->id) == 0)return;
-	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	if (g_myid == p->id)return;
+	if (!p->isMoving)return;
+
 	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+	CTransform* playerTrans = g_Object.find(p->id)->second->Transform();
+	CTerrain* pTerrain = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->GetTerrain();
+	const Vector3& xmf3Scale = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
+	Vector3 temp;
 
-	//switch (p->dir)
-	//{
-	//case MV_FRONT: 
-	//case MV_RIGHT:
-	//case MV_LEFT:
-	//	player->SetAnimation(p->id, Ani_TYPE::WALK_F);
-	//	break;
-	//case MV_BACK:
-	//	player->SetAnimation(p->id, Ani_TYPE::WALK_D);
-	//	break;
-	//default:
-	//	break;
-	//}
-
-	
-
-	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
-
-
-	pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
-
-	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
-	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
-
-
-	if (player->GetInterpolationCnt() != 4)
+	if (player->GetBisFrist())
 	{
-		ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
-			p->localVec.y,
-			player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
-
-		cout << ObjTrans->GetLocalPos().x << endl;
-		cout << ObjTrans->GetLocalPos().z << endl<<endl;
-		player->InterpolationCnt_PP();
+		temp = p->localVec + p->dirVec * p->speed * DT;
+		player->SetBisFrist(false);
 	}
 	else
-	{
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-	}
+		temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
 
+
+	playerTrans->SetLocalRot(p->rotateY);
+
+	int z = (int)(temp.z / xmf3Scale.z);
+	float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f + 100.f;
+
+	if (temp.y != fHeight)
+		temp.y = fHeight;
+
+	playerTrans->SetLocalPos(temp);
+
+	//cout << "델타 계산 후" << endl;
+	//cout << playerTrans->GetLocalPos().x << endl;
+	//cout << playerTrans->GetLocalPos().y << endl;
+	//cout << playerTrans->GetLocalPos().z << endl;
+	//cout << "*************************" << endl;
+
+
+
+	{
+		//CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+		//CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+
+
+		//pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+
+
+		//pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
+
+		//CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+		//ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+
+
+
+		//if (player->GetInterpolationCnt() != 4)
+		//{
+		//	ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
+		//		p->localVec.y,
+		//		player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
+		//	cout << ObjTrans->GetLocalPos().x << endl;
+		//	cout << ObjTrans->GetLocalPos().z << endl<<endl;
+		//	player->InterpolationCnt_PP();
+		//}
+		//else
+		//{
+		//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+		//}
+	}
 }
 
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 {
-	 m_movePacketTemp = new sc_packet_move;
-	 m_movePacketTemp = p; 
-	 m_fRTT = rtt;
+	m_movePacketTemp = new sc_packet_move;
+	m_movePacketTemp = p;
+	m_fRTT = rtt;
 }
 
 void CPlayerScript::SetOrigin_Point(const int& index, const float& x, const float& y)
@@ -321,7 +366,7 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
 
-	m_eAniType = type;
+	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimationType(type);
 }
 
 void CPlayerScript::SetAnimation(const int& other_id, const Ani_TYPE& type)

@@ -16,6 +16,7 @@ public:		// 菩哦 傈价何
 	void Send_Enter_Packet(  const int& user_id,   const int& other_id );
 	void Send_Leave_Packet(  const int& user_id, const int& other_id);
 	void Send_Move_Packet(const int& user_id, const int& mover_id, const char& dir);
+	void Send_Stop_Packet(const unsigned short& user_id, const int& mover_id, const bool& isMoving);
 public:		// 菩哦 荐脚何
 	void Process_Packet(const int& user_id, char* buf);
 	void Recv_Packet_Construct(const int& user_id, const int& io_byte);
@@ -24,6 +25,7 @@ public:		// 角力 按眉 诀单捞飘何
 	//void Random_Move_Monster(const int& id);
 	void Do_Attack(const int& user_id);
 	void Do_Move(const int& user_id, const char& dir, Vector3& localVec, const float& rotateY);
+	void Do_Stop(const unsigned short& user_id, const bool& isMoving);
 	void Disconnect(const int& user_id);
 	void Enter_Game(const int& user_id, char name[]);
 public:		// 矫具贸府 累己何
@@ -39,16 +41,25 @@ public:
 	void error_display(const char* msg, int err_no);
 public:		// thread 包府何
 	void Worker_Thread();
+	void DeadReckoning_Thread();
 	void Timer_Worker();
 	void WakeUp_NPC(const int& id);
 	void WakeUp_Monster(const int& id);
 	void Add_Timer(const int& obj_id, const int& status, system_clock::time_point t);
 
-public:		// 吝俺磊 包府何
+public:		//  object 吝俺磊 包府何
 	void Add(CGameObject* pObj, const int& id);
 	CGameObject* Find(const int& id);
 	void Delete_Obj(const int& id);
 	const size_t Count(const int& id);
 	const size_t Size();
+
+public:
+	void ReckonerAdd(const int& id);
+	int ReckonerFind(const int& id);
+	void Delete_Reckoner(const int& id);
+	const size_t ReckonerCount(const int& id);
+	const size_t ReckonerSize();
+
 };
 

@@ -74,6 +74,38 @@ const size_t CNetMgr::Size()
     return g_Object.size();
 }
 
+void CNetMgr::ReckonerAdd(const int& id)
+{
+    if (g_Reckoner.count(id) == 0)
+        g_Reckoner.emplace(id);
+}
+
+int CNetMgr::ReckonerFind(const int& id)
+{
+    if (g_Reckoner.count(id) != 0)
+    {
+        return  id;
+    }
+}
+
+void CNetMgr::Delete_Reckoner(const int& id)
+{
+    if (g_Reckoner.count(id) != 0)
+    {
+        g_Reckoner.erase(id);
+    }
+}
+
+const size_t CNetMgr::ReckonerCount(const int& id)
+{
+    return g_Reckoner.count(id);
+}
+
+const size_t CNetMgr::ReckonerSize()
+{
+    return g_Reckoner.size();
+}
+
 void CNetMgr::Send_Packet(const int& id, void* packet)
 {
     unsigned char* buf = reinterpret_cast<unsigned char*>(packet);
@@ -179,8 +211,8 @@ void CNetMgr::Send_Leave_Packet( const int& user_id, const int& other_id)
     p.id = other_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
-    cnt++;
-    //cout << other_id << "가  " << user_id << "한테서 LEAVE  " << "cnt = " << cnt << endl;
+    
+
 
     Send_Packet(user_id, &p);
 }
@@ -198,7 +230,18 @@ void CNetMgr::Send_Move_Packet(const int& user_id, const int& mover_id, const ch
     p.rotateY = Find(mover_id)->GetRotateY();
     p.speed = Find(mover_id)->GetSpeed();
     p.Start = Find(mover_id)->GetHalfRTT();
+    p.isMoving = Find(mover_id)->GetIsMoving();
 
+    Send_Packet(user_id, &p);
+}
+
+void CNetMgr::Send_Stop_Packet(const unsigned short& user_id, const int& mover_id,  const bool& isMoving)
+{
+    sc_packet_stop p;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_STOP;
+    p.id = mover_id;
+    p.isMoving = isMoving;
     Send_Packet(user_id, &p);
 }
 
@@ -474,11 +517,112 @@ void CNetMgr::Do_Move(const int& user_id, const char& dir, Vector3& localVec, co
     }
 }
 
+void CNetMgr::Do_Stop(const unsigned short& user_id, const bool& isMoving)
+{
+    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+
+    unordered_set<int> old_viewList = pClient->GetViewList();
+
+    _tSector oldSector = pClient->GetSector();
+    pClient->SetIsMoving(isMoving);
+    pClient->Change_Sector(oldSector);
+    unordered_set<int> new_viewList;
+
+    vector<unordered_set<int>> vSectors = pClient->Search_Sector();
+
+    for (auto& vSec : vSectors)
+    {
+        if (vSec.size() != 0)
+        {
+            for (auto& user : vSec)
+            {
+                if (is_near(user_id, user))
+                {
+                    if (!IsClient(user))
+                    {
+                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                        {
+                            if (IsMonster(user))
+                                WakeUp_Monster(user);
+                            else
+                            {
+                                WakeUp_NPC(user);
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                    new_viewList.insert(user);
+                }
+            }
+        }
+    }
+
+    for (auto& ob : new_viewList)
+    {
+        //시야에 새로 들어온 객체 구분
+
+        if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
+        {
+            pClient->GetViewList().insert(ob);
+            Send_Enter_Packet(user_id, ob);
+            if (IsClient(ob) && ob != user_id)
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Send_Enter_Packet(ob, user_id);
+                }
+                else
+                {
+                    Send_Stop_Packet(ob, user_id, isMoving);  // 여기서 또 들어옴
+                }
+            }
+        }
+        else // 이전에도 있던 아이디 
+        {
+            if (IsClient(ob) && ob != user_id)
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Send_Enter_Packet(ob, user_id);
+                }
+                else
+                {
+                    Send_Stop_Packet(ob, user_id,  isMoving);  // 여기서 또 들어옴
+                }
+            }
+        }
+    }
+    for (auto& ob : old_viewList)
+    {
+        if (new_viewList.count(ob) == 0)
+        {
+            pClient->GetViewList().erase(ob);
+            Send_Leave_Packet(user_id, ob);
+
+            if (IsClient(ob))
+            {
+                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) != 0)
+                {
+                    dynamic_cast<CClient*>(Find(ob))->GetViewList().erase(user_id);
+                    Send_Leave_Packet(ob, user_id);
+                }
+            }
+        }
+    }
+}
+
 
 void CNetMgr::Disconnect(const int& user_id)
 {
     CGameObject* pUser = Find( user_id);
     pUser->SetStatus(OBJSTATUS::ST_ALLOC);
+
+    Delete_Reckoner(user_id);
 
     Send_Leave_Packet( user_id, user_id);
 
@@ -560,23 +704,37 @@ void CNetMgr::Enter_Game(const int& user_id, char name[])
 void CNetMgr::Process_Packet(const int& user_id, char* buf)
 {
     switch (buf[1]) {
+    case CS_MOVE: {
+        cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
+
+
+        Find(user_id)->SetIsMoving(packet->isMoving);
+        Find(user_id)->SetClientTime(packet->move_time);
+        Find(user_id)->SetSpeed(packet->speed);
+        Find(user_id)->SetHalfRTT(packet->Start);
+        Find(user_id)->SetDirV(packet->DirVec);
+        Find(user_id)->SetDeadReckoningPacket(packet);
+
+        ReckonerAdd(user_id);
+
+        Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
+
+    }
+                break;
+    case CS_STOP:
+    {
+        cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
+        Find(user_id)->SetIsMoving(packet->isMoving);
+        Do_Stop(user_id, packet->isMoving);
+    }
+    break;
     case CS_LOGIN: {
         cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
         cout << packet->name << endl;
         Enter_Game(user_id, packet->name);
     }
                  break;
-    case CS_MOVE: {
-        cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
-
-
-        Find( user_id)->SetClientTime(packet->move_time);
-        Find(user_id)->SetSpeed(packet->speed);
-        Find(user_id)->SetHalfRTT(packet->Start);
-        Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
-
-    }
-                break;
+   
 
     case CS_ATTACK:
     {
@@ -710,7 +868,10 @@ void CNetMgr::Worker_Thread()
         CClient* pUser = dynamic_cast<CClient*>(Find( user_id));
         switch (exover->op) {
         case ENUMOP::OP_RECV:
-            if (0 == io_byte) Disconnect(user_id);
+            if (0 == io_byte) {
+                Disconnect(user_id);
+                
+            }
             else {
                 CClient* pClient = dynamic_cast<CClient*>(Find( user_id));
                 Recv_Packet_Construct(user_id, io_byte);
@@ -858,6 +1019,29 @@ void CNetMgr::Worker_Thread()
    
     }
 
+}
+
+void CNetMgr::DeadReckoning_Thread()
+{
+    if (g_Reckoner.size() == 0)return;
+    CGameObject* obj = nullptr;
+    cs_packet_move* drmPacket = nullptr;
+    while (true)
+    {
+        for (auto& reckoner : g_Reckoner)
+        {
+            obj = Find(reckoner);
+            drmPacket = obj->GetDeadReckoningPacket();
+            if (drmPacket->isMoving)
+            {
+                obj->SetRotateY(drmPacket->rotateY);
+                obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
+                //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
+            }
+
+        }
+    }
+    cout << "deadReckoning_ Thread Working" << endl;
 }
 
 void CNetMgr::Timer_Worker()

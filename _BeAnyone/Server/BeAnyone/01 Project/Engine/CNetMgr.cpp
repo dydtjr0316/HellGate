@@ -16,7 +16,7 @@
 
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.3";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.20.138";
@@ -153,7 +153,9 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 
 }
 
-void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVec, const float& rotateY, const system_clock::time_point& startTime)
+void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, 
+	const Vector3& dirVec, const float& rotateY, const system_clock::time_point& startTime,
+	const float& delta, const bool& isMoving)
 {
 	cs_packet_move p;
 	p.type = CS_MOVE;
@@ -164,7 +166,19 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	p.rotateY = rotateY;
 	p.Start = startTime;
 	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
+	p.deltaTime = delta;
+	p.isMoving = isMoving;
 
+
+	Send_Packet(&p);
+}
+
+void CNetMgr::Send_Stop_Packet(const bool& isMoving)
+{
+	cs_packet_stop p;
+	p.type = CS_STOP;
+	p.size = sizeof(p);
+	p.isMoving = isMoving;
 	Send_Packet(&p);
 }
 
@@ -312,14 +326,35 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				system_clock::time_point end = system_clock::now();
 				nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
-				
+				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
+				if(packet->isMoving)
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
+				else
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+
 				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 			}
 		}
 	}
 	break;
-	
+	case SC_PACKET_STOP:
+	{
+		sc_packet_stop* packet = reinterpret_cast<sc_packet_stop*>(ptr);
+		int other_id = packet->id;
+
+		if (other_id == g_myid)
+		{
+			//ObjTrans->SetLocalPos(packet->localVec);
+		}
+		else // 여기 브로드캐스팅하려면 다시수정
+		{
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+		}
+	}
+	break;
 	case SC_PACKET_LEAVE:
 	{
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);

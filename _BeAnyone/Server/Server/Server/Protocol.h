@@ -68,6 +68,7 @@ constexpr char SC_PACKET_ATTACK = 7;
 constexpr char SC_PACKET_LEVEL_UP = 8;
 constexpr char SC_PACKET_ID = 9;
 constexpr char SC_PACKET_MOUSE = 10;
+constexpr char SC_PACKET_STOP = 11;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -75,6 +76,8 @@ constexpr char CS_ATTACK = 2;
 constexpr char CS_CHAT = 3;
 constexpr char CS_LOGOUT = 4;
 constexpr char CS_TELEORT = 5;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
+constexpr char CS_STOP = 6;
+
 constexpr unsigned char O_PLAYER = 0;
 constexpr unsigned char O_NPC = 1;
 
@@ -123,6 +126,15 @@ struct sc_packet_move {
 	float rotateY;
 	system_clock::time_point Start;
 
+	bool isMoving;
+
+};
+
+struct sc_packet_stop {
+	char size;
+	char type;
+	unsigned short id;
+	bool isMoving;
 };
 
 
@@ -212,12 +224,20 @@ struct cs_packet_move {
 	Vector3 localVec;
 	Vector3 DirVec;
 	float speed;
+	float deltaTime;
 
 	system_clock::time_point Start;
 	
 	unsigned short	  move_time;
+	bool isMoving;
 };
 
+struct cs_packet_stop {
+	char size;
+	char type;
+	unsigned short id;
+	bool isMoving;
+};
 
 struct cs_packet_attack {
 	char	size;

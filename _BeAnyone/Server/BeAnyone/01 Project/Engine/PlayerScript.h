@@ -29,21 +29,28 @@ private:
 	Vector3				m_vecPlayerDir;
 
 private:
-	CTerrain*			m_pTerrainObj;
-	XMFLOAT3			m_xmf3Velocity;
-	float				m_fSpeed;
-	Ani_TYPE			m_eAniType;
-	CDeadReckoner*		m_pDeadReckoner;
-	sc_packet_move*		m_movePacketTemp = nullptr;
-	float				m_fRTT;
-	Vector2				m_v2Interpolation_Point[4];
-	Vector2				m_v2Origin_Point[4];
-	int					m_iInterpolationCnt = 0;
+	float m_ftimeCount = 0.f;
+	float m_fDelayTime = 1.f;
+	bool FirstPacket = false;
 
-
+	CTerrain* m_pTerrainObj;
+	XMFLOAT3 m_xmf3Velocity;
+	float m_fSpeed;
+	Ani_TYPE m_eAniType;
+	CDeadReckoner* m_pDeadReckoner;
+	sc_packet_move* m_movePacketTemp = nullptr;
+	float m_fRTT;
+	Vector2 m_v2Interpolation_Point[4];
+	Vector2 m_v2Origin_Point[4];
+	int m_iInterpolationCnt = 0;
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
+	void OnPlayerUpdateCallback();
+	bool GetBisFrist() { return FirstPacket; }
+	void SetBisFrist(const bool& bis) { FirstPacket = bis; }
+	void CountTime() { m_ftimeCount += DT; }
+	void SetTime_Zero() { m_ftimeCount = 0.f; }
 
 	Vector3 GetPlayerDir() { return m_vecPlayerDir; }
 	void SetPlayerDir(Vector3 _a) { m_vecPlayerDir = _a; }
@@ -55,11 +62,15 @@ public:
 	void SetAnimation(const Ani_TYPE& type);
 	void SetAnimation(const int& other_id, const Ani_TYPE& type);
 	Ptr<CMesh> GetAniData(const Ani_TYPE& type) { return m_pAniData[(int)type]; }
+	void SetAnimationType(const Ani_TYPE& type) { m_eAniType = type; }
 
 	void initDeadReckoner() { m_pDeadReckoner = new CDeadReckoner(g_myid); }
 	CDeadReckoner* GetReckoner() { return m_pDeadReckoner; }
 	void op_Move();
 	void SetOtherMovePacket(sc_packet_move* p, const float& rtt);
+	void SetOtherMovePacket__IsMoving(const bool& isMoving) { 
+		m_movePacketTemp->isMoving = isMoving;
+	}
 	void DeleteOherMovePaacket() { if (m_movePacketTemp != nullptr) { m_movePacketTemp = nullptr; } }
 	sc_packet_move* GetOtherMovePacket() { return m_movePacketTemp; }
 
