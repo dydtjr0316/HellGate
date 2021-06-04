@@ -35,6 +35,7 @@
 #include "ToolCamScript.h"
 #include "GridScript.h"
 #include "SwordScript.h"
+#include "MonsterScript.h"
 
 // UI
 #include "TemperUiScript.h"
@@ -633,6 +634,7 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
 	m_pCurScene->GetLayer(3)->SetName(L"Map");
 	m_pCurScene->GetLayer(4)->SetName(L"Weapone");
+	m_pCurScene->GetLayer(5)->SetName(L"Bullet");
 	m_pCurScene->GetLayer(30)->SetName(L"UI");
 
 	CGameObject* pObject = nullptr;
@@ -775,7 +777,7 @@ void CSceneMgr::init()
 	// Monster1 오브젝트 생성
 	// ====================
 	pObject = new CGameObject;
-	pObject->SetName(L"Monster Object 1");
+	pObject->SetName(L"Monster Object");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	// Transform 설정
@@ -793,16 +795,16 @@ void CSceneMgr::init()
 	pObject->Collider()->SetBoundingSphere(BoundingSphere(pObject->Transform()->GetLocalPos(), 50.f));
 
 	// Script 설정
-	// pObject->AddComponent(new CMonsterScript);
+	pObject->AddComponent(new CMonsterScript);
 	// AddGameObject
-	//m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
+	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
 
 
 	// ====================
 	// Monster2 오브젝트 생성(comput shader test)
 	// ====================
 	pObject = new CGameObject;
-	pObject->SetName(L"Monster Object 2");
+	pObject->SetName(L"Monster Object");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	// Transform 설정
@@ -818,9 +820,9 @@ void CSceneMgr::init()
 	pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f, 2.f, 2.f)));
 	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pNormalTargetTex.GetPointer());	
 	// Script 설정
-	// pObject->AddComponent(new CMonsterScript);
+	pObject->AddComponent(new CMonsterScript);
 	// AddGameObject
-	//m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
+	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
 
 
 	// ====================
@@ -891,6 +893,7 @@ void CSceneMgr::init()
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Monster");
 
 	
 
@@ -909,7 +912,7 @@ void CSceneMgr::update()
 	m_pCurScene->finalupdate();
 
 	// 충돌 처리
-	//CCollisionMgr::GetInst()->update();
+	CCollisionMgr::GetInst()->update();
 }
 
 void CSceneMgr::update_tool()

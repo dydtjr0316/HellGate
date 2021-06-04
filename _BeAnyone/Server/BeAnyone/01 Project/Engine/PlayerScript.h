@@ -47,7 +47,7 @@ public:
 
 	Vector3 GetPlayerDir() { return m_vecPlayerDir; }
 	void SetPlayerDir(Vector3 _a) { m_vecPlayerDir = _a; }
-	void Attack();
+	void Attack_Default();
 
 public: 
 	//¿ë¼®

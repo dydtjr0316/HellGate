@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerScript.h"
+#include "BulletScript.h"
 #include <iostream>
 
 using namespace std;
@@ -47,6 +48,8 @@ void CPlayerScript::update()
 	if (KEY_HOLD(KEY_TYPE::KEY_R))
 	{
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
+
+		Attack_Default();
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
@@ -116,7 +119,6 @@ void CPlayerScript::update()
 		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
 
 
-
 	if (/*(player->GetReckoner()->isFollowing() ||*/ (frameCnt+1) % 10/*(((int)CTimeMgr::GetInst()->GetFPS()/10)+1)*/ == 0//)
 		&& (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
 		// 1. 예측모델과의 오차가 커질때(얼마나 커졌을때할지는 다시 : 아직은 ㄱㅊ)
@@ -132,7 +134,6 @@ void CPlayerScript::update()
 
 		
 	}
-
 
 
 	if (KEY_HOLD(KEY_TYPE::KEY_Z))
@@ -339,5 +340,37 @@ void CPlayerScript::OnCollision(CCollider* _pOther)
 
 void CPlayerScript::OnCollisionExit(CCollider* _pOther)
 {
+}
+
+void CPlayerScript::Attack_Default()
+{
+	CPlayerScript* player = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	Vector3 vPos = player->Transform()->GetLocalPos();
+
+	vector<CGameObject*> vecObj;
+	CSceneMgr::GetInst()->FindGameObjectByTag(L"Attack Object", vecObj);
+
+	if (!vecObj.empty())
+	{
+		cout << "총알 객체 생성 안됌" << endl;
+		return;
+	}
+	else
+		cout << "생성" << endl << endl;
+
+	CGameObject* pBullet = new CGameObject;
+	pBullet->SetName(L"Attack Object");
+
+	vPos += -player->Transform()->GetWorldDir(DIR_TYPE::FRONT) * player->Collider()->GetBoundingSphere().Radius;
+	pBullet->AddComponent(new CTransform());
+	pBullet->Transform()->SetLocalPos(vPos);
+
+	pBullet->AddComponent(new CCollider);
+	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
+
+	pBullet->AddComponent(new CBulletScript);
+
+	CreateObject(pBullet, L"Bullet");
 }
 
