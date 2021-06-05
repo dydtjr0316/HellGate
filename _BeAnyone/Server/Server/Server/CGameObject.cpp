@@ -52,17 +52,12 @@ void CGameObject::Insert_Sector()
     SetSector((int)m_v3LocalPosVector.x / SECTOR_ROW_Length, (int)m_v3LocalPosVector.z / SECTOR_COL_Length);
     g_Sector[m_tSector.x][m_tSector.z].emplace(m_id);
 
-    if (m_id < 2)
-    {
-       // cout << "좌표 -> " << m_v3LocalPosVector.x << ", " << m_v3LocalPosVector.z << endl;
-       // cout << "섹터 -> " << m_tSector.x << ", " << m_tSector.z << endl << endl;
-    }
 }
 
 void CGameObject::Change_Sector(const _tSector& old_sector)
 {
-    int x = (int)m_v3LocalPosVector.x / SECTOR_ROW_Length;
-    int y = (int)m_v3LocalPosVector.z / SECTOR_COL_Length;
+    uShort x = (uShort)m_v3LocalPosVector.x / SECTOR_ROW_Length;
+    uShort y = (uShort)m_v3LocalPosVector.z / SECTOR_COL_Length;
     
     x = x < 0 ? 0 : x;
     x = x > SECTOR_ROW - 1 ? SECTOR_ROW - 1 : x;
@@ -84,19 +79,19 @@ void CGameObject::Change_Sector(const _tSector& old_sector)
    
 }
 
-vector<unordered_set<int>> CGameObject::Search_Sector()
+vector<unordered_set<uShort>> CGameObject::Search_Sector()
 {
-    vector<unordered_set<int>> vSectors;
+    vector<unordered_set<uShort>> vSectors;
    
     // sector로 전부 변경 불가?
-    int x1 = ((int)m_v3LocalPosVector.x - VIEW_LIMIT) / SECTOR_COL_Length;
-    int z1 = ((int)m_v3LocalPosVector.z - VIEW_LIMIT) / SECTOR_ROW_Length;
+    uShort x1 = ((uShort)m_v3LocalPosVector.x - VIEW_LIMIT) / SECTOR_COL_Length;
+    uShort z1 = ((uShort)m_v3LocalPosVector.z - VIEW_LIMIT) / SECTOR_ROW_Length;
 
     x1 = x1 < 0 ? 0 : x1;
     z1 = z1 < 0 ? 0 : z1;
 
-    int x2 = ((int)m_v3LocalPosVector.x + VIEW_LIMIT) / SECTOR_COL_Length;
-    int z2 = ((int)m_v3LocalPosVector.z + VIEW_LIMIT) / SECTOR_ROW_Length;
+    uShort x2 = ((uShort)m_v3LocalPosVector.x + VIEW_LIMIT) / SECTOR_COL_Length;
+    uShort z2 = ((uShort)m_v3LocalPosVector.z + VIEW_LIMIT) / SECTOR_ROW_Length;
 
     x2 = x2 > SECTOR_ROW - 1 ? SECTOR_ROW-1 : x2;
     z2 = z2 > SECTOR_COL - 1 ? SECTOR_COL-1 : z2;

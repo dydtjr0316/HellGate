@@ -31,7 +31,7 @@ class Vector2;
 class Vector3;
 class Vector4;
 class Matrix;
-
+typedef unsigned short uShort;
 //	¹®Á¦
 //#include "../Engine/Protocol.h"
 #include "../../../../Server/Server/Server/Protocol.h"

@@ -89,35 +89,35 @@ struct sc_packet_id
 	// 4byte
 	char size;
 	char type;
-	unsigned short  id;
+	uShort  id;
 };
 struct sc_packet_login_ok {
 	
 	char size;
 	char type;
 	// id제거해도 되는데 일단 두고 나중에 최적화 할때 지우자 // 다시확인
-	unsigned short  id;
+	uShort  id;
 	
 	//float x, y, z; 아래꺼 성공하면 삭제하는데 여기에 dirVector 필요한지 효림이한테 물어보기
 	Vector3 localVec;
 
-	unsigned short hp;
-	unsigned short level;
+	uShort hp;
+	uShort level;
 
-	unsigned short exp;
-	unsigned short iMax_exp;
+	uShort exp;
+	uShort iMax_exp;
 
-	unsigned short Attack_Damage;
+	uShort Attack_Damage;
 	// 패딩비트
 };
 
 struct sc_packet_move {
 	char size;
 	char type;
-	unsigned short id;
+	uShort id;
 
-	unsigned short move_time;
-	unsigned short dir = MV_IDLE;		// pragma pack 사용 안할거면 다시 char로 수정
+	uShort move_time;
+	uShort dir = MV_IDLE;		// pragma pack 사용 안할거면 다시 char로 수정
 
 	Vector3 localVec;
 	Vector3 dirVec;	//받아올땐 삭제해도되는가?
@@ -133,7 +133,7 @@ struct sc_packet_move {
 struct sc_packet_stop {
 	char size;
 	char type;
-	unsigned short id;
+	uShort id;
 	bool isMoving;
 };
 
@@ -141,12 +141,13 @@ struct sc_packet_stop {
 struct sc_packet_enter {
 	char size;
 	char type;
-	unsigned short  id;
+	uShort  id;
 
 	Vector3 localVec;
 
 	float RotateY;
 
+	uShort hp;
 	char name[MAX_ID_LEN];
 	char o_type;
 	//float x, y, z; // 보고 삭제
@@ -155,36 +156,36 @@ struct sc_packet_enter {
 struct sc_packet_leave {
 	char size;
 	char type;
-	unsigned short  id;
+	uShort  id;
 };
 
 struct sc_packet_attack {
 	char size;
 	char type;
-	unsigned short  id;
+	uShort  id;
 
-	unsigned short hp;
+	uShort hp;
 };
 
 struct sc_packet_level_up {
 	char size;
 	char type;
-	unsigned short  id;
+	uShort  id;
 
-	unsigned short hp;
-	unsigned short max_hp;
+	uShort hp;
+	uShort max_hp;
 
-	unsigned short level;
-	unsigned short   exp;
+	uShort level;
+	uShort   exp;
 
-	unsigned short max_exp;
-	unsigned short attack_damage;
+	uShort max_exp;
+	uShort attack_damage;
 };
 
 struct sc_packet_chat {
 	char  size;
 	char  type;
-	unsigned short	  id;			// teller
+	uShort	  id;			// teller
 
 	char  message[MAX_STR_LEN];	// 여기 수정 100너무큼
 };
@@ -192,17 +193,17 @@ struct sc_packet_chat {
 struct sc_packet_login_fail {
 	char  size;
 	char  type;
-	unsigned short	  id;
+	uShort	  id;
 	char  message[MAX_STR_LEN];// 여기 수정 100너무큼
 };
 
 struct sc_packet_stat_change {
 	char size;
 	char type;
-	unsigned short  id;
-	unsigned short hp;
-	unsigned short level;
-	unsigned short   exp;
+	uShort  id;
+	uShort hp;
+	uShort level;
+	uShort   exp;
 };
 
 
@@ -217,7 +218,7 @@ struct cs_packet_login {
 struct cs_packet_move {
 	char  size;
 	char  type;		// 정리할때 type이 꼭 필요한지 작성
-	unsigned short  dir;
+	char  dir;
 
 	float rotateY;
 
@@ -228,20 +229,21 @@ struct cs_packet_move {
 
 	system_clock::time_point Start;
 	
-	unsigned short	  move_time;
+	uShort	  move_time;
 	bool isMoving;
 };
 
 struct cs_packet_stop {
 	char size;
 	char type;
-	unsigned short id;
+	uShort id;
 	bool isMoving;
 };
 
 struct cs_packet_attack {
 	char	size;
 	char	type;
+	uShort  hp;
 };
 
 struct cs_packet_chat {

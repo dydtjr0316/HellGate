@@ -183,11 +183,12 @@ void CNetMgr::Send_Stop_Packet(const bool& isMoving)
 }
 
 
-void CNetMgr::Send_Attack_Packet()
+void CNetMgr::Send_Attack_Packet(const uShort& victim_id)
 {
 	cs_packet_attack p;
 	p.type = CS_ATTACK;
 	p.size = sizeof(p);
+	p.hp = g_Object.find(victim_id)->second->GetScript<CMonsterScript>()->GetHP();
 	Send_Packet(&p);
 }
 
@@ -279,36 +280,41 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 					);
 					g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
+					
 				}
 			}
 			if (id >= START_MONSTER && id < END_MONSTER)
 			{
+				Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
 				CGameObject* pObject = new CGameObject;
 				g_Object.emplace(id, pObject);
-				CGameObject* monster = g_Object.find(id)->second;
-				Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
-				pMeshData->Save(pMeshData->GetPath());
 				
-				monster =  pMeshData->Instantiate();
-				monster->SetName(L"FireMonster");
-				monster->FrustumCheck(false);
-				monster->Transform()->SetLocalPos(my_packet->localVec);
+				pMeshData->Save(pMeshData->GetPath());
+				//
+				g_Object.find(id)->second =  pMeshData->Instantiate();
+				g_Object.find(id)->second->SetName(L"FireMonster");
+				g_Object.find(id)->second->FrustumCheck(false);
+				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 				cout << my_packet->localVec.x << endl;
 				cout << my_packet->localVec.z << endl;
 				cout << "***************************" << endl << endl;
-				monster->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
-				monster->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
-				monster->AddComponent(new CCollider);
-				monster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_walking");
-				monster->Collider()->SetBoundingBox(BoundingBox(monster->Transform()->GetLocalPos(), monster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-				monster->Collider()->SetBoundingSphere(BoundingSphere(monster->Transform()->GetLocalPos(), monster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+				g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+				g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
+				g_Object.find(id)->second->AddComponent(new CCollider);
+				g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_walking");
+				g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos()
+					, g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+				g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere
+				(g_Object.find(id)->second->Transform()->GetLocalPos(),
+					g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
 
 				// Script ¼³Á¤
-				monster->AddComponent(new CMonsterScript);
+				g_Object.find(id)->second->AddComponent(new CMonsterScript);
 
-				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", monster, false);
+				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
 
-				monster->GetScript<CMonsterScript>()->SetID(id);
+				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
+				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 			}
 		}
 	}
@@ -370,6 +376,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 				CEventMgr::GetInst()->update();
 				g_Object.erase(other_id);
+
 			}
 		}
 	}
@@ -381,7 +388,19 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ATTACK:
 	{
+		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(ptr);
+		if (packet->id == g_myid)
+		{
 
+		}
+		else
+		{
+
+			if (packet->id >= START_MONSTER && packet->id < END_MONSTER)
+			{
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
+			}
+		}
 	}
 	break;
 	case SC_PACKET_ID:

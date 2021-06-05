@@ -6,7 +6,7 @@ public:
 	virtual ~CGameObject() {}
 public: // 상속 ,, 함수
 	// GET
-	const int& GetID() { return m_id; }
+	const uShort& GetID() { return m_id; }
 	//const float& GetX() { return m_iX; }
 	//const float& GetY() { return m_iY; }
 	//const float& GetZ() { return m_iZ; }
@@ -34,7 +34,7 @@ public: // 상속 ,, 함수
 
 
 	// set
-	void SetID(const int& id) { m_id = id; }
+	void SetID(const uShort& id) { m_id = id; }
 	
 	void SetPosX(const float& x) {		m_v3LocalPosVector.x = x; }
 	void SetPosY(const float& y) {		m_v3LocalPosVector.y = y; }
@@ -69,11 +69,11 @@ public: // 상속 ,, 함수
 public:
 	void Insert_Sector();
 	void Change_Sector(const _tSector& old_sector);
-	vector<unordered_set<int>> Search_Sector();
+	vector<unordered_set<uShort>> Search_Sector();
 	
 protected:
 	// int
-	int		m_id;	// id
+	uShort		m_id;	// id
 	//float		m_iX, m_iY, m_iZ; // 좌표
 	int   m_prev_size;
 

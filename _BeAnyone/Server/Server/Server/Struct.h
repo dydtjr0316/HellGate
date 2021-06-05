@@ -11,13 +11,13 @@ struct EXOVER
 		WSABUF			wsabuf;
 		SOCKET			c_socket;
 	};
-	int id;
+	uShort id;
 };
 
 // 타이머
 struct event_type
 {
-	int obj_id;
+	uShort obj_id;
 	system_clock::time_point wakeup_time;
 	int event_id;
 	int target_id;
@@ -32,15 +32,15 @@ struct event_type
 // 현재 섹터 판별 좌표 .. 추후 수정
 struct _tSector
 {
-	int x;
-	int z;
+	uShort x;
+	uShort z;
 	_tSector() { x = z = 0; }
-	_tSector(const int& _x, const int& _z)
+	_tSector(const uShort& _x, const uShort& _z)
 	{
 		x = _x;
 		z = _z;
 	}
-	void SetSector(const int& _x, const int& _z)
+	void SetSector(const uShort& _x, const uShort& _z)
 	{
 		x = _x;
 		z = _z;

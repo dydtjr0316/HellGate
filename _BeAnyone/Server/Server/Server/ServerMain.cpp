@@ -15,7 +15,7 @@ mutex timer_lock;
 mutex wakeup_lock;
 
 // sector ¼öÁ¤
-unordered_set<int> g_Sector[SECTOR_ROW][SECTOR_COL];
+unordered_set<uShort> g_Sector[SECTOR_ROW][SECTOR_COL];
 
 priority_queue<event_type>		timer_queue;
 

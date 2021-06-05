@@ -29,25 +29,8 @@ private:
 	Vector3				m_vecPlayerDir;
 
 private:
-<<<<<<< HEAD
-	CTerrain*			m_pTerrainObj;
-	XMFLOAT3			m_xmf3Velocity;
-	float				m_fSpeed;
-	Ani_TYPE			m_eAniType;
-	CDeadReckoner*		m_pDeadReckoner;
-	sc_packet_move*		m_movePacketTemp = nullptr;
-	float				m_fRTT;
-	Vector2				m_v2Interpolation_Point[4];
-	Vector2				m_v2Origin_Point[4];
-	int					m_iInterpolationCnt = 0;
-
-
-public:
-	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
-	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
-=======
 	float m_ftimeCount = 0.f;
-	float m_fDelayTime = 2.f;
+	float m_fDelayTime = 1.f;
 	bool FirstPacket = false;
 
 	CTerrain* m_pTerrainObj;
@@ -68,7 +51,6 @@ public:
 	void SetBisFrist(const bool& bis) { FirstPacket = bis; }
 	void CountTime() { m_ftimeCount += DT; }
 	void SetTime_Zero() { m_ftimeCount = 0.f; }
->>>>>>> quadTree
 
 	Vector3 GetPlayerDir() { return m_vecPlayerDir; }
 	void SetPlayerDir(Vector3 _a) { m_vecPlayerDir = _a; }
