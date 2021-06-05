@@ -687,7 +687,7 @@ void CSceneMgr::init()
 	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 
 	// ATTACK
-	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@Skill2.fbx", FBX_TYPE::PLAYER);
+	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@Attack1.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
 
 	

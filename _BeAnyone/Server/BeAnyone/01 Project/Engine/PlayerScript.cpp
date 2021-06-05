@@ -46,11 +46,15 @@ void CPlayerScript::update()
 	bool moveKeyInput = false;
 
 	op_Move();
-	if (KEY_TAB(KEY_TYPE::KEY_R))
+	if (KEY_HOLD(KEY_TYPE::KEY_R))
 	{
-		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
-
+		player->SetAnimation(Ani_TYPE::ATTACK);
+		moveKeyInput = true;
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_R))
+	{
 		Attack_Default();
+		player->SetAnimation(Ani_TYPE::IDLE);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
