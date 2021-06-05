@@ -95,7 +95,7 @@ public:
 	float GetSpeed() { return m_fSpeed; }
 
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
-	CTerrain* GetTerrain() { return m_pTerrainObj; }
+	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
 
 public:
 	virtual void OnCollisionEnter(CCollider* _pOther);

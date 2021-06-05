@@ -66,8 +66,8 @@ CMonsterScript::CMonsterScript()
 
 CMonsterScript::~CMonsterScript()
 {
-	SAFE_DELETE(m_pUi);
-	SAFE_DELETE(m_pUnderUi);
+	DeleteObject(m_pUi);
+	DeleteObject(m_pUnderUi);
 }
 
 

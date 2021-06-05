@@ -181,6 +181,7 @@ void CPlayerScript::op_Move()
 	if (g_Object.count(p->id) == 0)return;
 	if (g_myid == p->id)return;
 	if (!p->isMoving)return;
+	if (p->id > 1000)return;
 
 	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 	CTransform* playerTrans = g_Object.find(p->id)->second->Transform();

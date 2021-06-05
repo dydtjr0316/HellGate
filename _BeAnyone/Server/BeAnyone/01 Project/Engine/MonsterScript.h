@@ -8,6 +8,7 @@ private:
 	MONSTER_TYPE m_MType;
 	CGameObject* m_pUi;
 	CGameObject* m_pUnderUi;
+	CTerrain* m_pTerrainObj;
 
 	unsigned short m_sId;
 
@@ -22,6 +23,8 @@ public:
 	void SetHP(const uShort& hp) { m_sHp = hp; }
 	uShort GetHP() { return m_sHp; }
 
+	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
+	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
 
 	void DecreaseHp();
 

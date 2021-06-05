@@ -318,6 +318,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
 
+					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
+					);
+
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 					cout << "---------------------" << endl;
