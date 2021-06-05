@@ -24,7 +24,7 @@ void CBulletScript::update()
 
 	m_fTime += DT;
 
-	if (m_fTime > 1.f)
+	if (m_fTime > 0.1f)
 	{
 		m_bDead = true;
 		DeleteObject(GetObj());

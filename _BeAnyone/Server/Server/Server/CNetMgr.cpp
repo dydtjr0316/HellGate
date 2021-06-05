@@ -406,7 +406,12 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
     else
     {
         for (auto& clientID : new_viewList)
+        {
             Send_Leave_Packet(clientID, victim);
+        }
+        g_Sector[Find(victim)->GetSector().x][Find(victim)->GetSector().z].erase(victim);
+        Delete_Obj(victim);
+        
     }
     
 
