@@ -207,13 +207,14 @@ void CNetMgr::Send_Enter_Packet( const uShort& user_id,  const uShort& other_id)
     Send_Packet(user_id, &p);
 }
 
-void CNetMgr::Send_Leave_Packet( const uShort& user_id, const uShort& other_id)
+void CNetMgr::Send_Leave_Packet( const uShort& user_id, const uShort& other_id, const bool& isAttack)
 {
+    if (g_Object.count(other_id) == 0)return;
     sc_packet_leave p;
     p.id = other_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
-    
+    p.isAttack = isAttack;
 
 
     Send_Packet(user_id, &p);
@@ -407,11 +408,11 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
     {
         for (auto& clientID : new_viewList)
         {
-            Send_Leave_Packet(clientID, victim);
+            Send_Leave_Packet(clientID, victim, true);
         }
         g_Sector[Find(victim)->GetSector().x][Find(victim)->GetSector().z].erase(victim);
         Delete_Obj(victim);
-        
+      
     }
     
 

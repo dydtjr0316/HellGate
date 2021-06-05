@@ -73,6 +73,26 @@ CMonsterScript::~CMonsterScript()
 
 void CMonsterScript::update()
 {
+
+	if (m_bisAttack)
+	{
+		m_fAnimationCnt += DT;
+		cout << m_fAnimationCnt << endl;
+		SetAnimation(MONSTER_ANI_TYPE::DEAD);
+	}
+	if (m_fAnimationCnt > 1.5f)
+	{
+		m_bisAttack = false;
+
+		cout << "update " << endl;
+
+		DeleteObject(GetObj());
+		CEventMgr::GetInst()->update();
+		g_Object.erase(m_sId);
+	}
+
+
+
 	//------
 	// ui
 	//------
@@ -106,6 +126,9 @@ void CMonsterScript::update()
 void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 {
 	// 충돌이 발생하고, 상대 물체가 총일이면 스스로를 삭제
+
+	_pOther->GetObj()->GetLayerIdx();
+
 	if (L"Attack Object" == _pOther->GetObj()->GetName())
 	{
 		// 여기 두번들어감 // 용석
@@ -116,6 +139,13 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 
 void CMonsterScript::OnCollisionExit(CCollider* _pOther)
 {
+}
+
+void CMonsterScript::SetAnimation(const MONSTER_ANI_TYPE& type)
+{
+	GetObj()->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
+	GetObj()->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
+	GetObj()->MeshRender()->SetMesh(m_pAniData[(int)type]);
 }
 
 void CMonsterScript::DecreaseHp()

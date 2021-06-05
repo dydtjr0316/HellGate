@@ -55,6 +55,10 @@ constexpr char MV_FRONT = 4;
 constexpr char MV_BACK = 5;
 constexpr char MV_IDLE = 6;
 
+constexpr char ATTACK_IDLE = 7;
+constexpr char ATTACK_ANI = 8;
+
+
 
 // 패킷 이벤트 // 추후 수정
 constexpr char SC_PACKET_LOGIN_OK = 0;
@@ -157,6 +161,8 @@ struct sc_packet_leave {
 	char size;
 	char type;
 	uShort  id;
+
+	bool isAttack;
 };
 
 struct sc_packet_attack {

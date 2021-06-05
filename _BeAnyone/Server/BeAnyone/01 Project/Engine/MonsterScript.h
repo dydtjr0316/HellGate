@@ -9,8 +9,11 @@ private:
 	CGameObject* m_pUi;
 	CGameObject* m_pUnderUi;
 	CTerrain* m_pTerrainObj;
-
+	vector<Ptr<CMesh>>   m_pAniData;
 	unsigned short m_sId;
+	bool m_bisAttack = false;
+
+	float m_fAnimationCnt = 0.f;
 
 	uShort m_sHp;
 	uShort m_sMaxHP = 100;
@@ -22,7 +25,12 @@ public:
 	uShort GetID() { return m_sId; }
 	void SetHP(const uShort& hp) { m_sHp = hp; }
 	uShort GetHP() { return m_sHp; }
+	void SetBisAttack(const bool& isattack) { m_bisAttack = isattack; }
+	bool GetBisAttack() { return m_bisAttack; }
 
+	//animatioin
+	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
+	void SetAnimation(const MONSTER_ANI_TYPE& type);
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
 	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
 

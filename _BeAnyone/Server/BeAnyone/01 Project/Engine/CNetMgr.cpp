@@ -318,6 +318,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
 
+					//animation
+			   //walk
+					CMonsterScript* monsterScript = g_Object.find(id)->second->GetScript<CMonsterScript>();
+					monsterScript->SetAnimationData(pMeshData->GetMesh());
+					//dead
+					Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_die.fbx", FBX_TYPE::MONSTER);
+					monsterScript->SetAnimationData(pMeshDataKey->GetMesh());
+
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 					);
@@ -393,9 +401,19 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else if (CheckObjType(other_id) == OBJ_TYPE::MONSTER)
 				{
-					g_Object.find(other_id)->second->GetScript<CMonsterScript>()->DeleteObject(g_Object.find(other_id)->second);
-					CEventMgr::GetInst()->update();
-					g_Object.erase(other_id);
+					if (!my_packet->isAttack)
+					{
+						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->DeleteObject(g_Object.find(other_id)->second);
+						CEventMgr::GetInst()->update();
+						g_Object.erase(other_id);
+						cout << "network" << endl;
+					}
+					else
+					{
+						cout << "************" << endl;
+						cout << "bis attack change " << endl;
+						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetBisAttack(my_packet->isAttack);
+					}
 				}
 
 			}
@@ -420,9 +438,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 			if (CheckObjType(id) == OBJ_TYPE::MONSTER)
 			{
-				
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
-			
+				
+
 			}
 		}
 	}
