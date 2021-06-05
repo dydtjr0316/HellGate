@@ -13,7 +13,11 @@
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
 #include "MonsterScript.h"
-
+OBJ_TYPE CheckObjType(const uShort& id)
+{
+	if (id >= 0 && id < MAX_USER)return OBJ_TYPE::PLAYER;
+	else if (id >= START_MONSTER && id < END_MONSTER)return OBJ_TYPE::MONSTER;
+}
 
 //const char ip[] = "192.168.0.11";
 const char ip[] = "192.168.0.3";
@@ -258,7 +262,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 		else
 		{
-			if (id < MAX_USER)
+			if (CheckObjType(id) == OBJ_TYPE::PLAYER)
 			{
 				if (0 == g_Object.count(id))
 				{
@@ -272,7 +276,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->FrustumCheck(false);
 					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f,my_packet->RotateY, 0.f));
+					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, my_packet->RotateY, 0.f));
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
@@ -281,10 +285,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 					);
 					g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
-					
+
 				}
 			}
-			if (id >= START_MONSTER && id < END_MONSTER)
+			else if (CheckObjType(id) == OBJ_TYPE::MONSTER)
 			{
 				Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
 				CGameObject* pObject = new CGameObject;
@@ -374,13 +378,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else {
 			if (0 != g_Object.count(other_id))
 			{
-				if (other_id < MAX_USER)
+				if (CheckObjType(other_id) == OBJ_TYPE::PLAYER)
 				{
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 					CEventMgr::GetInst()->update();
 					g_Object.erase(other_id);
 				}
-				else if (other_id >= START_MONSTER && other_id < END_MONSTER)
+				else if (CheckObjType(other_id) == OBJ_TYPE::MONSTER)
 				{
 					g_Object.find(other_id)->second->GetScript<CMonsterScript>()->DeleteObject(g_Object.find(other_id)->second);
 					CEventMgr::GetInst()->update();
@@ -399,14 +403,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_ATTACK:
 	{
 		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(ptr);
-		if (packet->id == g_myid)
+		int id = packet->id;
+		if (id == g_myid)
 		{
 
 		}
 		else
 		{
 
-			if (packet->id >= START_MONSTER && packet->id < END_MONSTER)
+			if (CheckObjType(id) == OBJ_TYPE::MONSTER)
 			{
 				
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);

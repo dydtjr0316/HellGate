@@ -156,16 +156,12 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType, wstring _str)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(_str);
 	}
-	/*else if (COLLIDER_TYPE::SPHEREMESH == m_eType)
-	{
-		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(_str + L"_Sphere");
-	}*/
+
 }
 
 void CCollider::OnCollisionEnter(CCollider* _pOther)
 {
-	m_iCollisionCount += 1;
-
+	m_iCollisionCount++;
 	const vector<CScript*>& vecScripts = GetObj()->GetScripts();
 	for (size_t i = 0; i < vecScripts.size(); ++i)
 	{
