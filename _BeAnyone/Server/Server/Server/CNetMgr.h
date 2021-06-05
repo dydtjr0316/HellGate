@@ -18,6 +18,9 @@ public:		// 패킷 전송부
 	void Send_Leave_Packet(  const uShort& user_id, const uShort& other_id, const bool& isAttack = false);
 	void Send_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
 	void Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool& isMoving);
+
+	//가라
+	void Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attackerid, const bool& isAttack);
 public:		// 패킷 수신부
 	void Process_Packet(const uShort& user_id, char* buf);
 	void Recv_Packet_Construct(const uShort& user_id, const int& io_byte);
@@ -27,6 +30,7 @@ public:		// 실제 객체 업데이트부
 	void Do_Attack(const uShort& attacker, const uShort& victim);
 	void Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY);
 	void Do_Stop(const uShort& user_id, const bool& isMoving);
+	
 	void Kill_Monster(const uShort& monster_id);
 	void Disconnect(const uShort& user_id);
 	void Enter_Game(const uShort& user_id, char name[]);

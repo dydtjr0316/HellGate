@@ -206,6 +206,16 @@ void CNetMgr::Send_MonsterDead_Packet(const uShort& monster_id)
 	Send_Packet(&p);
 }
 
+void CNetMgr::Send_Player_Animation_Packet(const uShort& user_id, const bool& isAttack)
+{
+	cs_packet_AttackAni p;
+	p.type = CS_ATTACK_ANIMATION;
+	p.size = sizeof(p);
+	p.id = user_id;
+	p.isAttack = isAttack;
+	Send_Packet(&p);
+}
+
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 {
 	//cout << "------Setani -> " << (int)type << endl;
@@ -352,7 +362,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
-		
+
 		if (other_id == g_myid)
 		{
 			//ObjTrans->SetLocalPos(packet->localVec);
@@ -365,7 +375,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				system_clock::time_point end = system_clock::now();
 				nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
-				if(packet->isMoving)
+				if (packet->isMoving)
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
 				else
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
@@ -431,7 +441,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_CHAT:
 	{
-		
+
 	}
 	break;
 	case SC_PACKET_ATTACK:
@@ -448,7 +458,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (CheckObjType(id) == OBJ_TYPE::MONSTER)
 			{
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
-				
+
 
 			}
 		}
@@ -462,10 +472,35 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "Send_ID_Packet My ID : " << g_myid << endl;
 	}
 	break;
+
+	case SC_PACKET_ATTACKANI:
+	{
+		sc_packet_AttackAni* packet = reinterpret_cast<sc_packet_AttackAni*>(ptr);
+		int id = packet->id;
+		if (id == g_myid) {
+		}
+		else {
+			if (0 != g_Object.count(id)&&CheckObjType(id) == OBJ_TYPE::PLAYER)
+			{
+				if (packet->isAttack)
+				{
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::ATTACK);
+
+				}
+				else
+				{
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::IDLE);
+				}
+			}
+		}
+	}
+	break;
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);
 	}
+
 }
+
 
 void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 {

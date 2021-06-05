@@ -238,6 +238,17 @@ void CNetMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, co
     Send_Packet(user_id, &p);
 }
 
+void CNetMgr::Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attckerid, const bool& isAttack)
+{
+    sc_packet_AttackAni p;
+    p.id = attckerid;
+    p.size = sizeof(p);
+    p.isAttack = isAttack;
+    p.type = SC_PACKET_ATTACKANI;
+    Send_Packet(user_id, &p);
+}
+
+
 void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  const bool& isMoving)
 {
     sc_packet_stop p;
@@ -751,6 +762,7 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
     pUser->SetStatus(OBJSTATUS::ST_ACTIVE);
 }
 
+
 void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
 {
     switch (buf[1]) {
@@ -795,10 +807,37 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_MONSTER_DEAD:
     {
         cs_packet_MonsterDead* packet = reinterpret_cast<cs_packet_MonsterDead*>(buf);
-
+        if(g_Object.count(packet->id)!=0)
+            Kill_Monster(packet->id);
     }
     break;
+    case CS_ATTACK_ANIMATION:
+    {
+        cs_packet_AttackAni* packet = reinterpret_cast<cs_packet_AttackAni*>(buf);
+        if (g_Object.count(packet->id) == 0)break;
+        CClient* monster = dynamic_cast<CClient*>(Find(packet->id));
+        unordered_set<uShort> new_viewList;
+        vector<unordered_set<uShort>> vSectors = monster->Search_Sector();
+        for (auto& vSec : vSectors)
+        {
+            if (vSec.size() != 0)
+            {
+                for (auto& user : vSec)
+                {
+                    if (IsClient(user) && is_near(packet->id, user))
+                    {
+                        new_viewList.insert(user);
+                    }
+                }
+            }
+        }
+        for (auto& obj : new_viewList)
+        {
+            Send_Attack_Animation_Packet(obj, packet->id, packet->isAttack);
 
+        }
+    }
+    break;
     default:
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();

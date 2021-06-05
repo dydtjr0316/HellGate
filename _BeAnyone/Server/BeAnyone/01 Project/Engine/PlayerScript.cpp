@@ -45,13 +45,18 @@ void CPlayerScript::update()
 	char dir = MV_IDLE;
 	char attdir = ATTACK_IDLE;
 	bool moveKeyInput = false;
-
 	op_Move();
 	if (KEY_HOLD(KEY_TYPE::KEY_R))
 	{
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		attdir = ATTACK_ANI;
 		moveKeyInput = true;
+		if (!isAttack)
+		{
+			isAttack = true;
+			g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
+
+		}
 	}
 	if (KEY_AWAY(KEY_TYPE::KEY_R))
 	{
@@ -60,6 +65,10 @@ void CPlayerScript::update()
 		Attack_Default();
 
 		player->SetAnimation(Ani_TYPE::IDLE);
+		isAttack = false;
+		// packet send
+		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
+
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))

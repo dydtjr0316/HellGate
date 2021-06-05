@@ -73,18 +73,18 @@ CMonsterScript::~CMonsterScript()
 
 void CMonsterScript::update()
 {
-
-	if (m_bisAttack)
+	CGameObject* monster = g_Object.find(m_sId)->second;
+	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
+	if (monsterScript->GetBisAttack())
 	{
-		m_fAnimationCnt += DT;
-		cout << m_fAnimationCnt << endl;
+		monsterScript->Setcnt(monsterScript->Getcnt()+DT);
 		SetAnimation(MONSTER_ANI_TYPE::DEAD);
 	}
-	if (m_fAnimationCnt > 1.5f)
+	if (monsterScript->Getcnt() > 1.5f&& monsterScript->GetBisAttack())
 	{
-		m_bisAttack = false;
-
-		cout << "update " << endl;
+		cout << "몇번으로 보내냐 시바라" << endl;
+		monsterScript->SetBisAttack(false);
+		monsterScript->Setcnt(0.f);
 		g_netMgr.Send_MonsterDead_Packet(m_sId);
 		DeleteObject(GetObj());
 		CEventMgr::GetInst()->update();

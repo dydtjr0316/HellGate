@@ -28,6 +28,9 @@ public:
 	void SetBisAttack(const bool& isattack) { m_bisAttack = isattack; }
 	bool GetBisAttack() { return m_bisAttack; }
 
+	void Setcnt(const float& cnt) { m_fAnimationCnt = cnt; }
+	float Getcnt() { return m_fAnimationCnt; }
+
 	//animatioin
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const MONSTER_ANI_TYPE& type);
