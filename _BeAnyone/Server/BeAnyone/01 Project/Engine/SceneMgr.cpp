@@ -714,12 +714,12 @@ void CSceneMgr::init()
 	pMainCam->AddComponent(new CCamera);
 	pMainCam->AddComponent(new CToolCamScript);
 
-	pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));
-	pMainCam->Transform()->SetLocalRot(Vector3(XM_PI / 6 /*0.f*/, 0.0f, 0.f));
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetFar(100000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 	pMainCam->Camera()->SetLayerCheck(30, false);
+	//pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));
+	//pMainCam->Transform()->SetLocalRot(Vector3(XM_PI / 6 /*0.f*/, 0.0f, 0.f));
 	//vector<CToolCamScript*> camScript = (CToolCamScript*)(pMainCam->GetScripts())
 	////camScript[0]->
 	//pMainCam->GetScripts()[0]->SetPlayer();
@@ -750,7 +750,7 @@ void CSceneMgr::init()
 	pObject = new CGameObject;
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CLight);
-	pObject->Light()->SetLightPos(Vector3(0.f, 200.f, 1000.f));
+	pObject->Light()->SetLightPos(Vector3(0.f, 1000.f, 1000.f));
 	pObject->Light()->SetLightType(LIGHT_TYPE::DIR);
 	pObject->Light()->SetDiffuseColor(Vector3(1.f, 1.f, 1.f));
 	pObject->Light()->SetSpecular(Vector3(0.3f, 0.3f, 0.3f));
@@ -760,7 +760,26 @@ void CSceneMgr::init()
 	pObject->Transform()->SetLocalPos(Vector3(-1000.f, 1000.f, -1000.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-	
+
+	//	테스트 텍스쳐
+	pObject = new CGameObject;
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	// Transform 설정
+	pObject->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vector3(1000.f, 1000.f, 1.f));
+	pObject->Transform()->SetLocalRot(Vector3(XM_PI / 2.f, 0.f, 0.f));
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
+	pObject->MeshRender()->SetDynamicShadow(true);
+	// Script 설정
+	//pObject->AddComponent(new CPlayerScript);
+	// AddGameObject
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
 	// ====================
 	// Monster1 오브젝트 생성
 	// ====================

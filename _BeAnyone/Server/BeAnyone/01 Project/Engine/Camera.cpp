@@ -23,7 +23,7 @@ CCamera::CCamera()
 	, m_fNear(1.f)
 	, m_fFOV(XM_PI / 4.f)
 	, m_fScale(1.f)
-	, m_eProjType(PROJ_TYPE::ORTHOGRAPHIC)
+	, m_eProjType(PROJ_TYPE::PERSPECTIVE)
 	, m_iLayerCheck(0)
 	, m_bModule(false)
 {
@@ -226,11 +226,6 @@ void CCamera::render()
 					{
 						vecObj[i]->MeshRender()->render();
 					}
-
-					//if (vecObj[i]->Collider2D())
-					//{
-					//	vecObj[i]->Collider2D()->render();
-					//}
 				 }
 			}
 		}
