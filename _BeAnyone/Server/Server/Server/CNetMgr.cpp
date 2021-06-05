@@ -1027,6 +1027,7 @@ void CNetMgr::Worker_Thread()
         break;
         case ENUMOP::OP_RAMDON_MOVE_MONSTER:
         {
+            if (g_Object.count(user_id) == 0)break;
             //Random_Move_Monster(user_id);
             bool keep_alive = false;
             //active인 플레이어가 주변에 있으면 계속 깨워두기
