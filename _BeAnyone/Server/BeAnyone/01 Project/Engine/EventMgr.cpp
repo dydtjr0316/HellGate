@@ -23,7 +23,7 @@ void CEventMgr::update()
 	{
 		m_vecDead[i]->ClearParent();
 
-		CSceneMgr::GetInst()->GetCurScene()->GetLayer(1)->FindParentObj(m_vecDead[i]);
+		CSceneMgr::GetInst()->GetCurScene()->GetLayer(i)->FindParentObj(m_vecDead[i]);
 		wcout << m_vecDead[i]->GetName() << L"°´Ã¼ »èÁ¦" << endl;
 		SAFE_DELETE(m_vecDead[i]);
 	}

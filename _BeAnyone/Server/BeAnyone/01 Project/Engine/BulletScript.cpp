@@ -19,7 +19,7 @@ void CBulletScript::update()
 	Vector3 vPos = Transform()->GetLocalPos();
 
 	Transform()->SetLocalPos(vPos);
-	cout << "ÃÑ¾Ë À§Ä¡\t" << "x : " << Transform()->GetLocalPos().x << "\t" << Transform()->GetLocalPos().y << "\t" << Transform()->GetLocalPos().z << endl;
+	//cout << "ÃÑ¾Ë À§Ä¡\t" << "x : " << Transform()->GetLocalPos().x << "\t" << Transform()->GetLocalPos().y << "\t" << Transform()->GetLocalPos().z << endl;
 
 
 	m_fTime += DT;

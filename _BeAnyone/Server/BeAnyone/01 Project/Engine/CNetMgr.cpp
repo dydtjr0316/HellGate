@@ -290,36 +290,39 @@ void CNetMgr::ProcessPacket(char* ptr)
 			}
 			else if (CheckObjType(id) == OBJ_TYPE::MONSTER)
 			{
-				Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
-				CGameObject* pObject = new CGameObject;
-				g_Object.emplace(id, pObject);
-				
-				pMeshData->Save(pMeshData->GetPath());
-				//
-				g_Object.find(id)->second =  pMeshData->Instantiate();
-				g_Object.find(id)->second->SetName(L"FireMonster");
-				g_Object.find(id)->second->FrustumCheck(false);
-				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
-		
-				g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
-				g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
-				g_Object.find(id)->second->AddComponent(new CCollider);
-				g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_walking");
-				g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos()
-					, g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-				g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere
-				(g_Object.find(id)->second->Transform()->GetLocalPos(),
-					g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+				if (0 == g_Object.count(id))
+				{
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+					CGameObject* pObject = new CGameObject;
+					g_Object.emplace(id, pObject);
 
-				// Script 설정
-				g_Object.find(id)->second->AddComponent(new CMonsterScript);
+					//pMeshData->Save(pMeshData->GetPath());
+					//
+					g_Object.find(id)->second = pMeshData->Instantiate();
+					g_Object.find(id)->second->SetName(L"FireMonster");
+					g_Object.find(id)->second->FrustumCheck(false);
+					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 
-				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
+					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
+					g_Object.find(id)->second->AddComponent(new CCollider);
+					g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_walking");
+					g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos()
+						, g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+					g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere
+					(g_Object.find(id)->second->Transform()->GetLocalPos(),
+						g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
 
-				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
-				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
-				cout << "---------------------" << endl;
-				cout << "ID : "<<id<<"    packet HP : " << my_packet->hp << endl;
+					// Script 설정
+					g_Object.find(id)->second->AddComponent(new CMonsterScript);
+
+					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
+
+					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
+					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
+					cout << "---------------------" << endl;
+					cout << "ID : " << id << "    packet HP : " << my_packet->hp << endl;
+				}
 			}
 		}
 	}
