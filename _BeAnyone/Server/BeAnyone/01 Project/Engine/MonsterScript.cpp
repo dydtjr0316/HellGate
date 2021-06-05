@@ -85,7 +85,7 @@ void CMonsterScript::update()
 		m_bisAttack = false;
 
 		cout << "update " << endl;
-
+		g_netMgr.Send_MonsterDead_Packet(m_sId);
 		DeleteObject(GetObj());
 		CEventMgr::GetInst()->update();
 		g_Object.erase(m_sId);

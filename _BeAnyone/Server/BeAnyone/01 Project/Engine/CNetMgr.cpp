@@ -197,6 +197,15 @@ void CNetMgr::Send_Attack_Packet(const uShort& victim_id)
 	Send_Packet(&p);
 }
 
+void CNetMgr::Send_MonsterDead_Packet(const uShort& monster_id)
+{
+	cs_packet_MonsterDead p;
+	p.type = CS_MONSTER_DEAD;
+	p.size = sizeof(p);
+	p.id = monster_id;
+	Send_Packet(&p);
+}
+
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 {
 	//cout << "------Setani -> " << (int)type << endl;

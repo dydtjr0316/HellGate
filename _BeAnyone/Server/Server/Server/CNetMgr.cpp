@@ -398,9 +398,9 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
         }
     }
 
-    if (monster->GetHP() - 10 > 0)
+    if (monster->GetHP() - 20 >= 0)
     {
-        monster->SetHP(monster->GetHP() - 10);
+        monster->SetHP(monster->GetHP() - 20);
         for (auto& clientID : new_viewList)
             Send_Attacked_Packet_Monster(clientID, victim);
     }
@@ -409,15 +409,31 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
         for (auto& clientID : new_viewList)
         {
             Send_Leave_Packet(clientID, victim, true);
-        }
-        g_Sector[Find(victim)->GetSector().x][Find(victim)->GetSector().z].erase(victim);
-        Delete_Obj(victim);
-      
+        }   
     }
-    
+}
+void CNetMgr::Kill_Monster(const uShort& monster_id)
+{
+    CMonster* monster = dynamic_cast<CMonster*>(Find(monster_id));
+    unordered_set<uShort> new_viewList;
+    vector<unordered_set<uShort>> vSectors = monster->Search_Sector();
+    //for (auto& vSec : vSectors)
+    //{
+    //    if (vSec.size() != 0)
+    //    {
+    //        for (auto& user : vSec)
+    //        {
+    //            if (IsClient(user) && is_near(monster_id, user))
+    //            {
+    //                new_viewList.insert(user);
+    //            }
+    //        }
+    //    }
+    //}
+    g_Sector[Find(monster_id)->GetSector().x][Find(monster_id)->GetSector().z].erase(monster_id);
+    Delete_Obj(monster_id);
 
 }
-
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
 {
     CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
@@ -649,6 +665,8 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 }
 
 
+
+
 void CNetMgr::Disconnect(const uShort& user_id)
 {
     CGameObject* pUser = Find( user_id);
@@ -774,6 +792,13 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         Do_Attack(user_id, packet->id);
     }
     break;
+    case CS_MONSTER_DEAD:
+    {
+        cs_packet_MonsterDead* packet = reinterpret_cast<cs_packet_MonsterDead*>(buf);
+
+    }
+    break;
+
     default:
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();
