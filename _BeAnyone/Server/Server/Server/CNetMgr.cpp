@@ -381,22 +381,35 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 {
     CMonster* monster = dynamic_cast<CMonster*>(Find(victim));
-    
-    if (monster->GetHP()-10 > 0)
+    unordered_set<uShort> new_viewList;
+    vector<unordered_set<uShort>> vSectors = monster->Search_Sector();
+    for (auto& vSec : vSectors)
+    {
+        if (vSec.size() != 0)
+        {
+            for (auto& user : vSec)
+            {
+                if (IsClient(user) && is_near(victim, user))
+                {
+                    new_viewList.insert(user);
+                }
+            }
+        }
+    }
+
+    if (monster->GetHP() - 10 > 0)
     {
         monster->SetHP(monster->GetHP() - 10);
-        Send_Attacked_Packet_Monster(attacker, victim);
+        for (auto& clientID : new_viewList)
+            Send_Attacked_Packet_Monster(clientID, victim);
     }
     else
     {
-        Send_Leave_Packet(0, victim);
+        for (auto& clientID : new_viewList)
+            Send_Leave_Packet(clientID, victim);
     }
-
     
-    /// <summary>
-    ///  추가구현
-    /// </summary>
-    /// <param name="user_id"></param>
+
 }
 
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
@@ -807,7 +820,7 @@ void CNetMgr::Init_Monster()
     srand((unsigned int)time(NULL));
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
         pObj = new CMonster;
-        pObj->SetPosV((float)(800+(i-1000)*100), 300.f, (float)(800 + (i - 1000) * 100));
+        pObj->SetPosV((float)(1000+(i-1000)*500), 300.f, (float)(1000 + (i - 1000) * 500));
         pObj->SetID(i);
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);

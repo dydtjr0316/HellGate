@@ -10,8 +10,9 @@ private:
 	CGameObject* m_pUnderUi;
 
 	unsigned short m_sId;
-	uShort m_sHp;
 
+	uShort m_sHp;
+	uShort m_sMaxHP = 100;
 public:
 	virtual void update();
 	virtual void OnCollisionEnter(CCollider* _pOther);
@@ -21,6 +22,8 @@ public:
 	void SetHP(const uShort& hp) { m_sHp = hp; }
 	uShort GetHP() { return m_sHp; }
 
+
+	void DecreaseHp();
 
 	// void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
 public:

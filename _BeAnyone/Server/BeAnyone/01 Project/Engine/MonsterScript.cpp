@@ -2,7 +2,7 @@
 #include "MonsterScript.h"
 #include "MonsterHpUiScript.h"
 #include "RenderMgr.h"
-
+int attackcnt = 0;
 CMonsterScript::CMonsterScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
 {
@@ -106,13 +106,10 @@ void CMonsterScript::update()
 void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 {
 	// 충돌이 발생하고, 상대 물체가 총일이면 스스로를 삭제
-	if (L"Attack Object" == _pOther->GetObj()->GetName())
+	if (L"Attack Object" == _pOther->GetObj()->GetName()&& attackcnt==0)
 	{
+		// 여기 두번들어감 // 용석
 		g_netMgr.Send_Attack_Packet(m_sId);
-		
-		//DeleteObject(GetObj());	// -->삭제 이벤트 등록
-		//CEventMgr::GetInst()->update();
-		//g_Object.erase(m_sId);
 	}
 }
 

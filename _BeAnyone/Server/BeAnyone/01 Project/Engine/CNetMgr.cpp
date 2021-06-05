@@ -16,7 +16,7 @@
 
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.3";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.20.138";
@@ -374,9 +374,18 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else {
 			if (0 != g_Object.count(other_id))
 			{
-				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
-				CEventMgr::GetInst()->update();
-				g_Object.erase(other_id);
+				if (other_id < MAX_USER)
+				{
+					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
+					CEventMgr::GetInst()->update();
+					g_Object.erase(other_id);
+				}
+				else if (other_id >= START_MONSTER && other_id < END_MONSTER)
+				{
+					g_Object.find(other_id)->second->GetScript<CMonsterScript>()->DeleteObject(g_Object.find(other_id)->second);
+					CEventMgr::GetInst()->update();
+					g_Object.erase(other_id);
+				}
 
 			}
 		}
