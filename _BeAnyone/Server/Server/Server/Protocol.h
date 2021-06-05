@@ -244,6 +244,7 @@ struct cs_packet_attack {
 	char	size;
 	char	type;
 	uShort  hp;
+	uShort  id;
 };
 
 struct cs_packet_chat {

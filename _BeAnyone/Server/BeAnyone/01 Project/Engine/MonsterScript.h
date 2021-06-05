@@ -12,7 +12,7 @@ private:
 	unsigned short m_sId;
 
 	uShort m_sHp;
-
+	uShort m_sMaxHP = 100;
 public:
 	virtual void update();
 	virtual void OnCollisionEnter(CCollider* _pOther);

@@ -140,14 +140,14 @@ void CNetMgr::Send_LevelUP_Packet(const uShort& id)
     Send_Packet( id, &p);
 }
 
-void CNetMgr::Send_Attacked_Packet_Monster(const uShort& monster_id)
+void CNetMgr::Send_Attacked_Packet_Monster(const uShort& attacker, const uShort& monster_id)
 {
     sc_packet_attack p;
     p.id = monster_id;
     p.size = sizeof(sc_packet_attack);
     p.type = SC_PACKET_ATTACK;
     p.hp = dynamic_cast<CMonster*>(Find(monster_id))->GetHP();
-    Send_Packet(monster_id ,&p);
+    Send_Packet(attacker,&p);
 }
 
 void CNetMgr::Send_Attacked_Packet_Client(const uShort& client_id)
@@ -201,7 +201,8 @@ void CNetMgr::Send_Enter_Packet( const uShort& user_id,  const uShort& other_id)
     p.RotateY =  Find(other_id)->GetRoatateVector().y;
     strcpy_s(p.name, Find(other_id)->GetName());    // data race???
     p.o_type = O_PLAYER;
-    p.hp = dynamic_cast<CMonster*>( Find(other_id))->GetHP();
+    if (p.id >= START_MONSTER && p.id < END_MONSTER)
+        p.hp = dynamic_cast<CMonster*>(Find(other_id))->GetHP();
 
     Send_Packet(user_id, &p);
 }
@@ -377,14 +378,14 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 //    }
 //}
 
-void CNetMgr::Do_Attack(const uShort& victim)
+void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 {
     CMonster* monster = dynamic_cast<CMonster*>(Find(victim));
     
     if (monster->GetHP()-10 > 0)
     {
         monster->SetHP(monster->GetHP() - 10);
-        Send_Attacked_Packet_Monster(victim);
+        Send_Attacked_Packet_Monster(attacker, victim);
     }
     else
     {
@@ -751,7 +752,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_ATTACK:
     {
         cs_packet_attack* packet = reinterpret_cast<cs_packet_attack*>(buf);
-        Do_Attack(user_id);
+        Do_Attack(user_id, packet->id);
     }
     break;
     default:
@@ -806,15 +807,13 @@ void CNetMgr::Init_Monster()
     srand((unsigned int)time(NULL));
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
         pObj = new CMonster;
-        pObj->SetPosV((float)(rand() % 1000+(i-1000)*100), 300.f, (float)(rand() % 1000+ (i - 1000) * 100));
+        pObj->SetPosV((float)(800+(i-1000)*100), 300.f, (float)(800 + (i - 1000) * 100));
         pObj->SetID(i);
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->Insert_Sector();
         Add(pObj, i);
-        cout << pObj->GetLocalPosVector().x << endl;
-        cout << pObj->GetLocalPosVector().z << endl;
-        cout << "999999999999999999999999" << endl << endl;
+        cout << "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP() << endl;
   
     }
 }

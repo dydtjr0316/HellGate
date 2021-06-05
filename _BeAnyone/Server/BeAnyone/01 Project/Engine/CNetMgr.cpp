@@ -16,7 +16,7 @@
 
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.3";
+const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.20.138";
@@ -188,6 +188,7 @@ void CNetMgr::Send_Attack_Packet(const uShort& victim_id)
 	cs_packet_attack p;
 	p.type = CS_ATTACK;
 	p.size = sizeof(p);
+	p.id = victim_id;
 	p.hp = g_Object.find(victim_id)->second->GetScript<CMonsterScript>()->GetHP();
 	Send_Packet(&p);
 }
@@ -295,9 +296,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				g_Object.find(id)->second->SetName(L"FireMonster");
 				g_Object.find(id)->second->FrustumCheck(false);
 				g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
-				cout << my_packet->localVec.x << endl;
-				cout << my_packet->localVec.z << endl;
-				cout << "***************************" << endl << endl;
+		
 				g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 				g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
 				g_Object.find(id)->second->AddComponent(new CCollider);
@@ -315,6 +314,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
+				cout << "---------------------" << endl;
+				cout << "ID : "<<id<<"    packet HP : " << my_packet->hp << endl;
 			}
 		}
 	}
@@ -398,7 +399,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 			if (packet->id >= START_MONSTER && packet->id < END_MONSTER)
 			{
+				
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
+			
 			}
 		}
 	}

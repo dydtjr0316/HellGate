@@ -10,7 +10,7 @@ public:
 public:		// 패킷 전송부
 	void Send_Packet(const uShort& id, void* packet);
 	void Send_LevelUP_Packet(const uShort& id);
-	void Send_Attacked_Packet_Monster(const uShort& monster_id);
+	void Send_Attacked_Packet_Monster(const uShort& attacker, const uShort& monster_id);
 	void Send_Attacked_Packet_Client(const uShort& client_id);
 	void Send_ID_Packet(const uShort& user_id);
 	void Send_LoginOK_Packet(const uShort& id);
@@ -24,7 +24,7 @@ public:		// 패킷 수신부
 public:		// 실제 객체 업데이트부
 	//void Random_Move_NPC(const int& id);
 	//void Random_Move_Monster(const int& id);
-	void Do_Attack(const uShort& victim);
+	void Do_Attack(const uShort& attacker, const uShort& victim);
 	void Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY);
 	void Do_Stop(const uShort& user_id, const bool& isMoving);
 	void Disconnect(const uShort& user_id);

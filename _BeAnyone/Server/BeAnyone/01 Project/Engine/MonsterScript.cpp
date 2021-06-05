@@ -81,24 +81,26 @@ void CMonsterScript::update()
 
 	Vector3 UiPos = m_pUi->Transform()->GetLocalPos();
 	Vector3 PlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+	Vector3 UIscale = m_pUi->Transform()->GetLocalScale();
 
-	UiPos = MonsterPos;
 	UiPos.x = MonsterPos.x - 100.f;
 	UiPos.y = MonsterPos.y + 300.f;
 	UiPos.z = MonsterPos.z;
-
 	m_pUi->Transform()->SetLocalPos(UiPos);
+
 	m_pUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
 
 	// 체력 줄이는
-	DecreaseHp();
+	m_pUi->Transform()->SetLocalScale(Vector3(static_cast<float>(m_sHp*3.5f), UIscale.y, UIscale.z));
+	
+	
 
 
 	// Transform 월드 좌표정보 얻기
-	Vector3 vPos = Transform()->GetLocalPos();
+	//Vector3 vPos = Transform()->GetLocalPos();
 
-	// 수정된 좌표를 다시 세팅하기.
-	Transform()->SetLocalPos(vPos);
+	//// 수정된 좌표를 다시 세팅하기.
+	//Transform()->SetLocalPos(vPos);
 }
 
 void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
@@ -107,7 +109,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 	if (L"Attack Object" == _pOther->GetObj()->GetName())
 	{
 		g_netMgr.Send_Attack_Packet(m_sId);
-
+		
 		//DeleteObject(GetObj());	// -->삭제 이벤트 등록
 		//CEventMgr::GetInst()->update();
 		//g_Object.erase(m_sId);
@@ -120,13 +122,7 @@ void CMonsterScript::OnCollisionExit(CCollider* _pOther)
 
 void CMonsterScript::DecreaseHp()
 {
-	if (KEY_TAB(KEY_TYPE::KEY_E)) {
-		Vector3 uiScale = m_pUi->Transform()->GetLocalScale();
 
-		uiScale.x -= static_cast<float>(m_sHp);
-		m_pUi->Transform()->SetLocalScale(uiScale);
-	}
-	
 }
 
 
