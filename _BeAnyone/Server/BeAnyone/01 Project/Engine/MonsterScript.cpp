@@ -90,6 +90,9 @@ void CMonsterScript::update()
 	m_pUi->Transform()->SetLocalPos(UiPos);
 	m_pUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
 
+	// 체력 줄이는
+	DecreaseHp();
+
 
 	// Transform 월드 좌표정보 얻기
 	Vector3 vPos = Transform()->GetLocalPos();
@@ -114,3 +117,16 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 void CMonsterScript::OnCollisionExit(CCollider* _pOther)
 {
 }
+
+void CMonsterScript::DecreaseHp()
+{
+	if (KEY_TAB(KEY_TYPE::KEY_E)) {
+		Vector3 uiScale = m_pUi->Transform()->GetLocalScale();
+
+		uiScale.x -= static_cast<float>(m_sHp);
+		m_pUi->Transform()->SetLocalScale(uiScale);
+	}
+	
+}
+
+

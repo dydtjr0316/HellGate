@@ -10,6 +10,7 @@ private:
 	CGameObject* m_pUnderUi;
 
 	unsigned short m_sId;
+
 	uShort m_sHp;
 
 public:
@@ -21,6 +22,8 @@ public:
 	void SetHP(const uShort& hp) { m_sHp = hp; }
 	uShort GetHP() { return m_sHp; }
 
+
+	void DecreaseHp();
 
 	// void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
 public:
