@@ -723,11 +723,11 @@ void CSceneMgr::init()
 	//vector<CToolCamScript*> camScript = (CToolCamScript*)(pMainCam->GetScripts())
 	////camScript[0]->
 	//pMainCam->GetScripts()[0]->SetPlayer();
-
 	CToolCamScript* camScript = pMainCam->GetScript<CToolCamScript>();
 	camScript->SetPlayer(pPlayerObj);
 	// pObject->SetCam(pMainCam);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);
+
 
 	// UI Camera
 	CGameObject* pUICam = new CGameObject;
@@ -774,10 +774,7 @@ void CSceneMgr::init()
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-	pObject->MeshRender()->SetDynamicShadow(true);
-	// Script ¼³Á¤
-	//pObject->AddComponent(new CPlayerScript);
-	// AddGameObject
+	pObject->MeshRender()->SetDynamicShadow(false);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 	// ====================

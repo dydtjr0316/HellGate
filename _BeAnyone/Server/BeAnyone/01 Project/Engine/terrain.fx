@@ -80,8 +80,8 @@ PatchTess PatchConstFunc_terrain(InputPatch<VS_OUTPUT, 3> _input, int _iPatchID 
 }
 
 [domain("tri")]
-[partitioning("integer")]
-//[partitioning("fractional_odd")]
+//[partitioning("integer")]
+[partitioning("fractional_odd")]
 [outputcontrolpoints(3)]
 [patchconstantfunc("PatchConstFunc_terrain")]
 [maxtessfactor(64.f)]

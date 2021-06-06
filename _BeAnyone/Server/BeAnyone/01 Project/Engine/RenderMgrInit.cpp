@@ -5,8 +5,8 @@
 #include "ResMgr.h"
 
 #include "Core.h"
-//#include "ResMgr.h"
-//#include "Texture.h"
+#include "ResMgr.h"
+#include "Texture.h"
 #include "MRT.h"
 
 

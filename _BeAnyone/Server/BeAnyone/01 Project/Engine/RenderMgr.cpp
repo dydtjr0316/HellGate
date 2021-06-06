@@ -110,6 +110,15 @@ void CRenderMgr::render_lights()
 	m_arrMRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
 
 	// 광원을 그린다.
+	CCamera* pMainCam = CRenderMgr::GetInst()->GetMainCam();
+	if (nullptr == pMainCam)
+		return;
+
+	// 메인 카메라 시점 기준 View, Proj 행렬로 되돌린다.
+	g_transform.matView = pMainCam->GetViewMat();
+	g_transform.matProj = pMainCam->GetProjMat();
+	g_transform.matViewInv = pMainCam->GetViewMatInv();
+
 	for (size_t i = 0; i < m_vecLight.size(); ++i)
 	{
 		m_vecLight[i]->Light()->render();
