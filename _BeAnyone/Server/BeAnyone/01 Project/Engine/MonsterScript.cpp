@@ -77,10 +77,11 @@ void CMonsterScript::update()
 	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
 	if (monsterScript->GetBisAttack())
 	{
+		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt()+DT);
 		SetAnimation(MONSTER_ANI_TYPE::DEAD);
 	}
-	if (monsterScript->Getcnt() > 1.5f&& monsterScript->GetBisAttack())
+	if (monsterScript->Getcnt() > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack())
 	{
 		cout << "몇번으로 보내냐 시바라" << endl;
 		monsterScript->SetBisAttack(false);
@@ -90,7 +91,6 @@ void CMonsterScript::update()
 		CEventMgr::GetInst()->update();
 		g_Object.erase(m_sId);
 	}
-
 
 
 	//------

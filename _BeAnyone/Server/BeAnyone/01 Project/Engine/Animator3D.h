@@ -32,6 +32,8 @@ public:
 	void UpdateData();
 	void SetClipTime(int _iClipIdx, float _fTime) { m_vecClipUpdateTime[_iClipIdx] = _fTime; }
 
+	tMTAnimClip GetAnimClip(int _idx) { return m_pVecClip->at(_idx); }
+
 	// vector<Matrix>& GetFinalBoneMat() { return m_vecFinalBoneMat; }// ¾È ¾¸
 	CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMat; }
 

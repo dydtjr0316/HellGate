@@ -12,6 +12,7 @@ private:
 	vector<Ptr<CMesh>>   m_pAniData;
 	unsigned short m_sId;
 	bool m_bisAttack = false;
+	bool m_bisAniReset = false;
 
 	float m_fAnimationCnt = 0.f;
 
@@ -35,6 +36,14 @@ public:
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const MONSTER_ANI_TYPE& type);
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
+
+	void AnimClipReset() {
+		if (m_bisAniReset == false) {
+			GetObj()->Animator3D()->SetClipTime(0, 0.f);
+			m_bisAniReset = true;
+		}
+	};
+
 	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
 
 	void DecreaseHp();
