@@ -45,6 +45,9 @@ private:
 	Vector2 m_v2Origin_Point[4];
 	int m_iInterpolationCnt = 0;
 public:
+	void SetAttack(bool isattack) { isAttack = isattack; }
+	bool GetAttack() { return this->isAttack; }
+public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
 	void OnPlayerUpdateCallback();

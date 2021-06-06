@@ -51,9 +51,9 @@ void CPlayerScript::update()
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		attdir = ATTACK_ANI;
 		moveKeyInput = true;
-		if (!isAttack)
+		if (!player->GetAttack())
 		{
-			isAttack = true;
+			player->SetAttack(true);
 			g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
 
 		}
@@ -65,7 +65,8 @@ void CPlayerScript::update()
 		Attack_Default();
 
 		player->SetAnimation(Ani_TYPE::IDLE);
-		isAttack = false;
+		player->SetAttack(false);
+
 		// packet send
 		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
 

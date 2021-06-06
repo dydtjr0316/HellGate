@@ -413,13 +413,15 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
     {
         monster->SetHP(monster->GetHP() - 23);
         for (auto& clientID : new_viewList)
-            Send_Attacked_Packet_Monster(clientID, victim);
+        {
+                Send_Attacked_Packet_Monster(clientID, victim);
+        }
     }
     else
     {
+            monster->SetHP(0.f);
         for (auto& clientID : new_viewList)
         {
-            monster->SetHP(0.f);
             Send_Attacked_Packet_Monster(clientID, victim);
             Send_Leave_Packet(clientID, victim, true);
         }   
@@ -892,7 +894,7 @@ void CNetMgr::Init_Monster()
     srand((unsigned int)time(NULL));
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
         pObj = new CMonster;
-        pObj->SetPosV((float)(1500), 300.f, (float)(5000 + (i - 1000) * 400));
+        pObj->SetPosV((float)(1500), 300.f, (float)(5000 +  (i - 1000) * 400));
         pObj->SetID(i);
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);

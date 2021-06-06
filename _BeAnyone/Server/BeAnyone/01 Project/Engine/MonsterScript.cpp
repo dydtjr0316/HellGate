@@ -133,7 +133,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 	{
 		// 여기 두번들어감 // 용석
 		g_netMgr.Send_Attack_Packet(m_sId);
-
+		cout << "sid : " << m_sId << endl;
 	}
 }
 
