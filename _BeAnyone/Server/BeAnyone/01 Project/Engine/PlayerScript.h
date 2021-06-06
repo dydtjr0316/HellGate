@@ -33,6 +33,7 @@ private:
 	float m_fDelayTime = 1.f;
 	bool FirstPacket = false;
 	bool isAttack = false;
+	bool m_bisAniReset = false;
 
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;
@@ -59,11 +60,18 @@ public:
 
 public: 
 	//¿ë¼®
+	//animation
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const Ani_TYPE& type);
 	void SetAnimation(const int& other_id, const Ani_TYPE& type);
 	Ptr<CMesh> GetAniData(const Ani_TYPE& type) { return m_pAniData[(int)type]; }
 	void SetAnimationType(const Ani_TYPE& type) { m_eAniType = type; }
+	void AnimClipReset() {
+		if (m_bisAniReset == false) {
+			GetObj()->Animator3D()->SetClipTime(0, 0.f);
+			m_bisAniReset = true;
+		}
+	};
 
 	void initDeadReckoner() { m_pDeadReckoner = new CDeadReckoner(g_myid); }
 	CDeadReckoner* GetReckoner() { return m_pDeadReckoner; }

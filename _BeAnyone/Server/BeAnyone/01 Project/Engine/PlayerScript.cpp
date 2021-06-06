@@ -48,6 +48,7 @@ void CPlayerScript::update()
 	op_Move();
 	if (KEY_HOLD(KEY_TYPE::KEY_R))
 	{
+		player->AnimClipReset();
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		attdir = ATTACK_ANI;
 		moveKeyInput = true;
@@ -68,6 +69,7 @@ void CPlayerScript::update()
 		isAttack = false;
 		// packet send
 		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
+		m_bisAniReset = false;
 
 	}
 
