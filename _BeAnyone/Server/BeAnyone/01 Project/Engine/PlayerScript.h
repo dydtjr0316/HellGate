@@ -46,6 +46,8 @@ private:
 	Vector2 m_v2Origin_Point[4];
 	int m_iInterpolationCnt = 0;
 public:
+	bool GetAniReset() { return m_bisAniReset; }
+	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
 	void SetAttack(bool isattack) { isAttack = isattack; }
 	bool GetAttack() { return this->isAttack; }
 public:

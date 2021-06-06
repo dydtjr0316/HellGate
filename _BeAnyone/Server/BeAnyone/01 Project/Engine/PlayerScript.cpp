@@ -70,7 +70,7 @@ void CPlayerScript::update()
 
 		// packet send
 		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
-		m_bisAniReset = false;
+		player->SetAniReset(false);
 
 	}
 
