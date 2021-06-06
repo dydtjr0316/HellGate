@@ -892,7 +892,7 @@ void CNetMgr::Init_Monster()
     srand((unsigned int)time(NULL));
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
         pObj = new CMonster;
-        pObj->SetPosV((float)(900+(i-1000)*400), 300.f, (float)(900 + (i - 1000) * 400));
+        pObj->SetPosV((float)(1500), 300.f, (float)(5000 + (i - 1000) * 400));
         pObj->SetID(i);
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);

@@ -84,7 +84,6 @@ void CMonsterScript::update()
 	}
 	if (monsterScript->Getcnt() > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack())
 	{
-		cout << "몇번으로 보내냐 시바라" << endl;
 		monsterScript->SetBisAttack(false);
 		monsterScript->Setcnt(0.f);
 		g_netMgr.Send_MonsterDead_Packet(m_sId);
