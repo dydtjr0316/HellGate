@@ -419,6 +419,8 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
     {
         for (auto& clientID : new_viewList)
         {
+            monster->SetHP(0.f);
+            Send_Attacked_Packet_Monster(clientID, victim);
             Send_Leave_Packet(clientID, victim, true);
         }   
     }
