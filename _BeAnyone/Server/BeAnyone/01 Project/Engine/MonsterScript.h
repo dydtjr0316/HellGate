@@ -14,6 +14,8 @@ private:
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;
 
+
+
 	float m_fAnimationCnt = 0.f;
 
 	uShort m_sHp;

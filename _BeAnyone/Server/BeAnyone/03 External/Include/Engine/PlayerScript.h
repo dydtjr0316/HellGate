@@ -32,6 +32,7 @@ private:
 	float m_ftimeCount = 0.f;
 	float m_fDelayTime = 1.f;
 	bool FirstPacket = false;
+	bool isAttack = false;
 
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;

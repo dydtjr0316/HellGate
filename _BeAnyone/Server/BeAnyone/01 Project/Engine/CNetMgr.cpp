@@ -20,7 +20,7 @@ OBJ_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.3";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.20.138";
@@ -405,6 +405,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
+		
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
@@ -416,6 +417,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				{
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 					CEventMgr::GetInst()->update();
+					CEventMgr::GetInst()->update();
 					g_Object.erase(other_id);
 				}
 				else if (CheckObjType(other_id) == OBJ_TYPE::MONSTER)
@@ -424,13 +426,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 					{
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->DeleteObject(g_Object.find(other_id)->second);
 						CEventMgr::GetInst()->update();
+						CEventMgr::GetInst()->update();
 						g_Object.erase(other_id);
-						cout << "network" << endl;
+
 					}
 					else
 					{
-						cout << "************" << endl;
-						cout << "bis attack change " << endl;
+
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetBisAttack(my_packet->isAttack);
 					}
 				}

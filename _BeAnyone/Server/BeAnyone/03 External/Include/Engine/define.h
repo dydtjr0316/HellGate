@@ -305,3 +305,11 @@ enum class Ani_TYPE
 	ATTACK,
 	END
 };
+
+enum class MONSTER_ANI_TYPE
+{
+	WALK,
+	DEAD,
+	ATTACK,
+	END
+};

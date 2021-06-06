@@ -34,6 +34,10 @@ public:		// 패킷 전송부
 		const system_clock::time_point& startTime, const float& delta, const bool& isMoving);
 	void Send_Stop_Packet( const bool& isMoving);
 	void Send_Attack_Packet(const uShort& victim_id);
+	void Send_MonsterDead_Packet(const uShort& monster_id);
+
+	// 가라
+	void Send_Player_Animation_Packet(const uShort& user_id, const bool& isAttack);
 public:		// animation
 	void SetAnimation(int id, const Ani_TYPE& type);
 

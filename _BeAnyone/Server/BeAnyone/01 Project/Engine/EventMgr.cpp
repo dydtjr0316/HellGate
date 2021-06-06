@@ -23,13 +23,15 @@ void CEventMgr::update()
 	{
 		m_vecDead[i]->ClearParent();
 
-		CSceneMgr::GetInst()->GetCurScene()->GetLayer(i)->FindParentObj(m_vecDead[i]);
-		wcout << m_vecDead[i]->GetName() << L"按眉 昏力" << endl;
+		CSceneMgr::GetInst()->GetCurScene()->GetLayer(1)->FindParentObj(m_vecDead[i]);
+		CSceneMgr::GetInst()->GetCurScene()->GetLayer(2)->FindParentObj(m_vecDead[i]);
+		//wcout << m_vecDead[i]->GetName() << L"按眉 昏力" << endl;
 		SAFE_DELETE(m_vecDead[i]);
 	}
 	m_vecDead.clear();
 
 	// Event 贸府
+
 	for (size_t i = 0; i < m_vecEvent.size(); ++i)
 	{
 		Execute(m_vecEvent[i]);

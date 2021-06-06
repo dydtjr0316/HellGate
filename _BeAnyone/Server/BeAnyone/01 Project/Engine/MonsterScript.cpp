@@ -73,6 +73,7 @@ CMonsterScript::~CMonsterScript()
 
 void CMonsterScript::update()
 {
+	//if (g_Object.count(m_sId) == 0)return;
 	CGameObject* monster = g_Object.find(m_sId)->second;
 	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
 	if (monsterScript->GetBisAttack())
