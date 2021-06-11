@@ -23,7 +23,7 @@ OBJ_TYPE CheckObjType(const uShort& id)
 const char ip[] = "192.168.0.3";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
-const char KPUIP[] = "192.168.20.138";
+const char KPUIP[] = "192.168.140.245";
 
 CNetMgr g_netMgr;
 
@@ -68,7 +68,7 @@ void CNetMgr::Connect()
 	memset(&recvAddr, 0, sizeof(recvAddr));
 
 	recvAddr.sin_family = AF_INET;
-	recvAddr.sin_addr.s_addr = inet_addr(ip);
+	recvAddr.sin_addr.s_addr = inet_addr(KPUIP);
 	recvAddr.sin_port = htons(SERVER_PORT);
 
 	if (connect(g_Socket, (SOCKADDR*)&recvAddr, sizeof(recvAddr)) == SOCKET_ERROR)

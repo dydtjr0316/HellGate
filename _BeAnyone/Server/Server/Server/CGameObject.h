@@ -63,6 +63,7 @@ public: // 상속 ,, 함수
 
 	void SetSocket_Zero() { m_s = 0; }
 	void SetSocket(const SOCKET& s) { m_s = s; }
+
 	void SetSpeed(const float& speed) { m_fspeed = speed; }
 	void SetHalfRTT(const system_clock::time_point hrtt) { m_halfRTT = hrtt; }
 	void SetIsMoving(const bool& isMoving);

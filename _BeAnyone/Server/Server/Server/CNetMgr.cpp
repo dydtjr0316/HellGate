@@ -409,9 +409,9 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
         }
     }
 
-    if (monster->GetHP() - 23 >= 0)
+    if (monster->GetHP() - 12 >= 0)
     {
-        monster->SetHP(monster->GetHP() - 23);
+        monster->SetHP(monster->GetHP() - 12);
         for (auto& clientID : new_viewList)
         {
                 Send_Attacked_Packet_Monster(clientID, victim);
