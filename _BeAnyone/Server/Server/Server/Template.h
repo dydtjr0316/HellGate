@@ -20,7 +20,7 @@ void SafeDeleteArr(T& ptr)
     }
 }
 
-#define SINGLE(type) private: type(); ~type();\
+#define SINGLE(type) public: type(); ~type();\
 public:\
 static type* GetInst()\
 {\

@@ -1,4 +1,5 @@
 #pragma once
+class CSector;
 class CGameObject
 {
 public:
@@ -70,7 +71,7 @@ public: // 상속 ,, 함수
 public:
 	void Insert_Sector();
 	void Change_Sector(const _tSector& old_sector);
-	vector<unordered_set<uShort>> Search_Sector();
+
 	
 protected:
 	// int

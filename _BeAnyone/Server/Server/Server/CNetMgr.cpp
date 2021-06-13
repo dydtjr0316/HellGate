@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
-
+#include "CSectorMgr.h"
 int cnt = 0;
 int login = 0;
 int ghost = 0;
@@ -29,244 +29,21 @@ bool CNetMgr::is_near( const uShort& p1, const uShort& p2)
 {
     if(p1 == p2)return false;
     float dist =
-        (Find(p1)->GetLocalPosVector().x - Find(p2)->GetLocalPosVector().x)
-        * (Find(p1)->GetLocalPosVector().x - Find(p2)->GetLocalPosVector().x);
+        (m_pMediator->Find(p1)->GetLocalPosVector().x - m_pMediator->Find(p2)->GetLocalPosVector().x)
+        * (m_pMediator->Find(p1)->GetLocalPosVector().x - m_pMediator->Find(p2)->GetLocalPosVector().x);
 
-    dist += (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z)
-        * (Find(p1)->GetLocalPosVector().z - Find(p2)->GetLocalPosVector().z);
+    dist += (m_pMediator->Find(p1)->GetLocalPosVector().z - m_pMediator->Find(p2)->GetLocalPosVector().z)
+        * (m_pMediator->Find(p1)->GetLocalPosVector().z - m_pMediator->Find(p2)->GetLocalPosVector().z);
 
-   /* if (dist <= (float)(VIEW_LIMIT * VIEW_LIMIT))
-    {
-        cout << "시야에 들어온 섹터  : "<<Find(p1)->Search_Sector().size() << endl;
-    }*/
+  
 
     return dist <= (float)(VIEW_LIMIT * VIEW_LIMIT);
 }
 
 
-void CNetMgr::Add(CGameObject* pObj,  const uShort& id)
-{
-    if (pObj != nullptr)
-        g_Object.emplace(id, pObj);
-}
-
-CGameObject* CNetMgr::Find(const uShort& id)
-{
-    if (g_Object.count(id) != 0)
-    {
-        return  g_Object.find(id)->second;
-    }
-    return nullptr;
-}
-
-void CNetMgr::Delete_Obj(  const uShort& id)
-{
-    if (g_Object.count(id) != 0)
-    {
-        SafeDelete(g_Object.find(id)->second);
-        g_Object.erase(id);
-    }
-}
-
-const size_t CNetMgr::Count(const uShort& id)
-{
-    return g_Object.count(id);
-}
-
-const size_t CNetMgr::Size()
-{
-    return g_Object.size();
-}
-
-void CNetMgr::ReckonerAdd(const uShort& id)
-{
-    if (g_Reckoner.count(id) == 0)
-        g_Reckoner.emplace(id);
-}
-
-int CNetMgr::ReckonerFind(const uShort& id)
-{
-    if (g_Reckoner.count(id) != 0)
-    {
-        return  id;
-    }
-}
-
-void CNetMgr::Delete_Reckoner(const uShort& id)
-{
-    if (g_Reckoner.count(id) != 0)
-    {
-        g_Reckoner.erase(id);
-    }
-}
-
-const size_t CNetMgr::ReckonerCount(const uShort& id)
-{
-    return g_Reckoner.count(id);
-}
-
-const size_t CNetMgr::ReckonerSize()
-{
-    return g_Reckoner.size();
-}
-
-void CNetMgr::Send_Packet(const uShort& id, void* packet)
-{
-    unsigned char* buf = reinterpret_cast<unsigned char*>(packet);
-
-    EXOVER* exover = new EXOVER;
-    ZeroMemory(&exover->io_buf, sizeof(exover->io_buf));
-    memcpy(exover->io_buf, buf, buf[0]);
-    exover->op = ENUMOP::OP_SEND;
-    exover->wsabuf.buf = reinterpret_cast<char*>(exover->io_buf);
-    exover->wsabuf.len = buf[0];
-    ZeroMemory(&exover->over, sizeof(exover->over));
-
-    Find(id)->GetLock().lock();
-    WSASend(Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
-        &exover->over, NULL);
-    Find( id)->GetLock().unlock();
-    
-}
-
-void CNetMgr::Send_LevelUP_Packet(const uShort& id)
-{
-    sc_packet_level_up p;
-    p.id = id;
-    p.size = sizeof(sc_packet_level_up);
-    p.type = SC_PACKET_LEVEL_UP;
-    p.max_hp = Cast_Client(Find(id))->GetMaxHP();
-    p.level = Cast_Client(Find( id))->GetLevel();
-    p.attack_damage = Cast_Client(Find(id))->GetAttackDamage();
-    p.hp = Cast_Client(Find(id))->GetHP();
-    p.exp = Cast_Client(Find( id))->GetEXP();
-    p.max_exp = Cast_Client(Find( id))->GetMaxEXP();;
-    Send_Packet( id, &p);
-}
-
-void CNetMgr::Send_Attacked_Packet_Monster(const uShort& attacker, const uShort& monster_id)
-{
-    sc_packet_attack p;
-    p.id = monster_id;
-    p.size = sizeof(sc_packet_attack);
-    p.type = SC_PACKET_ATTACK;
-    p.hp = dynamic_cast<CMonster*>(Find(monster_id))->GetHP();
-    Send_Packet(attacker,&p);
-}
-
-void CNetMgr::Send_Attacked_Packet_Client(const uShort& client_id)
-{
-    sc_packet_attack p;
-    p.id = client_id;
-    p.size = sizeof(sc_packet_attack);
-    p.type = SC_PACKET_ATTACK;
-    p.hp = Cast_Client(Find(client_id))->GetHP();
-    Send_Packet(client_id, &p);
-}
-
-void CNetMgr::Send_ID_Packet(const uShort& user_id)
-{
-    sc_packet_id p;
-    CClient* pClient = Cast_Client(Find(user_id));
-    p.id = user_id;
-    p.size = sizeof(sc_packet_id);
-    p.type = SC_PACKET_ID;
-
-    Send_Packet(user_id, &p);
-}
-
-void CNetMgr::Send_LoginOK_Packet(const uShort& user_id)
-{
-    sc_packet_login_ok p;
-    CClient* pClient = Cast_Client(Find(user_id));
-    p.id = user_id;
-    p.size = sizeof(sc_packet_login_ok);
-    p.type = SC_PACKET_LOGIN_OK;
-    p.exp = pClient->GetEXP();
-    p.hp = pClient->GetHP();
-    p.level = pClient->GetLevel();
-    p.localVec = pClient->GetLocalPosVector();
-    p.iMax_exp = pClient->GetMaxEXP();
-    p.Attack_Damage = pClient->GetAttackDamage();
-
-    login++;
-   // cout << "Login 갯수 -> " << login <<endl;
-
-    Send_Packet(user_id, &p);
-}
-
-void CNetMgr::Send_Enter_Packet( const uShort& user_id,  const uShort& other_id)
-{
-    sc_packet_enter p;
-    p.id = other_id;
-    p.size = sizeof(p);
-    p.type = SC_PACKET_ENTER;
-    p.localVec = Find(other_id)->GetLocalPosVector();
-    p.RotateY =  Find(other_id)->GetRoatateVector().y;
-    strcpy_s(p.name, Find(other_id)->GetName());    // data race???
-    p.o_type = O_PLAYER;
-    if (p.id >= START_MONSTER && p.id < END_MONSTER)
-        p.hp = dynamic_cast<CMonster*>(Find(other_id))->GetHP();
-
-    Send_Packet(user_id, &p);
-}
-
-void CNetMgr::Send_Leave_Packet( const uShort& user_id, const uShort& other_id, const bool& isAttack)
-{
-    if (g_Object.count(other_id) == 0)return;
-    sc_packet_leave p;
-    p.id = other_id;
-    p.size = sizeof(p);
-    p.type = SC_PACKET_LEAVE;
-    p.isAttack = isAttack;
-
-
-    Send_Packet(user_id, &p);
-}
-
-void CNetMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir)
-{
-    sc_packet_move p;
-    p.id = mover_id;
-    p.size = sizeof(p);
-    p.type = SC_PACKET_MOVE;
-    p.localVec = Find(mover_id)->GetLocalPosVector();
-    p.dirVec = Find(mover_id)->GetDirVector();
-    p.dir = dir;
-    p.move_time = Find(mover_id)->GetClientTime();
-    p.rotateY = Find(mover_id)->GetRotateY();
-    p.speed = Find(mover_id)->GetSpeed();
-    p.Start = Find(mover_id)->GetHalfRTT();
-    p.isMoving = Find(mover_id)->GetIsMoving();
-
-    Send_Packet(user_id, &p);
-}
-
-void CNetMgr::Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attckerid, const bool& isAttack)
-{
-    sc_packet_AttackAni p;
-    p.id = attckerid;
-    p.size = sizeof(p);
-    p.isAttack = isAttack;
-    p.type = SC_PACKET_ATTACKANI;
-    Send_Packet(user_id, &p);
-}
-
-
-void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  const bool& isMoving)
-{
-    sc_packet_stop p;
-    p.size = sizeof(p);
-    p.type = SC_PACKET_STOP;
-    p.id = mover_id;
-    p.isMoving = isMoving;
-    Send_Packet(user_id, &p);
-}
-
-
 //void CNetMgr::Random_Move_NPC(const int& id)
 //{
-//    CGameObject* NPCObj = Find( id);
+//    CGameObject* NPCObj = m_pMediator->Find( id);
 //    float x = NPCObj->GetX();
 //    float y = NPCObj->GetY();
 //    
@@ -293,7 +70,7 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 //        {
 //            if (!IsClient(clientID))continue;
 //
-//            CGameObject* ClientObj = Find(clientID);
+//            CGameObject* ClientObj = m_pMediator->Find(clientID);
 //            if (ClientObj->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
 //
 //            if (is_near(clientID, id))
@@ -334,7 +111,7 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 
 //void CNetMgr::Random_Move_Monster(const int& id)
 //{
-//    CGameObject* MonsterObj = Find( id);
+//    CGameObject* MonsterObj = m_pMediator->Find( id);
 //    Vector3 monsterPos = MonsterObj->GetLocalPosVector();
 //
 //    _tSector oldSector = MonsterObj->GetSector();
@@ -357,7 +134,7 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 //        {
 //            if (!IsClient(sec))continue;
 //
-//            CClient* pClient = Cast_Client(Find(sec));
+//            CClient* pClient = Cast_Client(m_pMediator->Find(sec));
 //            if (pClient->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
 //
 //            if (is_near(sec, id))    // is near이 필요한가?
@@ -396,9 +173,9 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 
 void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 {
-    CMonster* monster = dynamic_cast<CMonster*>(Find(victim));
+    CMonster* monster = dynamic_cast<CMonster*>(m_pMediator->Find(victim));
     unordered_set<uShort> new_viewList;
-    vector<unordered_set<uShort>> vSectors = monster->Search_Sector();
+    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(victim));
     for (auto& vSec : vSectors)
     {
         if (vSec.size() != 0)
@@ -418,7 +195,7 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
         monster->SetHP(monster->GetHP() - 12);
         for (auto& clientID : new_viewList)
         {
-                Send_Attacked_Packet_Monster(clientID, victim);
+                m_pSendMgr->Send_Attacked_Packet_Monster(clientID, victim);
         }
     }
     else
@@ -426,16 +203,17 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
             monster->SetHP(0.f);
         for (auto& clientID : new_viewList)
         {
-            Send_Attacked_Packet_Monster(clientID, victim);
-            Send_Leave_Packet(clientID, victim, true);
+            m_pSendMgr->Send_Attacked_Packet_Monster(clientID, victim);
+            m_pSendMgr->Send_Leave_Packet(clientID, victim, true);
         }   
     }
 }
 void CNetMgr::Kill_Monster(const uShort& monster_id)
 {
-    CMonster* monster = dynamic_cast<CMonster*>(Find(monster_id));
+    CMonster* monster = dynamic_cast<CMonster*>(m_pMediator->Find(monster_id));
     unordered_set<uShort> new_viewList;
-    vector<unordered_set<uShort>> vSectors = monster->Search_Sector();
+    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(monster_id));
+
     //for (auto& vSec : vSectors)
     //{
     //    if (vSec.size() != 0)
@@ -449,13 +227,13 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
     //        }
     //    }
     //}
-    g_Sector[Find(monster_id)->GetSector().x][Find(monster_id)->GetSector().z].erase(monster_id);
-    Delete_Obj(monster_id);
+    g_Sector[m_pMediator->Find(monster_id)->GetSector().x][m_pMediator->Find(monster_id)->GetSector().z].erase(monster_id);
+    m_pMediator->Delete_Obj(monster_id);
 
 }
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
 {
-    CClient* pClient = Cast_Client(Find(user_id));
+    CClient* pClient = Cast_Client(m_pMediator->Find(user_id));
 
     unordered_set<int> old_viewList = pClient->GetViewList();
 
@@ -494,9 +272,8 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
     pClient->Change_Sector(oldSector);
     unordered_set<uShort> new_viewList;
 
-    //Send_Move_Packet(user_id, user_id, dir);
-
-    vector<unordered_set<uShort>> vSectors = pClient->Search_Sector();
+    //m_pSendMgr->Send_Move_Packet(user_id, user_id, dir);
+    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
 
     for (auto& vSec : vSectors)
     {
@@ -508,7 +285,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                 {
                     if (!IsClient(user))
                     {
-                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                        if (m_pMediator->Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
                         {
                             if (IsMonster(user))
                                 WakeUp_Monster(user);
@@ -535,17 +312,17 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
         if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
         {
             pClient->GetViewList().insert(ob);
-            Send_Enter_Packet(user_id, ob);
+            m_pSendMgr->Send_Enter_Packet(user_id, ob);
             if (IsClient(ob) && ob != user_id)
             {
-                if (Cast_Client(Find(ob))->GetViewList().count(user_id) == 0)
+                if (Cast_Client(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    Cast_Client(Find(ob))->GetViewList().insert(user_id);
-                    Send_Enter_Packet(ob, user_id);
+                    Cast_Client(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                    m_pSendMgr->Send_Enter_Packet(ob, user_id);
                 }
                 else
                 {
-                    Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+                    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
                 }
             }
         }
@@ -553,14 +330,14 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
         {
             if (IsClient(ob) && ob != user_id)
             {
-                if (Cast_Client(Find(ob))->GetViewList().count(user_id) == 0)
+                if (Cast_Client(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    Cast_Client(Find(ob))->GetViewList().insert(user_id);
-                    Send_Enter_Packet(ob, user_id);
+                    Cast_Client(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                    m_pSendMgr->Send_Enter_Packet(ob, user_id);
                 }
                 else
                 {
-                    Send_Move_Packet(ob, user_id, dir);
+                    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);
                 }
             }
         }
@@ -570,14 +347,14 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
         if (new_viewList.count(ob) == 0)
         {
             pClient->GetViewList().erase(ob);
-            Send_Leave_Packet(user_id, ob);
+            m_pSendMgr->Send_Leave_Packet(user_id, ob);
 
             if (IsClient(ob))
             {
-                if (Cast_Client(Find(ob))->GetViewList().count(user_id) != 0)
+                if (Cast_Client(m_pMediator->Find(ob))->GetViewList().count(user_id) != 0)
                 {
-                    Cast_Client(Find(ob))->GetViewList().erase(user_id);
-                    Send_Leave_Packet(ob, user_id);
+                    Cast_Client(m_pMediator->Find(ob))->GetViewList().erase(user_id);
+                    m_pSendMgr->Send_Leave_Packet(ob, user_id);
                 }
             }
         }
@@ -586,7 +363,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
 void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 {
-    CClient* pClient = Cast_Client(Find(user_id));
+    CClient* pClient = Cast_Client(m_pMediator->Find(user_id));
 
     unordered_set<int> old_viewList = pClient->GetViewList();
 
@@ -595,7 +372,8 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
     pClient->Change_Sector(oldSector);
     unordered_set<int> new_viewList;
 
-    vector<unordered_set<uShort>> vSectors = pClient->Search_Sector();
+    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+
 
     for (auto& vSec : vSectors)
     {
@@ -607,7 +385,7 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
                 {
                     if (!IsClient(user))
                     {
-                        if (Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                        if (m_pMediator->Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
                         {
                             if (IsMonster(user))
                                 WakeUp_Monster(user);
@@ -634,17 +412,17 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
         if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
         {
             pClient->GetViewList().insert(ob);
-            Send_Enter_Packet(user_id, ob);
+            m_pSendMgr->Send_Enter_Packet(user_id, ob);
             if (IsClient(ob) && ob != user_id)
             {
-                if (Cast_Client(Find(ob))->GetViewList().count(user_id) == 0)
+                if (Cast_Client(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    Cast_Client(Find(ob))->GetViewList().insert(user_id);
-                    Send_Enter_Packet(ob, user_id);
+                    Cast_Client(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                    m_pSendMgr->Send_Enter_Packet(ob, user_id);
                 }
                 else
                 {
-                    Send_Stop_Packet(ob, user_id, isMoving);  // 여기서 또 들어옴
+                    m_pSendMgr->Send_Stop_Packet(ob, user_id, isMoving);  // 여기서 또 들어옴
                 }
             }
         }
@@ -652,14 +430,14 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
         {
             if (IsClient(ob) && ob != user_id)
             {
-                if (Cast_Client(Find(ob))->GetViewList().count(user_id) == 0)
+                if (Cast_Client(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    Cast_Client(Find(ob))->GetViewList().insert(user_id);
-                    Send_Enter_Packet(ob, user_id);
+                    Cast_Client(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                    m_pSendMgr->Send_Enter_Packet(ob, user_id);
                 }
                 else
                 {
-                    Send_Stop_Packet(ob, user_id,  isMoving);  // 여기서 또 들어옴
+                    m_pSendMgr->Send_Stop_Packet(ob, user_id,  isMoving);  // 여기서 또 들어옴
                 }
             }
         }
@@ -669,14 +447,14 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
         if (new_viewList.count(ob) == 0)
         {
             pClient->GetViewList().erase(ob);
-            Send_Leave_Packet(user_id, ob);
+            m_pSendMgr->Send_Leave_Packet(user_id, ob);
 
             if (IsClient(ob))
             {
-                if (Cast_Client(Find(ob))->GetViewList().count(user_id) != 0)
+                if (Cast_Client(m_pMediator->Find(ob))->GetViewList().count(user_id) != 0)
                 {
-                    Cast_Client(Find(ob))->GetViewList().erase(user_id);
-                    Send_Leave_Packet(ob, user_id);
+                    Cast_Client(m_pMediator->Find(ob))->GetViewList().erase(user_id);
+                    m_pSendMgr->Send_Leave_Packet(ob, user_id);
                 }
             }
         }
@@ -688,25 +466,25 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 
 void CNetMgr::Disconnect(const uShort& user_id)
 {
-    CGameObject* pUser = Find( user_id);
+    CGameObject* pUser = m_pMediator->Find( user_id);
     pUser->SetStatus(OBJSTATUS::ST_ALLOC);
 
-    Delete_Reckoner(user_id);
+    m_pMediator->Delete_Reckoner(user_id);
 
-    Send_Leave_Packet( user_id, user_id);
+    m_pSendMgr->Send_Leave_Packet( user_id, user_id);
 
     pUser->GetLock().lock();
     for (int i = 0; i < MAX_USER; ++i)
     {
-        if (Find( i)->GetStatus() == OBJSTATUS::ST_ACTIVE)
+        if (m_pMediator->Find( i)->GetStatus() == OBJSTATUS::ST_ACTIVE)
         {
             if (IsClient(i)) {
                 if (i != user_id)
                 {
-                    if (Cast_Client(Find(i))->GetViewList().count(user_id))
+                    if (Cast_Client(m_pMediator->Find(i))->GetViewList().count(user_id))
                     {
-                        Cast_Client(Find(i))->GetViewList().erase(user_id);
-                        Send_Leave_Packet(i, user_id);
+                        Cast_Client(m_pMediator->Find(i))->GetViewList().erase(user_id);
+                        m_pSendMgr->Send_Leave_Packet(i, user_id);
                     }
                 }
             }
@@ -724,26 +502,27 @@ void CNetMgr::Disconnect(const uShort& user_id)
 
 void CNetMgr::Enter_Game(const uShort& user_id, char name[])
 {
-    CClient* pUser = Cast_Client(Find(user_id));
+    CClient* pUser = Cast_Client(m_pMediator->Find(user_id));
     pUser->GetLock().lock();
     pUser->SetName(name);
     pUser->GetLock().unlock();
     pUser->GetName()[MAX_ID_LEN] = NULL;
-    Send_LoginOK_Packet(user_id);
+    m_pSendMgr->Send_LoginOK_Packet(user_id);
     pUser->Insert_Sector();
 
     unordered_set<int> new_viewList;
 
-    vector<unordered_set<uShort>> vSectors = pUser->Search_Sector();
+    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+
 
     for (auto& vSec : vSectors)
     {
         for (auto& id : vSec) {
-            if (Find(id)->GetID() == Find(user_id)->GetID())continue;
-            if (Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
+            if (m_pMediator->Find(id)->GetID() == m_pMediator->Find(user_id)->GetID())continue;
+            if (m_pMediator->Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
             if (is_near(user_id, id)&&user_id!=id)
             {
-               /* if (Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
+               /* if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
                 {
                     if(IsMonster(id))
                         WakeUp_Monster(id);
@@ -752,16 +531,16 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
                 }*/
                 if (IsClient(id))
                 {
-                    if (Cast_Client(Find(id))->GetViewList().count(user_id) == 0)
+                    if (Cast_Client(m_pMediator->Find(id))->GetViewList().count(user_id) == 0)
                     {
-                        Cast_Client(Find(id))->GetViewList().insert(user_id);
-                        Send_Enter_Packet(id, user_id);
+                        Cast_Client(m_pMediator->Find(id))->GetViewList().insert(user_id);
+                        m_pSendMgr->Send_Enter_Packet(id, user_id);
                     }
                 }
                 if (pUser->GetViewList().count(id) == 0)
                 {
                     pUser->GetViewList().insert(id);
-                    Send_Enter_Packet(user_id, id);
+                    m_pSendMgr->Send_Enter_Packet(user_id, id);
                 }
             }
         }
@@ -778,14 +557,14 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 
 
-        Find(user_id)->SetIsMoving(packet->isMoving);
-        Find(user_id)->SetClientTime(packet->move_time);
-        Find(user_id)->SetSpeed(packet->speed);
-        Find(user_id)->SetHalfRTT(packet->Start);
-        Find(user_id)->SetDirV(packet->DirVec);
-        Find(user_id)->SetDeadReckoningPacket(packet);
+        m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
+        m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
+        m_pMediator->Find(user_id)->SetSpeed(packet->speed);
+        m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
+        m_pMediator->Find(user_id)->SetDirV(packet->DirVec);
+        m_pMediator->Find(user_id)->SetDeadReckoningPacket(packet);
 
-        ReckonerAdd(user_id);
+        m_pMediator->ReckonerAdd(user_id);
 
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
 
@@ -794,7 +573,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_STOP:
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
-        Find(user_id)->SetIsMoving(packet->isMoving);
+        m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
         Do_Stop(user_id, packet->isMoving);
     }
     break;
@@ -823,9 +602,10 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     {
         cs_packet_AttackAni* packet = reinterpret_cast<cs_packet_AttackAni*>(buf);
         if (g_Object.count(packet->id) == 0)break;
-        CClient* monster = Cast_Client(Find(packet->id));
+        CClient* monster = Cast_Client(m_pMediator->Find(packet->id));
         unordered_set<uShort> new_viewList;
-        vector<unordered_set<uShort>> vSectors = monster->Search_Sector();
+        vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(packet->id));
+
         for (auto& vSec : vSectors)
         {
             if (vSec.size() != 0)
@@ -841,7 +621,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         }
         for (auto& obj : new_viewList)
         {
-            Send_Attack_Animation_Packet(obj, packet->id, packet->isAttack);
+            m_pSendMgr->Send_Attack_Animation_Packet(obj, packet->id, packet->isAttack);
 
         }
     }
@@ -855,7 +635,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
 
 void CNetMgr::Recv_Packet_Construct(const uShort& user_id, const int& io_byte)
 {
-    CGameObject* pObj = dynamic_cast<CGameObject*>(Find( user_id));
+    CGameObject* pObj = dynamic_cast<CGameObject*>(m_pMediator->Find( user_id));
     //
     EXOVER r_o = (pObj->GetExover());
 
@@ -889,7 +669,7 @@ void CNetMgr::Init_Client()
         pObj = new CClient;
         pObj->SetID(i);
         pObj->SetStatus(OBJSTATUS::ST_FREE);
-        Add(pObj,  i);
+        m_pMediator->Add(pObj,  i);
     }
 }
 void CNetMgr::Init_Monster()
@@ -903,7 +683,7 @@ void CNetMgr::Init_Monster()
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->Insert_Sector();
-        Add(pObj, i);
+        m_pMediator->Add(pObj, i);
         cout << "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP() << endl;
   
     }
@@ -922,7 +702,7 @@ void CNetMgr::Init_NPC()
         pObj->SetName(npc_name);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->Insert_Sector();
-        Add(pObj, i);
+        m_pMediator->Add(pObj, i);
 
     }
 }
@@ -978,7 +758,7 @@ void CNetMgr::Worker_Thread()
         uShort user_id = static_cast<uShort>(key);
         
       
-        CClient* pUser = Cast_Client(Find( user_id));
+        CClient* pUser = Cast_Client(m_pMediator->Find( user_id));
         switch (exover->op) {
         case ENUMOP::OP_RECV:
             if (0 == io_byte) {
@@ -986,7 +766,7 @@ void CNetMgr::Worker_Thread()
                 
             }
             else {
-                CClient* pClient = Cast_Client(Find( user_id));
+                CClient* pClient = Cast_Client(m_pMediator->Find( user_id));
                 Recv_Packet_Construct(user_id, io_byte);
                 pClient->ZeroMemory_recv_over();
                 DWORD flags = 0;
@@ -1004,17 +784,17 @@ void CNetMgr::Worker_Thread()
             uShort user_id = -1;
             uShort i;
             for (i = 0; i < MAX_USER; ++i) {
-                Find( i)->GetLock().lock();
-                if (Find( i)->GetStatus() == OBJSTATUS::ST_FREE) {
-                    Find( i)->SetStatus(OBJSTATUS::ST_ALLOC);
+                m_pMediator->Find( i)->GetLock().lock();
+                if (m_pMediator->Find( i)->GetStatus() == OBJSTATUS::ST_FREE) {
+                    m_pMediator->Find( i)->SetStatus(OBJSTATUS::ST_ALLOC);
                     user_id = i;
                     //
-                    Find( i)->GetLock().unlock();
+                    m_pMediator->Find( i)->GetLock().unlock();
                     // 여기
 
                     break;
                 }
-                Find( i)->GetLock().unlock();
+                m_pMediator->Find( i)->GetLock().unlock();
             }
 
             SOCKET c_socket = exover->c_socket;
@@ -1027,7 +807,7 @@ void CNetMgr::Worker_Thread()
             if (-1 == user_id)
                 closesocket(c_socket);
             else {
-                CClient* pClient = Cast_Client(Find( user_id));
+                CClient* pClient = Cast_Client(m_pMediator->Find( user_id));
 
                 pClient->SetPrev_Size(0);
                 pClient->GetExover().op = ENUMOP::OP_RECV;
@@ -1072,7 +852,7 @@ void CNetMgr::Worker_Thread()
             AcceptEx(l_socket, c_socket, exover->io_buf, NULL,
                 sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
         
-            Send_ID_Packet(user_id);
+            m_pSendMgr->Send_ID_Packet(user_id);
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_NPC:
@@ -1080,7 +860,7 @@ void CNetMgr::Worker_Thread()
            // Random_Move_NPC(user_id); 
             bool keep_alive = false;
             //active인 플레이어가 주변에 있으면 계속 깨워두기
-            for (auto& vSec : Find(user_id)->Search_Sector())
+            for (auto& vSec : CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id)))
             {
                 for (auto& id : vSec)
                 {
@@ -1088,7 +868,7 @@ void CNetMgr::Worker_Thread()
                     {
                         if (is_near(user_id, id))
                         {
-                            if (Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
+                            if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
                             {
                                 keep_alive = true; 
                                 break;
@@ -1098,7 +878,7 @@ void CNetMgr::Worker_Thread()
                 }
            }
             if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
-            else Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+            else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
             //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
             delete exover;
 
@@ -1110,13 +890,13 @@ void CNetMgr::Worker_Thread()
             //Random_Move_Monster(user_id);
             bool keep_alive = false;
             //active인 플레이어가 주변에 있으면 계속 깨워두기
-            for (auto& vSec : Find(user_id)->Search_Sector())
+            for (auto& vSec : CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id)))
             {
                 for (auto& id : vSec)
                 {
                     if (IsClient(id))
                         if (is_near(user_id, id))
-                            if (Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
+                            if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
                             {
                                 keep_alive = true;
                                 break;
@@ -1124,7 +904,7 @@ void CNetMgr::Worker_Thread()
                 }
             }
             if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
-            else Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+            else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
             //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
             delete exover;
         }
@@ -1144,7 +924,7 @@ void CNetMgr::DeadReckoning_Thread()
     {
         for (auto& reckoner : g_Reckoner)
         {
-            obj = Find(reckoner);
+            obj = m_pMediator->Find(reckoner);
             drmPacket = obj->GetDeadReckoningPacket();
             if (drmPacket->isMoving)
             {
@@ -1194,7 +974,7 @@ bool CAS(int* addr, int exp, int update)        // cas
 void CNetMgr::WakeUp_NPC(const uShort& id)
 {
     int status = OBJSTATUS::ST_SLEEP;
-    if (CAS((int*)(&(Find(id)->GetStatus())), status, (int)ST_ACTIVE))
+    if (CAS((int*)(&(m_pMediator->Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
     }
@@ -1203,7 +983,7 @@ void CNetMgr::WakeUp_NPC(const uShort& id)
 void CNetMgr::WakeUp_Monster(const uShort& id)
 {
     int status = OBJSTATUS::ST_SLEEP;
-    if (CAS((int*)(&(Find(id)->GetStatus())), status, (int)ST_ACTIVE))
+    if (CAS((int*)(&(m_pMediator->Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
     }

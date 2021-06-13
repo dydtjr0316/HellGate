@@ -1,10 +1,14 @@
 #pragma once
+#include "CNetMgr.h"
 #include "CClient.h"
 #include "CMonster.h"
 #include "CNPC.h"
 
 // 전체적으로 추후 수정
 #define CLIENT_CAST dynamic_cast<CClient*>
+
+
+extern CNetMgr Netmgr;
 
 extern SOCKET l_socket;
 extern HANDLE g_iocp;
