@@ -32,6 +32,7 @@ public: // 상속 ,, 함수
 	bool GetIsMoving() { return m_bisMoving; }
 	void SetDeadReckoningPacket(cs_packet_move* p);
 	cs_packet_move* GetDeadReckoningPacket() { return m_deadReckoning_Packet; }
+	OBJECT_TYPE GetType() { return m_Type; }
 
 
 	// set
@@ -68,6 +69,7 @@ public: // 상속 ,, 함수
 	void SetSpeed(const float& speed) { m_fspeed = speed; }
 	void SetHalfRTT(const system_clock::time_point hrtt) { m_halfRTT = hrtt; }
 	void SetIsMoving(const bool& isMoving);
+	void SetType(const OBJECT_TYPE& type) { m_Type = type; }
 public:
 	void Insert_Sector();
 	void Change_Sector(const _tSector& old_sector);
@@ -101,5 +103,6 @@ protected:
 	system_clock::time_point m_halfRTT;
 
 	cs_packet_move* m_deadReckoning_Packet;
+	OBJECT_TYPE m_Type;
 };
 

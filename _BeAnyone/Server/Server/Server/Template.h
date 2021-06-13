@@ -20,7 +20,7 @@ void SafeDeleteArr(T& ptr)
     }
 }
 
-#define SINGLE(type) public: type(); ~type();\
+#define SINGLE(type) private: type(); ~type();\
 public:\
 static type* GetInst()\
 {\
@@ -29,3 +29,6 @@ static type* GetInst()\
 }
 
 #define DeltaTime CTimeMgr::GetInst()->GetDeltaTime()
+#define CAST_CLIENT dynamic_cast<CClient*>
+#define CAST_MONSTER dynamic_cast<CMONSTER*>
+#define CAST_NPC dynamic_cast<CNPC*>

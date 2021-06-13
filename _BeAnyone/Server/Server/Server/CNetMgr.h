@@ -11,6 +11,9 @@ class CNetMgr
 public:
 	CNetMgr() { m_pSendMgr = new CSendMgr; m_pMediator = new CMediatorMgr; }
 	~CNetMgr() {}
+public:
+	void Connect();
+	void CloseSocket();
 public:		// 菩哦 荐脚何
 	void Process_Packet(const uShort& user_id, char* buf);
 	void Recv_Packet_Construct(const uShort& user_id, const int& io_byte);
@@ -23,18 +26,9 @@ public:		// 角力 按眉 诀单捞飘何
 	void Kill_Monster(const uShort& monster_id);
 	void Disconnect(const uShort& user_id);
 	void Enter_Game(const uShort& user_id, char name[]);
-public:		// 矫具贸府 累己何
-	bool is_near( const uShort& p1,  const uShort& p2);
 
 public:		// 按眉 积己 关 魄喊何 
-	void Init_Client();
-	void Init_Monster();
-	void Init_NPC();
-	bool IsClient(const uShort& id);
-	bool IsMonster(const uShort& id);
-	bool IsNpc(const uShort& id);
-	CClient* Cast_Client(CGameObject* obj);
-	CMonster* Cast_Monster(CGameObject* obj);
+
 
 public:		// thread 包府何
 	void Worker_Thread();
@@ -51,7 +45,8 @@ public:		// 菩哦 傈价何
 private:
 	CSendMgr* m_pSendMgr;
 	CMediatorMgr* m_pMediator;
-
+	SOCKET m_ListenSocket;
+	HANDLE m_IocpHandle;
 public:
 	void error_display(const char* msg, int err_no);
 };
