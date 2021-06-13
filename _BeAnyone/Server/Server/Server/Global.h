@@ -4,6 +4,7 @@
 #include "CNPC.h"
 
 // 전체적으로 추후 수정
+#define CLIENT_CAST dynamic_cast<CClient*>
 
 extern SOCKET l_socket;
 extern HANDLE g_iocp;

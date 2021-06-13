@@ -43,6 +43,9 @@ public:		// 按眉 积己 关 魄喊何
 	bool IsClient(const uShort& id);
 	bool IsMonster(const uShort& id);
 	bool IsNpc(const uShort& id);
+	CClient* Cast_Client(CGameObject* obj);
+	CMonster* Cast_Monster(CGameObject* obj);
+	
 public:
 	void error_display(const char* msg, int err_no);
 public:		// thread 包府何

@@ -12,9 +12,6 @@
     <Filter Include="98DataBase">
       <UniqueIdentifier>{e34b5076-33c3-47dd-b9aa-df2d3c0c7a16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00Main\00NetGame">
-      <UniqueIdentifier>{c7ed21cc-2192-4611-b5f6-8b959cf7d0ab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02CGameObject">
       <UniqueIdentifier>{1f8268cf-eff4-461f-96e8-d27aa2c8203e}</UniqueIdentifier>
     </Filter>
@@ -32,6 +29,15 @@
     </Filter>
     <Filter Include="04TimeMgr">
       <UniqueIdentifier>{b2908859-e62c-4bbb-aee3-6c798a57362d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00Main\00NetWorking">
+      <UniqueIdentifier>{c7ed21cc-2192-4611-b5f6-8b959cf7d0ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00Main\00NetWorking\00NetMgr">
+      <UniqueIdentifier>{5557b9f2-360b-4e39-985d-0ff09949d297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00Main\00NetWorking\01SendMgr">
+      <UniqueIdentifier>{f0dcdd92-f389-4edd-a1d8-0bf26f389b65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,14 +59,17 @@
     <ClCompile Include="CNPC.cpp">
       <Filter>02CGameObject\03NPC</Filter>
     </ClCompile>
-    <ClCompile Include="CNetMgr.cpp">
-      <Filter>00Main\00NetGame</Filter>
-    </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
       <Filter>03. SimpleMath</Filter>
     </ClCompile>
     <ClCompile Include="CTimeMgr.cpp">
       <Filter>04TimeMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CNetMgr.cpp">
+      <Filter>00Main\00NetWorking\00NetMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CSendMgr.cpp">
+      <Filter>00Main\00NetWorking\01SendMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,9 +103,6 @@
     <ClInclude Include="CNPC.h">
       <Filter>02CGameObject\03NPC</Filter>
     </ClInclude>
-    <ClInclude Include="CNetMgr.h">
-      <Filter>00Main\00NetGame</Filter>
-    </ClInclude>
     <ClInclude Include="Template.h">
       <Filter>99Etc</Filter>
     </ClInclude>
@@ -105,6 +111,12 @@
     </ClInclude>
     <ClInclude Include="CTimeMgr.h">
       <Filter>04TimeMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="CNetMgr.h">
+      <Filter>00Main\00NetWorking\00NetMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="CSendMgr.h">
+      <Filter>00Main\00NetWorking\01SendMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

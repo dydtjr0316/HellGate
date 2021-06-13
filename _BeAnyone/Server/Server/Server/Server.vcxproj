@@ -145,6 +145,7 @@
     <ClCompile Include="CMonster.cpp" />
     <ClCompile Include="CNetMgr.cpp" />
     <ClCompile Include="CNPC.cpp" />
+    <ClCompile Include="CSendMgr.cpp" />
     <ClCompile Include="CTimeMgr.cpp" />
     <ClCompile Include="ServerMain.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="CMonster.h" />
     <ClInclude Include="CNetMgr.h" />
     <ClInclude Include="CNPC.h" />
+    <ClInclude Include="CSendMgr.h" />
     <ClInclude Include="CTimeMgr.h" />
     <ClInclude Include="Enum.h" />
     <ClInclude Include="Global.h" />

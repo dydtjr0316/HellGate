@@ -4,7 +4,11 @@
 int cnt = 0;
 int login = 0;
 int ghost = 0;
-
+CMonster* CNetMgr::Cast_Monster(CGameObject* obj)
+{
+    if (obj != nullptr)return dynamic_cast<CMonster*>(obj);
+    else return nullptr;
+}
 void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 {
     WCHAR* lpMsgBuf;
@@ -131,12 +135,12 @@ void CNetMgr::Send_LevelUP_Packet(const uShort& id)
     p.id = id;
     p.size = sizeof(sc_packet_level_up);
     p.type = SC_PACKET_LEVEL_UP;
-    p.max_hp = dynamic_cast<CClient*>(Find( id))->GetMaxHP();
-    p.level = dynamic_cast<CClient*>(Find( id))->GetLevel();
-    p.attack_damage = dynamic_cast<CClient*>(Find(id))->GetAttackDamage();
-    p.hp = dynamic_cast<CClient*>(Find(id))->GetHP();
-    p.exp = dynamic_cast<CClient*>(Find( id))->GetEXP();
-    p.max_exp = dynamic_cast<CClient*>(Find( id))->GetMaxEXP();;
+    p.max_hp = Cast_Client(Find(id))->GetMaxHP();
+    p.level = Cast_Client(Find( id))->GetLevel();
+    p.attack_damage = Cast_Client(Find(id))->GetAttackDamage();
+    p.hp = Cast_Client(Find(id))->GetHP();
+    p.exp = Cast_Client(Find( id))->GetEXP();
+    p.max_exp = Cast_Client(Find( id))->GetMaxEXP();;
     Send_Packet( id, &p);
 }
 
@@ -156,14 +160,14 @@ void CNetMgr::Send_Attacked_Packet_Client(const uShort& client_id)
     p.id = client_id;
     p.size = sizeof(sc_packet_attack);
     p.type = SC_PACKET_ATTACK;
-    p.hp = dynamic_cast<CClient*>(Find(client_id))->GetHP();
+    p.hp = Cast_Client(Find(client_id))->GetHP();
     Send_Packet(client_id, &p);
 }
 
 void CNetMgr::Send_ID_Packet(const uShort& user_id)
 {
     sc_packet_id p;
-    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+    CClient* pClient = Cast_Client(Find(user_id));
     p.id = user_id;
     p.size = sizeof(sc_packet_id);
     p.type = SC_PACKET_ID;
@@ -174,7 +178,7 @@ void CNetMgr::Send_ID_Packet(const uShort& user_id)
 void CNetMgr::Send_LoginOK_Packet(const uShort& user_id)
 {
     sc_packet_login_ok p;
-    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+    CClient* pClient = Cast_Client(Find(user_id));
     p.id = user_id;
     p.size = sizeof(sc_packet_login_ok);
     p.type = SC_PACKET_LOGIN_OK;
@@ -295,11 +299,11 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 //            if (is_near(clientID, id))
 //            {
 //                ClientObj->GetLock().lock();
-//                if (0 == dynamic_cast<CClient*>(ClientObj)->GetViewList().count(id))  // map으로 바꾸기
+//                if (0 == Cast_Client(ClientObj)->GetViewList().count(id))  // map으로 바꾸기
 //                {
 //                    //cout << "뷰리스트에 몬스터 없어" << endl;
 //                    ClientObj->GetLock().unlock();
-//                    dynamic_cast<CClient*>(ClientObj)->GetViewList().insert(id);
+//                    Cast_Client(ClientObj)->GetViewList().insert(id);
 //                    Send_Enter_Packet(clientID, id);
 //                }
 //                else
@@ -312,14 +316,14 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 //            else
 //            {
 //                ClientObj->GetLock().lock();
-//                if (0 == dynamic_cast<CClient*>(ClientObj)->GetViewList().count(id))
+//                if (0 == Cast_Client(ClientObj)->GetViewList().count(id))
 //                {
 //                    ClientObj->GetLock().unlock();
 //                }
 //                else
 //                {
 //                    ClientObj->GetLock().unlock();
-//                    dynamic_cast<CClient*>(ClientObj)->GetViewList().erase(id);
+//                    Cast_Client(ClientObj)->GetViewList().erase(id);
 //                    Send_Leave_Packet(clientID, id);
 //                }
 //
@@ -353,7 +357,7 @@ void CNetMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id,  c
 //        {
 //            if (!IsClient(sec))continue;
 //
-//            CClient* pClient = dynamic_cast<CClient*>(Find(sec));
+//            CClient* pClient = Cast_Client(Find(sec));
 //            if (pClient->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
 //
 //            if (is_near(sec, id))    // is near이 필요한가?
@@ -451,7 +455,7 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
 }
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
 {
-    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+    CClient* pClient = Cast_Client(Find(user_id));
 
     unordered_set<int> old_viewList = pClient->GetViewList();
 
@@ -534,9 +538,9 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
             Send_Enter_Packet(user_id, ob);
             if (IsClient(ob) && ob != user_id)
             {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                if (Cast_Client(Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Cast_Client(Find(ob))->GetViewList().insert(user_id);
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
@@ -549,9 +553,9 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
         {
             if (IsClient(ob) && ob != user_id)
             {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                if (Cast_Client(Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Cast_Client(Find(ob))->GetViewList().insert(user_id);
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
@@ -570,9 +574,9 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
             if (IsClient(ob))
             {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) != 0)
+                if (Cast_Client(Find(ob))->GetViewList().count(user_id) != 0)
                 {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().erase(user_id);
+                    Cast_Client(Find(ob))->GetViewList().erase(user_id);
                     Send_Leave_Packet(ob, user_id);
                 }
             }
@@ -582,7 +586,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
 void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 {
-    CClient* pClient = dynamic_cast<CClient*>(Find(user_id));
+    CClient* pClient = Cast_Client(Find(user_id));
 
     unordered_set<int> old_viewList = pClient->GetViewList();
 
@@ -633,9 +637,9 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
             Send_Enter_Packet(user_id, ob);
             if (IsClient(ob) && ob != user_id)
             {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                if (Cast_Client(Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Cast_Client(Find(ob))->GetViewList().insert(user_id);
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
@@ -648,9 +652,9 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
         {
             if (IsClient(ob) && ob != user_id)
             {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) == 0)
+                if (Cast_Client(Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().insert(user_id);
+                    Cast_Client(Find(ob))->GetViewList().insert(user_id);
                     Send_Enter_Packet(ob, user_id);
                 }
                 else
@@ -669,9 +673,9 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 
             if (IsClient(ob))
             {
-                if (dynamic_cast<CClient*>(Find(ob))->GetViewList().count(user_id) != 0)
+                if (Cast_Client(Find(ob))->GetViewList().count(user_id) != 0)
                 {
-                    dynamic_cast<CClient*>(Find(ob))->GetViewList().erase(user_id);
+                    Cast_Client(Find(ob))->GetViewList().erase(user_id);
                     Send_Leave_Packet(ob, user_id);
                 }
             }
@@ -699,9 +703,9 @@ void CNetMgr::Disconnect(const uShort& user_id)
             if (IsClient(i)) {
                 if (i != user_id)
                 {
-                    if (dynamic_cast<CClient*>(Find(i))->GetViewList().count(user_id))
+                    if (Cast_Client(Find(i))->GetViewList().count(user_id))
                     {
-                        dynamic_cast<CClient*>(Find(i))->GetViewList().erase(user_id);
+                        Cast_Client(Find(i))->GetViewList().erase(user_id);
                         Send_Leave_Packet(i, user_id);
                     }
                 }
@@ -710,7 +714,7 @@ void CNetMgr::Disconnect(const uShort& user_id)
     }
 
     pUser->SetStatus(OBJSTATUS::ST_FREE);
-    dynamic_cast<CClient*>(pUser)->GetViewList().clear();
+    Cast_Client(pUser)->GetViewList().clear();
     pUser->GetLock().unlock();
 
     closesocket(pUser->GetSocket());
@@ -720,7 +724,7 @@ void CNetMgr::Disconnect(const uShort& user_id)
 
 void CNetMgr::Enter_Game(const uShort& user_id, char name[])
 {
-    CClient* pUser = dynamic_cast<CClient*>(Find(user_id));
+    CClient* pUser = Cast_Client(Find(user_id));
     pUser->GetLock().lock();
     pUser->SetName(name);
     pUser->GetLock().unlock();
@@ -748,9 +752,9 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
                 }*/
                 if (IsClient(id))
                 {
-                    if (dynamic_cast<CClient*>(Find(id))->GetViewList().count(user_id) == 0)
+                    if (Cast_Client(Find(id))->GetViewList().count(user_id) == 0)
                     {
-                        dynamic_cast<CClient*>(Find(id))->GetViewList().insert(user_id);
+                        Cast_Client(Find(id))->GetViewList().insert(user_id);
                         Send_Enter_Packet(id, user_id);
                     }
                 }
@@ -819,7 +823,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     {
         cs_packet_AttackAni* packet = reinterpret_cast<cs_packet_AttackAni*>(buf);
         if (g_Object.count(packet->id) == 0)break;
-        CClient* monster = dynamic_cast<CClient*>(Find(packet->id));
+        CClient* monster = Cast_Client(Find(packet->id));
         unordered_set<uShort> new_viewList;
         vector<unordered_set<uShort>> vSectors = monster->Search_Sector();
         for (auto& vSec : vSectors)
@@ -947,6 +951,12 @@ bool CNetMgr::IsNpc(const uShort& id)
         return false;
 }
 
+CClient* CNetMgr::Cast_Client(CGameObject* obj)
+{
+    if (obj != nullptr)return dynamic_cast<CClient*>(obj);
+    else return nullptr;
+}
+
 void CNetMgr::Add_Timer(const uShort& obj_id, const int& status, system_clock::time_point t)
 {
     event_type ev{ obj_id, t, status };
@@ -968,7 +978,7 @@ void CNetMgr::Worker_Thread()
         uShort user_id = static_cast<uShort>(key);
         
       
-        CClient* pUser = dynamic_cast<CClient*>(Find( user_id));
+        CClient* pUser = Cast_Client(Find( user_id));
         switch (exover->op) {
         case ENUMOP::OP_RECV:
             if (0 == io_byte) {
@@ -976,7 +986,7 @@ void CNetMgr::Worker_Thread()
                 
             }
             else {
-                CClient* pClient = dynamic_cast<CClient*>(Find( user_id));
+                CClient* pClient = Cast_Client(Find( user_id));
                 Recv_Packet_Construct(user_id, io_byte);
                 pClient->ZeroMemory_recv_over();
                 DWORD flags = 0;
@@ -1017,7 +1027,7 @@ void CNetMgr::Worker_Thread()
             if (-1 == user_id)
                 closesocket(c_socket);
             else {
-                CClient* pClient = dynamic_cast<CClient*>(Find( user_id));
+                CClient* pClient = Cast_Client(Find( user_id));
 
                 pClient->SetPrev_Size(0);
                 pClient->GetExover().op = ENUMOP::OP_RECV;

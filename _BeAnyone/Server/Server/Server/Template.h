@@ -1,4 +1,5 @@
 #pragma once
+
 template <typename T>
 void SafeDelete(T& ptr)
 {
