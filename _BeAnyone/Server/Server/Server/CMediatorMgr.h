@@ -2,6 +2,7 @@
 class CGameObject;
 class CMonster;
 class CNPC;
+class CClient;
 typedef unordered_map<uShort, CGameObject*> OBJLIST;
 typedef unordered_set<uShort> RECKONER;
 //typedef OBJLIST::iterator OBJITER;

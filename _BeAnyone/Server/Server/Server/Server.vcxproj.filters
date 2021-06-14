@@ -45,7 +45,7 @@
     <Filter Include="03CGameObject\02CMonster">
       <UniqueIdentifier>{2244b04b-30fe-4218-b29e-c04ea77f792a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03CGameObject\03NPC">
+    <Filter Include="03CGameObject\01CClient\03NPC">
       <UniqueIdentifier>{457ba210-0511-45e6-8e34-21f5b3534f8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -66,7 +66,7 @@
       <Filter>03CGameObject\02CMonster</Filter>
     </ClCompile>
     <ClCompile Include="CNPC.cpp">
-      <Filter>03CGameObject\03NPC</Filter>
+      <Filter>03CGameObject\01CClient\03NPC</Filter>
     </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
       <Filter>96SimpleMath</Filter>
@@ -116,7 +116,7 @@
       <Filter>03CGameObject\02CMonster</Filter>
     </ClInclude>
     <ClInclude Include="CNPC.h">
-      <Filter>03CGameObject\03NPC</Filter>
+      <Filter>03CGameObject\01CClient\03NPC</Filter>
     </ClInclude>
     <ClInclude Include="Template.h">
       <Filter>99Etc</Filter>

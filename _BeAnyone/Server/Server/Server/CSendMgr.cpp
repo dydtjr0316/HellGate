@@ -26,12 +26,12 @@ void CSendMgr::Send_LevelUP_Packet(const uShort& id)
     p.id = id;
     p.size = sizeof(sc_packet_level_up);
     p.type = SC_PACKET_LEVEL_UP;
-    p.max_hp = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(id))->GetMaxHP();
-    p.level = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(id))->GetLevel();
-    p.attack_damage = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(id))->GetAttackDamage();
-    p.hp = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(id))->GetHP();
-    p.exp = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(id))->GetEXP();
-    p.max_exp = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(id))->GetMaxEXP();;
+    p.max_hp = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(id))->GetMaxHP();
+    p.level = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(id))->GetLevel();
+    p.attack_damage = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(id))->GetAttackDamage();
+    p.hp = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(id))->GetHP();
+    p.exp = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(id))->GetEXP();
+    p.max_exp = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(id))->GetMaxEXP();;
     Send_Packet(id, &p);
 }
 
@@ -51,14 +51,14 @@ void CSendMgr::Send_Attacked_Packet_Client(const uShort& client_id)
     p.id = client_id;
     p.size = sizeof(sc_packet_attack);
     p.type = SC_PACKET_ATTACK;
-    p.hp = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(client_id))->GetHP();
+    p.hp = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(client_id))->GetHP();
     Send_Packet(client_id, &p);
 }
 
 void CSendMgr::Send_ID_Packet(const uShort& user_id)
 {
     sc_packet_id p;
-    CClient* pClient = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(user_id));
+    CClient* pClient = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(user_id));
     p.id = user_id;
     p.size = sizeof(sc_packet_id);
     p.type = SC_PACKET_ID;
@@ -69,7 +69,7 @@ void CSendMgr::Send_ID_Packet(const uShort& user_id)
 void CSendMgr::Send_LoginOK_Packet(const uShort& user_id)
 {
     sc_packet_login_ok p;
-    CClient* pClient = Netmgr.Cast_Client(Netmgr.GetMediatorMgr()->Find(user_id));
+    CClient* pClient = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(user_id));
     p.id = user_id;
     p.size = sizeof(sc_packet_login_ok);
     p.type = SC_PACKET_LOGIN_OK;

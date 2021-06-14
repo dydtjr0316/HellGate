@@ -33,6 +33,7 @@ void CPlayerScript::awake()
 
 void CPlayerScript::update()
 {
+	
 	CTerrain* pTerrain = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain();
 	CPlayerScript* player = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
 	const Vector3& xmf3Scale = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
