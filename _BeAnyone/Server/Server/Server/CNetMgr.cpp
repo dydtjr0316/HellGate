@@ -535,35 +535,12 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
 
 void CNetMgr::Connect()
 {
-    std::wcout.imbue(locale("Korean"));
-    WSADATA WSAData;
-    WSAStartup(MAKEWORD(2, 2), &WSAData);
-    m_IocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
-    m_ListenSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
-    CreateIoCompletionPort(reinterpret_cast<HANDLE>(m_ListenSocket), m_IocpHandle, 999, 0);
-
-    SOCKADDR_IN s_address;
-    memset(&s_address, 0, sizeof(s_address));
-    s_address.sin_family = AF_INET;
-    s_address.sin_port = htons(SERVER_PORT);
-    s_address.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
-    ::bind(m_ListenSocket, reinterpret_cast<sockaddr*>(&s_address), sizeof(s_address));
-    listen(m_ListenSocket, SOMAXCONN);
-
-    SOCKET c_socket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
-    EXOVER accept_over;
-
-    accept_over.op = ENUMOP::OP_ACCEPT;
-    accept_over.c_socket = c_socket;
-    accept_over.wsabuf.len = static_cast<int>(c_socket);
-    ZeroMemory(&accept_over.over, sizeof(accept_over.over));
-    AcceptEx(m_ListenSocket, c_socket, accept_over.io_buf, 0, 32, 32, NULL, &accept_over.over);
+    
 }
 
 void CNetMgr::CloseSocket()
 {
-    closesocket(m_ListenSocket);
-    WSACleanup();
+   
 }
 
 void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
@@ -694,7 +671,7 @@ void CNetMgr::Worker_Thread()
         DWORD io_byte;
         ULONG_PTR key;
         WSAOVERLAPPED* over;
-        GetQueuedCompletionStatus(m_IocpHandle, &io_byte, &key, &over, INFINITE);
+        GetQueuedCompletionStatus(g_IocpHandle, &io_byte, &key, &over, INFINITE);
 
         EXOVER* exover = reinterpret_cast<EXOVER*>(over);
         uShort user_id = static_cast<uShort>(key);
@@ -771,7 +748,7 @@ void CNetMgr::Worker_Thread()
                 
                 pClient->SetFirstPos(pClient->GetLocalPosVector());
 
-                CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket), m_IocpHandle, user_id, 0);
+                CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket), g_IocpHandle, user_id, 0);
                 DWORD flags = 0;
                 int ret;
                 pClient->GetLock().lock();
@@ -791,7 +768,7 @@ void CNetMgr::Worker_Thread()
             c_socket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
             exover->c_socket = c_socket;
             ZeroMemory(&exover->over, sizeof(exover->over));
-            AcceptEx(m_ListenSocket, c_socket, exover->io_buf, NULL,
+            AcceptEx(g_listenSocket, c_socket, exover->io_buf, NULL,
                 sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
         
             m_pSendMgr->Send_ID_Packet(user_id);
@@ -895,13 +872,13 @@ void CNetMgr::Timer_Worker()
                 {
                     EXOVER* over = new EXOVER();
                     over->op = ENUMOP::OP_RAMDON_MOVE_NPC;
-                    PostQueuedCompletionStatus(m_IocpHandle, 1, ev.obj_id, &over->over);
+                    PostQueuedCompletionStatus(g_IocpHandle, 1, ev.obj_id, &over->over);
                 }
                 if (ev.event_id == ENUMOP::OP_RAMDON_MOVE_MONSTER)
                 {
                     EXOVER* over = new EXOVER();
                     over->op = ENUMOP::OP_RAMDON_MOVE_MONSTER;
-                    PostQueuedCompletionStatus(m_IocpHandle, 1, ev.obj_id, &over->over);
+                    PostQueuedCompletionStatus(g_IocpHandle, 1, ev.obj_id, &over->over);
                 }
             }
             else break;
