@@ -27,6 +27,7 @@ CNetMgr::CNetMgr()
 {
 	m_pObj = nullptr;
 }
+
 void CNetMgr::err_quit(const char* msg)
 {
 	LPVOID lpMsgBuf;

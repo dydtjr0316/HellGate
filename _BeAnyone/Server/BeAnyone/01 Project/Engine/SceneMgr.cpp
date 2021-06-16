@@ -766,8 +766,8 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	// Transform 설정
-	pObject->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
-	pObject->Transform()->SetLocalScale(Vector3(1000.f, 1000.f, 1.f));
+	pObject->Transform()->SetLocalPos(Vector3(500.f, 100.f, -1000.f));
+	pObject->Transform()->SetLocalScale(Vector3(2000.f, 2000.f, 1.f));
 	pObject->Transform()->SetLocalRot(Vector3(XM_PI / 2.f, 0.f, 0.f));
 	// MeshRender 설정
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -793,6 +793,7 @@ void CSceneMgr::init()
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
 	// Collider 설정
+
 	pObject->AddComponent(new CCollider);
 	pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
 	pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f,2.f,2.f)));
@@ -875,7 +876,7 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
 	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 10.f, 0.f));
-	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f, 600.f, 200.f)); // 2배함
+	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f /** 64.f*/, 600.f, 200.f /** 64.f*/)); // 2배함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
@@ -944,31 +945,3 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
 {
 	return (_pLeft->Transform()->GetWorldPos().z < _pRight->Transform()->GetWorldPos().z);
 }
-
-//void CSceneMgr::FindGameObjectByPoint(POINT _point, vector<CGameObject*>& _vecFindObj, CCamera* _pToolCam)
-//{
-//	CCamera* pCam = _pToolCam;
-//	if (CCore::GetInst()->GetSceneMod() == SCENE_MOD::SCENE_PLAY)
-//	{
-//		pCam = CRenderMgr::GetInst()->GetCamera(0);
-//	}
-//
-//	tResolution tRes = CRenderMgr::GetInst()->GetResolution();
-//	Vec3 vPickPos = Vec3((float)_point.x - (tRes.fWidth / 2.f), (tRes.fHeight / 2.f) - (float)_point.y, 0.f);
-//	vPickPos *= pCam->GetScale(); 
-//	vPickPos += pCam->Transform()->GetWorldPos();
-//
-//	for (int i = 0; i < MAX_LAYER; ++i)
-//	{
-//		const vector<CGameObject*>& vecObject = m_pCurScene->GetLayer(i)->GetObjects();
-//		for (size_t j = 0; j < vecObject.size(); ++j)
-//		{
-//			if (vecObject[j]->Transform()->IsCasting(vPickPos))
-//			{
-//				_vecFindObj.push_back(vecObject[j]);
-//			}
-//		}
-//	}
-//
-//	sort(_vecFindObj.begin(), _vecFindObj.end(), Compare);
-//}
