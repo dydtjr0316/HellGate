@@ -8,28 +8,21 @@ public:
 	CQuadTree(const CRectangle& _boundary, const int& n);
 public:  //oper
 	bool insert(CPlayer* p);
-	void subdivide();
+	void subm_bisDivide();
 	vector<CPlayer*> search(CRectangle& range);	// 인자로 vector<CPlayer> found 넣는 방식 생각해보기
-
 public: // get
-	CQuadTree* Getnw() { return nw; }
-	CQuadTree* Getne() { return ne; }
-	CQuadTree* Getsw() { return sw; }
-	CQuadTree* Getse() { return se; }
-	vector<CPlayer*> GetPoint() { return points; }
-	CQuadTree* GetParent() { return parent; }
+	vector<CPlayer*> GetPoint() { return m_vpPlayers; }
+	CQuadTree* GetParent() { return m_pParent; }
+	vector<CQuadTree*> GetChild() { return m_pChild; }
 public: // set
-	void setParent(CQuadTree* obj) { parent = obj; }
+	void setParent(CQuadTree* obj) { m_pParent = obj; }
 private:
-	bool divide = false;
-	int capacity;
+	bool m_bisDivide = false;
+	int m_icapacity;
 	CRectangle boundary;
-	vector<CPlayer*> points;
+	vector<CPlayer*> m_vpPlayers;
 private: // node
-	CQuadTree* parent;
-	CQuadTree* nw;
-	CQuadTree* ne;
-	CQuadTree* sw;
-	CQuadTree* se;
+	CQuadTree* m_pParent;
+	vector<CQuadTree*> m_pChild;
 };
 

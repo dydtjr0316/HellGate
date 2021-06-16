@@ -20,19 +20,13 @@ int main()
 	cout << "----------insert end-------------" << endl;
 
 	Print(qt);
-	for (auto& obj : qt->Getne()->GetPoint())
-	{
-		obj->SetX(obj->GetX() + 500.f);
-	}
-	
-
 
 	Enter();
 	cout << "----------search-------------" << endl;
 	CRectangle look(1000.f, 1000.f, 400.f, 400.f);
-	vector<CPlayer*> points = qt->search(look);
+	vector<CPlayer*> m_vpPlayers = qt->search(look);
 
-	for (auto& obj : points)
+	for (auto& obj : m_vpPlayers)
 	{
 		cout << obj->GetX() << ", " << obj->GetZ() << endl;
 	}
@@ -44,40 +38,21 @@ void Print(CQuadTree* qt)
 	if (qt->GetPoint().size() != 0)
 		for (auto& obj : qt->GetPoint())
 		{
-			cout << obj->GetX() << ", " << obj->GetZ() << endl;
+			cout << "player[" << obj->GetID() << "]  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
 		}
 	cout << "-----------------------------------" << endl;
-
-	Enter();
-	if (qt->Getnw() != nullptr)
-		if (qt->Getnw()->GetPoint().size() != 0)
-			for (auto& obj : qt->Getnw()->GetPoint())
+	
+	cout << "------------자식의 데이터---------------" << endl;
+	for (auto& obj : qt->GetChild())
+	{
+		if (obj!=nullptr)
+		{
+			for (auto& player : obj->GetPoint())
 			{
-				cout << "nw  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
+				cout << "player[" <<player->GetID()<< "]  ->" << player->GetX() << ", " << player->GetZ() << endl;
 			}
-
-	Enter();
-	if (qt->Getne() != nullptr)
-		if (qt->Getne()->GetPoint().size() != 0)
-			for (auto& obj : qt->Getne()->GetPoint())
-			{
-				cout << "ne  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
-			}
-
-	Enter();
-	if (qt->Getsw() != nullptr)
-		if (qt->Getsw()->GetPoint().size() != 0)
-			for (auto& obj : qt->Getsw()->GetPoint())
-			{
-				cout << "sw  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
-			}
-
-	Enter();
-	if (qt->Getse() != nullptr)
-		if (qt->Getse()->GetPoint().size() != 0)
-			for (auto& obj : qt->Getse()->GetPoint())
-			{
-				cout << "se  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
-			}
-
+			Enter();
+		}
+	}
+	cout << "-----------------------------------" << endl;
 }
