@@ -1,12 +1,17 @@
 #include "stdafx.h"
 #include "CPlayer.h"
-#include "CNode.h"
 
-void CPlayer::clean()
+CPlayer::CPlayer()
 {
-	if (m_pParent != nullptr)
-	{
-		delete m_pParent;		// 이코드 문제될지도 모름
-		m_pParent = nullptr;
-	}
+	m_fx = 0.f;
+	m_fz = 0.f;
+	m_id = 0;
 }
+
+CPlayer::CPlayer(const uShort& id, const float& x, const float& z)
+{
+	this->m_id = id;
+	this->m_fx = x;
+	this->m_fz = z;
+}
+

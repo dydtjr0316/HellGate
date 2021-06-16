@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4d16474b-11e3-42a6-845e-2f53e7c0622e}</ProjectGuid>
+    <ProjectGuid>{75d7526c-10f9-4559-9320-7b45e173de84}</ProjectGuid>
     <RootNamespace>QuadTree</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -139,19 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CNode.cpp" />
     <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="CQuadTree.cpp" />
-    <ClCompile Include="CRect.cpp" />
+    <ClCompile Include="CRectangle.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CNode.h" />
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CQuadTree.h" />
-    <ClInclude Include="CRect.h" />
+    <ClInclude Include="CRectangle.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="struct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

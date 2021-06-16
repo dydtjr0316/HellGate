@@ -1,20 +1,35 @@
 #pragma once
-class CNode;
-class CRect;
+#include "CRectangle.h"
 class CPlayer;
+class CRectangle;
 class CQuadTree
 {
 public:
-	CQuadTree();
-	~CQuadTree() {};
-public:
-	CNode* GetRoot() { return m_pRoot; }
-public:
-	void update(CNode* root);
-	void insert(const float& x, const float& y, CNode* root, bool dead = false);
-	CNode* search(const float& x, const float& y, CNode* root);
+	CQuadTree(const CRectangle& _boundary, const int& n);
+public:  //oper
+	bool insert(CPlayer* p);
+	void subdivide();
+	vector<CPlayer*> search(CRectangle& range);	// 인자로 vector<CPlayer> found 넣는 방식 생각해보기
 
+public: // get
+	CQuadTree* Getnw() { return nw; }
+	CQuadTree* Getne() { return ne; }
+	CQuadTree* Getsw() { return sw; }
+	CQuadTree* Getse() { return se; }
+	vector<CPlayer*> GetPoint() { return points; }
+	CQuadTree* GetParent() { return parent; }
+public: // set
+	void setParent(CQuadTree* obj) { parent = obj; }
 private:
-	CNode* m_pRoot;
+	bool divide = false;
+	int capacity;
+	CRectangle boundary;
+	vector<CPlayer*> points;
+private: // node
+	CQuadTree* parent;
+	CQuadTree* nw;
+	CQuadTree* ne;
+	CQuadTree* sw;
+	CQuadTree* se;
 };
 

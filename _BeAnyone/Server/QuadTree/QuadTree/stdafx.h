@@ -1,11 +1,12 @@
 #pragma once
 #include <iostream>
-#include <unordered_set>
-#include <unordered_map>
+using namespace std;
+
+
+
 #include <vector>
 
-#include "struct.h"
+typedef unsigned short uShort;
 
-#define MAX_PLAYER_IN_SECTOR 10
 
-using namespace std;
+

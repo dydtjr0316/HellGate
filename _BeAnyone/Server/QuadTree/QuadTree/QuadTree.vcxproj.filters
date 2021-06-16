@@ -1,62 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="99etc">
+    <Filter Include="헤더 파일">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="00main">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="02QuadTree">
-      <UniqueIdentifier>{0edb810e-ffbb-42e8-8d3a-bf0b74f3afd6}</UniqueIdentifier>
+    <Filter Include="01QuadTree">
+      <UniqueIdentifier>{b18114a0-3832-49a5-9803-4a24453defc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02QuadTree\00Node">
-      <UniqueIdentifier>{f0169a2e-1f61-4111-a3ea-58934f373969}</UniqueIdentifier>
+    <Filter Include="01QuadTree\00QuadTree">
+      <UniqueIdentifier>{f224c9a7-a7fa-49cd-84bc-64eb593dc63c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02QuadTree\01Rect">
-      <UniqueIdentifier>{9d5e8e2f-0174-4c28-b533-3e3574de9b36}</UniqueIdentifier>
+    <Filter Include="01QuadTree\01Point">
+      <UniqueIdentifier>{0c1498ee-0cd5-4d7d-b227-ed56ac89c7f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01Player">
-      <UniqueIdentifier>{48059fab-51a7-43b6-a86c-1db98d68c8f7}</UniqueIdentifier>
+    <Filter Include="01QuadTree\02Rectangle">
+      <UniqueIdentifier>{3f5d87cb-27e4-45c7-af5c-37cc601fe882}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CQuadTree.cpp">
-      <Filter>02QuadTree</Filter>
-    </ClCompile>
-    <ClCompile Include="CNode.cpp">
-      <Filter>02QuadTree\00Node</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>00main</Filter>
     </ClCompile>
-    <ClCompile Include="CRect.cpp">
-      <Filter>02QuadTree\01Rect</Filter>
-    </ClCompile>
     <ClCompile Include="CPlayer.cpp">
-      <Filter>01Player</Filter>
+      <Filter>01QuadTree\01Point</Filter>
+    </ClCompile>
+    <ClCompile Include="CRectangle.cpp">
+      <Filter>01QuadTree\02Rectangle</Filter>
+    </ClCompile>
+    <ClCompile Include="CQuadTree.cpp">
+      <Filter>01QuadTree\00QuadTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>99etc</Filter>
-    </ClInclude>
-    <ClInclude Include="CQuadTree.h">
-      <Filter>02QuadTree</Filter>
-    </ClInclude>
-    <ClInclude Include="CNode.h">
-      <Filter>02QuadTree\00Node</Filter>
-    </ClInclude>
-    <ClInclude Include="CRect.h">
-      <Filter>02QuadTree\01Rect</Filter>
-    </ClInclude>
-    <ClInclude Include="struct.h">
-      <Filter>99etc</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CPlayer.h">
-      <Filter>01Player</Filter>
+      <Filter>01QuadTree\01Point</Filter>
+    </ClInclude>
+    <ClInclude Include="CRectangle.h">
+      <Filter>01QuadTree\02Rectangle</Filter>
+    </ClInclude>
+    <ClInclude Include="CQuadTree.h">
+      <Filter>01QuadTree\00QuadTree</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
