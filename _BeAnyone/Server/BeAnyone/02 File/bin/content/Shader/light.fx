@@ -214,7 +214,7 @@ VS_ShadowOut VS_ShadowMap(VS_ShadowIn _in)
         Skinning(_in.vPos, _in.vWeights, _in.vIndices, 0);
     }
 
-    output.vPos = mul(float4(_in.vPos, 1.f), g_matWVP);
+    output.vPos = mul(float4(_in.vPos, 1.f), g_matWVP * 2);
     output.vProj = output.vPos;
 
     return output;

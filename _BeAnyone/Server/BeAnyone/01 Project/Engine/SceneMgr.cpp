@@ -766,7 +766,7 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	// Transform 설정
-	pObject->Transform()->SetLocalPos(Vector3(500.f, 100.f, -1000.f));
+	pObject->Transform()->SetLocalPos(Vector3(0.f, 100.f, 300.f));
 	pObject->Transform()->SetLocalScale(Vector3(2000.f, 2000.f, 1.f));
 	pObject->Transform()->SetLocalRot(Vector3(XM_PI / 2.f, 0.f, 0.f));
 	// MeshRender 설정

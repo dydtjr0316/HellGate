@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "RenderMgr.h"
 #include "Camera.h"
+#include "SceneMgr.h"
 
 #include "ResMgr.h"
 
@@ -73,8 +74,23 @@ void CLight::finalupdate()
 	Transform()->SetLocalScale(Vector3(m_tLightInfo.fRange, m_tLightInfo.fRange, m_tLightInfo.fRange));
 	m_iArrIdx = CRenderMgr::GetInst()->RegisterLight(this);
 
-	// 광원 관리 카메라도 광원과 같은 Transform 정보를 가지게 한다.
-	*m_pCamObj->Transform() = *Transform();
+
+	vector<CGameObject*> vectemp;
+	CSceneMgr::GetInst()->FindGameObjectByTag(L"PlayerMale", vectemp);
+	if (vectemp.size() == 0)
+	{
+		// 광원 관리 카메라도 광원과 같은 Transform 정보를 가지게 한다.
+		*m_pCamObj->Transform() = *Transform();
+	}
+	else
+	{
+		// 광원 관리 카메라를 플레이어 월드좌표와 곱하여 쉐도우맵 위치 업데이트
+		auto a = *Transform();
+		a.SetLocalPos(a.GetLocalPos() + vectemp[0]->Transform()->GetLocalPos());
+		*m_pCamObj->Transform() = a;
+
+	}
+
 	// 렌더매니저에 등록 안됌.
 	m_pCamObj->finalupdate(); 
 }

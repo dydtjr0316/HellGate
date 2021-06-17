@@ -117,39 +117,6 @@ void CCamera::SortGameObject()
 	auto b = m_vecForward;
 }
 
-void CCamera::SortShadowObject()
-{
-	m_vecShadowObj.clear();
-
-	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CLayer* pLayer = nullptr;
-
-	for (UINT i = 0; i < MAX_LAYER; ++i)
-	{
-		pLayer = pCurScene->GetLayer(i);
-		if (nullptr == pLayer || !(m_iLayerCheck & (1 << i)))
-			continue;
-
-		const vector<CGameObject*>& vecObj = pLayer->GetObjects();
-
-		for (size_t j = 0; j < vecObj.size(); ++j)
-		{
-			if (!vecObj[j]->GetFrustumCheck()
-				|| m_frustum.CheckFrustumSphere(vecObj[j]->Transform()->GetWorldPos(), vecObj[j]->Transform()->GetMaxScale()))
-			{
-				if (vecObj[j]->MeshRender()
-					&& vecObj[j]->MeshRender()->GetMesh() != nullptr
-					&& vecObj[j]->MeshRender()->GetSharedMaterial() != nullptr
-					&& vecObj[j]->MeshRender()->GetSharedMaterial()->GetShader() != nullptr
-					&& vecObj[j]->MeshRender()->GetDynamicShadow())
-				{
-					m_vecShadowObj.push_back(vecObj[j]);
-				}
-			}
-		}
-	}
-}
-
 void CCamera::render_deferred()
 {
 	g_transform.matView = GetViewMat();
@@ -189,6 +156,39 @@ void CCamera::render_forward()
 			m_vecForward[i]->Collider()->render();
 	}
 
+}
+
+void CCamera::SortShadowObject()
+{
+	m_vecShadowObj.clear();
+
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CLayer* pLayer = nullptr;
+
+	for (UINT i = 0; i < MAX_LAYER; ++i)
+	{
+		pLayer = pCurScene->GetLayer(i);
+		if (nullptr == pLayer || !(m_iLayerCheck & (1 << i)))
+			continue;
+
+		const vector<CGameObject*>& vecObj = pLayer->GetObjects();
+
+		for (size_t j = 0; j < vecObj.size(); ++j)
+		{
+			if (!vecObj[j]->GetFrustumCheck()
+				|| m_frustum.CheckFrustumSphere(vecObj[j]->Transform()->GetWorldPos(), vecObj[j]->Transform()->GetMaxScale()))
+			{
+				if (vecObj[j]->MeshRender()
+					&& vecObj[j]->MeshRender()->GetMesh() != nullptr
+					&& vecObj[j]->MeshRender()->GetSharedMaterial() != nullptr
+					&& vecObj[j]->MeshRender()->GetSharedMaterial()->GetShader() != nullptr
+					&& vecObj[j]->MeshRender()->GetDynamicShadow())
+				{
+					m_vecShadowObj.push_back(vecObj[j]);
+				}
+			}
+		}
+	}
 }
 
 void CCamera::render_shadowmap()
