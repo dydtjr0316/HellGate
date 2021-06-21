@@ -41,6 +41,8 @@ void CLight::SetLightType(LIGHT_TYPE _eType)
 		m_pCamObj->Camera()->SetFar(100000.f);
 		m_pCamObj->Camera()->SetWidth(512.f);
 		m_pCamObj->Camera()->SetHeight(512.f);
+		/*m_pCamObj->Camera()->SetWidth(4096.f);
+		m_pCamObj->Camera()->SetHeight(4096.f);*/
 	}
 	else if (LIGHT_TYPE::POINT == (LIGHT_TYPE)m_tLightInfo.iLightType)
 	{
@@ -84,7 +86,7 @@ void CLight::finalupdate()
 	}
 	else
 	{
-		// 광원 관리 카메라를 플레이어 월드좌표와 곱하여 쉐도우맵 위치 업데이트
+		// 광원 관리 카메라를 플레이어 월드좌표와 더하여 쉐도우맵 위치 업데이트
 		auto a = *Transform();
 		a.SetLocalPos(a.GetLocalPos() + vectemp[0]->Transform()->GetLocalPos());
 		*m_pCamObj->Transform() = a;
@@ -110,7 +112,7 @@ void CLight::render()
 		// 광원으로 투영시키기 위한 광원 View, Proj 행렬
 		Matrix matVP = m_pCamObj->Camera()->GetViewMat() * m_pCamObj->Camera()->GetProjMat();
 		m_pLightMtrl->SetData(SHADER_PARAM::MATRIX_0, &matVP);
-	}
+	}		
 
 	Transform()->UpdateData();
 	m_pLightMtrl->SetData(SHADER_PARAM::INT_0, &m_iArrIdx); // 광원 배열 인덱스정보 업데이트
