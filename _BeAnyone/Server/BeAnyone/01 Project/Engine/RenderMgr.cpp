@@ -28,11 +28,10 @@ CRenderMgr::~CRenderMgr()
 void CRenderMgr::render()
 {
 	// 초기화
-	float arrColor[4] = { 0.6f,0.6f, 0.6f, 1.f };
+	float arrColor[4] = { 0.6f, 0.6f, 0.6f, 1.f };
 	CDevice::GetInst()->render_start(arrColor);
 
 	// 광원 정보 업데이트
-	//UpdateLight2D();
 	UpdateLight();
 
 	// SwapChain MRT 초기화
@@ -48,13 +47,15 @@ void CRenderMgr::render()
 	// ==================================
 	// Main Camera 로 Deferred 렌더링 진행
 	// ==================================
-
 	m_vecCam[0]->SortGameObject();
 
 	// Deferred MRT 셋팅
 	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
 	m_vecCam[0]->render_deferred();
 	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->TargetToResBarrier();
+
+	// shadowmap 만들기
+	render_shadowmap();
 
 	// Render Light
 	render_lights();
@@ -83,8 +84,7 @@ void CRenderMgr::render_tool()
 	//Clear(arrColor);
 
 	// 광원 정보 업데이트
-	//UpdateLight2D();
-	//UpdateLight3D();
+	UpdateLight();
 }
 
 void CRenderMgr::UpdateLight()
@@ -110,6 +110,15 @@ void CRenderMgr::render_lights()
 	m_arrMRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
 
 	// 광원을 그린다.
+	CCamera* pMainCam = CRenderMgr::GetInst()->GetMainCam();
+	if (nullptr == pMainCam)
+		return;
+
+	// 메인 카메라 시점 기준 View, Proj 행렬로 되돌린다.
+	g_transform.matView = pMainCam->GetViewMat();
+	g_transform.matProj = pMainCam->GetProjMat();
+	g_transform.matViewInv = pMainCam->GetViewMatInv();
+
 	for (size_t i = 0; i < m_vecLight.size(); ++i)
 	{
 		m_vecLight[i]->Light()->render();
@@ -133,5 +142,22 @@ void CRenderMgr::merge_light()
 
 	pMtrl->UpdateData();
 	pRectMesh->render();
+}
+
+void CRenderMgr::render_shadowmap()
+{
+	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SHADOWMAP)->Clear();
+	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SHADOWMAP)->OMSet();
+
+	// 광원 시점으로 깊이를 그림
+	for (UINT i = 0; i < m_vecLight.size(); ++i)
+	{
+		if (m_vecLight[i]->GetLightInfo().iLightType != (UINT)LIGHT_TYPE::DIR)
+			continue;
+
+		m_vecLight[i]->render_shadowmap();
+	}
+
+	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SHADOWMAP)->TargetToResBarrier();
 }
 

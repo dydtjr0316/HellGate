@@ -220,6 +220,8 @@ void CTexture::Load(const wstring& _strFullPath)
 	HRESULT hr = CreateTexture(DEVICE.Get(), m_Image.GetMetadata(), &m_pTex2D);
 	if (FAILED(hr))
 		assert(nullptr);
+	m_tDesc = m_pTex2D->GetDesc();
+
 
 	vector<D3D12_SUBRESOURCE_DATA> vecSubresources;
 
@@ -272,6 +274,9 @@ void CTexture::Load(const wstring& _strFullPath)
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 	DEVICE->CreateShaderResourceView(m_pTex2D.Get(), &srvDesc, m_pSRV->GetCPUDescriptorHandleForHeapStart());
+
+	m_tDesc = m_pTex2D->GetDesc();
+
 }
 
 void CTexture::Save(const wstring& _strPath)

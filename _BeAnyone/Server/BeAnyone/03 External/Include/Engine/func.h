@@ -52,3 +52,7 @@ Matrix GetMatrix(FbxAMatrix& _mat);
 void CreateBoundingSphereCollisionMesh(float _fRadius, wstring _fName);
 
 void CreateBoundingCubeCollisionMesh(Vector4* vecMMax, wstring _fName);
+
+bool closeEnough(const float& a, const float& b, const float& epsilon);
+
+Vector3 DecomposeRotMat(const Matrix& _matRot);

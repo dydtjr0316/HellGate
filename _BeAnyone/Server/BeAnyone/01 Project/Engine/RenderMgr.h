@@ -24,8 +24,6 @@ private:
 	// CRenderTarget24*		m_arrRT[(UINT)RT_TYPE::END];
 	CMRT*					m_arrMRT[(UINT)MRT_TYPE::END];
 
-	//tLight2DInfo			m_tLight2DInfo;
-
 	vector<CLight*>			m_vecLight;
 	vector<CCamera*>		m_vecCam;
 
@@ -41,6 +39,7 @@ public:
 
 	void render_lights();
 	void merge_light();
+	void render_shadowmap();
 
 private:
 	void CreateMRT();

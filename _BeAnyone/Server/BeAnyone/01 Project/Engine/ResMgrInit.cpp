@@ -11,16 +11,16 @@ void CResMgr::CreateDefaultMesh()
     Ptr<CMesh> pMesh = nullptr;
 
 
-    // =============   // 0 --- 1
-    // Rect Mesh      // |  \  |
-    //               // 3 --- 2
+    // =============    // 0 --- 1
+    // Rect Mesh        // |  \  |
+    //                  // 3 --- 2
     // =============   
     pMesh = new CMesh;
 
     VTX v;
     // 1. 입력 조립기 단계에 전달할, 정점 3개로 구성된 삼각형 1개
     v.vPos = Vector3(-0.5f, 0.5f, 0.f);
-    v.vColor = Vector4(0.8f, 0.7f, 0.6f, 1.f);
+    v.vColor = Vector4(1.f, 0.f, 0.f, 1.f);
     v.vUV = Vector2(0.f, 0.f);
     v.vNormal = Vector3(0.f, 0.f, -1.f);
     v.vTangent = Vector3(1.f, 0.f, 0.f);
@@ -28,17 +28,17 @@ void CResMgr::CreateDefaultMesh()
     vecVTX.push_back(v);
 
     v.vPos = Vector3(0.5f, 0.5f, 0.f);
-    v.vColor = Vector4(0.8f, 0.7f, 0.6f, 1.f);
+    v.vColor = Vector4(0.f, 1.f, 0.f, 1.f);
     v.vUV = Vector2(1.f, 0.f);
     vecVTX.push_back(v);
 
     v.vPos = Vector3(0.5f, -0.5f, 0.f);
-    v.vColor = Vector4(0.8f, 0.7f, 0.6f, 1.f);
+    v.vColor = Vector4(0.f, 0.f, 1.f, 1.f);
     v.vUV = Vector2(1.f, 1.f);
     vecVTX.push_back(v);
 
     v.vPos = Vector3(-0.5f, -0.5f, 0.f);
-    v.vColor = Vector4(0.8f, 0.7f, 0.6f, 1.f);
+    v.vColor = Vector4(1.f, 0.f, 0.f, 1.f);
     v.vUV = Vector2(0.f, 1.f);
     vecVTX.push_back(v);
 
@@ -50,9 +50,9 @@ void CResMgr::CreateDefaultMesh()
 
     AddRes(L"RectMesh", pMesh);
 
-    // =============      // 0 --- 1
+    // =============        // 0 --- 1
     // Collider Rect Mesh   // |     |
-    //                  // 3 --- 2
+    //                      // 3 --- 2
     // =============   
     pMesh = new CMesh;
 
@@ -711,7 +711,7 @@ void CResMgr::CreateDefaultShader()
     pShader->CreateHullShader(L"Shader\\terrain.fx", "HS_Terrain", "hs_5_0");
     pShader->CreateDomainShader(L"Shader\\terrain.fx", "DS_Terrain", "ds_5_0");
     pShader->CreatePixelShader(L"Shader\\terrain.fx", "PS_Terrain", "ps_5_0");
-   // pShader->SetRasterizerType( RS_TYPE::WIRE_FRAME);
+    //pShader->SetRasterizerType( RS_TYPE::WIRE_FRAME);
     pShader->SetRasterizerType(RS_TYPE::CULL_NONE);
     pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS);
     pShader->Create(SHADER_POV::DEFERRED, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
@@ -723,6 +723,14 @@ void CResMgr::CreateDefaultShader()
     pShader = new CShader;
     pShader->CreateComputeShader(L"Shader\\animation.fx", "CS_Animation3D", "cs_5_0");
     AddRes(L"Animaion3DUpdateShader", pShader);
+
+    // ShadowMap Shader
+    pShader = new CShader;
+    pShader->CreateVertexShader(L"Shader\\light.fx", "VS_ShadowMap", "vs_5_0");
+    pShader->CreatePixelShader(L"Shader\\light.fx", "PS_ShadowMap", "ps_5_0");
+    pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS);
+    pShader->Create(SHADER_POV::SHADOW);
+    AddRes(L"ShadowMapShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -744,22 +752,10 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->SetShader(FindRes<CShader>(L"ColliderShader"));
     AddRes(L"ColMtrl", pMtrl);
 
-    /*
-    pMtrl = new CMaterial;
-    pMtrl->DisableFileSave();
-    pMtrl->SetShader(FindRes<CShader>(L"Std2DShader"));
-    AddRes(L"Std2DMtrl", pMtrl);
-
-    pMtrl = new CMaterial;
-    pMtrl->DisableFileSave();
-    pMtrl->SetShader(FindRes<CShader>(L"DirShader"));
-    AddRes(L"DirMtrl", pMtrl);*/
-
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"Std3DShader"));
     AddRes(L"Std3DMtrl", pMtrl);
-
 
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
@@ -773,15 +769,8 @@ void CResMgr::CreateDefaultMaterial()
     //pMtrl->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
     AddRes(L"GridMtrl", pMtrl);
 
-
-
-    //pMtrl = new CMaterial;
-    ////pMtrl->DisableFileSave();
-    //pMtrl->SetShader(FindRes<CShader>(L"2DShadowShader"));
-    //pMtrl->SetPath(L"Material\\2DShadowMtrl.mtrl");
-    //AddRes(L"Material\\2DShadowMtrl.mtrl", pMtrl);
-
-    {
+    //  방향 광
+    {   
         pMtrl = new CMaterial;
         pMtrl->DisableFileSave();
         pMtrl->SetShader(FindRes<CShader>(L"DirLightShader"));
@@ -795,6 +784,7 @@ void CResMgr::CreateDefaultMaterial()
         AddRes(L"DirLightMtrl", pMtrl);
     }
 
+    //  점 광
     {
         pMtrl = new CMaterial;
         pMtrl->DisableFileSave();
@@ -812,6 +802,7 @@ void CResMgr::CreateDefaultMaterial()
         AddRes(L"PointLightMtrl", pMtrl);
     }
 
+    //  광합
     {
         pMtrl = new CMaterial;
         pMtrl->DisableFileSave();
@@ -845,4 +836,10 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"Animaion3DUpdateShader"));
     AddRes(L"Animation3DUpdateMtrl", pMtrl);
+
+    // ShadowMap Material
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"ShadowMapShader"));
+    AddRes(L"ShadowMapMtrl", pMtrl);
 }

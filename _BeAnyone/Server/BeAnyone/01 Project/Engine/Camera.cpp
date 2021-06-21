@@ -23,8 +23,9 @@ CCamera::CCamera()
 	, m_fNear(1.f)
 	, m_fFOV(XM_PI / 4.f)
 	, m_fScale(1.f)
-	, m_eProjType(PROJ_TYPE::ORTHGRAPHIC)
+	, m_eProjType(PROJ_TYPE::PERSPECTIVE)
 	, m_iLayerCheck(0)
+	, m_bModule(false)
 {
 }
 
@@ -69,7 +70,8 @@ void CCamera::finalupdate()
 
 	m_frustum.finalupdate();
 
-	CRenderMgr::GetInst()->RegisterCamera(this);
+	if(!m_bModule)
+		CRenderMgr::GetInst()->RegisterCamera(this);
 
 	//	충돌 테스트용 분기문
 	if (KEY_HOLD(KEY_TYPE::KEY_NUM0))
@@ -156,6 +158,52 @@ void CCamera::render_forward()
 
 }
 
+void CCamera::SortShadowObject()
+{
+	m_vecShadowObj.clear();
+
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CLayer* pLayer = nullptr;
+
+	for (UINT i = 0; i < MAX_LAYER; ++i)
+	{
+		pLayer = pCurScene->GetLayer(i);
+		if (nullptr == pLayer || !(m_iLayerCheck & (1 << i)))
+			continue;
+
+		const vector<CGameObject*>& vecObj = pLayer->GetObjects();
+
+		for (size_t j = 0; j < vecObj.size(); ++j)
+		{
+			if (!vecObj[j]->GetFrustumCheck()
+				|| m_frustum.CheckFrustumSphere(vecObj[j]->Transform()->GetWorldPos(), vecObj[j]->Transform()->GetMaxScale()))
+			{
+				if (vecObj[j]->MeshRender()
+					&& vecObj[j]->MeshRender()->GetMesh() != nullptr
+					&& vecObj[j]->MeshRender()->GetSharedMaterial() != nullptr
+					&& vecObj[j]->MeshRender()->GetSharedMaterial()->GetShader() != nullptr
+					&& vecObj[j]->MeshRender()->GetDynamicShadow())
+				{
+					m_vecShadowObj.push_back(vecObj[j]);
+				}
+			}
+		}
+	}
+}
+
+void CCamera::render_shadowmap()
+{
+	// 뷰행렬과 투영행렬을 광원시점 카메라의 것으로 대체해둠
+	g_transform.matView = m_matView;
+	g_transform.matProj = m_matProj;
+	g_transform.matViewInv = m_matViewInv;
+
+	for (UINT i = 0; i < m_vecShadowObj.size(); ++i)
+	{
+		m_vecShadowObj[i]->MeshRender()->render_shadowmap();
+	}
+}
+
 void CCamera::render()
 {
 	g_transform.matView = GetViewMat();
@@ -178,11 +226,6 @@ void CCamera::render()
 					{
 						vecObj[i]->MeshRender()->render();
 					}
-
-					//if (vecObj[i]->Collider2D())
-					//{
-					//	vecObj[i]->Collider2D()->render();
-					//}
 				 }
 			}
 		}

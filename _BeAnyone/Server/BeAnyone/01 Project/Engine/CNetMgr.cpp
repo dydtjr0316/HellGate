@@ -36,6 +36,7 @@ CNetMgr::CNetMgr()
 {
 	m_pObj = nullptr;
 }
+
 void CNetMgr::err_quit(const char* msg)
 {
 	LPVOID lpMsgBuf;
@@ -296,6 +297,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
 					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, my_packet->RotateY, 0.f));
+					g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);

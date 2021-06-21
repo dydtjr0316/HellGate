@@ -198,7 +198,7 @@ enum class DEPTH_STENCIL_TYPE
 	GRATER_EQUAL,
 
 	NO_DEPTHTEST,
-	NO_DEPTHTEST_NO_WRITE,\
+	NO_DEPTHTEST_NO_WRITE,
 	LESS_NO_WRITE,	// Less ±Ì¿Ã≈◊Ω∫∆Æ, ±Ì¿Ã±‚∑œ X
 
 	END,
@@ -285,6 +285,7 @@ enum class SHADER_POV
 	POST_EFFECT,
 	LIGHTING,
 	COMPUTE, // GPGPU
+	SHADOW,
 };
 
 // fbx type

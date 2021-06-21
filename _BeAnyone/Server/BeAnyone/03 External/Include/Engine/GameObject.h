@@ -27,7 +27,7 @@ private:
 
 	//0506
 	//CToolCamScript*			m_CamObj;
-	CGameObject* m_pCamObj;
+	CGameObject*			m_pCamObj;
 
 	// UI
 	bool					m_bUiRenderCheck = true;

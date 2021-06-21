@@ -48,8 +48,13 @@ public:
 	virtual void Load(const wstring& _strFullPath);
 	virtual void Save(const wstring& _strPath/*최종 경로*/);
 
-	float Width() { return (float)m_Image.GetMetadata().width; }
-	float Height() { return (float)m_Image.GetMetadata().height; }
+	//float Width() { return (float)m_Image.GetMetadata().width; }
+	//float Height() { return (float)m_Image.GetMetadata().height; }
+	
+
+	float Width() { return (float)m_tDesc.Width; }
+	float Height() { return (float)m_tDesc.Height; }
+
 
 public:
 	CTexture();

@@ -22,6 +22,9 @@ private:
 	D3D12_RESOURCE_BARRIER			m_TargetToRes[8];
 	D3D12_RESOURCE_BARRIER			m_ResToTarget[8];
 
+	D3D12_VIEWPORT					m_tVP;
+	D3D12_RECT						m_tScissorRect;
+
 public:
 	void Create(UINT _iCount, tRT* _arrRT, Ptr<CTexture> _pDSTex);
 	void OMSet(UINT _iCount, UINT _iOffset = 0);

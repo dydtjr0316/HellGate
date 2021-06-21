@@ -65,7 +65,7 @@ int CDevice::initDirect3D(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	
 	CreateCommandObjects();
 	CreateSwapChain();
-	CreateViewPort();
+	//CreateViewPort();
 	CreateRootSignature();
 
 
@@ -84,8 +84,9 @@ void CDevice::render_start(float(&_arrFloat)[4])
 	// RootSignature 설정	
 	CMDLIST->SetGraphicsRootSignature(CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::RENDER).Get());
 
-	m_pCommandList->RSSetViewports(1, &m_tScreenViewport);
-	m_pCommandList->RSSetScissorRects(1, &m_tScissorRect);
+	//	0601 mrt로 뷰포트 구조체 이사
+	/*m_pCommandList->RSSetViewports(1, &m_tScreenViewport);
+	m_pCommandList->RSSetScissorRects(1, &m_tScissorRect);*/
 
 	CMRT* pSwapChainMRT = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN);
 
@@ -174,7 +175,6 @@ void CDevice::FlushCommandQueue_CS()
 		WaitForSingleObject(m_hFenceEvent, INFINITE);
 	}
 }
-
 
 void CDevice::CreateCommandObjects()
 {
