@@ -6,9 +6,13 @@ class CQuadTree
 {
 public:
 	CQuadTree(const CRectangle& _boundary, const int& n);
+private:
+	void SubDivideToChild();
+	bool IsSameObject(const uShort& p1, const uShort& p2);
 public:  //oper
 	bool insert(CPlayer* p);
-	void subm_bisDivide();
+	void Delete(CPlayer* p);
+	void sub_Divide();
 	vector<CPlayer*> search(CRectangle& range);	// 인자로 vector<CPlayer> found 넣는 방식 생각해보기
 public: // get
 	vector<CPlayer*> GetPoint() { return m_vpPlayers; }

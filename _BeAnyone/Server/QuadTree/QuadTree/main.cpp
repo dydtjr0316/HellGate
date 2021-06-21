@@ -23,12 +23,12 @@ int main()
 
 	Enter();
 	cout << "----------search-------------" << endl;
-	CRectangle look(1000.f, 1000.f, 400.f, 400.f);
+	CRectangle look(4000.f, 4000.f, 1000.f, 1000.f);
 	vector<CPlayer*> m_vpPlayers = qt->search(look);
 
 	for (auto& obj : m_vpPlayers)
 	{
-		cout << obj->GetX() << ", " << obj->GetZ() << endl;
+		cout << "player[" << obj->GetID() << "]  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
 	}
 }
 
