@@ -1,12 +1,14 @@
 #pragma once
 #include <iostream>
-using namespace std;
-
-
-
+#include <chrono>
 #include <vector>
-
+using namespace std;
+using namespace chrono;
 typedef unsigned short uShort;
 
 
+
+
+
+#include "define.h"
 

@@ -7,7 +7,9 @@ void Enter() { cout << endl; }
 void Print(CQuadTree* qt);
 int main()
 {
-	CQuadTree* qt = new CQuadTree(CRectangle(3200.f, 3200.f, 3200.f, 3200.f), 4);
+	system_clock::time_point start = system_clock::now();
+	{
+	/*CQuadTree* qt = new CQuadTree(CRectangle(3200.f, 3200.f, 3200.f, 3200.f), MAX_PLAYER_IN_NODE);
 	srand((unsigned int)time(NULL));
 	cout << "----------insert start-------------" << endl;
 	for (int i = 0; i < 10; i++)
@@ -29,7 +31,56 @@ int main()
 	for (auto& obj : m_vpPlayers)
 	{
 		cout << "player[" << obj->GetID() << "]  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
+	}*/
+}
+	CQuadTree* qt = new CQuadTree(CRectangle(3200.f, 3200.f, 3200.f, 3200.f), MAX_PLAYER_IN_NODE);
+	int i = 0;
+	float PlayerX, PlayerY;
+	CPlayer* pTemp;
+	vector<CPlayer*> m_vpPlayers;
+	CRectangle temp_look;
+	float nodeX, nodeY;
+	float sectorX, sectorY;
+	uShort searchid;
+	while (true)
+	{
+		cout << "1: Insert Player" << endl;
+		cout << "2: Delete Player" << endl;
+		cout << "3: Search Sector" << endl;
+		
+		cout << "User Input : ";
+		cin >> i;
+		switch (i)
+		{
+		case 1:
+			cout << "Input Player Points(x, y)" << endl;
+			cin >> PlayerX >> PlayerY;
+			pTemp = new CPlayer(id++, PlayerX, PlayerY);
+			qt->insert(pTemp);
+			break;
+		case 2:
+			cout << "Insert id : ";
+			cin >> searchid;
+			break;
+		case 3:
+			cout << "Insert Points & Sector size" << endl;
+			cin >> nodeX >> nodeY >> sectorX >> sectorY;
+			temp_look = CRectangle(nodeX, nodeY, sectorX, sectorY);
+			m_vpPlayers = qt->search(temp_look);
+			for (auto& obj : m_vpPlayers)
+			{
+				cout << "player[" << obj->GetID() << "]  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
+			}
+			break;
+		default:
+			break;
+		}
 	}
+
+
+	system_clock::time_point end = system_clock::now();
+	nanoseconds OperTime = duration_cast<nanoseconds>(end - start);
+	cout << "ÃÑ ¼öÇà ½Ã°£ : " << OperTime.count() << endl;
 }
 
 void Print(CQuadTree* qt)

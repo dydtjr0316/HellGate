@@ -148,6 +148,7 @@
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CQuadTree.h" />
     <ClInclude Include="CRectangle.h" />
+    <ClInclude Include="define.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
