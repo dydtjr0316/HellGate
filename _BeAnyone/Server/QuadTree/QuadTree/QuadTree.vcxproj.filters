@@ -25,6 +25,9 @@
     <Filter Include="01QuadTree\01Player">
       <UniqueIdentifier>{0c1498ee-0cd5-4d7d-b227-ed56ac89c7f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01QuadTree\03 Mediator">
+      <UniqueIdentifier>{0e2d3239-b5df-44ee-9762-b56a4e04cab0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="CQuadTree.cpp">
       <Filter>01QuadTree\00QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="CMediator.cpp">
+      <Filter>01QuadTree\03 Mediator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="define.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CMediator.h">
+      <Filter>01QuadTree\03 Mediator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
