@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "CQuadTree.h"
-#include "CPlayer.h"
-#include "CRectangle.h"
-#include "CMediator.h"
+#include "CGameObject.h"
+#include "CBoundary.h"
 
 
 void CQuadTree::PrintQuadTree()
@@ -14,8 +13,9 @@ void CQuadTree::PrintQuadTree()
 	{
 		for (auto& obj : m_vpPlayers)
 		{
-			CPlayer* temp = g_Medi.Find(obj);
-			cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetX() << ", " << temp->GetZ() << ")" << endl;
+			CGameObject* temp = Netmgr.GetMediatorMgr()->Find(obj);
+			cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetLocalPosVector().x << ", " 
+				<< temp->GetLocalPosVector().z << ")" << endl;
 		}
 	}
 	else
@@ -29,13 +29,13 @@ void CQuadTree::PrintQuadTree()
 	cout << "------------------" << endl;
 }
 
-CQuadTree::CQuadTree(const CRectangle& _m_boundary, const int& n)
+CQuadTree::CQuadTree(const CBoundary& _m_boundary, const int& n)
 {
-		m_boundary = _m_boundary; m_icapacity = n;
+	m_boundary = _m_boundary; m_icapacity = n;
 }
 
 
-bool CQuadTree::insert(CPlayer* p)
+bool CQuadTree::Insert(CGameObject* p)
 {
 	if (!m_boundary.contains(p))
 		return false;
@@ -48,7 +48,7 @@ bool CQuadTree::insert(CPlayer* p)
 	{
 		if (!m_bisDivide)
 		{
-			sub_Divide();
+			Sub_Divide();
 		}
 
 		{
@@ -61,12 +61,12 @@ bool CQuadTree::insert(CPlayer* p)
 		}
 		for (auto& obj : m_pChild)
 		{
-			if (obj->insert(p))return true;
+			if (obj->Insert(p))return true;
 		}
 	}
 }
 
-void CQuadTree::Delete(CPlayer* p)
+void CQuadTree::Delete(CGameObject* p)
 {
 	// 해당 플레이어 id로 현재위치한 노드를 찾는다 
 	// // 자식노드가 없는 노드중 플레이어 좌표를 취하는곳
@@ -117,23 +117,23 @@ bool CQuadTree::IsSameObject(const uShort& p1, const uShort& p2)
 	if (p1 == p2)return true;
 	else return false;
 }
-void CQuadTree::sub_Divide()
+void CQuadTree::Sub_Divide()
 {
-	CRectangle childRect[CHILD_NODE_SIZE];//용석
-	childRect[0] = CRectangle(m_boundary.GetX() + m_boundary.GetW() / 2, m_boundary.GetZ() - m_boundary.GetH() / 2,
+	CBoundary childRect[CHILD_NODE_SIZE];//용석
+	childRect[0] = CBoundary(m_boundary.GetX() + m_boundary.GetW() / 2, m_boundary.GetZ() - m_boundary.GetH() / 2,
 		m_boundary.GetW() / 2, m_boundary.GetH() / 2);
-	childRect[1] = CRectangle(m_boundary.GetX() - m_boundary.GetW() / 2, m_boundary.GetZ() - m_boundary.GetH() / 2,
+	childRect[1] = CBoundary(m_boundary.GetX() - m_boundary.GetW() / 2, m_boundary.GetZ() - m_boundary.GetH() / 2,
 		m_boundary.GetW() / 2, m_boundary.GetH() / 2);
-	childRect[2] = CRectangle(m_boundary.GetX() + m_boundary.GetW() / 2, m_boundary.GetZ() + m_boundary.GetH() / 2,
+	childRect[2] = CBoundary(m_boundary.GetX() + m_boundary.GetW() / 2, m_boundary.GetZ() + m_boundary.GetH() / 2,
 		m_boundary.GetW() / 2, m_boundary.GetH() / 2);
-	childRect[3] = CRectangle(m_boundary.GetX() - m_boundary.GetW() / 2, m_boundary.GetZ() + m_boundary.GetH() / 2,
+	childRect[3] = CBoundary(m_boundary.GetX() - m_boundary.GetW() / 2, m_boundary.GetZ() + m_boundary.GetH() / 2,
 		m_boundary.GetW() / 2, m_boundary.GetH() / 2);
-	for (int i = 0;i< CHILD_NODE_SIZE;i++)
+	for (int i = 0; i < CHILD_NODE_SIZE; i++)
 	{
 		CQuadTree* temp = new CQuadTree(childRect[i], MAX_PLAYER_IN_NODE);
 		temp->m_iDepth = m_iDepth++;
 		m_pChild.push_back(temp);
-		temp->setParent(this);
+		temp->SetParent(this);
 	}
 	SubDivideToChild();
 	m_bisDivide = true;
@@ -146,7 +146,7 @@ void CQuadTree::SubDivideToChild()
 		// 부모노드의 player정보는 삭제하는 코드가 있어야함
 		for (auto& childNode : m_pChild)
 		{
-			if (childNode->m_boundary.contains(g_Medi.Find(player)))
+			if (childNode->m_boundary.contains(Netmgr.GetMediatorMgr()->Find(player)))
 			{
 				childNode->m_vpPlayers.emplace(player);
 				break;
@@ -159,7 +159,7 @@ void CQuadTree::SubDivideToChild()
 
 
 
-unordered_set<uShort> CQuadTree::search(CRectangle& range)
+unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 {
 	//  쿼드트리 부모 자식 구조 바꾸면서 이부분 안바꿔도 되는지 확인해 볼 것
 	unordered_set<uShort> found;
@@ -179,7 +179,7 @@ unordered_set<uShort> CQuadTree::search(CRectangle& range)
 	{
 		for (auto& p : m_vpPlayers)
 		{
-			if (range.contains(g_Medi.Find(p)))
+			if (range.contains(Netmgr.GetMediatorMgr()->Find(p)))
 				found.emplace(p);
 		}
 	}

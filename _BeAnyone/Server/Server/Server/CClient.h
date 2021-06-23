@@ -40,6 +40,7 @@ public:
 
 	//view list
 	void InsertViewList(const int& id) { view_list.emplace(id); }
+	void SetViewList(const unordered_set<uShort>& view) { view_list = view; }
 
 private:
 	// int
@@ -57,7 +58,7 @@ private:
 
 	// char
 	// server
-	unordered_set<int> view_list;
+	unordered_set<uShort> view_list;
 	Vector3 m_v3FirstPos;
 
 

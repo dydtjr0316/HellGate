@@ -153,27 +153,15 @@ void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 {
     CMonster* monster = dynamic_cast<CMonster*>(m_pMediator->Find(victim));
-    unordered_set<uShort> new_viewList;
-    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(attacker));// search sector 인자 확인
+    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(attacker));// search sector 인자 확인
+
+    unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(attacker)));
     //client 인가 monster인가 
-    for (auto& vSec : vSectors)
-    {
-        if (vSec.size() != 0)
-        {
-            for (auto& user : vSec)
-            {
-                if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT) && CSectorMgr::GetInst()->Is_Near(victim, user))
-                {
-                    new_viewList.insert(user);
-                }
-            }
-        }
-    }
 
     if (monster->GetHP() - 12 >= 0)
     {
         monster->SetHP(monster->GetHP() - 12);
-        for (auto& clientID : new_viewList)
+        for (auto& clientID : vSectors)
         {
                 m_pSendMgr->Send_Attacked_Packet_Monster(clientID, victim);
         }
@@ -181,7 +169,7 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
     else
     {
             monster->SetHP(0.f);
-        for (auto& clientID : new_viewList)
+        for (auto& clientID : vSectors)
         {
             m_pSendMgr->Send_Attacked_Packet_Monster(clientID, victim);
             m_pSendMgr->Send_Leave_Packet(clientID, victim, true);
@@ -190,9 +178,8 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 }
 void CNetMgr::Kill_Monster(const uShort& monster_id)
 {
-    CMonster* monster = dynamic_cast<CMonster*>(m_pMediator->Find(monster_id));
-    unordered_set<uShort> new_viewList;
-    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(monster_id));
+    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(monster_id));
+    unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
 
     //for (auto& vSec : vSectors)
     //{
@@ -207,10 +194,11 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
     //        }
     //    }
     //}
-    CSectorMgr::GetInst()->Erase(m_pMediator->Find(monster_id)->GetSector().x,
-        m_pMediator->Find(monster_id)->GetSector().z,
-        monster_id
-        );
+    //CSectorMgr::GetInst()->Erase(m_pMediator->Find(monster_id)->GetSector().x,
+    //    m_pMediator->Find(monster_id)->GetSector().z,
+    //    monster_id
+    //    );
+    g_QuadTree.Delete(m_pMediator->Find(monster_id));
     m_pMediator->Delete_Obj(monster_id);
 
 }
@@ -220,7 +208,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
     unordered_set<int> old_viewList = pClient->GetViewList();
 
-    _tSector oldSector = pClient->GetSector();
+    //_tSector oldSector = pClient->GetSector();
 
     /*switch (dir)
     {
@@ -251,47 +239,37 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
-    
-    pClient->Change_Sector(oldSector);
+
+    pClient->Change_Sector();
     unordered_set<uShort> new_viewList;
 
     //m_pSendMgr->Send_Move_Packet(user_id, user_id, dir);
-    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
-
-    for (auto& vSec : vSectors)
+    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+    //
+    unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
+    if (vSectors.size() != 0)
     {
-        if (vSec.size() != 0)
+        for (auto& user : vSectors)
         {
-            for (auto& user : vSec)
+            if (!m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
             {
-                if (CSectorMgr::GetInst()->Is_Near(user_id, user))
+                if (m_pMediator->Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
                 {
-                    if (!m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
-                    {
-                        if (m_pMediator->Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
-                        {
-                            if (m_pMediator->IsType(user, OBJECT_TYPE::MONSTER))
-                                WakeUp_Monster(user);
-                            else
-                            {
-                                WakeUp_NPC(user);
-                            }
-                        }
-                    }
+                    if (m_pMediator->IsType(user, OBJECT_TYPE::MONSTER))
+                        WakeUp_Monster(user);
                     else
                     {
-
+                        WakeUp_NPC(user);
                     }
-                    new_viewList.insert(user);
                 }
             }
+            new_viewList.insert(user);
         }
     }
+    
 
-    for (auto& ob : new_viewList)
+    for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
     {
-        //시야에 새로 들어온 객체 구분
-
         if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
         {
             pClient->GetViewList().insert(ob);
@@ -355,38 +333,17 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
     pClient->Change_Sector(oldSector);
     unordered_set<int> new_viewList;
 
-    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+    unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
 
-
-    for (auto& vSec : vSectors)
+    if (vSectors.size() != 0)
     {
-        if (vSec.size() != 0)
+        for (auto& user : vSectors)
         {
-            for (auto& user : vSec)
-            {
-                if (CSectorMgr::GetInst()->Is_Near(user_id, user))
-                {
-                    if (!m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
-                    {
-                        if (m_pMediator->Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
-                        {
-                            if (m_pMediator->IsType(user, OBJECT_TYPE::MONSTER))
-                                WakeUp_Monster(user);
-                            else
-                            {
-                                WakeUp_NPC(user);
-                            }
-                        }
-                    }
-                    else
-                    {
-
-                    }
-                    new_viewList.insert(user);
-                }
-            }
+            new_viewList.insert(user);
         }
     }
+    
 
     for (auto& ob : new_viewList)
     {
@@ -495,38 +452,37 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
 
     unordered_set<int> new_viewList;
 
-    vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+    unordered_set<uShort> vSectors = g_QuadTree.search(m_pMediator->Find(user_id));
 
-
-    for (auto& vSec : vSectors)
+    for (auto& id : vSectors)
     {
-        for (auto& id : vSec) {
-            if (m_pMediator->Find(id)->GetID() == m_pMediator->Find(user_id)->GetID())continue;
-            if (m_pMediator->Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
-            if (CSectorMgr::GetInst()->Is_Near(user_id, id)&&user_id!=id)
+        if (m_pMediator->Find(id)->GetID() == m_pMediator->Find(user_id)->GetID())continue;
+        if (m_pMediator->Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
+        if (CSectorMgr::GetInst()->Is_Near(user_id, id) && user_id != id)
+        {
+            /* if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
+             {
+                 if(m_pMediator->IsType(id))
+                     WakeUp_Monster(id);
+                 else if (IsNpc(id))
+                     WakeUp_NPC(id);
+             }*/
+            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
             {
-               /* if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
+                if (CAST_CLIENT(m_pMediator->Find(id))->GetViewList().count(user_id) == 0)
                 {
-                    if(m_pMediator->IsType(id))
-                        WakeUp_Monster(id);
-                    else if (IsNpc(id))
-                        WakeUp_NPC(id);
-                }*/
-                if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-                {
-                    if (CAST_CLIENT(m_pMediator->Find(id))->GetViewList().count(user_id) == 0)
-                    {
-                        CAST_CLIENT(m_pMediator->Find(id))->GetViewList().insert(user_id);
-                        m_pSendMgr->Send_Enter_Packet(id, user_id);
-                    }
-                }
-                if (pUser->GetViewList().count(id) == 0)
-                {
-                    pUser->GetViewList().insert(id);
-                    m_pSendMgr->Send_Enter_Packet(user_id, id);
+                    CAST_CLIENT(m_pMediator->Find(id))->GetViewList().insert(user_id);
+                    m_pSendMgr->Send_Enter_Packet(id, user_id);
                 }
             }
+            if (pUser->GetViewList().count(id) == 0)
+            {
+                pUser->GetViewList().insert(id);
+                m_pSendMgr->Send_Enter_Packet(user_id, id);
+            }
         }
+
     }
 
     pUser->SetStatus(OBJSTATUS::ST_ACTIVE);
@@ -597,25 +553,22 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         if (m_pMediator->Count(packet->id) == 0)break;
         CClient* monster = CAST_CLIENT(m_pMediator->Find(packet->id));
         unordered_set<uShort> new_viewList;
-        vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(packet->id));
-
-        for (auto& vSec : vSectors)
+        //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(packet->id));
+        unordered_set<uShort> vSectors = g_QuadTree.search(m_pMediator->Find(user_id));
+        //if (vSectors.size() != 0)
+        //{
+        //    for (auto& user : vSectors)
+        //    {
+        //        if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
+        //        {
+        //            new_viewList.insert(user);
+        //        }
+        //    }
+        //}
+        for (auto& user : new_viewList)
         {
-            if (vSec.size() != 0)
-            {
-                for (auto& user : vSec)
-                {
-                    if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT) && CSectorMgr::GetInst()->Is_Near(packet->id, user))
-                    {
-                        new_viewList.insert(user);
-                    }
-                }
-            }
-        }
-        for (auto& obj : new_viewList)
-        {
-            m_pSendMgr->Send_Attack_Animation_Packet(obj, packet->id, packet->isAttack);
-
+            if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
+            m_pSendMgr->Send_Attack_Animation_Packet(user, packet->id, packet->isAttack);
         }
     }
     break;
@@ -776,56 +729,56 @@ void CNetMgr::Worker_Thread()
         break;
         case ENUMOP::OP_RAMDON_MOVE_NPC:
         {
-           // Random_Move_NPC(user_id); 
-            bool keep_alive = false;
-            //active인 플레이어가 주변에 있으면 계속 깨워두기
-            for (auto& vSec : CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id)))
-            {
-                for (auto& id : vSec)
-                {
-                    if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-                    {
-                        if (CSectorMgr::GetInst()->Is_Near(user_id, id))
-                        {
-                            if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
-                            {
-                                keep_alive = true; 
-                                break;
-                            }
-                        }
-                    }
-                }
-           }
-            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
-            else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
-            //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
-            delete exover;
+           //// Random_Move_NPC(user_id); 
+           // bool keep_alive = false;
+           // //active인 플레이어가 주변에 있으면 계속 깨워두기
+           // for (auto& vSec : CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id)))
+           // {
+           //     for (auto& id : vSec)
+           //     {
+           //         if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+           //         {
+           //             if (CSectorMgr::GetInst()->Is_Near(user_id, id))
+           //             {
+           //                 if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
+           //                 {
+           //                     keep_alive = true; 
+           //                     break;
+           //                 }
+           //             }
+           //         }
+           //     }
+           //}
+           // if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
+           // else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+           // //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
+           // delete exover;
 
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_MONSTER:
         {
-            if (m_pMediator->Count(user_id) == 0)break;
-            //Random_Move_Monster(user_id);
-            bool keep_alive = false;
-            //active인 플레이어가 주변에 있으면 계속 깨워두기
-            for (auto& vSec : CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id)))
-            {
-                for (auto& id : vSec)
-                {
-                    if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-                        if (CSectorMgr::GetInst()->Is_Near(user_id, id))
-                            if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
-                            {
-                                keep_alive = true;
-                                break;
-                            }
-                }
-            }
-            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
-            else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
-            //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
-            delete exover;
+            //if (m_pMediator->Count(user_id) == 0)break;
+            ////Random_Move_Monster(user_id);
+            //bool keep_alive = false;
+            ////active인 플레이어가 주변에 있으면 계속 깨워두기
+            //for (auto& vSec : CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id)))
+            //{
+            //    for (auto& id : vSec)
+            //    {
+            //        if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+            //            if (CSectorMgr::GetInst()->Is_Near(user_id, id))
+            //                if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
+            //                {
+            //                    keep_alive = true;
+            //                    break;
+            //                }
+            //    }
+            //}
+            //if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
+            //else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+            ////주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
+            //delete exover;
         }
         break;
         }

@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CBoundary.cpp" />
     <ClCompile Include="CClient.cpp" />
     <ClCompile Include="CDataBase.cpp" />
     <ClCompile Include="CGameObject.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="CMonster.cpp" />
     <ClCompile Include="CNetMgr.cpp" />
     <ClCompile Include="CNPC.cpp" />
+    <ClCompile Include="CQuadTree.cpp" />
     <ClCompile Include="CSectorMgr.cpp" />
     <ClCompile Include="CSendMgr.cpp" />
     <ClCompile Include="CTimeMgr.cpp" />
@@ -153,6 +155,7 @@
     <ClCompile Include="SimpleMath.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CBoundary.h" />
     <ClInclude Include="CClient.h" />
     <ClInclude Include="CDataBase.h" />
     <ClInclude Include="CGameObject.h" />
@@ -160,6 +163,7 @@
     <ClInclude Include="CMonster.h" />
     <ClInclude Include="CNetMgr.h" />
     <ClInclude Include="CNPC.h" />
+    <ClInclude Include="CQuadTree.h" />
     <ClInclude Include="CSectorMgr.h" />
     <ClInclude Include="CSendMgr.h" />
     <ClInclude Include="CTimeMgr.h" />

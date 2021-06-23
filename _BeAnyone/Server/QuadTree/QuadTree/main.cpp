@@ -4,6 +4,7 @@
 #include "CRectangle.h"
 #include "CMediator.h"
 uShort id = 0;
+CMediator g_Medi;
 void Enter() { cout << endl; }
 void Print(CQuadTree* qt);
 int main()
@@ -59,12 +60,15 @@ int main()
 			pTemp = new CPlayer(id, PlayerX, PlayerY);
 			g_Medi.Add(pTemp, id++);
 			qt->insert(pTemp);
+			qt->PrintQuadTree();
 			break;
 		case 2:
 			cout << "Insert id : ";
 			cin >> searchid;
 			g_Medi.Delete_Obj(searchid);
+			if (g_Medi.Find(searchid) == nullptr)break;
 			qt->Delete(g_Medi.Find(searchid));
+			qt->PrintQuadTree();
 			break;
 		case 3:
 			cout << "Insert Points & Sector size" << endl;
@@ -73,13 +77,14 @@ int main()
 			m_vpPlayers = qt->search(temp_look);
 			for (auto& obj : m_vpPlayers)
 			{
-				//cout << "player[" << obj->GetID() << "]  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
+				cout << "player[" << g_Medi.Find(obj)->GetID() << "]  ->" << g_Medi.Find(obj)->GetX() << ", " << g_Medi.Find(obj)->GetZ() << endl;
 			}
 			break;
 		default:
 			cout << "default" << endl;
 			break;
 		}
+		system("pause");
 		system("cls");
 	}
 

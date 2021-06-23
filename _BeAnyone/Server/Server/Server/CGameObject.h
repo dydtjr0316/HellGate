@@ -73,6 +73,7 @@ public: // 상속 ,, 함수
 public:
 	void Insert_Sector();
 	void Change_Sector(const _tSector& old_sector);
+	void Change_Sector();
 
 	
 protected:

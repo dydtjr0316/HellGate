@@ -3,6 +3,9 @@
 
 // 섹터 디파인 값
 constexpr float MOVE_SPEED = 5.f; // 이동패킷 구조변경 성공시 삭제
+constexpr short CHILD_NODE_SIZE = 4;
+constexpr short MAX_PLAYER_IN_NODE = 4;
+constexpr float SEARCH_SIZE = 500.f;
 
 // 추후  수정
 constexpr int NAME_LEN = 50;

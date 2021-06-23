@@ -9,7 +9,7 @@ mutex timer_lock;
 mutex wakeup_lock;
 priority_queue<event_type>		timer_queue;
 CNetMgr Netmgr;
-
+CQuadTree g_QuadTree;
 SOCKET g_listenSocket;
 HANDLE g_IocpHandle;
 
