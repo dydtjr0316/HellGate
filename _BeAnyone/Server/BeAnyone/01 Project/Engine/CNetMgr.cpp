@@ -96,6 +96,7 @@ void CNetMgr::Send_Packet(void* _packet)
 	EXOVER dataBuf;
 	char* packet = reinterpret_cast<char*>(_packet);
 	size_t sent;
+	DWORD flag;
 	dataBuf.wsabuf.len = packet[0];
 	dataBuf.wsabuf.buf = (char*)packet;
 	dataBuf.over = m_overlapped;
@@ -108,7 +109,7 @@ void CNetMgr::Send_Packet(void* _packet)
 		if (WSAGetLastError() == WSA_IO_PENDING)
 		{
 			WSAWaitForMultipleEvents(1, &m_overlapped.hEvent, TRUE, WSA_INFINITE, FALSE);
-			WSAGetOverlappedResult(g_Socket, &m_overlapped, (LPDWORD)&sent, FALSE, NULL);
+			WSAGetOverlappedResult(g_Socket, &m_overlapped, (LPDWORD)&sent, FALSE, &flag);
 		}
 		else
 			err_quit("WSASend");

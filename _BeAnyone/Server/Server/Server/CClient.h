@@ -24,7 +24,7 @@ public:
 	const int& GetEXP() { return m_iExp; }
 	const int& GetMaxEXP() { return m_iMax_exp; }
 	const bool& GetBisLevelUP() { return m_bisLevelUp; }
-	unordered_set<int>& GetViewList() { return view_list; }
+	unordered_set<uShort>& GetViewList() { return view_list; }
 
 	// SET
 	void SetLevel(const int& level) { m_ilevel = level; }

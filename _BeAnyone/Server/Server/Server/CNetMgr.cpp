@@ -168,7 +168,7 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
     }
     else
     {
-            monster->SetHP(0.f);
+            monster->SetHP(0);
         for (auto& clientID : vSectors)
         {
             m_pSendMgr->Send_Attacked_Packet_Monster(clientID, victim);
@@ -206,7 +206,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 {
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
 
-    unordered_set<int> old_viewList = pClient->GetViewList();
+    unordered_set<uShort> old_viewList = pClient->GetViewList();
 
     //_tSector oldSector = pClient->GetSector();
 
@@ -240,7 +240,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
 
-    pClient->Change_Sector();
+    //pClient->Change_Sector();
     unordered_set<uShort> new_viewList;
 
     //m_pSendMgr->Send_Move_Packet(user_id, user_id, dir);
@@ -326,7 +326,7 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 {
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
 
-    unordered_set<int> old_viewList = pClient->GetViewList();
+    unordered_set<uShort> old_viewList = pClient->GetViewList();
 
     _tSector oldSector = pClient->GetSector();
     pClient->SetIsMoving(isMoving);
@@ -453,7 +453,7 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
     unordered_set<int> new_viewList;
 
     //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
-    unordered_set<uShort> vSectors = g_QuadTree.search(m_pMediator->Find(user_id));
+    unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
 
     for (auto& id : vSectors)
     {
@@ -629,7 +629,9 @@ void CNetMgr::Worker_Thread()
         EXOVER* exover = reinterpret_cast<EXOVER*>(over);
         uShort user_id = static_cast<uShort>(key);
         
-      
+        cout << "ID: " << user_id << endl;
+        cout << "iobyte: " << io_byte << endl;
+        cout << "-----------------------" << endl;
         CClient* pUser = CAST_CLIENT(m_pMediator->Find( user_id));
         switch (exover->op) {
         case ENUMOP::OP_RECV:
@@ -687,6 +689,8 @@ void CNetMgr::Worker_Thread()
                 pClient->GetExover().wsabuf.buf = pClient->GetExover().io_buf;
                 pClient->GetExover().wsabuf.len = MAX_BUF_SIZE;
                 pClient->SetSocket(c_socket);
+                // 0623¿ë¼®
+                g_QuadTree.Insert(pClient);
 
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(

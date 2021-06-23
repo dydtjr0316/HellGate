@@ -64,6 +64,7 @@ bool CQuadTree::Insert(CGameObject* p)
 			if (obj->Insert(p))return true;
 		}
 	}
+	return true;// 여기서 true 반환하는거 괜찮은지 보기
 }
 
 void CQuadTree::Delete(CGameObject* p)
@@ -88,9 +89,12 @@ void CQuadTree::Delete(CGameObject* p)
 
 		// 4개이상이면 패스
 		// 4개이하라면 4개이상인 부모노드를 찾을 때 까지 재귀호출
-		for (auto& obj : m_pParent->GetChild())
+		if (m_pParent != nullptr)
 		{
-			cnt += obj->GetPoint().size();
+			for (auto& obj : m_pParent->GetChild())
+			{
+				cnt += obj->GetPoint().size();
+			}
 		}
 		if (cnt < 4)
 		{
@@ -175,11 +179,12 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 		}
 	}*/
 	}
-	if (m_boundary.intersects(range))
+	CBoundary temp = range;
+	if (m_boundary.intersects(temp))
 	{
 		for (auto& p : m_vpPlayers)
 		{
-			if (range.contains(Netmgr.GetMediatorMgr()->Find(p)))
+			if (temp.contains(Netmgr.GetMediatorMgr()->Find(p)))
 				found.emplace(p);
 		}
 	}

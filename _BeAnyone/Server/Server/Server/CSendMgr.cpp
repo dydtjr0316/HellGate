@@ -105,6 +105,7 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
 void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, const bool& isAttack)
 {
     if (Netmgr.GetMediatorMgr()->Count(other_id) == 0)return;
+    g_QuadTree.Delete(Netmgr.GetMediatorMgr()->Find(user_id));
     sc_packet_leave p;
     p.id = other_id;
     p.size = sizeof(p);

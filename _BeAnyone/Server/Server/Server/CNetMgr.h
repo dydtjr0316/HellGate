@@ -45,8 +45,6 @@ public:		// 패킷 전송부
 private:
 	CSendMgr* m_pSendMgr;
 	CMediatorMgr* m_pMediator;
-	SOCKET m_ListenSocket;
-	HANDLE m_IocpHandle;
 public:
 	void error_display(const char* msg, int err_no);
 };
