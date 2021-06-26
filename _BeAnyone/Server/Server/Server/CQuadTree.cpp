@@ -16,6 +16,8 @@ void CQuadTree::PrintQuadTree()
 			CGameObject* temp = Netmgr.GetMediatorMgr()->Find(obj);
 			cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetLocalPosVector().x << ", " 
 				<< temp->GetLocalPosVector().z << ")" << endl;
+			cout << "------------------" << endl;
+
 		}
 	}
 	else
@@ -26,7 +28,6 @@ void CQuadTree::PrintQuadTree()
 			obj->PrintQuadTree();
 		}
 	}
-	cout << "------------------" << endl;
 }
 
 CQuadTree::CQuadTree(const CBoundary& _m_boundary, const int& n)
@@ -64,6 +65,9 @@ bool CQuadTree::Insert(CGameObject* p)
 			if (obj->Insert(p))return true;
 		}
 	}
+	cout << endl;
+	cout << "Insert**********************" << endl;
+	PrintQuadTree();
 	return true;// 여기서 true 반환하는거 괜찮은지 보기
 }
 
@@ -95,26 +99,31 @@ void CQuadTree::Delete(CGameObject* p)
 			{
 				cnt += obj->GetPoint().size();
 			}
-		}
-		if (cnt < 4)
-		{
-			for (auto& obj : m_pParent->GetChild())
+			if (cnt < 4)
 			{
-				for (auto& sub : obj->GetPoint())
-					m_pParent->GetPoint().emplace(sub);
-				//obj->GetPoint().clear();
-				SafeDelete(obj);
-			}
+				for (auto& obj : m_pParent->GetChild())
+				{
+					for (auto& sub : obj->GetPoint())
+						m_pParent->GetPoint().emplace(sub);
+					//obj->GetPoint().clear();
+					SafeDelete(obj);
+				}
 
+			}
 		}
+		
 	}
 	else
 	{
-		for (auto& childNode : m_pChild)
-		{
-			childNode->Delete(p);
-		}
+		if (m_pChild.size() != 0)
+			for (auto& childNode : m_pChild)
+			{
+				childNode->Delete(p);
+			}
 	}
+	cout << endl;
+	cout << "Delete********************" << endl;
+	PrintQuadTree();
 }
 bool CQuadTree::IsSameObject(const uShort& p1, const uShort& p2)
 {
@@ -198,6 +207,12 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 			}
 		}
 	}
+	cout << "Search****************************" << endl;
+	for (auto& obj : found)
+	{
+		cout <<"ID : "<< obj << endl;
+	}
+	cout << "---------------------------" << endl;
 
 	return found;
 

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
-#include "CSectorMgr.h"
 int cnt = 0;
 int login = 0;
 int ghost = 0;
@@ -179,28 +178,13 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 void CNetMgr::Kill_Monster(const uShort& monster_id)
 {
     //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(monster_id));
-    unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
+    if (m_pMediator->Count(monster_id) != 0)
+    {
+        unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
 
-    //for (auto& vSec : vSectors)
-    //{
-    //    if (vSec.size() != 0)
-    //    {
-    //        for (auto& user : vSec)
-    //        {
-    //            if (m_pMediator->IsType(user) && is_near(monster_id, user))
-    //            {
-    //                new_viewList.insert(user);
-    //            }
-    //        }
-    //    }
-    //}
-    //CSectorMgr::GetInst()->Erase(m_pMediator->Find(monster_id)->GetSector().x,
-    //    m_pMediator->Find(monster_id)->GetSector().z,
-    //    monster_id
-    //    );
-    g_QuadTree.Delete(m_pMediator->Find(monster_id));
-    m_pMediator->Delete_Obj(monster_id);
-
+        g_QuadTree.Delete(m_pMediator->Find(monster_id));
+        m_pMediator->Delete_Obj(monster_id);
+    }
 }
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
 {
@@ -459,30 +443,26 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
     {
         if (m_pMediator->Find(id)->GetID() == m_pMediator->Find(user_id)->GetID())continue;
         if (m_pMediator->Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
-        if (CSectorMgr::GetInst()->Is_Near(user_id, id) && user_id != id)
+        /* if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
+         {
+             if(m_pMediator->IsType(id))
+                 WakeUp_Monster(id);
+             else if (IsNpc(id))
+                 WakeUp_NPC(id);
+         }*/
+        if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
         {
-            /* if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
-             {
-                 if(m_pMediator->IsType(id))
-                     WakeUp_Monster(id);
-                 else if (IsNpc(id))
-                     WakeUp_NPC(id);
-             }*/
-            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+            if (CAST_CLIENT(m_pMediator->Find(id))->GetViewList().count(user_id) == 0)
             {
-                if (CAST_CLIENT(m_pMediator->Find(id))->GetViewList().count(user_id) == 0)
-                {
-                    CAST_CLIENT(m_pMediator->Find(id))->GetViewList().insert(user_id);
-                    m_pSendMgr->Send_Enter_Packet(id, user_id);
-                }
-            }
-            if (pUser->GetViewList().count(id) == 0)
-            {
-                pUser->GetViewList().insert(id);
-                m_pSendMgr->Send_Enter_Packet(user_id, id);
+                CAST_CLIENT(m_pMediator->Find(id))->GetViewList().insert(user_id);
+                m_pSendMgr->Send_Enter_Packet(id, user_id);
             }
         }
-
+        if (pUser->GetViewList().count(id) == 0)
+        {
+            pUser->GetViewList().insert(id);
+            m_pSendMgr->Send_Enter_Packet(user_id, id);
+        }
     }
 
     pUser->SetStatus(OBJSTATUS::ST_ACTIVE);

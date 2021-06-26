@@ -16,8 +16,24 @@ CBoundary::CBoundary(const float& x, const float& z, const float& w, const float
 
 CBoundary::CBoundary(CGameObject* player, const float& searchsize)
 {
-	this->m_fx = dynamic_cast<CClient*>(player)->GetLocalPosVector().x;
-	this->m_fz = dynamic_cast<CClient*>(player)->GetLocalPosVector().z;
+	switch (player->GetType())
+	{
+	case OBJECT_TYPE::CLIENT:
+		this->m_fx = dynamic_cast<CClient*>(player)->GetLocalPosVector().x;
+		this->m_fz = dynamic_cast<CClient*>(player)->GetLocalPosVector().z;
+		break;
+	case OBJECT_TYPE::MONSTER:
+		this->m_fx = dynamic_cast<CMonster*>(player)->GetLocalPosVector().x;
+		this->m_fz = dynamic_cast<CMonster*>(player)->GetLocalPosVector().z;
+		break;
+	case OBJECT_TYPE::NPC:
+		this->m_fx = dynamic_cast<CNPC*>(player)->GetLocalPosVector().x;
+		this->m_fz = dynamic_cast<CNPC*>(player)->GetLocalPosVector().z;
+		break;
+	default:
+		break;
+	}
+
 	this->m_fw = searchsize;
 	this->m_fh = searchsize;
 }

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CGameObject.h"
-#include "CSectorMgr.h"
 
 CGameObject::CGameObject()
 {
