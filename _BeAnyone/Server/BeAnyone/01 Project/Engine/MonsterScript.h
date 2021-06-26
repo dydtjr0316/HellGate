@@ -6,10 +6,18 @@ class CMonsterScript :
 {
 private:
 	MONSTER_TYPE m_MType;
+
+	// ui
 	CGameObject* m_pUi;
 	CGameObject* m_pUnderUi;
+	CGameObject* m_pChildDummy;
+	bool m_bSetChild = false;
+	
 	CTerrain* m_pTerrainObj;
+
+	// animation
 	vector<Ptr<CMesh>>   m_pAniData;
+
 	unsigned short m_sId;
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;

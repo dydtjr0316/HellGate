@@ -36,7 +36,6 @@
 
 // UI
 #include "TemperUiScript.h"
-#include "MonsterHpUiScript.h"
 
 using namespace std;
 
