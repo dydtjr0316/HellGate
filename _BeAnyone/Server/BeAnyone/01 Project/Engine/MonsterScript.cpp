@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "MonsterScript.h"
-#include "MonsterHpUiScript.h"
 #include "RenderMgr.h"
+
 int attackcnt = 0;
+
 CMonsterScript::CMonsterScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
 {
@@ -18,20 +19,10 @@ CMonsterScript::CMonsterScript()
 		pMonsterUi->AddComponent(new CTransform);
 		pMonsterUi->AddComponent(new CMeshRender);
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
-		if (i == 0) {
-			if (i == 1) {
-				vScale = Vector3(350.f, 20.f, 1.f);
-			}
-			pMonsterUi->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
-				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
-				, 1.f));
-		}
-		else if (i == 1) {
+		
+		if (i == 1) 
 			vScale = Vector3(360.f, 2.f, 1.f);
-			pMonsterUi->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
-				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
-				, 1.f));
-		}
+	
 		pMonsterUi->Transform()->SetLocalScale(vScale);
 		pMonsterUi->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 
@@ -44,14 +35,6 @@ CMonsterScript::CMonsterScript()
 		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
 		pMonsterUi->MeshRender()->SetMaterial(pMtrl->Clone());
 
-		if (i == 0) {
-			pMonsterUi->AddComponent(new CMonsterHpUiScript);
-			CMonsterHpUiScript* uiScript = pMonsterUi->GetScript<CMonsterHpUiScript>();
-			uiScript->SetObject(pMonsterUi);
-			uiScript->SetMonsterObject(GetObj());
-			uiScript->SetPlayerObject(g_Object.find(g_myid)->second);
-		}
-
 		// AddGameObject
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Monster")->AddGameObject(pMonsterUi);
 
@@ -62,12 +45,24 @@ CMonsterScript::CMonsterScript()
 			m_pUnderUi = pMonsterUi;
 		}
 	}
+
+	// Child Dummy 
+	CGameObject* childDummy = new CGameObject;
+	childDummy->SetName(L"ChildDummy");
+	childDummy->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+	childDummy->AddComponent(new CTransform);
+	childDummy->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 0.0f));
+	childDummy->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Monster")->AddGameObject(childDummy);
+	m_pChildDummy = childDummy;
 }
 
 CMonsterScript::~CMonsterScript()
 {
 	DeleteObject(m_pUi);
 	DeleteObject(m_pUnderUi);
+	DeleteObject(m_pChildDummy);
 }
 
 
@@ -79,7 +74,7 @@ void CMonsterScript::update()
 	if (monsterScript->GetBisAttack())
 	{
 		monsterScript->AnimClipReset();
-		monsterScript->Setcnt(monsterScript->Getcnt()+DT);
+		monsterScript->Setcnt(monsterScript->Getcnt() + DT);
 		SetAnimation(MONSTER_ANI_TYPE::DEAD);
 	}
 	if (monsterScript->Getcnt() > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack())
@@ -92,35 +87,40 @@ void CMonsterScript::update()
 		g_Object.erase(m_sId);
 	}
 
-
 	//------
 	// ui
 	//------
 
+	if (m_bSetChild == false) {
+		GetObj()->AddChild(m_pChildDummy);
+		m_pChildDummy->AddChild(m_pUi);
+		m_bSetChild = true;
+	}
+
 	Vector3 MonsterPos = GetObj()->Transform()->GetLocalPos();
 
 	Vector3 UiPos = m_pUi->Transform()->GetLocalPos();
+	Vector3 UiUnderPos = m_pUnderUi->Transform()->GetLocalPos();
 	Vector3 PlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
 	Vector3 UIscale = m_pUi->Transform()->GetLocalScale();
 
-	UiPos.x = MonsterPos.x - 100.f;
-	UiPos.y = MonsterPos.y + 300.f;
-	UiPos.z = MonsterPos.z;
-	m_pUi->Transform()->SetLocalPos(UiPos);
+	m_pChildDummy->Transform()->SetLocalRot(Vector3(PlayerRot.x, PlayerRot.z, -PlayerRot.y) + Vector3(-XM_PI / 2, 0, XM_PI));
 
-	m_pUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
+	// Ui Under Bar
+	UiUnderPos = Vector3(MonsterPos.x, MonsterPos.y + 300.f, MonsterPos.z);
+	m_pUnderUi->Transform()->SetLocalPos(UiUnderPos);
+	m_pUnderUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
 
+	// Ui Bar
 	// 체력 줄이는
-	m_pUi->Transform()->SetLocalScale(Vector3(static_cast<float>(m_sHp*3.5f), UIscale.y, UIscale.z));
-	
-	
+	m_pUi->Transform()->SetLocalScale(Vector3(static_cast<float>(m_sHp * 3.5f), UIscale.y, UIscale.z));
+	UiPos = Vector3(0.0f, 0.f, 0.f);
+	float decresedHp = 350.f - static_cast<float>(m_sHp * 3.5f);
+	UiPos.x -= decresedHp / 2;
+	UiPos.y = 300.f;
+	m_pUi->Transform()->SetLocalPos(UiPos);
+	//m_pUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
 
-
-	// Transform 월드 좌표정보 얻기
-	//Vector3 vPos = Transform()->GetLocalPos();
-
-	//// 수정된 좌표를 다시 세팅하기.
-	//Transform()->SetLocalPos(vPos);
 }
 
 void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
