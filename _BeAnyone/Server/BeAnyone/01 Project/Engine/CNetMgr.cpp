@@ -128,7 +128,7 @@ void CNetMgr::Send_LogIN_Packet()
 	cin >> tempName;
 	sprintf_s(l_packet.name, tempName);
 	strcpy_s(name, l_packet.name);
-
+	cout << "CS_LOGIN 보냄 -> "<<g_myid << endl;
 	//cout << sizeof(l_packet) << endl << endl;
 
 	Send_Packet(&l_packet);
@@ -266,6 +266,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
+		cout << "SC_PACKET_LOGIN_OK :  "<<g_myid << endl;
 
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
@@ -285,7 +286,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		{
 			if (CheckObjType(id) == OBJ_TYPE::PLAYER)
 			{
-				if (0 == g_Object.count(id))
+				if (0 == g_Object.count(id)/*&& (g_Object.find(id)!= g_Object.end())*/)
 				{
 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 

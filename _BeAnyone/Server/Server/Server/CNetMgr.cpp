@@ -447,7 +447,7 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
     pUser->SetName(name);
     pUser->GetLock().unlock();
     pUser->GetName()[MAX_ID_LEN] = NULL;
-    m_pSendMgr->Send_LoginOK_Packet(user_id);
+    // 0624
     pUser->Insert_Sector();
 
     unordered_set<int> new_viewList;
@@ -527,8 +527,10 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     }
     break;
     case CS_LOGIN: {
-        cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
-        cout << packet->name << endl;
+        cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf) ;
+        cout << "send loginok packet" << endl;
+        m_pSendMgr->Send_LoginOK_Packet(user_id);
+
         Enter_Game(user_id, packet->name);
     }
                  break;
@@ -629,9 +631,13 @@ void CNetMgr::Worker_Thread()
         EXOVER* exover = reinterpret_cast<EXOVER*>(over);
         uShort user_id = static_cast<uShort>(key);
         
-        cout << "ID: " << user_id << endl;
-        cout << "iobyte: " << io_byte << endl;
-        cout << "-----------------------" << endl;
+        //cout << "ID: " << user_id << endl;
+        //cout << "iobyte: " << io_byte << endl;
+        //cout << "-----------------------" << endl;
+        if (user_id != 10000)
+        {
+
+        }
         CClient* pUser = CAST_CLIENT(m_pMediator->Find( user_id));
         switch (exover->op) {
         case ENUMOP::OP_RECV:
@@ -727,8 +733,8 @@ void CNetMgr::Worker_Thread()
             ZeroMemory(&exover->over, sizeof(exover->over));
             AcceptEx(g_listenSocket, c_socket, exover->io_buf, NULL,
                 sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
-        
             m_pSendMgr->Send_ID_Packet(user_id);
+
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_NPC:

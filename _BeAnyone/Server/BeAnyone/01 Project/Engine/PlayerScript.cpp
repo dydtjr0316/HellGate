@@ -155,6 +155,7 @@ void CPlayerScript::update()
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
 		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		CountTime();
 	}
 
 
@@ -168,7 +169,6 @@ void CPlayerScript::update()
 	}
 
 
-	CountTime();
 	if (m_ftimeCount >= m_fDelayTime)
 	{
 		system_clock::time_point start = system_clock::now();
