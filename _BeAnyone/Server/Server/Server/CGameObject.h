@@ -1,5 +1,4 @@
 #pragma once
-class CSector;
 class CGameObject
 {
 public:
@@ -19,7 +18,6 @@ public: // 상속 ,, 함수
 	const OBJSTATUS& GetStatus() { return m_status; }
 	const SOCKET& GetSocket() { return m_s; }
 	mutex& GetLock() { return m_lock; }
-	const _tSector GetSector() { return m_tSector; }
 	EXOVER& GetExover() { return m_Exover; }
 	void ZeroMemory_recv_over() { ZeroMemory(&m_Exover.over, sizeof(m_Exover.over)); }
 	char* Get_Packet_buf() { return m_packet_buf; }
@@ -60,8 +58,6 @@ public: // 상속 ,, 함수
 	void SetPrev_Size(const int& size) { m_prev_size = size; }
 	void SetName(char* name) { strcpy_s(m_name, name); }
 	void SetStatus(const OBJSTATUS& status) { m_status = status; }
-	void SetSector(const int& x, const int& z) { m_tSector.x = x; m_tSector.z = z; }
-	void SetSector(const _tSector& tsec) { m_tSector = tsec; }
 
 	void SetSocket_Zero() { m_s = 0; }
 	void SetSocket(const SOCKET& s) { m_s = s; }
@@ -92,7 +88,6 @@ protected:
 	// 구조체
 	OBJSTATUS m_status;
 	SOCKET	m_s;
-	_tSector m_tSector;
 	mutex m_lock;
 	EXOVER m_Exover;
 

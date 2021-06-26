@@ -312,24 +312,10 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
 
-    _tSector oldSector = pClient->GetSector();
     pClient->SetIsMoving(isMoving);
-    pClient->Change_Sector(oldSector);
-    unordered_set<int> new_viewList;
-
-    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
     unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
 
-    if (vSectors.size() != 0)
-    {
-        for (auto& user : vSectors)
-        {
-            new_viewList.insert(user);
-        }
-    }
-    
-
-    for (auto& ob : new_viewList)
+    for (auto& ob : vSectors)
     {
         //시야에 새로 들어온 객체 구분
 
@@ -368,7 +354,7 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
     }
     for (auto& ob : old_viewList)
     {
-        if (new_viewList.count(ob) == 0)
+        if (vSectors.count(ob) == 0)
         {
             pClient->GetViewList().erase(ob);
             m_pSendMgr->Send_Leave_Packet(user_id, ob);
