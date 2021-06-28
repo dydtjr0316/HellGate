@@ -23,7 +23,8 @@ void CQuadTree::PrintQuadTree()
 		cout << "자식이 있는 노드 입니다" << endl << endl;
 		for (auto& obj : m_pChild)
 		{
-			obj->PrintQuadTree();
+			if(obj->GetPoint().size()!=0)
+				obj->PrintQuadTree();
 		}
 	}
 	cout << "------------------" << endl;
@@ -119,6 +120,7 @@ bool CQuadTree::IsSameObject(const uShort& p1, const uShort& p2)
 }
 void CQuadTree::sub_Divide()
 {
+	CQuadTree* temp;
 	CRectangle childRect[CHILD_NODE_SIZE];//용석
 	childRect[0] = CRectangle(m_boundary.GetX() + m_boundary.GetW() / 2, m_boundary.GetZ() - m_boundary.GetH() / 2,
 		m_boundary.GetW() / 2, m_boundary.GetH() / 2);
@@ -130,11 +132,12 @@ void CQuadTree::sub_Divide()
 		m_boundary.GetW() / 2, m_boundary.GetH() / 2);
 	for (int i = 0;i< CHILD_NODE_SIZE;i++)
 	{
-		CQuadTree* temp = new CQuadTree(childRect[i], MAX_PLAYER_IN_NODE);
-		temp->m_iDepth = m_iDepth++;
+		temp = new CQuadTree(childRect[i], MAX_PLAYER_IN_NODE);
 		m_pChild.push_back(temp);
 		temp->setParent(this);
 	}
+	temp->m_iDepth = m_iDepth++;
+
 	SubDivideToChild();
 	m_bisDivide = true;
 }

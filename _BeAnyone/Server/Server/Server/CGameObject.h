@@ -7,9 +7,6 @@ public:
 public: // 상속 ,, 함수
 	// GET
 	const uShort& GetID() { return m_id; }
-	//const float& GetX() { return m_iX; }
-	//const float& GetY() { return m_iY; }
-	//const float& GetZ() { return m_iZ; }
 	const int& GetClientTime() { return m_iclinet_time; }
 	int Get_Prev_Size() { return m_prev_size; }
 	//
@@ -75,7 +72,6 @@ public:
 protected:
 	// int
 	uShort		m_id;	// id
-	//float		m_iX, m_iY, m_iZ; // 좌표
 	int   m_prev_size;
 
 	bool m_bisMoving;

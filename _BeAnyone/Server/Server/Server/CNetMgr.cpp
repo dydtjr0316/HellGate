@@ -19,75 +19,69 @@ void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
     LocalFree(lpMsgBuf);
 }
 
-//void CNetMgr::Random_Move_NPC(const int& id)
-//{
-//    CGameObject* NPCObj = m_pMediator->Find( id);
-//    float x = NPCObj->GetX();
-//    float y = NPCObj->GetY();
-//    
-//
-//    // 체인지 섹터 함수 호출
-//    _tSector oldSector;
-//    oldSector = NPCObj->GetSector();
-//
-//    switch (rand() % 4)
-//    {
-//    case 0: if (x > 0)x--; break;
-//    case 1: if (x < WORLD_WIDTH - 1)x++; break;
-//    case 2: if (y > 0)y--; break;
-//    case 3: if (y < WORLD_HEIGHT - 1)y++; break;
-//    }
-//
-//    NPCObj->SetX(x);
-//    NPCObj->SetY(y);
-//    
-//    NPCObj->Change_Sector(oldSector);
-//
-//    for (auto& vSec : NPCObj->Search_Sector()) {
-//        for (auto& clientID : vSec)
-//        {
-//            if (!m_pMediator->IsType(clientID))continue;
-//
-//            CGameObject* ClientObj = m_pMediator->Find(clientID);
-//            if (ClientObj->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
-//
-//            if (is_near(clientID, id))
-//            {
-//                ClientObj->GetLock().lock();
-//                if (0 == CAST_CLIENT(ClientObj)->GetViewList().count(id))  // map으로 바꾸기
-//                {
-//                    //cout << "뷰리스트에 몬스터 없어" << endl;
-//                    ClientObj->GetLock().unlock();
-//                    CAST_CLIENT(ClientObj)->GetViewList().insert(id);
-//                    Send_Enter_Packet(clientID, id);
-//                }
-//                else
-//                {
-//                    //cout << "뷰리스트에 npc 있어" << endl;
-//                    ClientObj->GetLock().unlock();
-//                    Send_Move_Packet(clientID, id);
-//                }
-//            }
-//            else
-//            {
-//                ClientObj->GetLock().lock();
-//                if (0 == CAST_CLIENT(ClientObj)->GetViewList().count(id))
-//                {
-//                    ClientObj->GetLock().unlock();
-//                }
-//                else
-//                {
-//                    ClientObj->GetLock().unlock();
-//                    CAST_CLIENT(ClientObj)->GetViewList().erase(id);
-//                    Send_Leave_Packet(clientID, id);
-//                }
-//
-//            }
-//        }
-//    }
-//}
+void CNetMgr::Random_Move_Monster(const int& Monster_id)
+{
+    CGameObject* MonsterObj = m_pMediator->Find(Monster_id);
+    Vector3 MonsterPos = MonsterObj->GetLocalPosVector();
 
-//void CNetMgr::Random_Move_Monster(const int& id)
+    switch (rand() % 4)
+    {
+    case 0: if (MonsterPos.x > 0)MonsterPos.x--; break;
+    case 1: if (MonsterPos.x < WORLD_WIDTH - 1)MonsterPos.x++; break;
+    case 2: if (MonsterPos.z > 0)MonsterPos.z--; break;
+    case 3: if (MonsterPos.z < WORLD_HEIGHT - 1)MonsterPos.z++; break;
+    }
+    MonsterObj->SetPosV(MonsterPos);
+    unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id)));
+    unordered_set<uShort> new_viewList;
+
+    for (auto& ids : vSectors)new_viewList.insert(ids);
+
+    // new old viewlist를 알아야함 ..
+
+    //for (auto& clientID : new_viewList)
+    //{
+    //    if (!m_pMediator->IsType(clientID, OBJECT_TYPE::CLIENT))continue;
+    //    CGameObject* ClientObj = m_pMediator->Find(clientID);
+    //    if (ClientObj->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
+
+    //    if (is_near(clientID, id))
+    //    {
+    //        ClientObj->GetLock().lock();
+    //        if (0 == CAST_CLIENT(ClientObj)->GetViewList().count(id))  // map으로 바꾸기
+    //        {
+    //            cout << "뷰리스트에 몬스터 없어" << endl;
+    //            ClientObj->GetLock().unlock();
+    //            CAST_CLIENT(ClientObj)->GetViewList().insert(id);
+    //            Send_Enter_Packet(clientID, id);
+    //        }
+    //        else
+    //        {
+    //            cout << "뷰리스트에 npc 있어" << endl;
+    //            ClientObj->GetLock().unlock();
+    //            Send_Move_Packet(clientID, id);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        ClientObj->GetLock().lock();
+    //        if (0 == CAST_CLIENT(ClientObj)->GetViewList().count(id))
+    //        {
+    //            ClientObj->GetLock().unlock();
+    //        }
+    //        else
+    //        {
+    //            ClientObj->GetLock().unlock();
+    //            CAST_CLIENT(ClientObj)->GetViewList().erase(id);
+    //            Send_Leave_Packet(clientID, id);
+    //        }
+
+    //    }
+
+    //}
+}
+
+//void CNetMgr::Random_Move_NPC(const int& id)
 //{
 //    CGameObject* MonsterObj = m_pMediator->Find( id);
 //    Vector3 monsterPos = MonsterObj->GetLocalPosVector();
@@ -422,12 +416,11 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
 
     unordered_set<int> new_viewList;
 
-    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
     unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
 
     for (auto& id : vSectors)
     {
-        if (m_pMediator->Find(id)->GetID() == m_pMediator->Find(user_id)->GetID())continue;
+        if (id == user_id)continue;
         if (m_pMediator->Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
         /* if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
          {
@@ -452,17 +445,6 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
     }
 
     pUser->SetStatus(OBJSTATUS::ST_ACTIVE);
-}
-
-
-void CNetMgr::Connect()
-{
-    
-}
-
-void CNetMgr::CloseSocket()
-{
-   
 }
 
 void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
@@ -765,6 +747,7 @@ void CNetMgr::Worker_Thread()
 
 void CNetMgr::DeadReckoning_Thread()
 {
+    cout << "deadReckoning_ Thread Working" << endl;
     if (m_pMediator->ReckonerSize() == 0)return;
     CGameObject* obj = nullptr;
     cs_packet_move* drmPacket = nullptr;
@@ -783,7 +766,6 @@ void CNetMgr::DeadReckoning_Thread()
 
         }
     }
-    cout << "deadReckoning_ Thread Working" << endl;
 }
 
 void CNetMgr::Timer_Worker()

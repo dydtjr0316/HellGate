@@ -10,7 +10,6 @@ CGameObject::CGameObject()
     m_iclinet_time = 0;
     m_status = OBJSTATUS::ST_FREE;
     m_s = 0;
-    m_tSector;
     m_lock;
     m_Exover;
     m_deadReckoning_Packet = nullptr;
@@ -49,7 +48,7 @@ void CGameObject::SetIsMoving(const bool& isMoving)
 
 void CGameObject::Insert_Sector()
 {
-    SetSector((int)m_v3LocalPosVector.x / SECTOR_ROW_Length, (int)m_v3LocalPosVector.z / SECTOR_COL_Length);
+    //SetSector((int)m_v3LocalPosVector.x / SECTOR_ROW_Length, (int)m_v3LocalPosVector.z / SECTOR_COL_Length);
     g_QuadTree.Insert(this);
     
    // CSectorMgr::GetInst()->Emplace(m_tSector.x, m_tSector.z, m_id);
