@@ -65,9 +65,13 @@ int main()
 		case 2:
 			cout << "Insert id : ";
 			cin >> searchid;
-			g_Medi.Delete_Obj(searchid);
-			if (g_Medi.Find(searchid) == nullptr)break;
+			if (g_Medi.Find(searchid) == nullptr)
+			{
+				cout << "없는 아이디 입니다." << endl;
+				break;
+			}
 			qt->Delete(g_Medi.Find(searchid));
+			g_Medi.Delete_Obj(searchid);
 			qt->PrintQuadTree();
 			break;
 		case 3:

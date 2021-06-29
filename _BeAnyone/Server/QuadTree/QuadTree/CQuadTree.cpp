@@ -10,6 +10,8 @@ void CQuadTree::PrintQuadTree()
 	cout << "------------------" << endl;
 	cout << "DEPTH : " << m_iDepth << endl;
 	cout << "------------------" << endl;
+	cout << m_boundary.GetX() << " - " << m_boundary.GetZ() << " - "
+		<< m_boundary.GetW() << " - " << m_boundary.GetH() << endl;
 	if (!m_bisDivide)
 	{
 		for (auto& obj : m_vpPlayers)
@@ -52,18 +54,12 @@ bool CQuadTree::insert(CPlayer* p)
 			sub_Divide();
 		}
 
-		{
-			////이자리에 부모노드 세팅과 자료 넘겨주는 부분이 필요함
-
-		//if (m_pParent != nullptr)
-		//{
-
-		//}
-		}
 		for (auto& obj : m_pChild)
 		{
-			if (obj->insert(p))return true;
+			if (obj->insert(p))
+				return true;
 		}
+
 	}
 }
 
@@ -72,9 +68,13 @@ void CQuadTree::Delete(CPlayer* p)
 	// 해당 플레이어 id로 현재위치한 노드를 찾는다 
 	// // 자식노드가 없는 노드중 플레이어 좌표를 취하는곳
 	int cnt = 0;
+	this;
 
-	if (!m_bisDivide && m_boundary.contains(p))		// player p를 포함하는 최하위 노드인가?
+	if (!m_bisDivide && m_boundary.contains(p))		// player p를 포함하는 리프 노드인가?
 	{
+		cout << "Test 출력" << endl;
+		cout << m_boundary.GetX() << " - " << m_boundary.GetZ() << " - "
+			<< m_boundary.GetW() << " - " << m_boundary.GetH() << endl;
 		// 노드에서 해당 플레이어를 뺀다
 		for (auto& playerID : m_vpPlayers)
 		{
@@ -93,17 +93,20 @@ void CQuadTree::Delete(CPlayer* p)
 		{
 			cnt += obj->GetPoint().size();
 		}
-		if (cnt < 4)
+		if (cnt <= 4)
 		{
 			for (auto& obj : m_pParent->GetChild())
 			{
-				for (auto& sub : obj->GetPoint())
-					m_pParent->GetPoint().emplace(sub);
-				//obj->GetPoint().clear();
+				for (auto& sub : obj->GetPoint())	//0629 이근처 부분 뒤죽박죽임 m_vplayer를쓸거면 그거만 쓰는걸로 정리하기 존나 헷갈리네 ㅅㅂ
+				{
+					obj->GetParent()->GetPoint().emplace(sub);
+					if (obj->GetParent()->m_bisDivide)
+						obj->GetParent()->m_bisDivide = false;
+				}
 				SafeDelete(obj);
 			}
-
 		}
+		//m_pParent->m_bisDivide = false;
 	}
 	else
 	{
@@ -133,10 +136,16 @@ void CQuadTree::sub_Divide()
 	for (int i = 0;i< CHILD_NODE_SIZE;i++)
 	{
 		temp = new CQuadTree(childRect[i], MAX_PLAYER_IN_NODE);
-		m_pChild.push_back(temp);
 		temp->setParent(this);
+		m_pChild.push_back(temp);
+
 	}
-	temp->m_iDepth = m_iDepth++;
+	for (auto& obj : m_pChild)
+	{
+		obj->m_iDepth = this->m_iDepth + 1;
+		cout << obj->GetParent()->m_boundary.GetX() << " - " << obj->GetParent()->m_boundary.GetZ() << " - "
+			<< obj->GetParent()->m_boundary.GetW() << " - " << obj->GetParent()->m_boundary.GetH() << endl;
+	}
 
 	SubDivideToChild();
 	m_bisDivide = true;
@@ -151,12 +160,14 @@ void CQuadTree::SubDivideToChild()
 		{
 			if (childNode->m_boundary.contains(g_Medi.Find(player)))
 			{
+				/*m_vpPlayers.erase(player);*/
 				childNode->m_vpPlayers.emplace(player);
 				break;
 			}
 		}
 	}
-	m_vpPlayers.clear();
+	if (m_bisDivide)
+		m_vpPlayers.clear();
 }
 
 
