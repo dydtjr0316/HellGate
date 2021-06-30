@@ -11,31 +11,47 @@ int main()
 {
 	system_clock::time_point start = system_clock::now();
 	{
-	/*CQuadTree* qt = new CQuadTree(CRectangle(3200.f, 3200.f, 3200.f, 3200.f), MAX_PLAYER_IN_NODE);
-	srand((unsigned int)time(NULL));
-	cout << "----------insert start-------------" << endl;
-	for (int i = 0; i < 10; i++)
-	{
-		CPlayer *p = new CPlayer(id, (float)(rand() % 6400), (float)(rand() % 6400));
-		id++;
-		cout << p->GetX() << ", " << p->GetZ() << endl;
-		qt->insert(p);
+		/*CQuadTree* qt = new CQuadTree(CRectangle(3200.f, 3200.f, 3200.f, 3200.f), MAX_PLAYER_IN_NODE);
+		srand((unsigned int)time(NULL));
+		cout << "----------insert start-------------" << endl;
+		for (int i = 0; i < 10; i++)
+		{
+			CPlayer *p = new CPlayer(id, (float)(rand() % 6400), (float)(rand() % 6400));
+			id++;
+			cout << p->GetX() << ", " << p->GetZ() << endl;
+			qt->insert(p);
+		}
+		cout << "----------insert end-------------" << endl;
+
+		Print(qt);
+
+		Enter();
+		cout << "----------search-------------" << endl;
+		CRectangle look(4000.f, 4000.f, 1000.f, 1000.f);
+		unordered_set<uShort> m_vpPlayers = qt->search(look);
+
+		for (auto& obj : m_vpPlayers)
+		{
+			cout << "player[" << obj->GetID() << "]  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
+		}*/
 	}
-	cout << "----------insert end-------------" << endl;
-
-	Print(qt);
-
-	Enter();
-	cout << "----------search-------------" << endl;
-	CRectangle look(4000.f, 4000.f, 1000.f, 1000.f);
-	unordered_set<uShort> m_vpPlayers = qt->search(look);
-
-	for (auto& obj : m_vpPlayers)
-	{
-		cout << "player[" << obj->GetID() << "]  ->" << obj->GetX() << ", " << obj->GetZ() << endl;
-	}*/
-}
 	CQuadTree* qt = new CQuadTree(CRectangle(3200.f, 3200.f, 3200.f, 3200.f), MAX_PLAYER_IN_NODE);
+	CPlayer* p;
+	{
+		p = new CPlayer(id, 100.f, 100.f);
+		qt->insert(p);
+		g_Medi.Add(p, id++);
+		p = new CPlayer(id, 6000.f, 6000.f);
+		qt->insert(p);
+		g_Medi.Add(p, id++);
+		p = new CPlayer(id, 6000.f, 1000.f);
+		qt->insert(p);
+		g_Medi.Add(p, id++);
+		p = new CPlayer(id, 1000.f, 6000.f);
+		qt->insert(p);
+		g_Medi.Add(p, id++);
+		qt->PrintQuadTree();
+	}
 	int i = 0;
 	float PlayerX, PlayerY;
 	CPlayer* pTemp;
@@ -49,7 +65,7 @@ int main()
 		cout << "1: Insert Player" << endl;
 		cout << "2: Delete Player" << endl;
 		cout << "3: Search Sector" << endl;
-		
+
 		cout << "User Input : ";
 		cin >> i;
 		switch (i)

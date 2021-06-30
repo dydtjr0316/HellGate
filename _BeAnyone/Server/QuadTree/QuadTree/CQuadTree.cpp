@@ -10,14 +10,19 @@ void CQuadTree::PrintQuadTree()
 	cout << "------------------" << endl;
 	cout << "DEPTH : " << m_iDepth << endl;
 	cout << "------------------" << endl;
+
 	cout << m_boundary.GetX() << " - " << m_boundary.GetZ() << " - "
 		<< m_boundary.GetW() << " - " << m_boundary.GetH() << endl;
 	if (!m_bisDivide)
 	{
-		for (auto& obj : m_vpPlayers)
+		if (m_vpPlayers.size() != 0)
 		{
-			CPlayer* temp = g_Medi.Find(obj);
-			cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetX() << ", " << temp->GetZ() << ")" << endl;
+			for (auto& obj : m_vpPlayers)
+			{
+
+				CPlayer* temp = g_Medi.Find(obj);
+				cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetX() << ", " << temp->GetZ() << ")" << endl;
+			}
 		}
 	}
 	else
@@ -25,7 +30,7 @@ void CQuadTree::PrintQuadTree()
 		cout << "자식이 있는 노드 입니다" << endl << endl;
 		for (auto& obj : m_pChild)
 		{
-			if(obj->GetPoint().size()!=0)
+			if(obj->GetPoint().size()!=0||obj->m_bisDivide)
 				obj->PrintQuadTree();
 		}
 	}
@@ -43,23 +48,23 @@ bool CQuadTree::insert(CPlayer* p)
 	if (!m_boundary.contains(p))
 		return false;
 
-	if (m_vpPlayers.size() < m_icapacity)
+	if (!m_bisDivide)
 	{
-		m_vpPlayers.emplace(p->GetID());
+		if (m_vpPlayers.size() < m_icapacity)	// leaf node 일때
+		{
+			m_vpPlayers.emplace(p->GetID());
+		}
+		else
+		{
+			sub_Divide();
+			for (auto& obj : m_pChild)
+				if (obj->insert(p))return true;
+		}
 	}
 	else
 	{
-		if (!m_bisDivide)
-		{
-			sub_Divide();
-		}
-
 		for (auto& obj : m_pChild)
-		{
-			if (obj->insert(p))
-				return true;
-		}
-
+			if (obj->insert(p))return true;
 	}
 }
 
@@ -99,21 +104,23 @@ void CQuadTree::Delete(CPlayer* p)
 			{
 				for (auto& sub : obj->GetPoint())	//0629 이근처 부분 뒤죽박죽임 m_vplayer를쓸거면 그거만 쓰는걸로 정리하기 존나 헷갈리네 ㅅㅂ
 				{
-					obj->GetParent()->GetPoint().emplace(sub);
-					if (obj->GetParent()->m_bisDivide)
-						obj->GetParent()->m_bisDivide = false;
+					m_pParent->GetPoint().emplace(sub);
+					if (m_pParent->m_bisDivide)
+						m_pParent->m_bisDivide = false;
 				}
-				SafeDelete(obj);
 			}
+
 		}
 		//m_pParent->m_bisDivide = false;
 	}
 	else
 	{
+		//if (m_pChild.size() ==0)return;
 		for (auto& childNode : m_pChild)
 		{
 			childNode->Delete(p);
 		}
+
 	}
 }
 bool CQuadTree::IsSameObject(const uShort& p1, const uShort& p2)
@@ -147,8 +154,8 @@ void CQuadTree::sub_Divide()
 			<< obj->GetParent()->m_boundary.GetW() << " - " << obj->GetParent()->m_boundary.GetH() << endl;
 	}
 
-	SubDivideToChild();
 	m_bisDivide = true;
+	SubDivideToChild();
 }
 void CQuadTree::SubDivideToChild()
 {
