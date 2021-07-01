@@ -16,8 +16,8 @@ public:  //oper
 	bool insert(CPlayer* p);
 	void Delete(CPlayer* p);
 	void sub_Divide();
-	unordered_set<uShort> search(CRectangle& range);
-public: // get
+	unordered_set<uShort>  search(CRectangle& range);
+public: // get 
 	unordered_set<uShort>& GetPoint() { return m_vpPlayers; }
 	CQuadTree* GetParent() { return m_pParent; }
 	vector<CQuadTree*>& GetChild() { return m_pChild; }

@@ -182,8 +182,8 @@ void CQuadTree::SubDivideToChild()
 
 unordered_set<uShort> CQuadTree::search(CRectangle& range)
 {
-	//  쿼드트리 부모 자식 구조 바꾸면서 이부분 안바꿔도 되는지 확인해 볼 것
 	unordered_set<uShort> found;
+	//  쿼드트리 부모 자식 구조 바꾸면서 이부분 안바꿔도 되는지 확인해 볼 것
 	{
 		/*if (!m_boundary.intersects(range))
 		return found;
@@ -196,7 +196,7 @@ unordered_set<uShort> CQuadTree::search(CRectangle& range)
 		}
 	}*/
 	}
-	if (m_boundary.intersects(range))
+	if (!m_bisDivide && m_boundary.intersects(range))
 	{
 		for (auto& p : m_vpPlayers)
 		{

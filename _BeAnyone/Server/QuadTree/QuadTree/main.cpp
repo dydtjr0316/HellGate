@@ -54,11 +54,10 @@ int main()
 	}
 	int i = 0;
 	float PlayerX, PlayerY;
+	uShort deleteID;
 	CPlayer* pTemp;
 	unordered_set<uShort> m_vpPlayers;
 	CRectangle temp_look;
-	float nodeX, nodeY;
-	float sectorX, sectorY;
 	uShort searchid;
 	while (true)
 	{
@@ -80,20 +79,21 @@ int main()
 			break;
 		case 2:
 			cout << "Insert id : ";
-			cin >> searchid;
-			if (g_Medi.Find(searchid) == nullptr)
+			cin >> deleteID;
+			if (g_Medi.Find(deleteID) == nullptr)
 			{
 				cout << "없는 아이디 입니다." << endl;
 				break;
 			}
-			qt->Delete(g_Medi.Find(searchid));
-			g_Medi.Delete_Obj(searchid);
+			qt->Delete(g_Medi.Find(deleteID));
+			g_Medi.Delete_Obj(deleteID);
 			qt->PrintQuadTree();
 			break;
 		case 3:
-			cout << "Insert Points & Sector size" << endl;
-			cin >> nodeX >> nodeY >> sectorX >> sectorY;
-			temp_look = CRectangle(nodeX, nodeY, sectorX, sectorY);
+			cout << "Insert Player ID" << endl;
+			cin >> searchid;
+			temp_look = CRectangle(g_Medi.Find(deleteID));
+			//CRectangle T = CRectangle(g_Medi.Find(deleteID));
 			m_vpPlayers = qt->search(temp_look);
 			for (auto& obj : m_vpPlayers)
 			{
