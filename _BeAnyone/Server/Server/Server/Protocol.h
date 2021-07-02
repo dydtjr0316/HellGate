@@ -30,8 +30,10 @@ constexpr int START_NPC = END_MONSTER;
 constexpr int MAX_NPC = 2000;
 constexpr int END_NPC = START_NPC + MAX_NPC;
 
-constexpr int WORLD_WIDTH = 12800;
-constexpr int WORLD_HEIGHT = 12800;
+//constexpr int WORLD_WIDTH = 12800;
+//constexpr int WORLD_HEIGHT = 12800;
+constexpr int WORLD_WIDTH = 25600;
+constexpr int WORLD_HEIGHT = 25600;
 
 constexpr int VIEW_LIMIT =  1280;				// 시야 반지름
 

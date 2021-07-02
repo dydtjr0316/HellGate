@@ -33,7 +33,6 @@
 #include "GridScript.h"
 #include "SwordScript.h"
 #include "MonsterScript.h"
-
 // UI
 #include "TemperUiScript.h"
 #include "MonsterHpUiScript.h"
@@ -691,7 +690,6 @@ void CSceneMgr::init()
 	// ATTACK
 	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@Attack1.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
-
 	
 
 	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
@@ -721,30 +719,6 @@ void CSceneMgr::init()
 	SwordScript->SetBoneFinalMat(pPlayerObj->Animator3D()->GetFinalBoneMat());
 
 	//m_pCurScene->AddGameObject(L"Weapone", pSword, false);
-
-	// =============
-    // Monster 파일 로드
-    // =============
-	// 몬스터
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
-	//pMeshData->Save(pMeshData->GetPath());
-
-
-	//CGameObject* pMonsterObj = nullptr;
-	//pMonsterObj = pMeshData->Instantiate();
-	//pMonsterObj->SetName(L"FireMonster");
-	//pMonsterObj->FrustumCheck(false);
-	//pMonsterObj->Transform()->SetLocalPos(Vector3(200.f, 200, 200.f));
-	//pMonsterObj->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
-	//pMonsterObj->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
-	//pMonsterObj->AddComponent(new CCollider);
-	//pMonsterObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_walking");
-	//pMonsterObj->Collider()->SetBoundingBox(BoundingBox(pMonsterObj->Transform()->GetLocalPos(), pMonsterObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	//pMonsterObj->Collider()->SetBoundingSphere(BoundingSphere(pMonsterObj->Transform()->GetLocalPos(), pMonsterObj->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-	//// Script 설정
-	//pMonsterObj->AddComponent(new CMonsterScript);
-	//m_pCurScene->AddGameObject(L"Monster", pMonsterObj, false);
-
 	
 
 	// ==================
@@ -917,8 +891,8 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CMeshRender);
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
-	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 10.f, 0.f));
-	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f /** 64.f*/, 600.f, 200.f /** 64.f*/)); // 2배함
+	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 20.f, 0.f));
+	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f , 300.f * TERRAIN_YSIZE, 200.f)); // 2배함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
