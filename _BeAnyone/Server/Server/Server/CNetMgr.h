@@ -11,15 +11,13 @@ class CNetMgr
 public:
 	CNetMgr() { m_pSendMgr = new CSendMgr; m_pMediator = new CMediatorMgr; }
 	~CNetMgr() {}
-public:
-	void Connect();
-	void CloseSocket();
+
 public:		// 패킷 수신부
 	void Process_Packet(const uShort& user_id, char* buf);
 	void Recv_Packet_Construct(const uShort& user_id, const int& io_byte);
 public:		// 실제 객체 업데이트부
-	//void Random_Move_NPC(const int& id);
-	//void Random_Move_Monster(const int& id);
+	void Random_Move_NPC(const int& Monster_id);
+	void Random_Move_Monster(const int& Monster_id);
 	void Do_Attack(const uShort& attacker, const uShort& victim);
 	void Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY);
 	void Do_Stop(const uShort& user_id, const bool& isMoving);
@@ -45,8 +43,6 @@ public:		// 패킷 전송부
 private:
 	CSendMgr* m_pSendMgr;
 	CMediatorMgr* m_pMediator;
-	SOCKET m_ListenSocket;
-	HANDLE m_IocpHandle;
 public:
 	void error_display(const char* msg, int err_no);
 };

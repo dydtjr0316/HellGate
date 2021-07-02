@@ -14,6 +14,14 @@ CRectangle::CRectangle(const float& x, const float& z, const float& w, const flo
 	this->m_fh = h;
 }
 
+CRectangle::CRectangle(CPlayer* player, const float& w, const float& h)
+{
+	this->m_fx = player->GetX();
+	this->m_fz = player->GetZ();
+	this->m_fw = w;
+	this->m_fh = h;
+}
+
 bool CRectangle::contains(CPlayer* p)
 {
 	return (p->GetX() >= m_fx - m_fw &&

@@ -1,5 +1,4 @@
 #pragma once
-class CSector;
 class CGameObject
 {
 public:
@@ -8,9 +7,6 @@ public:
 public: // 상속 ,, 함수
 	// GET
 	const uShort& GetID() { return m_id; }
-	//const float& GetX() { return m_iX; }
-	//const float& GetY() { return m_iY; }
-	//const float& GetZ() { return m_iZ; }
 	const int& GetClientTime() { return m_iclinet_time; }
 	int Get_Prev_Size() { return m_prev_size; }
 	//
@@ -19,7 +15,6 @@ public: // 상속 ,, 함수
 	const OBJSTATUS& GetStatus() { return m_status; }
 	const SOCKET& GetSocket() { return m_s; }
 	mutex& GetLock() { return m_lock; }
-	const _tSector GetSector() { return m_tSector; }
 	EXOVER& GetExover() { return m_Exover; }
 	void ZeroMemory_recv_over() { ZeroMemory(&m_Exover.over, sizeof(m_Exover.over)); }
 	char* Get_Packet_buf() { return m_packet_buf; }
@@ -60,8 +55,6 @@ public: // 상속 ,, 함수
 	void SetPrev_Size(const int& size) { m_prev_size = size; }
 	void SetName(char* name) { strcpy_s(m_name, name); }
 	void SetStatus(const OBJSTATUS& status) { m_status = status; }
-	void SetSector(const int& x, const int& z) { m_tSector.x = x; m_tSector.z = z; }
-	void SetSector(const _tSector& tsec) { m_tSector = tsec; }
 
 	void SetSocket_Zero() { m_s = 0; }
 	void SetSocket(const SOCKET& s) { m_s = s; }
@@ -73,12 +66,12 @@ public: // 상속 ,, 함수
 public:
 	void Insert_Sector();
 	void Change_Sector(const _tSector& old_sector);
+	void Change_Sector();
 
 	
 protected:
 	// int
 	uShort		m_id;	// id
-	//float		m_iX, m_iY, m_iZ; // 좌표
 	int   m_prev_size;
 
 	bool m_bisMoving;
@@ -91,7 +84,6 @@ protected:
 	// 구조체
 	OBJSTATUS m_status;
 	SOCKET	m_s;
-	_tSector m_tSector;
 	mutex m_lock;
 	EXOVER m_Exover;
 

@@ -19,8 +19,9 @@ OBJ_TYPE CheckObjType(const uShort& id)
 	else if (id >= START_MONSTER && id < END_MONSTER)return OBJ_TYPE::MONSTER;
 }
 
-const char ip[] = "221.151.160.142";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.11";
+const char ip[] = "192.168.0.7";
+//const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -96,6 +97,7 @@ void CNetMgr::Send_Packet(void* _packet)
 	EXOVER dataBuf;
 	char* packet = reinterpret_cast<char*>(_packet);
 	size_t sent;
+	DWORD flag;
 	dataBuf.wsabuf.len = packet[0];
 	dataBuf.wsabuf.buf = (char*)packet;
 	dataBuf.over = m_overlapped;
@@ -108,7 +110,7 @@ void CNetMgr::Send_Packet(void* _packet)
 		if (WSAGetLastError() == WSA_IO_PENDING)
 		{
 			WSAWaitForMultipleEvents(1, &m_overlapped.hEvent, TRUE, WSA_INFINITE, FALSE);
-			WSAGetOverlappedResult(g_Socket, &m_overlapped, (LPDWORD)&sent, FALSE, NULL);
+			WSAGetOverlappedResult(g_Socket, &m_overlapped, (LPDWORD)&sent, FALSE, &flag);
 		}
 		else
 			err_quit("WSASend");
@@ -127,7 +129,7 @@ void CNetMgr::Send_LogIN_Packet()
 	cin >> tempName;
 	sprintf_s(l_packet.name, tempName);
 	strcpy_s(name, l_packet.name);
-
+	cout << "CS_LOGIN 보냄 -> "<<g_myid << endl;
 	//cout << sizeof(l_packet) << endl << endl;
 
 	Send_Packet(&l_packet);
@@ -265,6 +267,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
+		cout << "SC_PACKET_LOGIN_OK :  "<<g_myid << endl;
 
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
@@ -284,7 +287,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		{
 			if (CheckObjType(id) == OBJ_TYPE::PLAYER)
 			{
-				if (0 == g_Object.count(id))
+				if (0 == g_Object.count(id)/*&& (g_Object.find(id)!= g_Object.end())*/)
 				{
 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 

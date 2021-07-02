@@ -35,7 +35,6 @@
 #include "MonsterScript.h"
 // UI
 #include "TemperUiScript.h"
-#include "MonsterHpUiScript.h"
 
 using namespace std;
 
@@ -706,7 +705,7 @@ void CSceneMgr::init()
 	pSword = pMeshData->Instantiate();
 	pSword->SetName(L"sword");
 	pSword->FrustumCheck(false);
-	pSword->Transform()->SetLocalPos(Vector3(0.f, 140.f, 0.f));
+	pSword->Transform()->SetLocalPos(Vector3(100.f, 320.f, 150.f));
 	pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 	pSword->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pSword->AddComponent(new CCollider);
@@ -716,10 +715,9 @@ void CSceneMgr::init()
 	// Script 설정
 	pSword->AddComponent(new CSwordScript);
 	CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
-	SwordScript->SetBoneFinalMat(pPlayerObj->Animator3D()->GetFinalBoneMat());
+	SwordScript->SetBoneFinalMat(pPlayerObj->Animator3D()->GetSwordFinalBoneMat());
 
 	//m_pCurScene->AddGameObject(L"Weapone", pSword, false);
-	
 
 	// ==================
 	// Camera Object 생성

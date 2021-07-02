@@ -9,20 +9,11 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="98DataBase">
-      <UniqueIdentifier>{e34b5076-33c3-47dd-b9aa-df2d3c0c7a16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00Main\00NetWorking">
       <UniqueIdentifier>{c7ed21cc-2192-4611-b5f6-8b959cf7d0ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="00Main\00NetWorking\00NetMgr">
       <UniqueIdentifier>{5557b9f2-360b-4e39-985d-0ff09949d297}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97TimeMgr">
-      <UniqueIdentifier>{b2908859-e62c-4bbb-aee3-6c798a57362d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96SimpleMath">
-      <UniqueIdentifier>{af61c17b-0f05-4c3a-b1f0-5856f76fb4a6}</UniqueIdentifier>
     </Filter>
     <Filter Include="02Manager">
       <UniqueIdentifier>{a3a30b1f-8b08-4c0e-9add-00ffff36faee}</UniqueIdentifier>
@@ -33,9 +24,6 @@
     <Filter Include="02Manager\02MediatorMgr">
       <UniqueIdentifier>{11a45d47-b9dc-4596-bc91-860fe9a37c69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02Manager\03SectorMgr">
-      <UniqueIdentifier>{51de0b26-1701-4a5e-a8c8-4f0cc1cfcbf1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03CGameObject">
       <UniqueIdentifier>{1f8268cf-eff4-461f-96e8-d27aa2c8203e}</UniqueIdentifier>
     </Filter>
@@ -45,7 +33,28 @@
     <Filter Include="03CGameObject\02CMonster">
       <UniqueIdentifier>{2244b04b-30fe-4218-b29e-c04ea77f792a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03CGameObject\01CClient\03NPC">
+    <Filter Include="98Sub">
+      <UniqueIdentifier>{e6319cac-cbd3-4abb-a680-9e72c52cc1c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97DataBase">
+      <UniqueIdentifier>{e34b5076-33c3-47dd-b9aa-df2d3c0c7a16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98Sub\00SimpleMath">
+      <UniqueIdentifier>{af61c17b-0f05-4c3a-b1f0-5856f76fb4a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98Sub\01TimeMgr">
+      <UniqueIdentifier>{b2908859-e62c-4bbb-aee3-6c798a57362d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02Manager\03Sector">
+      <UniqueIdentifier>{51de0b26-1701-4a5e-a8c8-4f0cc1cfcbf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02Manager\03Sector\00QuadTree">
+      <UniqueIdentifier>{479b45fb-d6c4-4b1f-90cc-2d6b0e480ef0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02Manager\03Sector\00QuadTree\Boundary">
+      <UniqueIdentifier>{5984b46b-53e4-4e7d-b596-461d999723ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03CGameObject\03NPC">
       <UniqueIdentifier>{457ba210-0511-45e6-8e34-21f5b3534f8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -54,7 +63,7 @@
       <Filter>00Main</Filter>
     </ClCompile>
     <ClCompile Include="CDataBase.cpp">
-      <Filter>98DataBase</Filter>
+      <Filter>97DataBase</Filter>
     </ClCompile>
     <ClCompile Include="CGameObject.cpp">
       <Filter>03CGameObject</Filter>
@@ -66,13 +75,13 @@
       <Filter>03CGameObject\02CMonster</Filter>
     </ClCompile>
     <ClCompile Include="CNPC.cpp">
-      <Filter>03CGameObject\01CClient\03NPC</Filter>
+      <Filter>03CGameObject\03NPC</Filter>
     </ClCompile>
     <ClCompile Include="SimpleMath.cpp">
-      <Filter>96SimpleMath</Filter>
+      <Filter>98Sub\00SimpleMath</Filter>
     </ClCompile>
     <ClCompile Include="CTimeMgr.cpp">
-      <Filter>97TimeMgr</Filter>
+      <Filter>98Sub\01TimeMgr</Filter>
     </ClCompile>
     <ClCompile Include="CNetMgr.cpp">
       <Filter>00Main\00NetWorking\00NetMgr</Filter>
@@ -83,13 +92,16 @@
     <ClCompile Include="CMediatorMgr.cpp">
       <Filter>02Manager\02MediatorMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CSectorMgr.cpp">
-      <Filter>02Manager\03SectorMgr</Filter>
+    <ClCompile Include="CQuadTree.cpp">
+      <Filter>02Manager\03Sector\00QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="CBoundary.cpp">
+      <Filter>02Manager\03Sector\00QuadTree\Boundary</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CDataBase.h">
-      <Filter>98DataBase</Filter>
+      <Filter>97DataBase</Filter>
     </ClInclude>
     <ClInclude Include="CGameObject.h">
       <Filter>03CGameObject</Filter>
@@ -116,16 +128,16 @@
       <Filter>03CGameObject\02CMonster</Filter>
     </ClInclude>
     <ClInclude Include="CNPC.h">
-      <Filter>03CGameObject\01CClient\03NPC</Filter>
+      <Filter>03CGameObject\03NPC</Filter>
     </ClInclude>
     <ClInclude Include="Template.h">
       <Filter>99Etc</Filter>
     </ClInclude>
     <ClInclude Include="SimpleMath.h">
-      <Filter>96SimpleMath</Filter>
+      <Filter>98Sub\00SimpleMath</Filter>
     </ClInclude>
     <ClInclude Include="CTimeMgr.h">
-      <Filter>97TimeMgr</Filter>
+      <Filter>98Sub\01TimeMgr</Filter>
     </ClInclude>
     <ClInclude Include="CNetMgr.h">
       <Filter>00Main\00NetWorking\00NetMgr</Filter>
@@ -136,13 +148,16 @@
     <ClInclude Include="CMediatorMgr.h">
       <Filter>02Manager\02MediatorMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CSectorMgr.h">
-      <Filter>02Manager\03SectorMgr</Filter>
+    <ClInclude Include="CQuadTree.h">
+      <Filter>02Manager\03Sector\00QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="CBoundary.h">
+      <Filter>02Manager\03Sector\00QuadTree\Boundary</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
-      <Filter>96SimpleMath</Filter>
+      <Filter>98Sub\00SimpleMath</Filter>
     </None>
   </ItemGroup>
 </Project>

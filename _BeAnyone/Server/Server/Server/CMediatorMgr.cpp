@@ -23,8 +23,8 @@ void CMediatorMgr::InitObject()
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
         pObj->SetType(OBJECT_TYPE::MONSTER);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
-        pObj->Insert_Sector();
         Add(pObj, i);
+        pObj->Insert_Sector();
         cout << "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP() << endl;
     }
 
@@ -47,6 +47,7 @@ void CMediatorMgr::InitObject()
 
 bool CMediatorMgr::IsType(const uShort& id, const OBJECT_TYPE& type)
 {
+    if (Count(id) == 0)return false;
     if (Find(id)->GetType() == type)return true;
     else return false;
 }

@@ -9,7 +9,7 @@ mutex timer_lock;
 mutex wakeup_lock;
 priority_queue<event_type>		timer_queue;
 CNetMgr Netmgr;
-
+CQuadTree g_QuadTree(CBoundary(WORLD_WIDTH/2, WORLD_HEIGHT/2, WORLD_WIDTH / 2, WORLD_HEIGHT / 2), MAX_PLAYER_IN_NODE);
 SOCKET g_listenSocket;
 HANDLE g_IocpHandle;
 
@@ -18,10 +18,10 @@ int main()
 {
     std::wcout.imbue(locale("Korean"));
     WSADATA WSAData;
-    WSAStartup(MAKEWORD(2, 2), &WSAData);
+    int start = WSAStartup(MAKEWORD(2, 2), &WSAData);
     g_IocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
     g_listenSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
-    CreateIoCompletionPort(reinterpret_cast<HANDLE>(g_listenSocket), g_IocpHandle, 999, 0);
+    CreateIoCompletionPort(reinterpret_cast<HANDLE>(g_listenSocket), g_IocpHandle, 10000, 0);
 
     SOCKADDR_IN s_address;
     memset(&s_address, 0, sizeof(s_address));
@@ -41,7 +41,6 @@ int main()
     AcceptEx(g_listenSocket, c_socket, accept_over.io_buf, 0, 32, 32, NULL, &accept_over.over);
     
     // 지우기
-    Netmgr.Connect();
     Netmgr.GetMediatorMgr()->InitObject();
 
     cout << "**********Play************" << endl;
@@ -55,7 +54,6 @@ int main()
     time_thread.join();
 
     // 지우기
-    Netmgr.CloseSocket();
     closesocket(g_listenSocket);
     WSACleanup();
 }

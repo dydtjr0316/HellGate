@@ -20,6 +20,6 @@ _BeAnyone/Client/BeAnyone/01 Project/Engine/x64/Debug/Engine_debug.lib.recipe
 _BeAnyone/Client/BeAnyone/01 Project/Client/x64/Debug/*.pdb
 _BeAnyone/Client/BeAnyone/01 Project/Client/x64/Debug/Client.vcxproj.FileListAbsolute.txt
 _BeAnyone/Client/BeAnyone/01 Project/Engine/x64/Debug/Engine.vcxproj.FileListAbsolute.txt
-_BeAnyone/Server/BeAnyone/01 Project/Client/x64\Release/*.recipe
-_BeAnyone/Server/BeAnyone/01 Project/Client/x64\Release/*.txt
+_BeAnyone/Server/BeAnyone/01 Project/Client/x64/Release/*.recipe
+_BeAnyone/Server/BeAnyone/01 Project/Client/x64/Release/*.txt
 _BeAnyone/Server/BeAnyone/03 External/Library/Engine/*.lib

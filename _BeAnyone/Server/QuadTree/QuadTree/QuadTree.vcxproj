@@ -139,15 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CMediator.cpp" />
     <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="CQuadTree.cpp" />
     <ClCompile Include="CRectangle.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CMediator.h" />
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CQuadTree.h" />
     <ClInclude Include="CRectangle.h" />
+    <ClInclude Include="define.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

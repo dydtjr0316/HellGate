@@ -6,6 +6,7 @@ class CRectangle
 public:
 	CRectangle();
 	CRectangle(const float& x, const float& z, const float& w, const float& h);
+	CRectangle(CPlayer* player, const float& w = 1000.f, const float& h = 1000.f);
 public:  // oper
 	bool contains(CPlayer* p);
 	bool intersects(CRectangle& range);
