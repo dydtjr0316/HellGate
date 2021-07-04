@@ -41,34 +41,28 @@ bool CQuadTree::Insert(CGameObject* p)
 	if (!m_boundary.contains(p))
 		return false;
 
-	if (m_vpPlayers.size() < m_icapacity)
+	if (!m_bisDivide)
 	{
-		m_vpPlayers.emplace(p->GetID());
+		if (m_vpPlayers.size() < m_icapacity)	// leaf node 일때
+		{
+			m_vpPlayers.emplace(p->GetID());
+		}
+		else
+		{
+			Sub_Divide();
+			for (auto& obj : m_pChild)
+				if (obj->Insert(p))return true;
+		}
 	}
 	else
 	{
-		if (!m_bisDivide)
-		{
-			Sub_Divide();
-		}
-
-		{
-			////이자리에 부모노드 세팅과 자료 넘겨주는 부분이 필요함
-
-		//if (m_pParent != nullptr)
-		//{
-
-		//}
-		}
 		for (auto& obj : m_pChild)
-		{
 			if (obj->Insert(p))return true;
-		}
 	}
-	cout << endl;
-	cout << "Insert**********************" << endl;
-	PrintQuadTree();
-	return true;// 여기서 true 반환하는거 괜찮은지 보기
+	//cout << endl;
+	//cout << "Insert**********************" << endl;
+	//PrintQuadTree();
+	//return true;// 여기서 true 반환하는거 괜찮은지 보기
 }
 
 void CQuadTree::Delete(CGameObject* p)
@@ -76,9 +70,13 @@ void CQuadTree::Delete(CGameObject* p)
 	// 해당 플레이어 id로 현재위치한 노드를 찾는다 
 	// // 자식노드가 없는 노드중 플레이어 좌표를 취하는곳
 	int cnt = 0;
+	this;
 
-	if (!m_bisDivide && m_boundary.contains(p))		// player p를 포함하는 최하위 노드인가?
+	if (!m_bisDivide && m_boundary.contains(p))		// player p를 포함하는 리프 노드인가?
 	{
+		//cout << "Test 출력" << endl;
+		//cout << m_boundary.GetX() << " - " << m_boundary.GetZ() << " - "
+		//	<< m_boundary.GetW() << " - " << m_boundary.GetH() << endl;
 		// 노드에서 해당 플레이어를 뺀다
 		for (auto& playerID : m_vpPlayers)
 		{
@@ -93,37 +91,37 @@ void CQuadTree::Delete(CGameObject* p)
 
 		// 4개이상이면 패스
 		// 4개이하라면 4개이상인 부모노드를 찾을 때 까지 재귀호출
-		if (m_pParent != nullptr)
+		for (auto& obj : m_pParent->GetChild())
+		{
+			cnt += obj->GetPoint().size();
+		}
+		if (cnt <= 4)
 		{
 			for (auto& obj : m_pParent->GetChild())
 			{
-				cnt += obj->GetPoint().size();
-			}
-			if (cnt < 4)
-			{
-				for (auto& obj : m_pParent->GetChild())
+				for (auto& sub : obj->GetPoint())	//0629 이근처 부분 뒤죽박죽임 m_vplayer를쓸거면 그거만 쓰는걸로 정리하기 존나 헷갈리네 ㅅㅂ
 				{
-					for (auto& sub : obj->GetPoint())
-						m_pParent->GetPoint().emplace(sub);
-					//obj->GetPoint().clear();
-					SafeDelete(obj);
+					m_pParent->GetPoint().emplace(sub);
+					if (m_pParent->m_bisDivide)
+						m_pParent->m_bisDivide = false;
 				}
-
 			}
+
 		}
-		
+		//m_pParent->m_bisDivide = false;
 	}
 	else
 	{
-		if (m_pChild.size() != 0)
-			for (auto& childNode : m_pChild)
-			{
-				childNode->Delete(p);
-			}
+		//if (m_pChild.size() ==0)return;
+		for (auto& childNode : m_pChild)
+		{
+			childNode->Delete(p);
+		}
+
 	}
-	cout << endl;
-	cout << "Delete********************" << endl;
-	PrintQuadTree();
+	//cout << endl;
+	//cout << "Delete********************" << endl;
+	//PrintQuadTree();
 }
 bool CQuadTree::IsSameObject(const uShort& p1, const uShort& p2)
 {
@@ -144,12 +142,15 @@ void CQuadTree::Sub_Divide()
 	for (int i = 0; i < CHILD_NODE_SIZE; i++)
 	{
 		CQuadTree* temp = new CQuadTree(childRect[i], MAX_PLAYER_IN_NODE);
-		temp->m_iDepth = m_iDepth++;
-		m_pChild.push_back(temp);
 		temp->SetParent(this);
+		m_pChild.push_back(temp);
 	}
-	SubDivideToChild();
+	for (auto& obj : m_pChild)
+	{
+		obj->m_iDepth = this->m_iDepth + 1;
+	}
 	m_bisDivide = true;
+	SubDivideToChild();
 }
 void CQuadTree::SubDivideToChild()
 {
@@ -161,12 +162,14 @@ void CQuadTree::SubDivideToChild()
 		{
 			if (childNode->m_boundary.contains(Netmgr.GetMediatorMgr()->Find(player)))
 			{
+				/*m_vpPlayers.erase(player);*/
 				childNode->m_vpPlayers.emplace(player);
 				break;
 			}
 		}
 	}
-	m_vpPlayers.clear();
+	if (m_bisDivide)
+		m_vpPlayers.clear();
 }
 
 

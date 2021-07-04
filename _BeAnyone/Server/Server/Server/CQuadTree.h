@@ -17,9 +17,9 @@ public:  //oper
 	void Sub_Divide();
 	unordered_set<uShort> search(const CBoundary& range);
 public: // get
-	unordered_set<uShort> GetPoint() { return m_vpPlayers; }
+	unordered_set<uShort>& GetPoint() { return m_vpPlayers; }
 	CQuadTree* GetParent() { return m_pParent; }
-	vector<CQuadTree*> GetChild() { return m_pChild; }
+	vector<CQuadTree*>& GetChild() { return m_pChild; }
 public: // set
 	void SetParent(CQuadTree* obj) { m_pParent = obj; }
 private:
