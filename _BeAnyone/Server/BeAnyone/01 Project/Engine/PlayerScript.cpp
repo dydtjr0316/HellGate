@@ -395,7 +395,7 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimationType(type);
 }
 
-void CPlayerScript::SetAnimation(const int& other_id, const Ani_TYPE& type)
+void CPlayerScript::SetAnimation(const uShort& other_id, const Ani_TYPE& type)
 {
 	g_Object.find(other_id)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
 	g_Object.find(other_id)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());

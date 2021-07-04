@@ -20,7 +20,7 @@ OBJ_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
@@ -377,16 +377,27 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//Ãß°¡
 			if (0 != g_Object.count(other_id))
 			{
-				system_clock::time_point end = system_clock::now();
-				nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
-				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
-				if (packet->isMoving)
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
-				else
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+				if (CheckObjType(other_id) == OBJ_TYPE::PLAYER)
+				{
+					system_clock::time_point end = system_clock::now();
+					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
+					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
+					if (packet->isMoving)
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
+					else
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
 
-				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
-				g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
+					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
+				}
+				else if (CheckObjType(other_id) == OBJ_TYPE::MONSTER)
+				{
+					CGameObject* MonsterObj = g_Object.find(other_id)->second;
+					MonsterObj->Transform()->SetLocalPos(packet->localVec);
+					MonsterObj->Transform()->SetLocalRot(packet->rotateY);
+					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::WALK);
+					
+				}
 			}
 		}
 	}

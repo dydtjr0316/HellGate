@@ -3,10 +3,14 @@
 #include "CGameObject.h"
 #include "CBoundary.h"
 
+CQuadTree::CQuadTree(const CBoundary& _m_boundary, const int& n)
+{
+	m_boundary = _m_boundary; m_icapacity = n;
+}
 
 void CQuadTree::PrintQuadTree()
 {
-	cout << "------------------" << endl;
+	/*cout << "------------------" << endl;
 	cout << "DEPTH : " << m_iDepth << endl;
 	cout << "------------------" << endl;
 	if (!m_bisDivide)
@@ -14,7 +18,7 @@ void CQuadTree::PrintQuadTree()
 		for (auto& obj : m_vpPlayers)
 		{
 			CGameObject* temp = Netmgr.GetMediatorMgr()->Find(obj);
-			cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetLocalPosVector().x << ", " 
+			cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetLocalPosVector().x << ", "
 				<< temp->GetLocalPosVector().z << ")" << endl;
 			cout << "------------------" << endl;
 
@@ -27,14 +31,8 @@ void CQuadTree::PrintQuadTree()
 		{
 			obj->PrintQuadTree();
 		}
-	}
+	}*/
 }
-
-CQuadTree::CQuadTree(const CBoundary& _m_boundary, const int& n)
-{
-	m_boundary = _m_boundary; m_icapacity = n;
-}
-
 
 bool CQuadTree::Insert(CGameObject* p)
 {
