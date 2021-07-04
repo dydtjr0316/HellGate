@@ -84,7 +84,6 @@ void CAnimator3D::UpdateData()
 
 	// t7 레지스터에 최종행렬 데이터(구조버퍼) 바인딩
 	m_pBoneFinalMat->UpdateData(TEXTURE_REGISTER::t7);
-	m_pBoneSwordFinalMat->UpdateData(TEXTURE_REGISTER::t6);
 }
 
 void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)

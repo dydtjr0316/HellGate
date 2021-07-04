@@ -94,8 +94,8 @@ Texture2D g_tex_2 : register(t2);
 Texture2D g_tex_3 : register(t3);
 Texture2D g_tex_4 : register(t4);
 Texture2D g_tex_5 : register(t5);
+Texture2D g_tex_6 : register(t6);
 
-StructuredBuffer<Matrix> g_arrSwordFinalBoneMat : register(t6);
 StructuredBuffer<Matrix> g_arrFinalBoneMat : register(t7);
 
 Texture2DArray g_arrtex_0 : register(t8);

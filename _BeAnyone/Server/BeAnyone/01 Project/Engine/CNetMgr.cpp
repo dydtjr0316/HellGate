@@ -13,6 +13,7 @@
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
 #include "MonsterScript.h"
+#include "SwordScript.h"
 OBJ_TYPE CheckObjType(const uShort& id)
 {
 	if (id >= 0 && id < MAX_USER)return OBJ_TYPE::PLAYER;
@@ -310,6 +311,33 @@ void CNetMgr::ProcessPacket(char* ptr)
 					);
 					g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
 
+					// ----
+					// 무기
+					// ----
+
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale_Weapon_Sword.fbx", FBX_TYPE::PLAYER);
+					//pMeshData->Save(pMeshData->GetPath());
+
+
+					CGameObject* pSword = nullptr;
+
+					pSword = pMeshData->Instantiate();
+					pSword->SetName(L"sword");
+					pSword->FrustumCheck(false);
+					//pSword->Transform()->SetLocalPos(Vector3(100.f, 320.f, 150.f));
+					pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+					//pSword->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+					pSword->AddComponent(new CCollider);
+					pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
+
+
+					// Script 설정
+					pSword->AddComponent(new CSwordScript);
+					CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
+					SwordScript->SetBoneFinalMat(g_Object.find(id)->second->Animator3D()->GetSwordFinalBoneMat());
+
+					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pSword, false);
+					g_Object.find(id)->second->AddChild(pSword);
 				}
 			}
 			else if (CheckObjType(id) == OBJ_TYPE::MONSTER)

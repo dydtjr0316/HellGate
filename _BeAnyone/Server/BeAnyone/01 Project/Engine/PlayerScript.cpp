@@ -82,6 +82,14 @@ void CPlayerScript::update()
 
 	}
 
+	if (KEY_TAB(KEY_TYPE::KEY_R))
+	{
+		player->AnimClipReset();
+		player->SetAnimation(Ani_TYPE::ATTACK);
+		attdir = ATTACK_ANI;
+		moveKeyInput = true;
+	}
+
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		vRot.y += vDrag.x * DT * ROTATE_SPEED;
