@@ -22,7 +22,7 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 		m_pHeightMap = _pMap;
 	else
 		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
-		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\hm01.png");
+		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\T3.jpg");
 
 	
 	Vector2 vHeightMapRes = Vector2( m_pHeightMap->Width(), m_pHeightMap->Height() );
@@ -122,6 +122,8 @@ void CTerrain::CreateHeightmapPixelsInfo()
 
 	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
+	/*HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\T3.raw"
+		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);*/
 	DWORD dwBytesRead;
 	::ReadFile(hFile, pHeightMapPixels, (m_nWidth * m_nLength), &dwBytesRead, NULL);
 	::CloseHandle(hFile);
@@ -145,8 +147,8 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 
 	//	**4배**
 
-	float fx = _fx / Transform()->GetLocalScale().x * 4 /*/ 100.f*/;
-	float fz = _fz / Transform()->GetLocalScale().z * 4 /*/ 100.f*/;
+	float fx = _fx / Transform()->GetLocalScale().x * 2.f /*/ 100.f*/;
+	float fz = _fz / Transform()->GetLocalScale().z * 2.f /*/ 100.f*/;
 	
 	int m_nWidth = m_pHeightMap->Width();
 	int m_nLength = m_pHeightMap->Height();
@@ -183,8 +185,7 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
 	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
 
-	return(fHeight);
-	//return 0.f;
+	return(fHeight * (TERRAIN_YSIZE / 2.f));
 }
 
 void CTerrain::CreateHeightmapPixelsInfo__()
@@ -194,11 +195,10 @@ void CTerrain::CreateHeightmapPixelsInfo__()
 
 	UCHAR* pHeightMapPixels = new UCHAR[m_nWidth * m_nLength];
 
-	wstring fn = CPathMgr::GetResPath();
-	fn += L"Texture\\Terrain\\HeightMap_01.png";
-
 	HANDLE hFile = ::CreateFile(L"C:\\Users\\채영문\\Desktop\\BeAnyone\\BeAnyone\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
+	//HANDLE hFile = ::CreateFile(L"C:\\Users\\채영문\\Desktop\\BeAnyone\\BeAnyone\\02 File\\bin\\content\\Texture\\Terrain\\T3.raw"
+		//, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
 	DWORD dwBytesRead;
 	::ReadFile(hFile, pHeightMapPixels, (m_nWidth * m_nLength), &dwBytesRead, NULL);
 	::CloseHandle(hFile);

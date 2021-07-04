@@ -109,6 +109,7 @@ struct tFrameTrans
 StructuredBuffer<tFrameTrans>   g_arrFrameTrans : register(t10);
 StructuredBuffer<matrix>        g_arrOffset : register(t11);
 RWStructuredBuffer<matrix>      g_arrFinalMat : register(u0);
+RWStructuredBuffer<matrix>      g_arrSwordFinalMat : register(u1);
 
 // ===========================
 // Animation3D Compute Shader
@@ -144,6 +145,8 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
 
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
     g_arrFinalMat[_iThreadIdx.x] = mul(matOffset, matBone);
+
+    g_arrSwordFinalMat[_iThreadIdx.x] = matBone;
 }
 
 #endif

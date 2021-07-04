@@ -47,6 +47,13 @@ void CPlayerScript::update()
 	char attdir = ATTACK_IDLE;
 	bool moveKeyInput = false;
 	op_Move();
+	
+
+	/*cout << playerTrans->GetLocalPos().x << endl;
+	cout << playerTrans->GetLocalPos().y << endl;
+	cout << playerTrans->GetLocalPos().z << endl;
+	cout << "*************************" << endl;*/
+
 	if (KEY_HOLD(KEY_TYPE::KEY_R))
 	{
 		player->AnimClipReset();
@@ -211,6 +218,7 @@ void CPlayerScript::op_Move()
 	const Vector3& xmf3Scale = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
 	Vector3 temp;
 
+	
 	if (player->GetBisFrist())
 	{
 		temp = p->localVec + p->dirVec * p->speed * DT;
@@ -223,18 +231,13 @@ void CPlayerScript::op_Move()
 	playerTrans->SetLocalRot(p->rotateY);
 
 	int z = (int)(temp.z / xmf3Scale.z);
-	float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f + 100.f;
+	float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0));
 
 	if (temp.y != fHeight)
 		temp.y = fHeight;
 
 	playerTrans->SetLocalPos(temp);
 
-	//cout << "µ¨Å¸ °è»ê ÈÄ" << endl;
-	//cout << playerTrans->GetLocalPos().x << endl;
-	//cout << playerTrans->GetLocalPos().y << endl;
-	//cout << playerTrans->GetLocalPos().z << endl;
-	//cout << "*************************" << endl;
 
 
 

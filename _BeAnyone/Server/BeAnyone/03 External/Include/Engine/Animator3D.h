@@ -23,7 +23,8 @@ private:
 	int							m_iFrameIdx; // 클립의 현제 프레임
 
 	Ptr<CMaterial>				m_pBoneMtrl; // BoneData Update Compute Shader
-	CStructuredBuffer* m_pBoneFinalMat;  // 특정 프레임의 최종 행렬
+	CStructuredBuffer*			m_pBoneFinalMat;  // 특정 프레임의 최종 행렬
+	CStructuredBuffer*			m_pBoneSwordFinalMat;  // 특정 프레임의 최종 행렬(무기)
 	bool						m_bFinalMatUpdate; // 최종행렬 연산 수행여부
 
 public:
@@ -36,6 +37,7 @@ public:
 
 	// vector<Matrix>& GetFinalBoneMat() { return m_vecFinalBoneMat; }// 안 씀
 	CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMat; }
+	CStructuredBuffer* GetSwordFinalBoneMat() { return m_pBoneSwordFinalMat; }
 
 private:
 	void check_mesh(Ptr<CMesh> _pMesh);
