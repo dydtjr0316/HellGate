@@ -3,6 +3,9 @@
 #include "BulletScript.h"
 #include <iostream>
 
+extern int anicnt;
+int anicnt = 0;
+
 using namespace std;
 
 bool checkOnce = true;
@@ -44,7 +47,6 @@ void CPlayerScript::update()
 	Vector3 worldDir;
 	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
-	char attdir = ATTACK_IDLE;
 	bool moveKeyInput = false;
 	op_Move();
 	
@@ -85,27 +87,24 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
 		player->AnimClipReset();
-		m_bisAttack = true;
-		g_netMgr.Send_Player_Animation_Packet(g_myid, m_bisAttack);
+		player->SetAttack(true);
+		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
 		cout << "KEY_TAB(KEY_TYPE::KEY_R)" << endl;
 	}
 
-	if (m_bisAttack && player->Getcnt() < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
+	if (player->GetAttack() && player->Getcnt() < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->Setcnt(player->Getcnt() + DT);
 		player->SetAnimation(Ani_TYPE::ATTACK);
-		attdir = ATTACK_ANI;
 		moveKeyInput = true;
-
+		anicnt++;
 	}
 	else if (player->Getcnt() > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
-		m_bisAttack = false;
+		player->SetAttack(false);
 		player->Setcnt(0.f);
-		cout << "Cnt - " << player->Getcnt() << endl;
-		cout << "anitime" << g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength << endl;
-		g_netMgr.Send_Player_Animation_Packet(g_myid, m_bisAttack);
-		cout << "KEY_AWAY(KEY_TYPE::KEY_R)" << endl;
-
+		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
+		cout << "KEY_AWAY  --> aniCnt = "<< anicnt << endl;
+		anicnt = 0;
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
@@ -418,7 +417,7 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
 
-	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimationType(type);
+	//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimationType(type);
 }
 
 void CPlayerScript::SetAnimation(const uShort& other_id, const Ani_TYPE& type)

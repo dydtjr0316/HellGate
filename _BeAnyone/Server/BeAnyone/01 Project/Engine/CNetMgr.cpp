@@ -22,7 +22,7 @@ OBJ_TYPE CheckObjType(const uShort& id)
 
 //const char ip[] = "192.168.0.11";
 //const char ip[] = "192.168.0.13";
-const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -106,6 +106,7 @@ void CNetMgr::Send_Packet(void* _packet)
 	testpacket = dataBuf.wsabuf.len;
 
 
+	//if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
 	if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() == WSA_IO_PENDING)
@@ -116,6 +117,7 @@ void CNetMgr::Send_Packet(void* _packet)
 		else
 			err_quit("WSASend");
 	}
+
 }
 
 void CNetMgr::Send_LogIN_Packet()
@@ -248,7 +250,6 @@ void CNetMgr::Recevie_Data()
 	{
 		if (WSAGetLastError() == WSAEWOULDBLOCK)
 		{
-			int i = 0;
 		}
 	}
 	else
@@ -524,7 +525,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_AttackAni* packet = reinterpret_cast<sc_packet_AttackAni*>(ptr);
 		int id = packet->id;
 		if (id == g_myid) {
-			cout << "SC_PACKET_ATTACKANI 본인 패킷 처리 X" << endl;
 		}
 		else {
 			if (0 != g_Object.count(id)&&CheckObjType(id) == OBJ_TYPE::PLAYER)
@@ -532,11 +532,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 				if (packet->isAttack)
 				{
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::ATTACK);
+					//g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 
 				}
 				else
 				{
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::IDLE);
+					//g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 				}
 			}
 		}
