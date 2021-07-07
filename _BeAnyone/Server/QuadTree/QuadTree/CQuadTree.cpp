@@ -102,7 +102,7 @@ void CQuadTree::Delete(CPlayer* p)
 		{
 			for (auto& obj : m_pParent->GetChild())
 			{
-				for (auto& sub : obj->GetPoint())	//0629 이근처 부분 뒤죽박죽임 m_vplayer를쓸거면 그거만 쓰는걸로 정리하기 존나 헷갈리네 ㅅㅂ
+				for (auto& sub : obj->GetPoint())	//0629 이근처 부분 뒤죽박죽임 m_vplayer를쓸거면 그거만 쓰는걸로 정리하기
 				{
 					m_pParent->GetPoint().emplace(sub);
 					if (m_pParent->m_bisDivide)
@@ -111,11 +111,9 @@ void CQuadTree::Delete(CPlayer* p)
 			}
 
 		}
-		//m_pParent->m_bisDivide = false;
 	}
 	else
 	{
-		//if (m_pChild.size() ==0)return;
 		for (auto& childNode : m_pChild)
 		{
 			childNode->Delete(p);
@@ -167,7 +165,6 @@ void CQuadTree::SubDivideToChild()
 		{
 			if (childNode->m_boundary.contains(g_Medi.Find(player)))
 			{
-				/*m_vpPlayers.erase(player);*/
 				childNode->m_vpPlayers.emplace(player);
 				break;
 			}
@@ -183,19 +180,7 @@ void CQuadTree::SubDivideToChild()
 unordered_set<uShort> CQuadTree::search(CRectangle& range)
 {
 	unordered_set<uShort> found;
-	//  쿼드트리 부모 자식 구조 바꾸면서 이부분 안바꿔도 되는지 확인해 볼 것
-	{
-		/*if (!m_boundary.intersects(range))
-		return found;
-	else
-	{
-		for (auto& p : m_vpPlayers)
-		{
-			if (range.contains(p))
-				found.push_back(p);
-		}
-	}*/
-	}
+
 	if (!m_bisDivide && m_boundary.intersects(range))
 	{
 		for (auto& p : m_vpPlayers)
@@ -216,6 +201,5 @@ unordered_set<uShort> CQuadTree::search(CRectangle& range)
 	}
 
 	return found;
-
 }
 
