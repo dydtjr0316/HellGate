@@ -273,6 +273,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
+		g_Object.find(g_myid)->second->SetID(g_myid);
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->initDeadReckoner();
 	}
 	break;
@@ -295,6 +296,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
+					g_Object.find(id)->second->SetID(id);
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"PlayerMale");

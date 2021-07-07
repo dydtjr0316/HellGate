@@ -3,7 +3,7 @@
 #include "BulletScript.h"
 #include <iostream>
 
-extern int anicnt;
+
 int anicnt = 0;
 
 using namespace std;
@@ -35,7 +35,7 @@ void CPlayerScript::awake()
 }
 
 void CPlayerScript::update()
-{
+{	
 	
 	CTerrain* pTerrain = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain();
 	CPlayerScript* player = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
@@ -73,7 +73,6 @@ void CPlayerScript::update()
 	//{
 	//	attdir = ATTACK_IDLE;
 
-	//	Attack_Default();
 
 	//	player->SetAnimation(Ani_TYPE::IDLE);
 	//	player->SetAttack(false);
@@ -90,21 +89,23 @@ void CPlayerScript::update()
 		player->SetAttack(true);
 		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
 		cout << "KEY_TAB(KEY_TYPE::KEY_R)" << endl;
+		anicnt++;
 	}
 
 	if (player->GetAttack() && player->Getcnt() < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->Setcnt(player->Getcnt() + DT);
+		cout << "*****************************"<<DT << endl;
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		moveKeyInput = true;
-		anicnt++;
 	}
 	else if (player->Getcnt() > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
+		Attack_Default();
+
 		player->SetAttack(false);
 		player->Setcnt(0.f);
 		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
-		cout << "KEY_AWAY  --> aniCnt = "<< anicnt << endl;
-		anicnt = 0;
+
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))

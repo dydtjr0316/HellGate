@@ -43,6 +43,7 @@ void CScene::update()
 	for (UINT i = 0; i < MAX_LAYER; ++i) {
 		if (nullptr != m_arrLayer[i]) {
 			m_arrLayer[i]->update();
+			
 		}
 	}
 

@@ -4,7 +4,7 @@
 #include "SceneMgr.h"
 #include "Scene.h"
 #include "GameObject.h"
-
+int pcnt = 0;
 CLayer::CLayer()
 {
 

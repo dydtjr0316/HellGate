@@ -25,6 +25,8 @@ private:
 	bool					m_bActive;
 	bool					m_bFrustumCheck;
 
+	unsigned short					m_iID;
+
 	//0506
 	//CToolCamScript*			m_CamObj;
 	CGameObject*			m_pCamObj;
@@ -85,6 +87,9 @@ public:
 
 	CGameObject* GetCam() { return m_pCamObj; }
 	void SetCam(CGameObject* obj) { m_pCamObj = obj; }
+
+	void SetID(const unsigned short& id) { m_iID = id; }
+	unsigned short& GetID() { return m_iID; }
 
 public:
 	CLONE(CGameObject);
