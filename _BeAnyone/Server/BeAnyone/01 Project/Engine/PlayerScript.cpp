@@ -54,40 +54,58 @@ void CPlayerScript::update()
 	cout << playerTrans->GetLocalPos().z << endl;
 	cout << "*************************" << endl;*/
 
-	if (KEY_HOLD(KEY_TYPE::KEY_R))
-	{
-		player->AnimClipReset();
-		player->SetAnimation(Ani_TYPE::ATTACK);
-		attdir = ATTACK_ANI;
-		moveKeyInput = true;
-		if (!player->GetAttack())
-		{
-			player->SetAttack(true);
-			g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
+	//if (KEY_HOLD(KEY_TYPE::KEY_R))
+	//{
+	//	player->AnimClipReset();
+	//	player->SetAnimation(Ani_TYPE::ATTACK);
+	//	attdir = ATTACK_ANI;
+	//	moveKeyInput = true;
+	//	if (!player->GetAttack())
+	//	{
+	//		player->SetAttack(true);
+	//		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
 
-		}
-	}
-	if (KEY_AWAY(KEY_TYPE::KEY_R))
-	{
-		attdir = ATTACK_IDLE;
+	//	}
+	//}
+	//if (KEY_AWAY(KEY_TYPE::KEY_R))
+	//{
+	//	attdir = ATTACK_IDLE;
 
-		Attack_Default();
+	//	Attack_Default();
 
-		player->SetAnimation(Ani_TYPE::IDLE);
-		player->SetAttack(false);
+	//	player->SetAnimation(Ani_TYPE::IDLE);
+	//	player->SetAttack(false);
 
-		// packet send
-		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
-		player->SetAniReset(false);
+	//	// packet send
+	//	g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
+	//	player->SetAniReset(false);
 
-	}
+	//}
 
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
 		player->AnimClipReset();
+		m_bisAttack = true;
+		g_netMgr.Send_Player_Animation_Packet(g_myid, m_bisAttack);
+		cout << "KEY_TAB(KEY_TYPE::KEY_R)" << endl;
+	}
+
+	if (m_bisAttack && player->Getcnt() < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
+		player->Setcnt(player->Getcnt() + DT);
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		attdir = ATTACK_ANI;
 		moveKeyInput = true;
+
+	}
+	else if (player->Getcnt() > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
+	{
+		m_bisAttack = false;
+		player->Setcnt(0.f);
+		cout << "Cnt - " << player->Getcnt() << endl;
+		cout << "anitime" << g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength << endl;
+		g_netMgr.Send_Player_Animation_Packet(g_myid, m_bisAttack);
+		cout << "KEY_AWAY(KEY_TYPE::KEY_R)" << endl;
+
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))

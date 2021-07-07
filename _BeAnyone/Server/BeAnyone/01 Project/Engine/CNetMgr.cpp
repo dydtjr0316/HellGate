@@ -21,8 +21,8 @@ OBJ_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.13";
-//const char ip[] = "192.168.0.7";
+//const char ip[] = "192.168.0.13";
+const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -524,6 +524,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_AttackAni* packet = reinterpret_cast<sc_packet_AttackAni*>(ptr);
 		int id = packet->id;
 		if (id == g_myid) {
+			cout << "SC_PACKET_ATTACKANI 본인 패킷 처리 X" << endl;
 		}
 		else {
 			if (0 != g_Object.count(id)&&CheckObjType(id) == OBJ_TYPE::PLAYER)
