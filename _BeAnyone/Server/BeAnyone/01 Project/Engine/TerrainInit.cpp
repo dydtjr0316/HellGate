@@ -21,8 +21,8 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 	if(_pMap != nullptr)
 		m_pHeightMap = _pMap;
 	else
-		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
-		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\T3.jpg");
+		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
+		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\teset.png");
 
 	
 	Vector2 vHeightMapRes = Vector2( m_pHeightMap->Width(), m_pHeightMap->Height() );
@@ -120,10 +120,10 @@ void CTerrain::CreateHeightmapPixelsInfo()
 
 	BYTE* pHeightMapPixels = new BYTE[m_nWidth * m_nLength];
 
-	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
-		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
-	/*HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\T3.raw"
+	/*HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);*/
+	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\teset.raw"
+		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
 	DWORD dwBytesRead;
 	::ReadFile(hFile, pHeightMapPixels, (m_nWidth * m_nLength), &dwBytesRead, NULL);
 	::CloseHandle(hFile);
@@ -134,6 +134,10 @@ void CTerrain::CreateHeightmapPixelsInfo()
 		for (int x = 0; x < m_nWidth; ++x)
 		{
 			m_pHeightMapPixels[x + ((m_nLength - 1 - y) * m_nWidth)] = pHeightMapPixels[x + (y * m_nWidth)];
+ 			cout << x + ((m_nLength - 1 - y) * m_nWidth) << "\t" << x + (y * m_nWidth) << endl;
+			cout << m_pHeightMapPixels[ x + ((m_nLength - 1 - y) * m_nWidth) ] << endl;
+			if (x + ((m_nLength - 1 - y) * m_nWidth) == 66049)
+				int a = 0;
 		}
 	}
 
@@ -147,8 +151,8 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 
 	//	**4น่**
 
-	float fx = _fx / Transform()->GetLocalScale().x * 4.f /*/ 100.f*/;
-	float fz = _fz / Transform()->GetLocalScale().z * 4.f /*/ 100.f*/;
+	float fx = _fx / Transform()->GetLocalScale().x * 1.f /*/ 100.f*/;
+	float fz = _fz / Transform()->GetLocalScale().z * 1.f /*/ 100.f*/;
 	
 	int m_nWidth = m_pHeightMap->Width();
 	int m_nLength = m_pHeightMap->Height();
@@ -185,7 +189,9 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
 	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
 
-	return(fHeight/* * (TERRAIN_YSIZE / 2.f)*/);
+	cout << fHeight << endl;
+
+	return(fHeight);
 }
 
 void CTerrain::CreateHeightmapPixelsInfo__()

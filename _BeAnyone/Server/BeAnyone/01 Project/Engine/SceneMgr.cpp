@@ -891,7 +891,7 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
 	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 100.f, 0.f));
-	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f , 300.f /** TERRAIN_YSIZE*/, 200.f)); // 2배함
+	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f , 3000.f /** TERRAIN_YSIZE*/, 200.f)); // 2배함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
