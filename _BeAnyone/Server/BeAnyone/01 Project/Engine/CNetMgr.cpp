@@ -21,8 +21,8 @@ OBJ_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "221.151.160.142";
-//const char ip[] = "192.168.0.7";
+//const char ip[] = "192.168.0.13";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -106,6 +106,7 @@ void CNetMgr::Send_Packet(void* _packet)
 	testpacket = dataBuf.wsabuf.len;
 
 
+	//if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
 	if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() == WSA_IO_PENDING)
@@ -116,6 +117,7 @@ void CNetMgr::Send_Packet(void* _packet)
 		else
 			err_quit("WSASend");
 	}
+
 }
 
 void CNetMgr::Send_LogIN_Packet()
@@ -248,7 +250,6 @@ void CNetMgr::Recevie_Data()
 	{
 		if (WSAGetLastError() == WSAEWOULDBLOCK)
 		{
-			int i = 0;
 		}
 	}
 	else
@@ -272,6 +273,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
+		g_Object.find(g_myid)->second->SetID(g_myid);
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->initDeadReckoner();
 	}
 	break;
@@ -294,6 +296,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
+					g_Object.find(id)->second->SetID(id);
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"PlayerMale");
@@ -531,11 +534,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 				if (packet->isAttack)
 				{
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::ATTACK);
+					//g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 
 				}
 				else
 				{
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::IDLE);
+					//g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 				}
 			}
 		}

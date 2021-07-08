@@ -3,6 +3,9 @@
 #include "BulletScript.h"
 #include <iostream>
 
+
+int anicnt = 0;
+
 using namespace std;
 
 bool checkOnce = true;
@@ -32,7 +35,7 @@ void CPlayerScript::awake()
 }
 
 void CPlayerScript::update()
-{
+{	
 	
 	CTerrain* pTerrain = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain();
 	CPlayerScript* player = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
@@ -44,7 +47,6 @@ void CPlayerScript::update()
 	Vector3 worldDir;
 	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
-	char attdir = ATTACK_IDLE;
 	bool moveKeyInput = false;
 	op_Move();
 	
@@ -54,40 +56,56 @@ void CPlayerScript::update()
 	cout << playerTrans->GetLocalPos().z << endl;
 	cout << "*************************" << endl;*/
 
-	if (KEY_HOLD(KEY_TYPE::KEY_R))
-	{
-		player->AnimClipReset();
-		player->SetAnimation(Ani_TYPE::ATTACK);
-		attdir = ATTACK_ANI;
-		moveKeyInput = true;
-		if (!player->GetAttack())
-		{
-			player->SetAttack(true);
-			g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
+	//if (KEY_HOLD(KEY_TYPE::KEY_R))
+	//{
+	//	player->AnimClipReset();
+	//	player->SetAnimation(Ani_TYPE::ATTACK);
+	//	attdir = ATTACK_ANI;
+	//	moveKeyInput = true;
+	//	if (!player->GetAttack())
+	//	{
+	//		player->SetAttack(true);
+	//		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
 
-		}
-	}
-	if (KEY_AWAY(KEY_TYPE::KEY_R))
-	{
-		attdir = ATTACK_IDLE;
+	//	}
+	//}
+	//if (KEY_AWAY(KEY_TYPE::KEY_R))
+	//{
+	//	attdir = ATTACK_IDLE;
 
-		Attack_Default();
 
-		player->SetAnimation(Ani_TYPE::IDLE);
-		player->SetAttack(false);
+	//	player->SetAnimation(Ani_TYPE::IDLE);
+	//	player->SetAttack(false);
 
-		// packet send
-		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
-		player->SetAniReset(false);
+	//	// packet send
+	//	g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
+	//	player->SetAniReset(false);
 
-	}
+	//}
 
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
 		player->AnimClipReset();
+		player->SetAttack(true);
+		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
+		cout << "KEY_TAB(KEY_TYPE::KEY_R)" << endl;
+		anicnt++;
+	}
+
+	if (player->GetAttack() && player->Getcnt() < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
+		player->Setcnt(player->Getcnt() + DT);
+		cout << "*****************************"<<DT << endl;
 		player->SetAnimation(Ani_TYPE::ATTACK);
-		attdir = ATTACK_ANI;
 		moveKeyInput = true;
+	}
+	else if (player->Getcnt() > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
+	{
+		Attack_Default();
+
+		player->SetAttack(false);
+		player->Setcnt(0.f);
+		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
+
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
@@ -397,7 +415,7 @@ void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
 
-	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimationType(type);
+	//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimationType(type);
 }
 
 void CPlayerScript::SetAnimation(const uShort& other_id, const Ani_TYPE& type)

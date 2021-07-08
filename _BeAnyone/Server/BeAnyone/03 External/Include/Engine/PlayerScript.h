@@ -32,7 +32,11 @@ private:
 	float m_ftimeCount = 0.f;
 	float m_fDelayTime = 1.f;
 	bool FirstPacket = false;
+<<<<<<< HEAD
 	bool isAttack = false;
+=======
+	bool m_bisAttack = false;
+>>>>>>> e68cd54c4d4f3c46eaf7523c8250e94f2defd0d8
 	bool m_bisAniReset = false;
 	float m_fAnimationCnt = 0.f;
 
@@ -49,12 +53,21 @@ private:
 public:
 	bool GetAniReset() { return m_bisAniReset; }
 	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
+<<<<<<< HEAD
 	void SetAttack(bool isattack) { isAttack = isattack; }
 	bool GetAttack() { return this->isAttack; }
+=======
+	void SetAttack(bool isattack) { m_bisAttack = isattack; }
+	bool GetAttack() { return this->m_bisAttack; }
+>>>>>>> e68cd54c4d4f3c46eaf7523c8250e94f2defd0d8
 
 	// animclip
 	void Setcnt(const float& cnt) { m_fAnimationCnt = cnt; }
 	float Getcnt() { return m_fAnimationCnt; }
+<<<<<<< HEAD
+=======
+	//bool
+>>>>>>> e68cd54c4d4f3c46eaf7523c8250e94f2defd0d8
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }

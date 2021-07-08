@@ -223,12 +223,12 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
             {
                 if (m_pMediator->Find(user)->GetStatus() == OBJSTATUS::ST_SLEEP)
                 {
-                    if (m_pMediator->IsType(user, OBJECT_TYPE::MONSTER))
+                   /* if (m_pMediator->IsType(user, OBJECT_TYPE::MONSTER))
                         WakeUp_Monster(user);
                     else
                     {
                         WakeUp_NPC(user);
-                    }
+                    }*/
                 }
             }
             new_viewList.insert(user);
@@ -694,24 +694,24 @@ void CNetMgr::Worker_Thread()
         break;
         case ENUMOP::OP_RAMDON_MOVE_MONSTER:
         {
-            if (m_pMediator->Count(user_id) == 0)break;
-            Random_Move_Monster(user_id);
-            bool keep_alive = false;
-            //active인 플레이어가 주변에 있으면 계속 깨워두기
-            for (auto& id : g_QuadTree.search(CBoundary(Netmgr.GetMediatorMgr()->Find(user_id))))
-            {
-                if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-                    if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
-                    {
-                        keep_alive = true;
-                        break;
-                    }
-            }
-            
-            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
-            else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
-            //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
-            delete exover;
+            //if (m_pMediator->Count(user_id) == 0)break;
+            //Random_Move_Monster(user_id);
+            //bool keep_alive = false;
+            ////active인 플레이어가 주변에 있으면 계속 깨워두기
+            //for (auto& id : g_QuadTree.search(CBoundary(Netmgr.GetMediatorMgr()->Find(user_id))))
+            //{
+            //    if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+            //        if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
+            //        {
+            //            keep_alive = true;
+            //            break;
+            //        }
+            //}
+            //
+            //if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
+            //else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+            ////주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
+            //delete exover;
         }
         break;
         }

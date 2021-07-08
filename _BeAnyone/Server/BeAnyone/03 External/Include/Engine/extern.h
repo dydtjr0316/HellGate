@@ -20,6 +20,9 @@ extern int movePacketSendCnt;
 extern system_clock::time_point MoveStart;
 extern system_clock::time_point MoveEnd;
 
+//temp
+ extern int anicnt;
+// 
 // State Description
 extern D3D12_RASTERIZER_DESC g_arrRSDesc[(UINT)RS_TYPE::END];
 extern D3D12_BLEND_DESC g_arrBlendDesc[(UINT)BLEND_TYPE::END];
