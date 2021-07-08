@@ -22,7 +22,7 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 		m_pHeightMap = _pMap;
 	else
 		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
-		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\T3.jpg");
+		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\T3.jpg");
 
 	
 	Vector2 vHeightMapRes = Vector2( m_pHeightMap->Width(), m_pHeightMap->Height() );
@@ -147,8 +147,8 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 
 	//	**4น่**
 
-	float fx = _fx / Transform()->GetLocalScale().x * 2.f /*/ 100.f*/;
-	float fz = _fz / Transform()->GetLocalScale().z * 2.f /*/ 100.f*/;
+	float fx = _fx / Transform()->GetLocalScale().x * 4.f /*/ 100.f*/;
+	float fz = _fz / Transform()->GetLocalScale().z * 4.f /*/ 100.f*/;
 	
 	int m_nWidth = m_pHeightMap->Width();
 	int m_nLength = m_pHeightMap->Height();
@@ -185,7 +185,7 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
 	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
 
-	return(fHeight * (TERRAIN_YSIZE / 2.f));
+	return(fHeight/* * (TERRAIN_YSIZE / 2.f)*/);
 }
 
 void CTerrain::CreateHeightmapPixelsInfo__()

@@ -21,7 +21,7 @@ public:
 public:
 	void AddRef() { m_iRefCount++; }
 	void SubRef() { m_iRefCount--; }
-
+	 
 public:
 	virtual void Load(const wstring& _strPath/*최종 경로*/) {};
 	virtual void Save(const wstring& _strPath/*최종 경로*/) {};

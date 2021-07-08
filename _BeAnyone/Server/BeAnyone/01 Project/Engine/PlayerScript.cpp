@@ -239,15 +239,12 @@ void CPlayerScript::op_Move()
 	playerTrans->SetLocalRot(p->rotateY);
 
 	int z = (int)(temp.z / xmf3Scale.z);
-	float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0));
+	float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f /*+ 100.f*/;
 
 	if (temp.y != fHeight)
 		temp.y = fHeight;
 
 	playerTrans->SetLocalPos(temp);
-
-
-
 
 	{
 		//CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();

@@ -33,6 +33,8 @@ private:
 	float m_fDelayTime = 1.f;
 	bool FirstPacket = false;
 	bool isAttack = false;
+	bool m_bisAniReset = false;
+	float m_fAnimationCnt = 0.f;
 
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;
@@ -44,6 +46,15 @@ private:
 	Vector2 m_v2Interpolation_Point[4];
 	Vector2 m_v2Origin_Point[4];
 	int m_iInterpolationCnt = 0;
+public:
+	bool GetAniReset() { return m_bisAniReset; }
+	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
+	void SetAttack(bool isattack) { isAttack = isattack; }
+	bool GetAttack() { return this->isAttack; }
+
+	// animclip
+	void Setcnt(const float& cnt) { m_fAnimationCnt = cnt; }
+	float Getcnt() { return m_fAnimationCnt; }
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
@@ -59,11 +70,18 @@ public:
 
 public: 
 	//¿ë¼®
+	//animation
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const Ani_TYPE& type);
-	void SetAnimation(const int& other_id, const Ani_TYPE& type);
+	void SetAnimation(const uShort& other_id, const Ani_TYPE& type);
 	Ptr<CMesh> GetAniData(const Ani_TYPE& type) { return m_pAniData[(int)type]; }
 	void SetAnimationType(const Ani_TYPE& type) { m_eAniType = type; }
+	void AnimClipReset() {
+		if (m_bisAniReset == false) {
+			GetObj()->Animator3D()->SetClipTime(0, 0.f);
+			m_bisAniReset = true;
+		}
+	};
 
 	void initDeadReckoner() { m_pDeadReckoner = new CDeadReckoner(g_myid); }
 	CDeadReckoner* GetReckoner() { return m_pDeadReckoner; }
