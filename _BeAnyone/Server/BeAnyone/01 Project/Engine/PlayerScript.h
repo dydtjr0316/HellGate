@@ -34,7 +34,8 @@ private:
 	bool FirstPacket = false;
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;
-	float m_fAnimationCnt = 0.f;
+	bool m_bisDamage = false;
+	float m_fAnimationCnt[(UINT)PlAYER_ANICNT_TYPE::END]{};
 
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;
@@ -52,9 +53,13 @@ public:
 	void SetAttack(bool isattack) { m_bisAttack = isattack; }
 	bool GetAttack() { return this->m_bisAttack; }
 
+	void SetDamage(bool _isDamage) { m_bisDamage = _isDamage; }
+	bool GetDamage() { return m_bisDamage; }
+
 	// animclip
-	void Setcnt(const float& cnt) { m_fAnimationCnt = cnt; }
-	float Getcnt() { return m_fAnimationCnt; }
+	void SetCnt(const float& cnt, PlAYER_ANICNT_TYPE _AniCntType) { m_fAnimationCnt[(UINT)_AniCntType] = cnt; }
+	float GetCnt(PlAYER_ANICNT_TYPE _AniCntType) { return m_fAnimationCnt[(UINT)_AniCntType]; }
+	
 	//bool
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }

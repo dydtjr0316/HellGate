@@ -83,6 +83,7 @@ void CPlayerScript::update()
 
 	//}
 
+	// 공격 애니메이션
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
 		player->AnimClipReset();
@@ -92,21 +93,44 @@ void CPlayerScript::update()
 		anicnt++;
 	}
 
-	if (player->GetAttack() && player->Getcnt() < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
-		player->Setcnt(player->Getcnt() + DT);
+	if (player->GetAttack() && player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
+		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) + DT, PlAYER_ANICNT_TYPE::ATTACK_CNT);
 		//cout << "*****************************"<<DT << endl;
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		moveKeyInput = true;
 	}
-	else if (player->Getcnt() > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
+	else if (player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
 		Attack_Default();
 
 		player->SetAttack(false);
-		player->Setcnt(0.f);
+		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::ATTACK_CNT);
 		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
 
 	}
+
+	// 데미지 애니메이션
+	if (KEY_TAB(KEY_TYPE::KEY_Q)) {
+		player->AnimClipReset();
+		player->SetDamage(true);
+		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetDamage());
+	}
+	if (player->GetDamage() && player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
+		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) + DT, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
+		//cout << "*****************************"<<DT << endl;
+		player->SetAnimation(Ani_TYPE::DAMAGE);
+		moveKeyInput = true;
+	}
+	else if (player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
+	{
+		//Attack_Default();
+
+		player->SetDamage(false);
+		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
+		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetDamage());
+
+	}
+
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{

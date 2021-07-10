@@ -22,7 +22,7 @@ OBJ_TYPE CheckObjType(const uShort& id)
 
 //const char ip[] = "192.168.0.11";
 //const char ip[] = "192.168.0.13";
-const char ip[] = "192.168.0.13";
+const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.140.59";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -347,7 +347,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
-					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_idle.fbx", FBX_TYPE::MONSTER);
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
 
@@ -374,11 +374,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
 
 					//animation
-			   //walk
+					//idle
 					CMonsterScript* monsterScript = g_Object.find(id)->second->GetScript<CMonsterScript>();
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
+					//walk
+					Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+					monsterScript->SetAnimationData(pMeshDataKey->GetMesh());
 					//dead
-					Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_die.fbx", FBX_TYPE::MONSTER);
+					pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_die.fbx", FBX_TYPE::MONSTER);
 					monsterScript->SetAnimationData(pMeshDataKey->GetMesh());
 
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
@@ -444,6 +447,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
+
+			if (g_Object.count(other_id) == 0)break;
+			if (g_Object.find(other_id)->second == nullptr)break;
+
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
