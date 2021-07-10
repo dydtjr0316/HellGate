@@ -1,9 +1,5 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
-#define  _CRT_NO_VA_START_VALIDATION 
-int cnt = 0;
-int login = 0;
-int ghost = 0;
 
 void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 {
@@ -802,7 +798,11 @@ void CNetMgr::WakeUp_Monster(const uShort& id)
     int status = OBJSTATUS::ST_SLEEP;
     if (CAS((int*)(&(m_pMediator->Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
-        
+        //CAS(메모리, expected, update)
+        //    메모리의 값이 expected면 update로 바꾸고, true 리턴
+        //    메모리의 값이 expected가 아니면 false 리턴
+        //    WAIT FREE를 유지하는 알고리즘
+
         Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now());
     }
 }
