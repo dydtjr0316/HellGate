@@ -4,6 +4,7 @@
 #include <chrono>
 #include<algorithm>
 #include <stdio.h>  
+#include <random>
 
 // namespcae
 using namespace std;

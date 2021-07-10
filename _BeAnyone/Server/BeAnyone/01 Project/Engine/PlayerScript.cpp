@@ -94,7 +94,7 @@ void CPlayerScript::update()
 
 	if (player->GetAttack() && player->Getcnt() < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->Setcnt(player->Getcnt() + DT);
-		cout << "*****************************"<<DT << endl;
+		//cout << "*****************************"<<DT << endl;
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		moveKeyInput = true;
 	}

@@ -208,12 +208,12 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 			}
 		}
 	}
-	cout << "Search****************************" << endl;
+	/*cout << "Search****************************" << endl;
 	for (auto& obj : found)
 	{
 		cout <<"ID : "<< obj << endl;
 	}
-	cout << "---------------------------" << endl;
+	cout << "---------------------------" << endl;*/
 
 	return found;
 
