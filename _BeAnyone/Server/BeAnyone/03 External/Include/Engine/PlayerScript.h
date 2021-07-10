@@ -32,13 +32,10 @@ private:
 	float m_ftimeCount = 0.f;
 	float m_fDelayTime = 1.f;
 	bool FirstPacket = false;
-<<<<<<< HEAD
-	bool isAttack = false;
-=======
 	bool m_bisAttack = false;
->>>>>>> e68cd54c4d4f3c46eaf7523c8250e94f2defd0d8
 	bool m_bisAniReset = false;
-	float m_fAnimationCnt = 0.f;
+	bool m_bisDamage = false;
+	float m_fAnimationCnt[(UINT)PlAYER_ANICNT_TYPE::END]{};
 
 	CTerrain* m_pTerrainObj;
 	XMFLOAT3 m_xmf3Velocity;
@@ -53,21 +50,17 @@ private:
 public:
 	bool GetAniReset() { return m_bisAniReset; }
 	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
-<<<<<<< HEAD
-	void SetAttack(bool isattack) { isAttack = isattack; }
-	bool GetAttack() { return this->isAttack; }
-=======
 	void SetAttack(bool isattack) { m_bisAttack = isattack; }
 	bool GetAttack() { return this->m_bisAttack; }
->>>>>>> e68cd54c4d4f3c46eaf7523c8250e94f2defd0d8
+
+	void SetDamage(bool _isDamage) { m_bisDamage = _isDamage; }
+	bool GetDamage() { return m_bisDamage; }
 
 	// animclip
-	void Setcnt(const float& cnt) { m_fAnimationCnt = cnt; }
-	float Getcnt() { return m_fAnimationCnt; }
-<<<<<<< HEAD
-=======
+	void SetCnt(const float& cnt, PlAYER_ANICNT_TYPE _AniCntType) { m_fAnimationCnt[(UINT)_AniCntType] = cnt; }
+	float GetCnt(PlAYER_ANICNT_TYPE _AniCntType) { return m_fAnimationCnt[(UINT)_AniCntType]; }
+	
 	//bool
->>>>>>> e68cd54c4d4f3c46eaf7523c8250e94f2defd0d8
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }

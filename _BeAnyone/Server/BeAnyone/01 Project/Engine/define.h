@@ -305,7 +305,16 @@ enum class Ani_TYPE
 	WALK_D,
 	RUN,
 	ATTACK,
+	DAMAGE,
 	END
+};
+
+enum class PlAYER_ANICNT_TYPE
+{
+	ATTACK_CNT,
+	DAMAGE_CNT,
+	END,
+
 };
 
 enum class MONSTER_ANI_TYPE
