@@ -348,13 +348,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
-					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_idle.fbx", FBX_TYPE::MONSTER);
+ 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_idle.fbx", FBX_TYPE::MONSTER);
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
 
 					//pMeshData->Save(pMeshData->GetPath());
 					//
-					g_Object.find(id)->second = pMeshData->Instantiate();
+ 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"FireMonster");
 					g_Object.find(id)->second->FrustumCheck(false);
 					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
@@ -362,7 +362,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
 					g_Object.find(id)->second->AddComponent(new CCollider);
-					g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_walking");
+					g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_idle");
 					g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos()
 						, g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 					g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere
@@ -379,11 +379,17 @@ void CNetMgr::ProcessPacket(char* ptr)
 					CMonsterScript* monsterScript = g_Object.find(id)->second->GetScript<CMonsterScript>();
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
 					//walk
-					Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
-					monsterScript->SetAnimationData(pMeshDataKey->GetMesh());
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+					monsterScript->SetAnimationData(pMeshData->GetMesh());
 					//dead
-					pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_die.fbx", FBX_TYPE::MONSTER);
-					monsterScript->SetAnimationData(pMeshDataKey->GetMesh());
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_die.fbx", FBX_TYPE::MONSTER);
+					monsterScript->SetAnimationData(pMeshData->GetMesh());
+					//attack
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_attack2.fbx", FBX_TYPE::MONSTER);
+					monsterScript->SetAnimationData(pMeshData->GetMesh());
+					//damage
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_damage.fbx", FBX_TYPE::MONSTER);
+					monsterScript->SetAnimationData(pMeshData->GetMesh());
 
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
@@ -430,7 +436,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					CGameObject* MonsterObj = g_Object.find(other_id)->second;
 					MonsterObj->Transform()->SetLocalPos(packet->localVec);
 					MonsterObj->Transform()->SetLocalRot(packet->rotateY);
-					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::WALK);
+					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::IDLE);
 					
 				}
 			}

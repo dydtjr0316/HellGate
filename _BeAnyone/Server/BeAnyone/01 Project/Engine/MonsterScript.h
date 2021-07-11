@@ -20,11 +20,17 @@ private:
 
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;
+	bool m_bisDamaged = false;
 
+<<<<<<< HEAD
 
 	// ¿ë¼®
 	unsigned short m_sId;
 	float m_fAnimationCnt = 0.f;
+=======
+	float m_fAnimationCnt[(UINT)MONSTER_ANICNT_TYPE::END] = {};
+
+>>>>>>> fd74a4364d5ec09f736ec5be37f786b08bea4b9f
 	uShort m_sHp;
 	uShort m_sMaxHP = 100;
 	MONSTER_AUTOMOVE_DIR m_eDir = MONSTER_AUTOMOVE_DIR::IDLE;
@@ -39,8 +45,8 @@ public:
 	void SetBisAttack(const bool& isattack) { m_bisAttack = isattack; }
 	bool GetBisAttack() { return m_bisAttack; }
 
-	void Setcnt(const float& cnt) { m_fAnimationCnt = cnt; }
-	float Getcnt() { return m_fAnimationCnt; }
+	void Setcnt(const float& cnt, MONSTER_ANICNT_TYPE _cntType) { m_fAnimationCnt[(UINT)_cntType] = cnt; }
+	float Getcnt(MONSTER_ANICNT_TYPE _cntType) { return  m_fAnimationCnt[(UINT)_cntType]; }
 
 	//animatioin
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }

@@ -797,6 +797,16 @@ void CSceneMgr::init()
 	pObject->MeshRender()->SetDynamicShadow(false);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
+	// monster
+	Ptr<CMeshData> pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_idle.fbx", FBX_TYPE::MONSTER);
+	//walk
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+	//dead
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_die.fbx", FBX_TYPE::MONSTER);
+	//attack
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_attack2.fbx", FBX_TYPE::MONSTER);
+	//damage
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_damage.fbx", FBX_TYPE::MONSTER);
 
 	//// ====================
 	//// Monster1 오브젝트 생성
