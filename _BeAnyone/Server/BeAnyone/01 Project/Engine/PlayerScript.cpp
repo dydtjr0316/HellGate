@@ -86,6 +86,8 @@ void CPlayerScript::update()
 	// 공격 애니메이션
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
+		cout << "ID : "<<GetObj()->GetID() << endl;
+
 		player->AnimClipReset();
 		player->SetAttack(true);
 		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
@@ -237,7 +239,6 @@ void CPlayerScript::update()
 		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
 		SetTime_Zero();
 	}
-
 
 	if (KEY_HOLD(KEY_TYPE::KEY_Z))
 	{

@@ -48,6 +48,7 @@ using std::string;
 using std::wstring;
 using std::make_pair;
 
+
 #include "d3dx12.h"	// Dx12 서포트 헤더
 #include "define.h" // 매크로, enum
 #include "struct.h" // 구조체 설계
@@ -78,12 +79,12 @@ using namespace DirectX::PackedVector;
 using namespace Microsoft::WRL;
 
 
-// Fbx Loader
-//#ifdef _DEBUG
-//#include "fbxsdk.h"
-//#else
-//#include "../../03 External/Include/FBXLoader/fbxsdk.h"
-//#endif
+ //Fbx Loader
+#ifdef _DEBUG
+#include "fbxsdk.h"
+#else
+#include "../../03 External/Include/FBXLoader/fbxsdk.h"
+#endif
 
 
 #ifdef _DEBUG

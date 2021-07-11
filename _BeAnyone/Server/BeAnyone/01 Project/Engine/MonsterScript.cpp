@@ -148,6 +148,14 @@ void CMonsterScript::SetAnimation(const MONSTER_ANI_TYPE& type)
 	GetObj()->MeshRender()->SetMesh(m_pAniData[(int)type]);
 }
 
+void CMonsterScript::AnimClipReset()
+{
+	if (m_bisAniReset == false) {
+		GetObj()->Animator3D()->SetClipTime(0, 0.f);
+		m_bisAniReset = true;
+	}
+}
+
 void CMonsterScript::DecreaseHp()
 {
 

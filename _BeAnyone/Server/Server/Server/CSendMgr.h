@@ -1,8 +1,7 @@
 #pragma once
 class CSendMgr
 {
-public:
-	void Send_Packet(const uShort& id, void* packet);
+public:		//player
 	void Send_LevelUP_Packet(const uShort& id);
 	void Send_Attacked_Packet_Monster(const uShort& attacker, const uShort& monster_id);
 	void Send_Attacked_Packet_Client(const uShort& client_id);
@@ -15,5 +14,10 @@ public:
 
 	//°¡¶ó
 	void Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attackerid, const bool& isAttack);
+public:		// monster
+	void Send_Monster_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
+
+public:
+	void Send_Packet(const uShort& id, void* packet);
 };
 

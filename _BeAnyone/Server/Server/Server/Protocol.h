@@ -77,6 +77,7 @@ constexpr char SC_PACKET_LEVEL_UP = 8;
 constexpr char SC_PACKET_ID = 9;
 constexpr char SC_PACKET_MOUSE = 10;
 constexpr char SC_PACKET_STOP = 11;
+constexpr char SC_PACKET_MONSTER_MOVE = 12;
 
 //°¡¶ó
 constexpr char SC_PACKET_ATTACKANI = 12;
@@ -190,6 +191,14 @@ struct sc_packet_attack {
 	uShort  id;
 
 	uShort hp;
+};
+
+struct sc_packet_monster_automove
+{
+	char size;
+	char type;
+	uShort id;
+	char eDir;
 };
 
 struct sc_packet_level_up {

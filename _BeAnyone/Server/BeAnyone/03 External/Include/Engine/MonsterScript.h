@@ -18,16 +18,16 @@ private:
 	// animation
 	vector<Ptr<CMesh>>   m_pAniData;
 
-	unsigned short m_sId;
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;
 
 
-
+	// ¿ë¼®
+	unsigned short m_sId;
 	float m_fAnimationCnt = 0.f;
-
 	uShort m_sHp;
 	uShort m_sMaxHP = 100;
+	MONSTER_AUTOMOVE_DIR m_eDir = MONSTER_AUTOMOVE_DIR::IDLE;
 public:
 	virtual void update();
 	virtual void OnCollisionEnter(CCollider* _pOther);
@@ -47,18 +47,16 @@ public:
 	void SetAnimation(const MONSTER_ANI_TYPE& type);
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
 
-	void AnimClipReset() {
-		if (m_bisAniReset == false) {
-			GetObj()->Animator3D()->SetClipTime(0, 0.f);
-			m_bisAniReset = true;
-		}
-	};
+	void AnimClipReset();
 
 	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
 
 	void DecreaseHp();
 
 	// void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
+	MONSTER_AUTOMOVE_DIR& GetDir() { return m_eDir; }
+	void SetDir(const MONSTER_AUTOMOVE_DIR& dir) { m_eDir = dir; }
+	
 public:
 	CLONE(CMonsterScript);
 

@@ -14,10 +14,11 @@
 #include "ToolCamScript.h"
 #include "MonsterScript.h"
 #include "SwordScript.h"
-OBJ_TYPE CheckObjType(const uShort& id)
+MONSTER_TYPE;
+OBJECT_TYPE CheckObjType(const uShort& id)
 {
-	if (id >= 0 && id < MAX_USER)return OBJ_TYPE::PLAYER;
-	else if (id >= START_MONSTER && id < END_MONSTER)return OBJ_TYPE::MONSTER;
+	if (id >= 0 && id < MAX_USER)return OBJECT_TYPE::CLIENT;
+	else if (id >= START_MONSTER && id < END_MONSTER)return OBJECT_TYPE::MONSTER;
 }
 
 //const char ip[] = "192.168.0.11";
@@ -288,7 +289,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 		else
 		{
-			if (CheckObjType(id) == OBJ_TYPE::PLAYER)
+			if (CheckObjType(id) == OBJECT_TYPE::CLIENT)
 			{
 				if (0 == g_Object.count(id)/*&& (g_Object.find(id)!= g_Object.end())*/)
 				{
@@ -343,7 +344,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->AddChild(pSword);
 				}
 			}
-			else if (CheckObjType(id) == OBJ_TYPE::MONSTER)
+			else if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
 			{
 				if (0 == g_Object.count(id))
 				{
@@ -411,7 +412,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//Ãß°¡
 			if (0 != g_Object.count(other_id))
 			{
-				if (CheckObjType(other_id) == OBJ_TYPE::PLAYER)
+				if (CheckObjType(other_id) == OBJECT_TYPE::CLIENT)
 				{
 					system_clock::time_point end = system_clock::now();
 					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
@@ -424,7 +425,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 				}
-				else if (CheckObjType(other_id) == OBJ_TYPE::MONSTER)
+				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
 					CGameObject* MonsterObj = g_Object.find(other_id)->second;
 					MonsterObj->Transform()->SetLocalPos(packet->localVec);
@@ -467,14 +468,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else {
 			if (0 != g_Object.count(other_id))
 			{
-				if (CheckObjType(other_id) == OBJ_TYPE::PLAYER)
+				if (CheckObjType(other_id) == OBJECT_TYPE::CLIENT)
 				{
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 					CEventMgr::GetInst()->update();
 					CEventMgr::GetInst()->update();
 					g_Object.erase(other_id);
 				}
-				else if (CheckObjType(other_id) == OBJ_TYPE::MONSTER)
+				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
 					if (!my_packet->isAttack)
 					{
@@ -511,7 +512,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else
 		{
 
-			if (CheckObjType(id) == OBJ_TYPE::MONSTER)
+			if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
 			{
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
 
@@ -536,7 +537,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (id == g_myid) {
 		}
 		else {
-			if (0 != g_Object.count(id)&&CheckObjType(id) == OBJ_TYPE::PLAYER)
+			if (0 != g_Object.count(id)&&CheckObjType(id) == OBJECT_TYPE::CLIENT)
 			{
 				if (packet->isAttack)
 				{
