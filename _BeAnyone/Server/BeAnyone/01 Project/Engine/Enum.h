@@ -1,9 +1,11 @@
 #pragma once
 
 // 확정
-enum class OBJ_TYPE { PLAYER, MONSTER };
+enum class OBJECT_TYPE { CLIENT, MONSTER, NPC };
 
 enum class MONSTER_TYPE { MONSTER1, MONSTER2, MONSTER3, MONSTER4, BOSS_MONSTER, DEFAULT };
+
+enum class MONSTER_AUTOMOVE_DIR { FRONT, BACK, LEFT, RIGHT, AUTO, IDLE };
 
 enum class KEYINPUT { UP, DOWN, LEFT, RIGHT, JUMP, /* + 조작키 */ };
 

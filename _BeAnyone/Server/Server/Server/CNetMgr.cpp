@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
+float RMMT = 3.f;
 
 void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 {
@@ -18,10 +19,8 @@ void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 
 void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
 {
-
     CGameObject* MonsterObj = m_pMediator->Find(Monster_id);
     Vector3 MonsterPos = MonsterObj->GetLocalPosVector();
-    //unordered_set<uShort> vSectors; 
     unordered_set<uShort> old_viewList;
     unordered_set<uShort> new_viewList;
     for (auto& old_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id))))
@@ -31,24 +30,24 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     }
 
     std::random_device rd;
-    // random_device 를 통해 난수 생성 엔진을 초기화 한다.
     std::mt19937 gen(rd());
-    // 0 부터 99 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
     std::uniform_int_distribution<int> dis(0, 3);
+    MONSTER_AUTOMOVE_DIR dir = (MONSTER_AUTOMOVE_DIR)(dis(gen));
 
-    //char dir = rand() % 4;//
-    char dir = dis(gen);
-    switch (dir)
-    {   // 캐릭터 바라보는 방향 바꾸는 코드 필요
-    case 0: if (MonsterPos.x > 0)MonsterPos.x -= 1.f; break;
-    case 1: if (MonsterPos.x < WORLD_WIDTH - 1)MonsterPos.x += 1.f; break;
-    case 2: if (MonsterPos.z > 0)MonsterPos.z -= 1.f; break;
-    case 3: if (MonsterPos.z < WORLD_HEIGHT - 1)MonsterPos.z += 1.f; break;
-    }
-    MonsterObj->SetPosV(MonsterPos);
-    cout << "Monster Random move    ->>>>   " << (int)dir << endl;
-    cout << MonsterPos.x << MonsterPos.z << endl;
-    cout << "------------------------" << endl;
+    //switch (dir)
+    //{   // 캐릭터 바라보는 방향 바꾸는 코드 필요
+    //case 0: if (MonsterPos.x > 0)MonsterPos.x -= 1.f; break;
+    //case 1: if (MonsterPos.x < WORLD_WIDTH - 1)MonsterPos.x += 1.f; break;
+    //case 2: if (MonsterPos.z > 0)MonsterPos.z -= 1.f; break;
+    //case 3: if (MonsterPos.z < WORLD_HEIGHT - 1)MonsterPos.z += 1.f; break;
+    //}
+    //MonsterObj->SetPosV(MonsterPos);
+
+
+
+    //cout << "Monster Random move    ->>>>   " << (int)dir << endl;
+    //cout << MonsterPos.x << MonsterPos.z << endl;
+    //cout << "------------------------" << endl;
     for (auto& new_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id))))
     {
         if (m_pMediator->IsType(new_ids, OBJECT_TYPE::CLIENT))
@@ -65,7 +64,7 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
         }
         else
         {
-            m_pSendMgr->Send_Move_Packet(id, Monster_id, dir);
+            m_pSendMgr->Send_Move_Packet(id, Monster_id, (char)dir);
         }
     }
 
@@ -706,7 +705,8 @@ void CNetMgr::Worker_Thread()
             Random_Move_Monster(user_id);
             bool keep_alive = false;
             //active인 플레이어가 주변에 있으면 계속 깨워두기
-            for (auto& id : g_QuadTree.search(CBoundary(Netmgr.GetMediatorMgr()->Find(user_id))))
+            unordered_set<uShort> view = g_QuadTree.search(CBoundary(Netmgr.GetMediatorMgr()->Find(user_id)));
+            for (auto& id : view)
             {
                 if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
                     if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
@@ -717,7 +717,10 @@ void CNetMgr::Worker_Thread()
             }
             
             if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now());
-            else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+            else {
+                m_pMediator->Find(user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+                //for auto viewand send packet;
+            }
             //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
             delete exover;
         }

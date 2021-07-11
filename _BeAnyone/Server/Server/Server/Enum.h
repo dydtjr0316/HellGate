@@ -5,6 +5,8 @@ enum class OBJECT_TYPE { CLIENT, MONSTER, NPC };
 
 enum class MONSTER_TYPE { MONSTER1, MONSTER2, MONSTER3, MONSTER4, BOSS_MONSTER, DEFAULT };
 
+enum class MONSTER_AUTOMOVE_DIR { FRONT, BACK, LEFT, RIGHT, AUTO, IDLE };
+
 enum class KEYINPUT { UP, DOWN, LEFT, RIGHT, JUMP, /* + 조작키 */ };
 
 enum class PLAYER_TYPE { WARRIOR, SNIPER };	// 캐릭터 타입 근접 : 원거리
