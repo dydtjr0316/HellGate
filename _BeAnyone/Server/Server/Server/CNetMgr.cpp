@@ -43,11 +43,6 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     //}
     //MonsterObj->SetPosV(MonsterPos);
 
-
-
-    //cout << "Monster Random move    ->>>>   " << (int)dir << endl;
-    //cout << MonsterPos.x << MonsterPos.z << endl;
-    //cout << "------------------------" << endl;
     for (auto& new_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id))))
     {
         if (m_pMediator->IsType(new_ids, OBJECT_TYPE::CLIENT))
@@ -57,14 +52,9 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     // new viewlist를 알아야함 ..
     for (auto& id : new_viewList)
     {
-        if (old_viewList.count(id) == 0)
+        if (old_viewList.count(id) != 0)
         {
-            dynamic_cast<CClient*>(m_pMediator->Find(id))->GetViewList().insert(Monster_id);
-            m_pSendMgr->Send_Enter_Packet(id, Monster_id);
-        }
-        else
-        {
-            m_pSendMgr->Send_Move_Packet(id, Monster_id, (char)dir);
+            m_pSendMgr->Send_Monster_Move_Packet(id, Monster_id, (char)MONSTER_AUTOMOVE_DIR::FRONT);
         }
     }
 
@@ -73,6 +63,7 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
         if (new_viewList.count(id) == 0)
         {
             dynamic_cast<CClient*>(m_pMediator->Find(id))->GetViewList().erase(Monster_id);
+            m_pSendMgr->Send_Monster_Move_Packet(id, Monster_id, (char)MONSTER_AUTOMOVE_DIR::IDLE);
             m_pSendMgr->Send_Leave_Packet(id, Monster_id);
         }
     }
@@ -716,7 +707,7 @@ void CNetMgr::Worker_Thread()
                     }
             }
             
-            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now());
+            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
             else {
                 m_pMediator->Find(user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
                 //for auto viewand send packet;
@@ -806,6 +797,6 @@ void CNetMgr::WakeUp_Monster(const uShort& id)
         //    메모리의 값이 expected가 아니면 false 리턴
         //    WAIT FREE를 유지하는 알고리즘
 
-        Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now());
+        Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
     }
 }

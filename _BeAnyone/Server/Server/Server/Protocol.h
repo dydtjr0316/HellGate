@@ -80,7 +80,7 @@ constexpr char SC_PACKET_STOP = 11;
 constexpr char SC_PACKET_MONSTER_MOVE = 12;
 
 //°¡¶ó
-constexpr char SC_PACKET_ATTACKANI = 12;
+constexpr char SC_PACKET_ATTACKANI = 13;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;

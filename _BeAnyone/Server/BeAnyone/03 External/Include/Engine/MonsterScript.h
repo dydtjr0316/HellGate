@@ -6,6 +6,7 @@ class CMonsterScript :
 {
 private:
 	MONSTER_TYPE m_MType;
+	float m_fSpeed = 2.0f;
 
 	// ui
 	CGameObject* m_pUi;
@@ -22,6 +23,8 @@ private:
 	bool m_bisAniReset = false;
 	bool m_bisDamaged = false;
 
+	sc_packet_monster_automove* m_Packet_autoMove = nullptr;
+
 	// ¿ë¼®
 	unsigned short m_sId;
 	float m_fAnimationCnt[(UINT)MONSTER_ANICNT_TYPE::END] = {};
@@ -32,6 +35,7 @@ public:
 	virtual void update();
 	virtual void OnCollisionEnter(CCollider* _pOther);
 	virtual void OnCollisionExit(CCollider* _pOther);
+	float GetSpeed() { return m_fSpeed; }
 	void SetID(const uShort& id) { m_sId = id; }
 	uShort GetID() { return m_sId; }
 	void SetHP(const uShort& hp) { m_sHp = hp; }
@@ -46,7 +50,6 @@ public:
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const MONSTER_ANI_TYPE& type);
 	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
-
 	void AnimClipReset();
 
 	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
@@ -56,6 +59,9 @@ public:
 	// void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
 	MONSTER_AUTOMOVE_DIR& GetDir() { return m_eDir; }
 	void SetDir(const MONSTER_AUTOMOVE_DIR& dir) { m_eDir = dir; }
+
+	sc_packet_monster_automove* GetPacketMove() { m_Packet_autoMove; }
+	void SetPacketMove(sc_packet_monster_automove* p) { m_Packet_autoMove = p; }
 	
 public:
 	CLONE(CMonsterScript);

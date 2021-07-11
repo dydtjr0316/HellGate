@@ -69,8 +69,50 @@ CMonsterScript::~CMonsterScript()
 void CMonsterScript::update()
 {
 	//if (g_Object.count(m_sId) == 0)return;
-	CGameObject* monster = g_Object.find(m_sId)->second;
+	
+	CGameObject* monster = GetObj();
+	CTransform* monsterTrans = monster->Transform();
+	Vector3 monsterPos = monsterTrans->GetLocalPos();
+	Vector3 worldDir;
 	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
+	if (m_Packet_autoMove != nullptr)
+	{
+		switch ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir)
+		{
+		case MONSTER_AUTOMOVE_DIR::FRONT:
+			//worlddir 변경
+			// 밑에꺼 처럼 좌표 변경하는 코드1
+			//monsterPos.z += DT * 200;
+
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			monsterPos += worldDir * 20.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);
+
+			break;
+		case MONSTER_AUTOMOVE_DIR::BACK:
+		/*	monsterTrans->SetLocalRot(Vector3(XM_PI, 0.f, 0.f));
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			monsterPos += worldDir * 20.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);*/
+			break;
+		case MONSTER_AUTOMOVE_DIR::LEFT:
+			break;
+		case MONSTER_AUTOMOVE_DIR::RIGHT:
+			break;
+		case MONSTER_AUTOMOVE_DIR::AUTO:
+			// a* 사용할곳
+			break;
+		case MONSTER_AUTOMOVE_DIR::IDLE:
+			m_Packet_autoMove = nullptr;
+			break;
+		default:
+			break;
+		}
+
+		if ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+			monsterTrans->SetLocalPos(monsterPos);
+	}
+
 	if (monsterScript->GetBisAttack())
 	{
 		monsterScript->AnimClipReset();

@@ -443,6 +443,17 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 	}
 	break;
+	case SC_PACKET_MONSTER_MOVE:
+	{
+		sc_packet_monster_automove* packet = reinterpret_cast<sc_packet_monster_automove*>(ptr);
+		int monster_id = packet->id;
+		if (g_Object.find(packet->id)->second == nullptr)break;
+		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
+
+		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+		// 여기서부터 
+	}
+	break;
 	case SC_PACKET_STOP:
 	{
 		sc_packet_stop* packet = reinterpret_cast<sc_packet_stop*>(ptr);
@@ -450,7 +461,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (other_id == g_myid)
 		{
-			//ObjTrans->SetLocalPos(packet->localVec);
+			
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
