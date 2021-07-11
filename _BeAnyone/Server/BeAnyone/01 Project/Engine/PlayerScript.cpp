@@ -36,78 +36,42 @@ void CPlayerScript::awake()
 
 void CPlayerScript::update()
 {	
-	
-	CTerrain* pTerrain = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain();
-	CPlayerScript* player = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
-	const Vector3& xmf3Scale = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
-	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	CTransform* playerTrans = g_Object.find(g_myid)->second->Transform();
+	int id = GetObj()->GetID();
+	if (id >= MAX_USER)return;
+	CTerrain* pTerrain = GetObj()->GetScript<CPlayerScript>()->GetTerrain();
+	CPlayerScript* player = GetObj()->GetScript<CPlayerScript>();
+	const Vector3& xmf3Scale = GetObj()->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
+	Vector3 localPos = GetObj()->Transform()->GetLocalPos();
+	CTransform* playerTrans = GetObj()->Transform();
 	Vector2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-	Vector3 vRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+	Vector3 vRot = GetObj()->Transform()->GetLocalRot();
 	Vector3 worldDir;
 	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
 	op_Move();
-	
-
-	/*cout << playerTrans->GetLocalPos().x << endl;
-	cout << playerTrans->GetLocalPos().y << endl;
-	cout << playerTrans->GetLocalPos().z << endl;
-	cout << "*************************" << endl;*/
-
-	//if (KEY_HOLD(KEY_TYPE::KEY_R))
-	//{
-	//	player->AnimClipReset();
-	//	player->SetAnimation(Ani_TYPE::ATTACK);
-	//	attdir = ATTACK_ANI;
-	//	moveKeyInput = true;
-	//	if (!player->GetAttack())
-	//	{
-	//		player->SetAttack(true);
-	//		g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
-
-	//	}
-	//}
-	//if (KEY_AWAY(KEY_TYPE::KEY_R))
-	//{
-	//	attdir = ATTACK_IDLE;
-
-
-	//	player->SetAnimation(Ani_TYPE::IDLE);
-	//	player->SetAttack(false);
-
-	//	// packet send
-	//	g_netMgr.Send_Player_Animation_Packet(g_myid, isAttack);
-	//	player->SetAniReset(false);
-
-	//}
 
 	// 공격 애니메이션
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
-		cout << "ID : "<<GetObj()->GetID() << endl;
-
 		player->AnimClipReset();
 		player->SetAttack(true);
-		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
-		cout << "KEY_TAB(KEY_TYPE::KEY_R)" << endl;
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack());
 		anicnt++;
 	}
 
-	if (player->GetAttack() && player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
+	if (player->GetAttack() && player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) + DT, PlAYER_ANICNT_TYPE::ATTACK_CNT);
-		//cout << "*****************************"<<DT << endl;
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		moveKeyInput = true;
 	}
-	else if (player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
+	else if (player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
 		Attack_Default();
 
 		player->SetAttack(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::ATTACK_CNT);
-		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetAttack());
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack());
 
 	}
 
@@ -115,21 +79,20 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_Q)) {
 		player->AnimClipReset();
 		player->SetDamage(true);
-		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetDamage());
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage());
 	}
-	if (player->GetDamage() && player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
+	if (player->GetDamage() && player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) + DT, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
-		//cout << "*****************************"<<DT << endl;
 		player->SetAnimation(Ani_TYPE::DAMAGE);
 		moveKeyInput = true;
 	}
-	else if (player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) > g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength)
+	else if (player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
 		//Attack_Default();
 
 		player->SetDamage(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
-		g_netMgr.Send_Player_Animation_Packet(g_myid, player->GetDamage());
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage());
 
 	}
 
@@ -137,7 +100,7 @@ void CPlayerScript::update()
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		vRot.y += vDrag.x * DT * ROTATE_SPEED;
-		g_Object.find(g_myid)->second->Transform()->SetLocalRot(vRot);
+		GetObj()->Transform()->SetLocalRot(vRot);
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
@@ -197,7 +160,7 @@ void CPlayerScript::update()
 		player->SetAnimation(Ani_TYPE::IDLE);
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
-		player->GetReckoner()->DeadReckoning(g_Object.find(g_myid)->second);
+		player->GetReckoner()->DeadReckoning(GetObj());
 
 	
 
@@ -213,7 +176,7 @@ void CPlayerScript::update()
 
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
-		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		player->GetReckoner()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
 		CountTime();
 	}
 
@@ -236,7 +199,7 @@ void CPlayerScript::update()
 
 		player->GetReckoner()->SetDirVec(worldDir);
 		player->GetReckoner()->SetRotateY(vRot.y);
-		player->GetReckoner()->SetLocalPos(g_Object.find(g_myid)->second->Transform()->GetLocalPos());
+		player->GetReckoner()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
 		SetTime_Zero();
 	}
 
@@ -255,11 +218,11 @@ void CPlayerScript::update()
 
 void CPlayerScript::op_Move()
 {
-	sc_packet_move* p = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
+	sc_packet_move* p = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
 
 	if (p == nullptr)return;
 	if (g_Object.count(p->id) == 0)return;
-	if (g_myid == p->id)return;
+	if (GetObj()->GetID() == p->id)return;
 	if (!p->isMoving)return;
 	if (p->id >= 1000)return;
 
@@ -341,7 +304,7 @@ void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, con
 
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
-	sc_packet_move* recvPacket = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
+	sc_packet_move* recvPacket = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
 	Vector3 tempLocalPos = recvPacket->localVec;
 	
 	float tempSpeed = recvPacket->speed;
@@ -383,10 +346,6 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	
 
 	for (int i = 0; i < 4; i++) {
-		/*cout << "templocalPos.z : " << tempLocalPos.z << endl;
-		cout << "time stamp : " << (float)(rtt / i) << endl;
-		cout << "calc       : " << (tempWorldDir.z * tempSpeed * (float)(rtt / i)) << endl;*/
-
 		tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
 		tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
 		g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
@@ -421,7 +380,7 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 	float dt;
 	int i;
 	dt = DT / 3.f;
-	sc_packet_move* recvPacket = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket();
+	sc_packet_move* recvPacket = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
 	CPlayerScript* player = g_Object.find(recvPacket->id)->second->GetScript<CPlayerScript>();
 	for (i = 0; i < 4; i++)
 	{
@@ -436,11 +395,11 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 
 void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 {
-	g_Object.find(g_myid)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
-	g_Object.find(g_myid)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
-	g_Object.find(g_myid)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
+	GetObj()->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
+	GetObj()->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
+	GetObj()->MeshRender()->SetMesh(m_pAniData[(int)type]);
 
-	//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimationType(type);
+	//GetObj()->GetScript<CPlayerScript>()->SetAnimationType(type);
 }
 
 void CPlayerScript::SetAnimation(const uShort& other_id, const Ani_TYPE& type)
@@ -466,9 +425,9 @@ void CPlayerScript::OnCollision(CCollider* _pOther)
 	BoundingSphere otherBS = _pOther->Collider()->GetBoundingSphere();
 
 	
-	Vector3 localPos = g_Object.find(g_myid)->second->Transform()->GetLocalPos();
-	localPos += -g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetPlayerDir() * 2;
-	g_Object.find(g_myid)->second->Transform()->SetLocalPos(localPos);
+	Vector3 localPos = GetObj()->Transform()->GetLocalPos();
+	localPos += -GetObj()->GetScript<CPlayerScript>()->GetPlayerDir() * 2;
+	GetObj()->Transform()->SetLocalPos(localPos);
 
 }
 
@@ -478,7 +437,7 @@ void CPlayerScript::OnCollisionExit(CCollider* _pOther)
 
 void CPlayerScript::Attack_Default()
 {
-	CPlayerScript* player = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	CPlayerScript* player = GetObj()->GetScript<CPlayerScript>();
 	Vector3 vPos = player->Transform()->GetLocalPos();
 
 	vector<CGameObject*> vecObj;

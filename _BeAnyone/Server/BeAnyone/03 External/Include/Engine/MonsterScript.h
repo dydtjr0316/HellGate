@@ -22,15 +22,9 @@ private:
 	bool m_bisAniReset = false;
 	bool m_bisDamaged = false;
 
-<<<<<<< HEAD
-
 	// ¿ë¼®
 	unsigned short m_sId;
-	float m_fAnimationCnt = 0.f;
-=======
 	float m_fAnimationCnt[(UINT)MONSTER_ANICNT_TYPE::END] = {};
-
->>>>>>> fd74a4364d5ec09f736ec5be37f786b08bea4b9f
 	uShort m_sHp;
 	uShort m_sMaxHP = 100;
 	MONSTER_AUTOMOVE_DIR m_eDir = MONSTER_AUTOMOVE_DIR::IDLE;
