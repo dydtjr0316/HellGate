@@ -22,6 +22,7 @@ private:
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;
 	bool m_bisDamaged = false;
+	bool m_bisPunch = false;
 
 	float m_fAnimationCnt[(UINT)MONSTER_ANICNT_TYPE::END] = {};
 

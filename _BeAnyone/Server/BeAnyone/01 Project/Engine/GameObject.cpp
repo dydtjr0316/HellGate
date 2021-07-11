@@ -221,7 +221,12 @@ void CGameObject::update()
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
-		m_vecScript[i]->update();
+		if (GetName() == L"PlayerMale") {
+			if (GetID() == g_myid && g_Object.size() != 0 && g_Object.find(g_myid)->second != nullptr)
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->update();
+		}
+		else
+			m_vecScript[i]->update();
 	}
 	
 }

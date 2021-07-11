@@ -387,7 +387,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_attack2.fbx", FBX_TYPE::MONSTER);
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
 					//damage
-					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_damage.fbx", FBX_TYPE::MONSTER);
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_damage2.fbx", FBX_TYPE::MONSTER);
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
 
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(

@@ -81,23 +81,39 @@ void CMonsterScript::update()
 	{
 		monsterScript->SetBisAttack(false);
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
+		m_bisAniReset = false;
 		g_netMgr.Send_MonsterDead_Packet(m_sId);
 		DeleteObject(GetObj());
 		CEventMgr::GetInst()->update();
 		g_Object.erase(m_sId);
+
 	}
 
 	// is damaged
-	if (m_bisDamaged == true) {
+	if (m_bisDamaged == true && monsterScript->GetBisAttack() == false) {
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
 	}
-	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack()) {
+	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		m_bisDamaged = false;
+		m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
 		// 서버에 패킷 보내야 함
+	}
+
+	// attack
+	if (m_bisPunch == true && KEY_TAB(KEY_TYPE::KEY_NUM3)) {
+		monsterScript->AnimClipReset();
+		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::ATTACK);
+	}
+	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+		m_bisPunch = false;
+		m_bisAniReset = false;
+		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::IDLE);
 	}
 
 	//------
