@@ -317,6 +317,14 @@ enum class PlAYER_ANICNT_TYPE
 
 };
 
+enum class MONSTER_ANICNT_TYPE
+{
+	ATTACK_CNT,
+	DAMAGE_CNT,
+	DEATH_CNT,
+	END,
+};
+
 enum class MONSTER_ANI_TYPE
 {
 	IDLE,

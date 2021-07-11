@@ -74,17 +74,30 @@ void CMonsterScript::update()
 	if (monsterScript->GetBisAttack())
 	{
 		monsterScript->AnimClipReset();
-		monsterScript->Setcnt(monsterScript->Getcnt() + DT);
+		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) + DT, MONSTER_ANICNT_TYPE::DEATH_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::DEAD);
 	}
-	if (monsterScript->Getcnt() > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack())
+	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack())
 	{
 		monsterScript->SetBisAttack(false);
-		monsterScript->Setcnt(0.f);
+		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
 		g_netMgr.Send_MonsterDead_Packet(m_sId);
 		DeleteObject(GetObj());
 		CEventMgr::GetInst()->update();
 		g_Object.erase(m_sId);
+	}
+
+	// is damaged
+	if (m_bisDamaged == true) {
+		monsterScript->AnimClipReset();
+		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
+	}
+	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack()) {
+		m_bisDamaged = false;
+		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::IDLE);
+		// 서버에 패킷 보내야 함
 	}
 
 	//------
@@ -134,6 +147,8 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 		// 여기 두번들어감 // 용석
 		g_netMgr.Send_Attack_Packet(m_sId);
 		cout << "sid : " << m_sId << endl;
+		
+		m_bisDamaged = true;
 	}
 }
 
