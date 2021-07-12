@@ -22,6 +22,7 @@ private:
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;
 	bool m_bisDamaged = false;
+	bool m_bisPunch = false;
 
 	sc_packet_monster_automove* m_Packet_autoMove = nullptr;
 

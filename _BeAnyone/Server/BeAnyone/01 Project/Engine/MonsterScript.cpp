@@ -56,6 +56,8 @@ CMonsterScript::CMonsterScript()
 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Monster")->AddGameObject(childDummy);
 	m_pChildDummy = childDummy;
+
+
 }
 
 CMonsterScript::~CMonsterScript()
@@ -81,23 +83,30 @@ void CMonsterScript::update()
 		{
 		case MONSTER_AUTOMOVE_DIR::FRONT:
 			//worlddir 변경
-			// 밑에꺼 처럼 좌표 변경하는 코드1
-			//monsterPos.z += DT * 200;
-
-			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			// 밑에꺼 처럼 좌표 변경하는 코드
+			
+			worldDir = -monsterTrans->GetLocalDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 20.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 
 			break;
 		case MONSTER_AUTOMOVE_DIR::BACK:
-		/*	monsterTrans->SetLocalRot(Vector3(XM_PI, 0.f, 0.f));
+			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 20.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);*/
+			monsterTrans->SetLocalPos(monsterPos);
 			break;
 		case MONSTER_AUTOMOVE_DIR::LEFT:
+			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			monsterPos += worldDir * 20.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);
 			break;
 		case MONSTER_AUTOMOVE_DIR::RIGHT:
+			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			monsterPos += worldDir * 20.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);
 			break;
 		case MONSTER_AUTOMOVE_DIR::AUTO:
 			// a* 사용할곳
@@ -163,19 +172,21 @@ void CMonsterScript::update()
 	//------
 
 	if (m_bSetChild == false) {
-		GetObj()->AddChild(m_pChildDummy);
+		//GetObj()->AddChild(m_pChildDummy);
 		m_pChildDummy->AddChild(m_pUi);
 		m_bSetChild = true;
 	}
 
 	Vector3 MonsterPos = GetObj()->Transform()->GetLocalPos();
-
+	Vector3 DummyPos = m_pChildDummy->Transform()->GetLocalPos();
 	Vector3 UiPos = m_pUi->Transform()->GetLocalPos();
 	Vector3 UiUnderPos = m_pUnderUi->Transform()->GetLocalPos();
 	Vector3 PlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
 	Vector3 UIscale = m_pUi->Transform()->GetLocalScale();
 
-	m_pChildDummy->Transform()->SetLocalRot(Vector3(PlayerRot.x, PlayerRot.z, -PlayerRot.y) + Vector3(-XM_PI / 2, 0, XM_PI));
+	DummyPos = MonsterPos;
+	m_pChildDummy->Transform()->SetLocalRot(Vector3(PlayerRot + Vector3(0.f, XM_PI, 0.f)));
+	m_pChildDummy->Transform()->SetLocalPos(DummyPos);
 
 	// Ui Under Bar
 	UiUnderPos = Vector3(MonsterPos.x, MonsterPos.y + 300.f, MonsterPos.z);
@@ -185,7 +196,7 @@ void CMonsterScript::update()
 	// Ui Bar
 	// 체력 줄이는
 	m_pUi->Transform()->SetLocalScale(Vector3(static_cast<float>(m_sHp * 3.5f), UIscale.y, UIscale.z));
-	UiPos = Vector3(0.0f, 0.f, 0.f);
+	UiPos = Vector3(0.0f, 300.f, 0.f);
 	float decresedHp = 350.f - static_cast<float>(m_sHp * 3.5f);
 	UiPos.x -= decresedHp / 2;
 	UiPos.y = 300.f;

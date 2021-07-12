@@ -54,7 +54,7 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     {
         if (old_viewList.count(id) != 0)
         {
-            m_pSendMgr->Send_Monster_Move_Packet(id, Monster_id, (char)MONSTER_AUTOMOVE_DIR::FRONT);
+            m_pSendMgr->Send_Monster_Move_Packet(id, Monster_id, (char)dir);
         }
     }
 
@@ -683,7 +683,7 @@ void CNetMgr::Worker_Thread()
            //         }
            //     }
            //}
-           // if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
+           // if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_NPC, system_clock::now() + monsterAutoMoveTimer);
            // else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
            // //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
            // delete exover;
@@ -707,7 +707,7 @@ void CNetMgr::Worker_Thread()
                     }
             }
             
-            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
+            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + monsterAutoMoveTimer);
             else {
                 m_pMediator->Find(user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
                 //for auto viewand send packet;
@@ -783,7 +783,7 @@ void CNetMgr::WakeUp_NPC(const uShort& id)
     int status = OBJSTATUS::ST_SLEEP;
     if (CAS((int*)(&(m_pMediator->Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
-        Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + 1s);
+        Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + monsterAutoMoveTimer);
     }
 }
 
@@ -797,6 +797,6 @@ void CNetMgr::WakeUp_Monster(const uShort& id)
         //    메모리의 값이 expected가 아니면 false 리턴
         //    WAIT FREE를 유지하는 알고리즘
 
-        Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now() + 1s);
+        Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now() + monsterAutoMoveTimer);
     }
 }

@@ -24,7 +24,7 @@ private:
 	Matrix m_mPlayerWolrd;
 	Vector3 m_vPlayerDir[(UINT)DIR_TYPE::END];
 
-	
+
 
 public:
 	const Vector3& GetLocalPos() { return m_vLocalPos; }
@@ -45,6 +45,10 @@ public:
 	void SetLocalScale(const Vector3& _vScale) { if (m_vLocalScale != _vScale) { m_vLocalScale = _vScale; Changed(); } }
 	void SetLocalRot(const Vector3& _vRot) { if (m_vLocalRot != _vRot) { m_vLocalRot = _vRot; Changed(); } }
 	void SetLocalRot(const float& _vRotY) { if (m_vLocalRot.y != _vRotY) { m_vLocalRot.y = _vRotY; Changed(); } }
+
+	// monster local dir ¼öÁ¤
+	void SetLocalDir(DIR_TYPE _eType, const Vector3& _vDir) { m_vLocalDir[(UINT)_eType] = _vDir; }
+	void SetWorldDir(DIR_TYPE _eType, const Vector3& _vDir) { m_vWorldDir[(UINT)_eType] = _vDir; }
 
 	bool IsCasting(const Vector3& _vPos);
 	float GetMaxScale();
