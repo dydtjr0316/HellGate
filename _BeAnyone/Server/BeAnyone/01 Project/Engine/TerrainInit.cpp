@@ -22,7 +22,7 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 		m_pHeightMap = _pMap;
 	else
 		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
-		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\teset.png");
+		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\test2.png");
 
 	
 	Vector2 vHeightMapRes = Vector2( m_pHeightMap->Width(), m_pHeightMap->Height() );
@@ -122,7 +122,7 @@ void CTerrain::CreateHeightmapPixelsInfo()
 
 	/*HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);*/
-	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\teset.raw"
+	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\test2.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
 	DWORD dwBytesRead;
 	::ReadFile(hFile, pHeightMapPixels, (m_nWidth * m_nLength), &dwBytesRead, NULL);
@@ -134,10 +134,6 @@ void CTerrain::CreateHeightmapPixelsInfo()
 		for (int x = 0; x < m_nWidth; ++x)
 		{
 			m_pHeightMapPixels[x + ((m_nLength - 1 - y) * m_nWidth)] = pHeightMapPixels[x + (y * m_nWidth)];
- 			cout << x + ((m_nLength - 1 - y) * m_nWidth) << "\t" << x + (y * m_nWidth) << endl;
-			cout << m_pHeightMapPixels[ x + ((m_nLength - 1 - y) * m_nWidth) ] << endl;
-			if (x + ((m_nLength - 1 - y) * m_nWidth) == 66049)
-				int a = 0;
 		}
 	}
 
@@ -170,6 +166,8 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fTopLeft = (float)m_pHeightMapPixels[x + ((z + 1) * m_nWidth)];
 	float fTopRight = (float)m_pHeightMapPixels[(x + 1) + ((z + 1) * m_nWidth)];
 
+	cout << fBottomLeft << "\t" << fBottomRight << "\t" << fTopLeft << "\t" << fTopRight << endl;
+
 	if (_check)
 	{
 		if (fzPercent >= fxPercent)
@@ -192,36 +190,4 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	cout << fHeight << endl;
 
 	return(fHeight);
-}
-
-void CTerrain::CreateHeightmapPixelsInfo__()
-{
-	int m_nWidth = m_pHeightMap->Width();
-	int m_nLength = m_pHeightMap->Height();
-
-	UCHAR* pHeightMapPixels = new UCHAR[m_nWidth * m_nLength];
-
-	HANDLE hFile = ::CreateFile(L"C:\\Users\\채영문\\Desktop\\BeAnyone\\BeAnyone\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
-		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
-	//HANDLE hFile = ::CreateFile(L"C:\\Users\\채영문\\Desktop\\BeAnyone\\BeAnyone\\02 File\\bin\\content\\Texture\\Terrain\\T3.raw"
-		//, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
-	DWORD dwBytesRead;
-	::ReadFile(hFile, pHeightMapPixels, (m_nWidth * m_nLength), &dwBytesRead, NULL);
-	::CloseHandle(hFile);
-
-	m_pHeightMapPixels = new BYTE[m_nWidth * m_nLength];
-	for (int y = 0; y < m_nLength; ++y)
-	{
-		if (y == 2500)
-		{
-			int a = 0;
-		}
-		for (int x = 0; x < m_nWidth; ++x)
-		{
-			m_pHeightMapPixels[x + ((m_nLength - 1 - y) * m_nWidth)] = pHeightMapPixels[x + (y * m_nWidth)];
-		}
-	}
-	auto a = m_pHeightMapPixels;
-	if (pHeightMapPixels)
-		delete[] pHeightMapPixels;
 }
