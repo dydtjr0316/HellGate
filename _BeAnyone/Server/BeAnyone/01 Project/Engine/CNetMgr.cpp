@@ -223,6 +223,17 @@ void CNetMgr::Send_Player_Animation_Packet(const uShort& user_id, const bool& is
 	Send_Packet(&p);
 }
 
+void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONSTER_ANI_TYPE& aniType)
+{
+	cs_pcaket_Monster_Animation p;
+	p.type = CS_MONSTER_ANIMATION;
+	p.size = sizeof(p);
+	p.id = monster_id;
+	p.aniType = aniType;
+	Send_Packet(&p);
+
+}
+
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 {
 	//cout << "------Setani -> " << (int)type << endl;
@@ -270,7 +281,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
-		cout << "SC_PACKET_LOGIN_OK :  "<<g_myid << endl;
+		cout << "SC_PACKET_LOGIN_OK :  " << g_myid << endl;
 
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
@@ -348,13 +359,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
- 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_idle.fbx", FBX_TYPE::MONSTER);
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_idle.fbx", FBX_TYPE::MONSTER);
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
 
 					//pMeshData->Save(pMeshData->GetPath());
 					//
- 					g_Object.find(id)->second = pMeshData->Instantiate();
+					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"FireMonster");
 					g_Object.find(id)->second->FrustumCheck(false);
 					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
@@ -394,7 +405,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 					);
-
+					g_Object.find(id)->second->SetID(id);
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 					cout << "---------------------" << endl;
@@ -437,7 +448,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					MonsterObj->Transform()->SetLocalPos(packet->localVec);
 					MonsterObj->Transform()->SetLocalRot(packet->rotateY);
 					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::IDLE);
-					
+
 				}
 			}
 		}
@@ -461,7 +472,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (other_id == g_myid)
 		{
-			
+
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -477,7 +488,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
-		
+
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
@@ -554,7 +565,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (id == g_myid) {
 		}
 		else {
-			if (0 != g_Object.count(id)&&CheckObjType(id) == OBJECT_TYPE::CLIENT)
+			if (0 != g_Object.count(id) && CheckObjType(id) == OBJECT_TYPE::CLIENT)
 			{
 				if (packet->isAttack)
 				{
@@ -569,6 +580,18 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 			}
 		}
+	}
+	break;
+	case SC_PACKET_MONSTER_ANIMATION:
+	{
+		sc_packet_Monster_Animation* packet = reinterpret_cast<sc_packet_Monster_Animation*>(ptr);
+		int id = packet->id;
+		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
+
+		cout << "Monster id -> " << packet->id << endl;
+		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->id, packet->aniType);
+
+		//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 	}
 	break;
 	default:

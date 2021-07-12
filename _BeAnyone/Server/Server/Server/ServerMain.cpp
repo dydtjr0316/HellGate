@@ -40,6 +40,8 @@ int main()
     accept_over.wsabuf.len = static_cast<int>(c_socket);
     ZeroMemory(&accept_over.over, sizeof(accept_over.over));
     AcceptEx(g_listenSocket, c_socket, accept_over.io_buf, 0, 32, 32, NULL, &accept_over.over);
+
+    CTimeMgr::GetInst();
     
     // Áö¿ì±â
     Netmgr.GetMediatorMgr()->InitObject();
@@ -49,7 +51,7 @@ int main()
     thread time_thread(&CNetMgr::Timer_Worker, &Netmgr);
     vector <thread> worker_threads;
     for (int i = 0; i < 4; ++i) worker_threads.emplace_back(thread(&CNetMgr::Worker_Thread, &Netmgr));
-    worker_threads.emplace_back(thread(&CNetMgr::DeadReckoning_Thread, &Netmgr));
+    worker_threads.emplace_back(thread(&CNetMgr::Processing_Thead, &Netmgr));
     for (auto& th : worker_threads) th.join();
     
     time_thread.join();

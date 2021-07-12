@@ -81,6 +81,7 @@ constexpr char SC_PACKET_MONSTER_MOVE = 12;
 
 //가라
 constexpr char SC_PACKET_ATTACKANI = 13;
+constexpr char SC_PACKET_MONSTER_ANIMATION = 14;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -90,7 +91,8 @@ constexpr char CS_LOGOUT = 4;
 constexpr char CS_TELEORT = 5;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
 constexpr char CS_STOP = 6;
 constexpr char CS_MONSTER_DEAD = 7;
-constexpr char CS_ATTACK_ANIMATION = 8;
+constexpr char CS_ATTACK_ANIMATION = 8; 
+constexpr char CS_MONSTER_ANIMATION = 9;
 
 
 constexpr unsigned char O_PLAYER = 0;
@@ -151,6 +153,13 @@ struct sc_packet_AttackAni {
 	char type;
 	uShort id;
 	bool isAttack;
+};
+
+struct sc_packet_Monster_Animation {
+	char size;
+	char type;
+	uShort id;
+	MONSTER_ANI_TYPE aniType;
 };
 
 
@@ -293,6 +302,14 @@ struct cs_packet_AttackAni {
 	uShort  id;
 
 	bool isAttack;
+};
+
+struct cs_pcaket_Monster_Animation {
+	char	size;
+	char	type;
+	uShort  id;
+
+	MONSTER_ANI_TYPE aniType;
 };
 
 

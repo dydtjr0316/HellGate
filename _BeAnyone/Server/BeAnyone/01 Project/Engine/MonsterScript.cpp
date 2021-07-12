@@ -145,26 +145,34 @@ void CMonsterScript::update()
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
+		cout << "What is Getobj.id = " << m_sId << endl;
+		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
 	}
 	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		m_bisDamaged = false;
 		m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
+		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
 		// 서버에 패킷 보내야 함
 	}
-
+	GetObj()->GetID();
 	// attack
-	if (m_bisPunch == true && KEY_TAB(KEY_TYPE::KEY_NUM3)) {
+	if (m_bisPunch) {
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::ATTACK);
+		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK);
+
+		// packet
 	}
 	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		m_bisPunch = false;
 		m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
+		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
+		// packet
 	}
 
 	//------
@@ -230,6 +238,13 @@ void CMonsterScript::SetAnimation(const MONSTER_ANI_TYPE& type)
 	GetObj()->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
 	GetObj()->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	GetObj()->MeshRender()->SetMesh(m_pAniData[(int)type]);
+}
+
+void CMonsterScript::SetAnimation(const uShort& other_id, const MONSTER_ANI_TYPE& type)
+{
+	g_Object.find(other_id)->second->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
+	g_Object.find(other_id)->second->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
+	g_Object.find(other_id)->second->MeshRender()->SetMesh(m_pAniData[(int)type]);
 }
 
 void CMonsterScript::AnimClipReset()

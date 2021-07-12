@@ -144,6 +144,17 @@ void CSendMgr::Send_Attack_Animation_Packet(const uShort& user_id, const uShort&
     Send_Packet(user_id, &p);
 }
 
+void CSendMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const uShort& user_id, const MONSTER_ANI_TYPE& aniType)
+{
+    sc_packet_Monster_Animation p;
+    p.id = monster_id;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_MONSTER_ANIMATION;
+    p.aniType = aniType;
+    Send_Packet(user_id, &p);
+
+}
+
 void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir)
 {
     sc_packet_monster_automove p;

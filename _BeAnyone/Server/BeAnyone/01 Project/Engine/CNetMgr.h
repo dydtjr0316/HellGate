@@ -38,6 +38,7 @@ public:		// 패킷 전송부
 
 	// 가라
 	void Send_Player_Animation_Packet(const uShort& user_id, const bool& isAttack);
+	void Send_Monster_Animation_Packet(const uShort& monster_id, const MONSTER_ANI_TYPE& aniType);
 public:		// animation
 	void SetAnimation(int id, const Ani_TYPE& type);
 

@@ -30,5 +30,5 @@ static type* GetInst()\
 
 #define DeltaTime CTimeMgr::GetInst()->GetDeltaTime()
 #define CAST_CLIENT dynamic_cast<CClient*>
-#define CAST_MONSTER dynamic_cast<CMONSTER*>
+#define CAST_MONSTER dynamic_cast<CMonster*>
 #define CAST_NPC dynamic_cast<CNPC*>
