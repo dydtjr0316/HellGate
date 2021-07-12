@@ -30,7 +30,7 @@ public:		// 按眉 积己 关 魄喊何
 
 public:		// thread 包府何
 	void Worker_Thread();
-	void DeadReckoning_Thread();
+	void Processing_Thead();// 单靛饭目醋 + monster ani cnt
 	void Timer_Worker();
 	void WakeUp_NPC(const uShort& id);
 	void WakeUp_Monster(const uShort& id);

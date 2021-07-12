@@ -498,6 +498,25 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         }
     }
     break;
+    case CS_MONSTER_ANIMATION:
+    {
+        cs_pcaket_Monster_Animation* packet = reinterpret_cast<cs_pcaket_Monster_Animation*>(buf);
+
+        //if (m_pMediator->Count(packet->id) == 0)break;
+        CMonster* monster = CAST_MONSTER(m_pMediator->Find(packet->id));
+        unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(packet->id));
+        for (auto& user : new_viewList)
+        {
+            if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
+            {
+                cout << "monster animation user id -> " << user << endl;
+                cout << "monster animation monster id -> " << packet->id << endl;
+                cout << "monster animation ani type -> " << (int)packet->aniType << endl;
+                m_pSendMgr->Send_Monster_Animation_Packet(packet->id, user, packet->aniType);
+            }
+        }
+    }
+    break;
     default:
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();
@@ -722,14 +741,13 @@ void CNetMgr::Worker_Thread()
 
 }
 
-void CNetMgr::DeadReckoning_Thread()
+void CNetMgr::Processing_Thead()
 {
     cout << "deadReckoning_ Thread Working" << endl;
-    if (m_pMediator->ReckonerSize() == 0)return;
-    CGameObject* obj = nullptr;
-    cs_packet_move* drmPacket = nullptr;
-    while (true)
+    if (m_pMediator->ReckonerSize() != 0)
     {
+        CGameObject* obj = nullptr;
+        cs_packet_move* drmPacket = nullptr;
         for (auto& reckoner : m_pMediator->GetReckonerList())
         {
             obj = m_pMediator->Find(reckoner);
@@ -740,7 +758,6 @@ void CNetMgr::DeadReckoning_Thread()
                 obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
                 //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
             }
-
         }
     }
 }

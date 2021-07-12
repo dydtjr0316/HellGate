@@ -53,12 +53,12 @@ typedef unsigned short uShort;
 
 
 
+#include "../../BeAnyone/01 Project/Engine/define.h"
 #include "protocol.h"
 #include "enum.h"
 #include "struct.h"
 #include "Global.h" 
 #include "Template.h"
 #include "CTimeMgr.h"
-
 
 
