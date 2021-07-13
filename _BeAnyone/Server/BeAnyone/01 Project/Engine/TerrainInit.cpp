@@ -118,27 +118,30 @@ void CTerrain::CreateHeightmapPixelsInfo()
 	int m_nWidth = m_pHeightMap->Width();
 	int m_nLength = m_pHeightMap->Height();
 
-	BYTE* pHeightMapPixels = new BYTE[m_nWidth * m_nLength];
+	int iSize = m_nWidth * m_nLength;
+	BYTE* pHeightMapPixels = new BYTE[iSize];
 
 	/*HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);*/
 	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\test2.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
 	DWORD dwBytesRead;
-	::ReadFile(hFile, pHeightMapPixels, (m_nWidth * m_nLength), &dwBytesRead, NULL);
+	::ReadFile(hFile, pHeightMapPixels, iSize, &dwBytesRead, NULL);
 	::CloseHandle(hFile);
 
-	m_pHeightMapPixels = new BYTE[m_nWidth * m_nLength];
+	m_pHeightMapPixels = new BYTE[iSize];
 	for (int y = 0; y < m_nLength; ++y)
 	{
 		for (int x = 0; x < m_nWidth; ++x)
 		{
+			//	픽셀좌표계에서 지형 좌표계로 변환
 			m_pHeightMapPixels[x + ((m_nLength - 1 - y) * m_nWidth)] = pHeightMapPixels[x + (y * m_nWidth)];
+			//cout << static_cast<float>(m_pHeightMapPixels[x + ((m_nLength - 1 - y) * m_nWidth)]) << "\t" << x + (y * m_nWidth) << endl;
 		}
 	}
 
 	if (pHeightMapPixels) 
-		delete[] pHeightMapPixels;
+		delete[] pHeightMapPixels;	
 }
 
 float CTerrain::GetHeight(float _fx, float _fz, bool _check)
@@ -146,12 +149,13 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	//	xmf3Scale :: 교수님 Heightmap resourse는 257 257 크기라 x, z크기 스케일 함
 
 	//	**4배**
+	_check = true;
 
-	float fx = _fx / Transform()->GetLocalScale().x * 1.f /*/ 100.f*/;
-	float fz = _fz / Transform()->GetLocalScale().z * 1.f /*/ 100.f*/;
+	float fx = _fx / Transform()->GetLocalScale().x * 2.f;
+	float fz = _fz / Transform()->GetLocalScale().z * 2.f;
 	
 	int m_nWidth = m_pHeightMap->Width();
-	int m_nLength = m_pHeightMap->Height();
+	int m_nLength = m_pHeightMap->Height();		
 
 	if ((fx < 0.0f) || (fz < 0.0f) || (fx >= m_nWidth) || (fz >= m_nLength)) 
 		return(0.0f);
@@ -166,9 +170,9 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fTopLeft = (float)m_pHeightMapPixels[x + ((z + 1) * m_nWidth)];
 	float fTopRight = (float)m_pHeightMapPixels[(x + 1) + ((z + 1) * m_nWidth)];
 
-	cout << fBottomLeft << "\t" << fBottomRight << "\t" << fTopLeft << "\t" << fTopRight << endl;
+	cout << _fx << "\t" << _fz << "\t";
 
-	if (_check)
+	if (_check) 
 	{
 		if (fzPercent >= fxPercent)
 			fBottomRight = fBottomLeft + (fTopRight - fTopLeft);
@@ -189,5 +193,5 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 
 	cout << fHeight << endl;
 
-	return(fHeight);
+	return(fHeight * 10.f);
 }
