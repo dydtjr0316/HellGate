@@ -743,20 +743,25 @@ void CNetMgr::Worker_Thread()
 
 void CNetMgr::Processing_Thead()
 {
-    cout << "deadReckoning_ Thread Working" << endl;
-    if (m_pMediator->ReckonerSize() != 0)
+    while (1)
     {
-        CGameObject* obj = nullptr;
-        cs_packet_move* drmPacket = nullptr;
-        for (auto& reckoner : m_pMediator->GetReckonerList())
+        if (m_pMediator->ReckonerSize() != 0)
         {
-            obj = m_pMediator->Find(reckoner);
-            drmPacket = obj->GetDeadReckoningPacket();
-            if (drmPacket->isMoving)
+            CGameObject* obj = nullptr;
+            cs_packet_move* drmPacket = nullptr;
+            Vector3 objPos;
+            for (auto& reckoner : m_pMediator->GetReckonerList())
             {
-                obj->SetRotateY(drmPacket->rotateY);
-                obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
+                obj = m_pMediator->Find(reckoner);
+                objPos = obj->GetLocalPosVector();
+                drmPacket = obj->GetDeadReckoningPacket();
+                if (obj->GetIsMoving())
+                {
+                    obj->SetRotateY(drmPacket->rotateY);
+                    obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
+                    cout << "ID: " << reckoner << " XÁÂÇ¥ -> " << objPos.x << " YÁÂÇ¥ -> " << objPos.z << endl;
+                    //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
+                }
             }
         }
     }
