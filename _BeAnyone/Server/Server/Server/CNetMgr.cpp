@@ -177,44 +177,10 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
 
-    //_tSector oldSector = pClient->GetSector();
-
-    /*switch (dir)
-    {
-    case MV_UP:
-        if (localVec.y > 0) localVec += dirVec;
-        break;
-    case MV_DOWN:
-        if (localVec.y < (WORLD_HEIGHT - 1)) localVec += dirVec;
-        break;
-    case MV_LEFT:
-        if (localVec.x > 0) localVec += dirVec;
-        break;
-    case MV_RIGHT:
-        if (localVec.x < (WORLD_WIDTH - 1)) localVec += dirVec;
-        break;
-    case MV_FRONT:
-        if (localVec.z < (WORLD_WIDTH - 1)) localVec += dirVec;
-        break;
-    case MV_BACK:
-        if (localVec.z > 0) localVec += dirVec;
-        break;
-
-    default:
-        cout << "Unknown Direction from Client move packet!\n";
-        DebugBreak();
-        exit(-1);
-    }*/
-
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
 
-    //pClient->Change_Sector();
     unordered_set<uShort> new_viewList;
-
-    //m_pSendMgr->Send_Move_Packet(user_id, user_id, dir);
-    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
-    //
     unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
     if (vSectors.size() != 0)
     {
@@ -249,6 +215,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                 {
                     CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
                     m_pSendMgr->Send_Enter_Packet(ob, user_id);
+                    
                 }
                 else
                 {
@@ -728,6 +695,7 @@ void CNetMgr::Worker_Thread()
                     {
                         keep_alive = true;
                         break;
+                        break;
                     }
             }
             
@@ -766,7 +734,7 @@ void CNetMgr::Processing_Thead()
                 {
                     obj->SetRotateY(drmPacket->rotateY);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                    cout << "ID: " << reckoner << " XÁÂÇ¥ -> " << objPos.x << " YÁÂÇ¥ -> " << objPos.z << endl;
+                   // ¿ë¼® cout << "ID: " << reckoner << " XÁÂÇ¥ -> " << objPos.x << " YÁÂÇ¥ -> " << objPos.z << endl;
                     //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
                 }
             }

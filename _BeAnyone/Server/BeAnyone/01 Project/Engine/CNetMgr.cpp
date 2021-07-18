@@ -360,7 +360,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
-					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_idle.fbx", FBX_TYPE::MONSTER);
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
 
@@ -374,6 +374,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
 					g_Object.find(id)->second->AddComponent(new CCollider);
+					// Collider 물어보기
 					g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_idle");
 					g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos()
 						, g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
@@ -501,7 +502,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				{
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 					CEventMgr::GetInst()->update();
-					CEventMgr::GetInst()->update();
+					//CEventMgr::GetInst()->update();
 					g_Object.erase(other_id);
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
@@ -571,13 +572,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 				if (packet->isAttack)
 				{
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::ATTACK);
-					//g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
-
 				}
 				else
 				{
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::IDLE);
-					//g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CSendMgr.h"
+int sendentercnt = 1;
 
 void CSendMgr::Send_Packet(const uShort& id, void* packet)
 {
@@ -98,6 +99,8 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
     p.o_type = O_PLAYER;
     if (p.id >= START_MONSTER && p.id < END_MONSTER)
         p.hp = dynamic_cast<CMonster*>(Netmgr.GetMediatorMgr()->Find(other_id))->GetHP();
+
+    cout << "<" << sendentercnt++ << ">     " << user_id << "에게 " << other_id << "가  Enter Packet 전송" << endl;
 
     Send_Packet(user_id, &p);
 }
