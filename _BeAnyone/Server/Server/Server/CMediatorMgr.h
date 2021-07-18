@@ -5,6 +5,7 @@ class CNPC;
 class CClient;
 typedef unordered_map<uShort, CGameObject*> OBJLIST;
 typedef unordered_set<uShort> RECKONER;
+typedef unordered_set<uShort> MONSTER_RECKONER;
 //typedef OBJLIST::iterator OBJITER;
 //typedef RECKONER::iterator RECKONER_ITER;
 class CMediatorMgr
@@ -12,11 +13,13 @@ class CMediatorMgr
 private:
 	OBJLIST m_ObjectList;
 	RECKONER m_ReckonerList;
+	MONSTER_RECKONER m_MonsterReckonerList;
 public:
 	void InitObject();
 public:
 	OBJLIST GetObjList() { return m_ObjectList; }
 	RECKONER GetReckonerList() { return m_ReckonerList; }
+	MONSTER_RECKONER GetMonsterReckonerList() { return m_MonsterReckonerList; }
 public:
 	bool IsType(const uShort& id, const OBJECT_TYPE& type);
 	
@@ -35,5 +38,12 @@ public:		//  Reckoner 중개자 관리부
 	void Delete_Reckoner(const uShort& id);
 	const size_t ReckonerCount(const uShort& id);
 	const size_t ReckonerSize();
+
+public:
+	void MonsterReckonerAdd(const uShort& id);
+	int MonsterReckonerFind(const uShort& id);
+	void Delete_MonsterReckoner(const uShort& id);
+	const size_t MonsterReckonerCount(const uShort& id);
+	const size_t MonsterReckonerSize();
 };
 

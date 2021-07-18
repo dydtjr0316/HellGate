@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
-float RMMT = 3.f;
 
 void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 {
@@ -33,6 +32,10 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(0, 3);
     MONSTER_AUTOMOVE_DIR dir = (MONSTER_AUTOMOVE_DIR)(dis(gen));
+    
+    CAST_MONSTER(MonsterObj)->SetDir(dir);
+    CAST_MONSTER(MonsterObj)->SetIsMoving(true);
+    
 
     //switch (dir)
     //{   // 캐릭터 바라보는 방향 바꾸는 코드 필요
@@ -711,7 +714,9 @@ void CNetMgr::Worker_Thread()
         break;
         case ENUMOP::OP_RAMDON_MOVE_MONSTER:
         {
+            if (!m_pMediator->IsType(user_id, OBJECT_TYPE::MONSTER))break;
             if (m_pMediator->Count(user_id) == 0)break;
+            m_pMediator->MonsterReckonerAdd(user_id);
             Random_Move_Monster(user_id);
             bool keep_alive = false;
             //active인 플레이어가 주변에 있으면 계속 깨워두기
@@ -729,6 +734,8 @@ void CNetMgr::Worker_Thread()
             if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + monsterAutoMoveTimer);
             else {
                 m_pMediator->Find(user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+                m_pMediator->Delete_MonsterReckoner(user_id);
+                CAST_MONSTER(m_pMediator->Find(user_id))->SetIsMoving(false);
                 //for auto viewand send packet;
             }
             //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
@@ -743,7 +750,7 @@ void CNetMgr::Worker_Thread()
 
 void CNetMgr::Processing_Thead()
 {
-    while (1)
+    while (true)
     {
         if (m_pMediator->ReckonerSize() != 0)
         {
@@ -761,6 +768,40 @@ void CNetMgr::Processing_Thead()
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
                     cout << "ID: " << reckoner << " X좌표 -> " << objPos.x << " Y좌표 -> " << objPos.z << endl;
                     //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
+                }
+            }
+        }
+
+        if (m_pMediator->MonsterReckonerSize() != 0)
+        {
+            Vector3 monsterPos;
+            for (auto& monster : m_pMediator->GetMonsterReckonerList())
+            {
+                monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();
+                if (CAST_MONSTER(m_pMediator->Find(monster))->GetIsMoving())
+                {
+                    switch (CAST_MONSTER(m_pMediator->Find(monster))->GetDir())
+                    {
+                    case MONSTER_AUTOMOVE_DIR::FRONT:
+                        monsterPos.z += 20.f * DT;
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::BACK:
+                        monsterPos.z -= 20.f * DT;
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::LEFT:
+                        monsterPos.x -= 20.f * DT;
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::RIGHT:
+                        monsterPos.x += 20.f * DT;
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::AUTO:
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::IDLE:
+                        break;
+                    default:
+                        break;
+                    }
+                    CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
                 }
             }
         }

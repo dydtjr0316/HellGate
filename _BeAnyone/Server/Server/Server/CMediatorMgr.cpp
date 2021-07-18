@@ -106,6 +106,38 @@ const size_t CMediatorMgr::Size()
     return m_ObjectList.size();
 }
 
+void CMediatorMgr::MonsterReckonerAdd(const uShort& id)
+{
+    if (m_MonsterReckonerList.count(id) == 0)
+        m_MonsterReckonerList.emplace(id);
+}
+
+int CMediatorMgr::MonsterReckonerFind(const uShort& id)
+{
+    if (m_MonsterReckonerList.count(id) != 0)
+    {
+        return  id;
+    }
+}
+
+void CMediatorMgr::Delete_MonsterReckoner(const uShort& id)
+{
+    if (m_MonsterReckonerList.count(id) != 0)
+    {
+        m_MonsterReckonerList.erase(id);
+    }
+}
+
+const size_t CMediatorMgr::MonsterReckonerCount(const uShort& id)
+{
+    return m_MonsterReckonerList.count(id);
+}
+
+const size_t CMediatorMgr::MonsterReckonerSize()
+{
+    return m_MonsterReckonerList.size();
+}
+
 void CMediatorMgr::ReckonerAdd(const uShort& id)
 {
     if (m_ReckonerList.count(id) == 0)
