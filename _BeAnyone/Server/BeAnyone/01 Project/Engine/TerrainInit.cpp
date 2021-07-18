@@ -151,8 +151,11 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	//	**4น่**
 	_check = true;
 
-	float fx = _fx / Transform()->GetLocalScale().x * 2.f;
-	float fz = _fz / Transform()->GetLocalScale().z * 2.f;
+	float fx = _fx / Transform()->GetLocalScale().x * 1.f;
+	float fz = _fz / Transform()->GetLocalScale().z * 1.f;
+
+	auto tempX = Transform()->GetLocalScale().x;
+	auto tempZ = Transform()->GetLocalScale().z;
 	
 	int m_nWidth = m_pHeightMap->Width();
 	int m_nLength = m_pHeightMap->Height();		
