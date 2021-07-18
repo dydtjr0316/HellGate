@@ -797,7 +797,7 @@ void CSceneMgr::init()
 
 	// UI Camera
 	CGameObject* pUICam = new CGameObject;
-	pUICam->SetName(L"MainCam");
+	pUICam->SetName(L"UiCam");
 	pUICam->AddComponent(new CTransform);
 	pUICam->AddComponent(new CCamera);
 	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
@@ -974,6 +974,7 @@ void CSceneMgr::init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Monster");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
 
 	
 

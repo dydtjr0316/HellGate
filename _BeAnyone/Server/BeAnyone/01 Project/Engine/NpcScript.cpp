@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "NpcScript.h"
 #include "RenderMgr.h"
+#include "ToolCamScript.h"
 
 CNpcScript::CNpcScript()
 	: CScript((UINT)COMPONENT_TYPE::SCRIPT) //CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT),
@@ -62,16 +63,21 @@ void CNpcScript::update()
 
 		POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
 
-		if (m_bIsCollision == true && m_bIsTalk != true) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
-			m_bIsTalk = true;
+		if (m_bIsCollision == true ) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
+			// m_bIsTalk = true;
 			m_pConversationBox->SetUiRenderCheck(true);
 			// 첫 대화가 나와야 함
+			// 클릭할 때마다 다른 대화
+			// 마지막 대화 끝나면 
 
-		}
-
-		if (m_bIsTalk == true) {
+			// 카메라 회전
+			RotateCamera();
 			
 		}
+
+		//if (m_bIsTalk == true) { // 필요없을 것 같은데
+		//	
+		//}
 
 	}
 }
@@ -104,8 +110,33 @@ void CNpcScript::AnimClipReset()
 void CNpcScript::OnCollisionEnter(CCollider* _pOther)
 {
 	// 대화하겠다는 텍스트 띄우기
-
+	
 	// 클릭하면 대화 상자 띄우기 (istalk true로 만들기) -> SetUiRenderCheck true로
-
+	m_bIsCollision = true;
 }
 
+void CNpcScript::OnCollisionExit(CCollider* _pOther)
+{
+	//cout << "나감" << endl;
+}
+
+void CNpcScript::RotateCamera()
+{
+	CGameObject* cam;
+	vector<CGameObject*> objects;
+	objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetObjects();
+
+	vector<CGameObject*>::iterator iter = objects.begin();
+
+	for (; iter != objects.end();) {
+		if ((*iter)->GetName() == L"MainCam")
+ 			cam = *iter;
+		++iter;
+	}
+
+	Vector3 npcPos = GetObj()->Transform()->GetLocalPos();
+
+	CToolCamScript* camScript = cam->GetScript<CToolCamScript>();
+	camScript->SetCamState(2);
+	camScript->SetNpcPos(npcPos);
+}

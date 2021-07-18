@@ -44,6 +44,10 @@ public:
 
 	// collision
 	void OnCollisionEnter(CCollider* _pOther);
+	void OnCollisionExit(CCollider* _pOther);
+
+	// camera
+	void RotateCamera();
 
 public:
 	CLONE(CNpcScript);
