@@ -44,6 +44,7 @@ public:
 		, DXGI_FORMAT _iIdxFormat, UINT _iIdxCount, BYTE* _pIdxSysMem);
 
 	static CMesh* CreateFromContainer(CFBXLoader& _loader);
+	static CMesh* CreateFromContainerAni(CFBXLoader& _loader);
 
 	void render(UINT _iSubset = 0);
 

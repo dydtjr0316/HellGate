@@ -26,5 +26,6 @@ public:
 public:
 	void CreateTargetUI();
 	void CreateMap(CTerrain*);
+	void CreateNpc();
 };
 

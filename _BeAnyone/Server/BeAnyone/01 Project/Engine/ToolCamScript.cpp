@@ -20,14 +20,21 @@ void CToolCamScript::update()
  
 	if (KEY_TAB(KEY_TYPE::KEY_LCTRL))
 	{
-		int i = 0;
-		bCameraTag = !bCameraTag;
+		/*int i = 0;
+		bCameraTag = !bCameraTag;*/
+
+		if (m_eCamState == CAMERA_STATE::FREE_CAMERA)
+			m_eCamState = CAMERA_STATE::FIXED_CAMERA;
+		else 
+			m_eCamState = CAMERA_STATE::FREE_CAMERA;
 	}
 
-	if (!bCameraTag)
+	if (m_eCamState == CAMERA_STATE::FREE_CAMERA)
 		SetFreeCamera();
-	else
+	else if (m_eCamState == CAMERA_STATE::FIXED_CAMERA)
 		SetPlayerFixedCamera();
+	else if (m_eCamState == CAMERA_STATE::NPC_CAMERA)
+		SetNpcCamera();
 }
 
 void CToolCamScript::SetFreeCamera()
@@ -107,4 +114,21 @@ void CToolCamScript::SetPlayerFixedCamera()
 
     Transform()->SetLocalPos(vPos);
     Transform()->SetLocalRot(vPlayerPos->GetLocalRot() + Vector3(XM_PI / 8.5, XM_PI, 0.f));
+}
+
+void CToolCamScript::SetNpcCamera()
+{
+	// 공통
+	Vector3 vPos = Transform()->GetLocalPos();
+	CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
+
+	// 공통
+	float fDistance = 500.f; //200.f;
+
+	vPos = vPlayerPos->GetLocalPos() + (vPlayerPos->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
+	vPos.y = vPlayerPos->GetLocalPos().y + 450.f; // 200.f;
+
+	Transform()->SetLocalPos(vPos);
+	Transform()->SetLocalRot(vPlayerPos->GetLocalRot() + Vector3(XM_PI / 8.5, XM_PI, 0.f));
+	cout << "npcCamera" << endl;
 }

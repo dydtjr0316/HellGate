@@ -295,9 +295,19 @@ enum class FBX_TYPE
 	PLAYER,
 	DESERT_MAP,
 	MONSTER,
+	NPC,
+	ANI,
 	END,
 };
-\
+
+enum class NPC_TYPE
+{
+	NPC_FEMALE,
+	NPC_MALE,
+	NPC_STORE,
+	END,
+};
+
 enum class Ani_TYPE
 {
 	IDLE,
@@ -307,6 +317,24 @@ enum class Ani_TYPE
 	ATTACK,
 	DAMAGE,
 	END
+};
+
+enum class MONSTER_ANI_TYPE
+{
+	IDLE,
+	WALK,
+	DEAD,
+	ATTACK,
+	DAMAGE,
+	END
+};
+
+enum class NPC_ANI_TYPE
+{
+	IDLE,
+	WALK,
+	WALK_TURN,
+	END,
 };
 
 enum class PlAYER_ANICNT_TYPE
@@ -325,12 +353,5 @@ enum class MONSTER_ANICNT_TYPE
 	END,
 };
 
-enum class MONSTER_ANI_TYPE
-{
-	IDLE,
-	WALK,
-	DEAD,
-	ATTACK,
-	DAMAGE,
-	END
-};
+
+

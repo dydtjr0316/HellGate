@@ -104,6 +104,10 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 	// 노드의 메쉬정보 읽기
 	FbxNodeAttribute* pAttr = _pNode->GetNodeAttribute();
 
+	if (pAttr && FbxNodeAttribute::eSkeleton == pAttr->GetAttributeType()) {
+		int a = 0;
+	}
+
 	if (pAttr && FbxNodeAttribute::eMesh == pAttr->GetAttributeType())
 	{
 		FbxMesh* pMesh = _pNode->GetMesh();
@@ -115,6 +119,9 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 	UINT iMtrlCnt = _pNode->GetMaterialCount();
 	if (iMtrlCnt > 0)
 	{
+		if (iMtrlCnt == 3 && m_fbxType == FBX_TYPE::NPC)
+			iMtrlCnt = 2;
+
 		for (UINT i = 0; i < iMtrlCnt; ++i)
 		{
 			FbxSurfaceMaterial* pMtrlSur = _pNode->GetMaterial(i);
@@ -206,6 +213,11 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 
 	// 재질의 개수 ( ==> SubSet 개수 ==> Index Buffer Count)
 	int iMtrlCnt = _pFbxMesh->GetNode()->GetMaterialCount();
+
+	if (m_fbxType == FBX_TYPE::NPC) {
+		iMtrlCnt = 2;
+	}
+
 	Container.vecIdx.resize(iMtrlCnt);
 
 	// 정점 정보가 속한 subset 을 알기위해서...
@@ -438,6 +450,9 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 	else if (m_fbxType == FBX_TYPE::MONSTER) {
 		wstrName += L"Texture\\Monster\\";
 	}
+	else if (m_fbxType == FBX_TYPE::NPC) {
+		wstrName += L"Texture\\Npc\\";
+	}
 
 	FbxProperty TextureProperty = _pSurface->FindProperty(_pMtrlProperty);
 	if (TextureProperty.IsValid())
@@ -459,6 +474,21 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 		}
 	}
 
+	if (m_fbxType == FBX_TYPE::NPC) {
+		strName = _pSurface->GetName();
+		strName += ".png";
+
+
+		if (m_fileName.find('@') != m_fileName.npos) {
+			int a = m_fileName.find('@');
+			m_fileName = m_fileName.erase(a);
+		}
+
+		wstrName += m_fileName;
+
+		wstrName += L"_";
+		wstrName += wstring(strName.begin(), strName.end());
+	}
 	if (m_fbxType == FBX_TYPE::DESERT_MAP) {
 		strName = "Desert1";//_pSurface->GetName();
 		strName += ".png";

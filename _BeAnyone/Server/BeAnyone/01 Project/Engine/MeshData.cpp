@@ -34,6 +34,8 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, FBX_TYPE _fbxType)
 	loader.LoadFbx(strFullPath, _fbxType);
 
 	// 메쉬 가져오기
+
+
 	CMesh* pMesh = CMesh::CreateFromContainer(loader);
 
 	//	매쉬 최소 최대 Vertex 저장

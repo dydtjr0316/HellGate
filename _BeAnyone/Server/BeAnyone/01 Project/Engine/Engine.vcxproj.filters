@@ -183,6 +183,9 @@
     <ClCompile Include="MonsterScript.cpp">
       <Filter>04. GameObject\Script</Filter>
     </ClCompile>
+    <ClCompile Include="NpcScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h" />
@@ -356,6 +359,9 @@
     </ClInclude>
     <ClInclude Include="StructuredBuffer.h">
       <Filter>03. Device\02.StructuredBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="NpcScript.h">
+      <Filter>04. GameObject\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
