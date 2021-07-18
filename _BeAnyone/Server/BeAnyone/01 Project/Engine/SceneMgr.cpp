@@ -33,6 +33,7 @@
 #include "GridScript.h"
 #include "SwordScript.h"
 #include "MonsterScript.h"
+#include "NpcScript.h"
 // UI
 #include "TemperUiScript.h"
 
@@ -583,6 +584,47 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	
 }
 
+void CSceneMgr::CreateNpc()
+{
+	// Npc_1
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_4@Idle.fbx", FBX_TYPE::NPC);
+	//Ptr<CMeshData> pAniData = CResMgr::GetInst()->LoadFBX(L"FBX\\Animation\\itempack@spraying.fbx", FBX_TYPE::ANI);
+
+	CGameObject* pNpcObject = nullptr;
+	pNpcObject = pMeshData->Instantiate();
+	pNpcObject->SetName(L"Npc_1");
+	pNpcObject->FrustumCheck(false);
+	pNpcObject->Transform()->SetLocalPos(Vector3(2300.f, 240.f, 4300.f));
+	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
+	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
+	pNpcObject->AddComponent(new CCollider);
+	pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Npc_1");
+	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	//pNpcObject->MeshRender()->SetDynamicShadow(true);
+	pNpcObject->AddComponent(new CNpcScript);
+	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
+
+	// Npc_2
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_1@Dance.fbx", FBX_TYPE::NPC);
+	//Ptr<CMeshData> pAniData = CResMgr::GetInst()->LoadFBX(L"FBX\\Animation\\itempack@spraying.fbx", FBX_TYPE::ANI);
+
+	pNpcObject = new CGameObject;
+	pNpcObject = pMeshData->Instantiate();
+	pNpcObject->SetName(L"Npc_2");
+	pNpcObject->FrustumCheck(false);
+	pNpcObject->Transform()->SetLocalPos(Vector3(1300.f, 240.f, 3700.f));
+	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
+	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
+	//pNpcObject->AddComponent(new CCollider);
+	//pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
+	//pNpcObject->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	//pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	//pNpcObject->MeshRender()->SetDynamicShadow(true);
+	pNpcObject->AddComponent(new CNpcScript);
+	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
+}
+
 void CSceneMgr::init()
 {
 	// =================
@@ -605,6 +647,9 @@ void CSceneMgr::init()
 	Ptr<CTexture> pDiffuseTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex");
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
+
+	// Conversation Box
+	Ptr<CTexture> pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"UiBoard", L"Texture\\UIboard.png");
 
 	// UAV 용 Texture 생성
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024
@@ -632,7 +677,7 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(1)->SetName(L"Player");
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
 	m_pCurScene->GetLayer(3)->SetName(L"Map");
-	m_pCurScene->GetLayer(4)->SetName(L"Weapone");
+	m_pCurScene->GetLayer(4)->SetName(L"Npc");
 	m_pCurScene->GetLayer(5)->SetName(L"Bullet");
 
 	m_pCurScene->GetLayer(30)->SetName(L"UI");
@@ -640,6 +685,7 @@ void CSceneMgr::init()
 	CGameObject* pObject = nullptr;
 
 //	CreateMap();
+	CreateNpc();
 
 	// =============
    // FBX 파일 로드

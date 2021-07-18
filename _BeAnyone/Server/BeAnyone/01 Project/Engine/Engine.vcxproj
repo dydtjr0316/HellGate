@@ -54,6 +54,7 @@
     <ClInclude Include="MeshRender.h" />
     <ClInclude Include="MonsterScript.h" />
     <ClInclude Include="MRT.h" />
+    <ClInclude Include="NpcScript.h" />
     <ClInclude Include="PathMgr.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerScript.h" />
@@ -110,6 +111,7 @@
     <ClCompile Include="MeshRender.cpp" />
     <ClCompile Include="MonsterScript.cpp" />
     <ClCompile Include="MRT.cpp" />
+    <ClCompile Include="NpcScript.cpp" />
     <ClCompile Include="PathMgr.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

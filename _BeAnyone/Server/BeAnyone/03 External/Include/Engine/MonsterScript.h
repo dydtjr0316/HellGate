@@ -50,7 +50,8 @@ public:
 	//animatioin
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const MONSTER_ANI_TYPE& type);
-	void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
+	void CMonsterScript::SetAnimation(const uShort& other_id, const MONSTER_ANI_TYPE& type);
+		void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
 	void AnimClipReset();
 
 	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
