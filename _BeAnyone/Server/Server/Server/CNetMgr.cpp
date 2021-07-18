@@ -740,7 +740,7 @@ void CNetMgr::Processing_Thead()
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
                     if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
                     {
-                        CAST_CLIENT(obj)->CountRefreshPacketCnt();
+                        CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
                         cout << reckoner<<"번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
                         m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
