@@ -13,7 +13,8 @@ public:
 	const int& GetAttackDamage() { return m_iAttack_Damage; }
 	const int& GetFirstX() { return m_iFirstX; }
 	const int& GetFirstY() { return m_iFirstY; }
-
+	const bool& GetIsMoving() { return m_bisMoving; }
+	const MONSTER_AUTOMOVE_DIR& GetDir() { return m_dir; }
 	//const MONSTER_TYPE& GetType() { return m_Type; }
 	//int Get_Prev_Size() { return m_prev_size; }
 	//char* Get_Packet_buf() { return m_packet_buf; }
@@ -28,6 +29,8 @@ public:
 	//void SetType(const MONSTER_TYPE& t) { m_Type = t; }
 	//void SetPrev_Size(const int& size) { m_prev_size = size; }
 	void SetBisDead(const bool& isdead) { m_bisDead = isdead; }
+	void SetBisMoving(const bool* isMove) { m_bisMoving = isMove; }
+	void SetDir(const MONSTER_AUTOMOVE_DIR& dir) { m_dir = dir; }
 
 	//view list
 	//void InsertViewList(const int& id) { view_list.emplace(id); }
@@ -41,6 +44,8 @@ private:
 	int		m_iFirstX = 0;
 	int		m_iFirstY = 0;
 	//int   m_prev_size = 0;
+	bool	m_bisMoving = false;
+	MONSTER_AUTOMOVE_DIR		m_dir = MONSTER_AUTOMOVE_DIR::IDLE;
 
 	//unordered_set<int> view_list;
 
