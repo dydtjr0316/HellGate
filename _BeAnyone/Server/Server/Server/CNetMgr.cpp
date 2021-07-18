@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
-
+float packetTimeCnt = 0.f;
 void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 {
     WCHAR* lpMsgBuf;
@@ -214,12 +214,13 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                 if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
                     CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                    cout << "새로들어온 객체에 대한 Enter" << endl;
                     m_pSendMgr->Send_Enter_Packet(ob, user_id);
                     
                 }
                 else
                 {
-                    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+                    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  
                 }
             }
         }
@@ -230,6 +231,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                 if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
                     CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                    cout << "있던 객체에 대한 Enter(아마 안들어옴)" << endl;
                     m_pSendMgr->Send_Enter_Packet(ob, user_id);
                 }
                 else
@@ -536,6 +538,7 @@ void CNetMgr::Add_Timer(const uShort& obj_id, const int& status, system_clock::t
 void CNetMgr::Worker_Thread()
 {
     while (true) {
+        CTimeMgr::GetInst()->update();
         DWORD io_byte;
         ULONG_PTR key;
         WSAOVERLAPPED* over;
@@ -718,6 +721,7 @@ void CNetMgr::Worker_Thread()
 
 void CNetMgr::Processing_Thead()
 {
+    
     while (true)
     {
         if (m_pMediator->ReckonerSize() != 0)
@@ -734,8 +738,13 @@ void CNetMgr::Processing_Thead()
                 {
                     obj->SetRotateY(drmPacket->rotateY);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                   // 용석 cout << "ID: " << reckoner << " X좌표 -> " << objPos.x << " Y좌표 -> " << objPos.z << endl;
-                    //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
+                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
+                    {
+                        CAST_CLIENT(obj)->CountRefreshPacketCnt();
+                        cout << reckoner<<"번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
+                        m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
+                        CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
+                    }
                 }
             }
         }

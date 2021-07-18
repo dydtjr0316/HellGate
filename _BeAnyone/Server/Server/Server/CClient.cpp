@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CClient.h"
+#include "CTimeMgr.h"
 
 extern CClient g_clients[MAX_USER];
 

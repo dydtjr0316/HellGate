@@ -1,5 +1,6 @@
 #pragma once
 #include "CGameObject.h"
+#include "Template.h"
 
 class CClient : public CGameObject
 {
@@ -25,6 +26,7 @@ public:
 	const int& GetMaxEXP() { return m_iMax_exp; }
 	const bool& GetBisLevelUP() { return m_bisLevelUp; }
 	unordered_set<uShort>& GetViewList() { return view_list; }
+	const float& GetRefreshPacketCnt() { m_frpc; }
 
 	// SET
 	void SetLevel(const int& level) { m_ilevel = level; }
@@ -37,6 +39,8 @@ public:
 	void SetEXP(const int& exp) { m_iExp = exp; }
 	void SetMaxEXP(const int& mexp) { m_iMax_exp = mexp; }
 	void SetBisDead(const bool& isdead) { m_bisDead = isdead; }
+	void SetRefreshPacketCnt_Zero() { m_frpc = 0.f; }
+	void CountRefreshPacketCnt() { m_frpc += DeltaTime; }
 
 	//view list
 	void InsertViewList(const int& id) { view_list.emplace(id); }
@@ -55,6 +59,7 @@ private:
 							//bool
 	bool	m_bisLevelUp = false;	// ·¹º§¾÷
 	bool m_bisDead = false;
+	float m_frpc = 0.f;// Refresh Packet Cnt
 
 	// char
 	// server
