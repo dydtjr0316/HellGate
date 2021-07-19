@@ -75,7 +75,7 @@ void CCore::progress()
 	CEventMgr::GetInst()->clear();
 	{
 		CSceneMgr::GetInst()->update();
-		cout << "****************************"<<anicnt << endl;
+		//cout << "****************************"<<anicnt << endl;
 		CRenderMgr::GetInst()->render();
 	}
 	CEventMgr::GetInst()->update();

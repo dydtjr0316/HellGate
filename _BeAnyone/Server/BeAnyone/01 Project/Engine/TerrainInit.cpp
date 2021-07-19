@@ -11,6 +11,7 @@
 #include "Shader.h"
 
 void CTerrain::init(Ptr<CTexture> _pMap) {
+
 	ChangeFaceCount( m_iFaceX, m_iFaceZ );
 
 	Ptr<CMaterial> pMtrl = MeshRender()->GetSharedMaterial();
@@ -22,7 +23,7 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 		m_pHeightMap = _pMap;
 	else
 		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
-		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\test2.png");
+		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\test2.bmp");
 
 	
 	Vector2 vHeightMapRes = Vector2( m_pHeightMap->Width(), m_pHeightMap->Height() );
@@ -37,11 +38,12 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 
 	
 	//Ptr<CTexture> pBase = CResMgr::GetInst()->Load<CTexture>(L"BaseTexture", L"Texture\\Terrain\\Base_Texture1.jpg");
+
 	Ptr<CTexture> pBase = CResMgr::GetInst()->Load<CTexture>(L"BaseTexture", L"Texture\\Terrain\\Desert_Base.png");
 	pMtrl->SetData(SHADER_PARAM::TEX_3, pBase.GetPointer());
 
-	
 	CreateHeightmapPixelsInfo();
+
 
 }
 
@@ -148,14 +150,10 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 {
 	//	xmf3Scale :: 교수님 Heightmap resourse는 257 257 크기라 x, z크기 스케일 함
 
-	//	**4배**
 	_check = true;
 
-	float fx = _fx / Transform()->GetLocalScale().x * 1.f;
-	float fz = _fz / Transform()->GetLocalScale().z * 1.f;
-
-	auto tempX = Transform()->GetLocalScale().x;
-	auto tempZ = Transform()->GetLocalScale().z;
+	float fx = _fx / Transform()->GetLocalScale().x * 4.f * (float)TERRAIN_SIZING;
+	float fz = _fz / Transform()->GetLocalScale().z * 4.f * (float)TERRAIN_SIZING;
 	
 	int m_nWidth = m_pHeightMap->Width();
 	int m_nLength = m_pHeightMap->Height();		
@@ -194,7 +192,10 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
 	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
 
-	cout << fHeight << endl;
+	
+	//cout << fHeight << "\t" << fHeight * 10.f << endl;
+	//return(fHeight );
 
-	return(fHeight * 10.f);
+	float fNormalizedHeight = fHeight / 255.f * Transform()->GetLocalScale().y;
+	return fNormalizedHeight;
 }

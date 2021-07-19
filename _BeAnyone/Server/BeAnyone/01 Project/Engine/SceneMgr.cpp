@@ -822,8 +822,8 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CMeshRender);
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
-	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 100.f * 10.f, 0.f));
-	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f , 3000.f /** TERRAIN_YSIZE*/, 200.f)); // 2배함
+	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 500.f, 0.f));
+	pTerrainObject->Transform()->SetLocalScale(Vector3(500.f, 3000.f, 500.f));		//	하이트맵 텍스쳐의 UV좌표값 기준으로 정규화된 값을 스케일링 함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
