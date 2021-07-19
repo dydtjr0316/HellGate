@@ -177,10 +177,43 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
 
+    //_tSector oldSector = pClient->GetSector();
+
+    /*switch (dir)
+    {
+    case MV_UP:
+        if (localVec.y > 0) localVec += dirVec;
+        break;
+    case MV_DOWN:
+        if (localVec.y < (WORLD_HEIGHT - 1)) localVec += dirVec;
+        break;
+    case MV_LEFT:
+        if (localVec.x > 0) localVec += dirVec;
+        break;
+    case MV_RIGHT:
+        if (localVec.x < (WORLD_WIDTH - 1)) localVec += dirVec;
+        break;
+    case MV_FRONT:
+        if (localVec.z < (WORLD_WIDTH - 1)) localVec += dirVec;
+        break;
+    case MV_BACK:
+        if (localVec.z > 0) localVec += dirVec;
+        break;
+    default:
+        cout << "Unknown Direction from Client move packet!\n";
+        DebugBreak();
+        exit(-1);
+    }*/
+
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
 
+    //pClient->Change_Sector();
     unordered_set<uShort> new_viewList;
+
+    //m_pSendMgr->Send_Move_Packet(user_id, user_id, dir);
+    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+    //
     unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
     if (vSectors.size() != 0)
     {
@@ -194,14 +227,14 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                         WakeUp_Monster(user);
                     else
                     {
-                       // WakeUp_NPC(user);
+                        // WakeUp_NPC(user);
                     }
                 }
             }
             new_viewList.insert(user);
         }
     }
-    
+
 
     for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
     {
@@ -214,13 +247,11 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                 if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
                     CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-                    cout << "새로들어온 객체에 대한 Enter" << endl;
                     m_pSendMgr->Send_Enter_Packet(ob, user_id);
-                    
                 }
                 else
                 {
-                    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  
+                    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
                 }
             }
         }
@@ -231,7 +262,6 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                 if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
                     CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-                    cout << "있던 객체에 대한 Enter(아마 안들어옴)" << endl;
                     m_pSendMgr->Send_Enter_Packet(ob, user_id);
                 }
                 else
@@ -301,7 +331,7 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
                 }
                 else
                 {
-                    m_pSendMgr->Send_Stop_Packet(ob, user_id,  isMoving);  // 여기서 또 들어옴
+                    m_pSendMgr->Send_Stop_Packet(ob, user_id, isMoving);  // 여기서 또 들어옴
                 }
             }
         }
@@ -324,9 +354,6 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
         }
     }
 }
-
-
-
 
 void CNetMgr::Disconnect(const uShort& user_id)
 {
@@ -738,13 +765,14 @@ void CNetMgr::Processing_Thead()
                 {
                     obj->SetRotateY(drmPacket->rotateY);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
+                    cout << "ID: " << reckoner << " X좌표 -> " << objPos.x << " Z좌표 -> " << objPos.z << endl;
+ /*                   if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
                     {
                         CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
                         cout << reckoner<<"번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
                         m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
-                    }
+                    }*/
                 }
             }
         }

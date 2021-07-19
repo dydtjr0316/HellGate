@@ -211,9 +211,6 @@ void CPlayerScript::update()
 	{
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
-
-
-
 }
 
 void CPlayerScript::op_Move()

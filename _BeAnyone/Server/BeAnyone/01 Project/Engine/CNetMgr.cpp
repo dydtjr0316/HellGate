@@ -440,10 +440,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
-					CGameObject* MonsterObj = g_Object.find(other_id)->second;
+					/*CGameObject* MonsterObj = g_Object.find(other_id)->second;
 					MonsterObj->Transform()->SetLocalPos(packet->localVec);
 					MonsterObj->Transform()->SetLocalRot(packet->rotateY);
-					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::IDLE);
+					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::WALK);*/
 
 				}
 			}
