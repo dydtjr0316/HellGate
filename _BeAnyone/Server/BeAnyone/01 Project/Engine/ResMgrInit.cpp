@@ -559,7 +559,7 @@ void CResMgr::CreateDefaultShader()
     //=============
     Ptr<CShader> pShader = nullptr;
 
-    pShader = new CShader;
+    pShader = new CShader;\
     pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Test", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Test", "ps_5_0");
 

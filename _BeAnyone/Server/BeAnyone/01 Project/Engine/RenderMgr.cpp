@@ -27,6 +27,11 @@ CRenderMgr::~CRenderMgr()
 
 void CRenderMgr::render()
 {
+	for (int i = 0; i < m_vecCam.size(); ++i) {
+		if (m_vecCam[i]->GetObj()->GetName() == L"MainCam")
+			m_MainCamNum = i;
+	}
+
 	// 초기화
 	float arrColor[4] = { 0.6f, 0.6f, 0.6f, 1.f };
 	CDevice::GetInst()->render_start(arrColor);
@@ -47,11 +52,11 @@ void CRenderMgr::render()
 	// ==================================
 	// Main Camera 로 Deferred 렌더링 진행
 	// ==================================
-	m_vecCam[0]->SortGameObject();
+	m_vecCam[m_MainCamNum]->SortGameObject();
 
 	// Deferred MRT 셋팅
 	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
-	m_vecCam[0]->render_deferred();
+	m_vecCam[m_MainCamNum]->render_deferred();
 	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->TargetToResBarrier();
 
 	// shadowmap 만들기
@@ -65,7 +70,7 @@ void CRenderMgr::render()
 
 	// SwapChain MRT 셋팅
 	//m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
-	m_vecCam[0]->render_forward();
+	m_vecCam[m_MainCamNum]->render_forward();
 
 	for (size_t i = 1; i < m_vecCam.size(); ++i)
 	{

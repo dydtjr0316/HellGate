@@ -353,5 +353,12 @@ enum class MONSTER_ANICNT_TYPE
 	END,
 };
 
+//----------------
 
+enum class CAMERA_STATE {
+	FREE_CAMERA,
+	FIXED_CAMERA,
+	NPC_CAMERA,
+	END,
+};
 

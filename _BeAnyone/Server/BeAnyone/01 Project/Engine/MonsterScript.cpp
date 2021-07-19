@@ -53,7 +53,7 @@ CMonsterScript::CMonsterScript()
 	childDummy->AddComponent(new CTransform);
 	childDummy->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 0.0f));
 	childDummy->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));
-
+	
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Monster")->AddGameObject(childDummy);
 	m_pChildDummy = childDummy;
 

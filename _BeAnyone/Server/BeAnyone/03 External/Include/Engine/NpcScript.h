@@ -9,6 +9,14 @@ enum class REQUEST_STATE
 	END,
 };
 
+//enum class REQUEST_STATE
+//{
+//	NOT_RECIEVE,
+//	REQUESTING,
+//	REQUEST_RESOLUTION,
+//	END,
+//};
+
 class CNpcScript :
 	public CScript
 {
@@ -25,6 +33,7 @@ private:
 	CGameObject*		m_pConversationBox;
 	bool				m_bIsTalk = false;
 	bool				m_bIsCollision = false;
+	int					m_iClickNum{};
 
 	// animation
 	vector<Ptr<CMesh>>   m_pAniData;
@@ -47,7 +56,7 @@ public:
 	void OnCollisionExit(CCollider* _pOther);
 
 	// camera
-	void RotateCamera();
+	void SetCameraState(CAMERA_STATE _eCamState);
 
 public:
 	CLONE(CNpcScript);

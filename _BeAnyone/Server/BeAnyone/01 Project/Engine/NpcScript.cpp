@@ -63,21 +63,29 @@ void CNpcScript::update()
 
 		POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
 
-		if (m_bIsCollision == true ) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
-			// m_bIsTalk = true;
+		if (m_bIsCollision == true && m_bIsTalk == false) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
+			m_bIsTalk = true;
 			m_pConversationBox->SetUiRenderCheck(true);
 			// 첫 대화가 나와야 함
 			// 클릭할 때마다 다른 대화
 			// 마지막 대화 끝나면 
 
 			// 카메라 회전
-			RotateCamera();
+			SetCameraState(CAMERA_STATE::NPC_CAMERA);
 			
 		}
 
-		//if (m_bIsTalk == true) { // 필요없을 것 같은데
-		//	
-		//}
+		if (m_bIsTalk == true) { // 필요없을 것 같은데
+			++m_iClickNum;
+
+			if (m_iClickNum == 3) {	// 3번 누르면 나가는 걸로 가정
+				SetCameraState(CAMERA_STATE::FIXED_CAMERA);
+				m_pConversationBox->SetUiRenderCheck(false);
+				m_bIsTalk = false;
+				m_bIsCollision = false;
+				m_iClickNum = 0;
+			}
+		}
 
 	}
 }
@@ -117,11 +125,12 @@ void CNpcScript::OnCollisionEnter(CCollider* _pOther)
 
 void CNpcScript::OnCollisionExit(CCollider* _pOther)
 {
-	//cout << "나감" << endl;
+	cout << "나감" << endl;
 }
 
-void CNpcScript::RotateCamera()
+void CNpcScript::SetCameraState(CAMERA_STATE _eCamState)
 {
+
 	CGameObject* cam;
 	vector<CGameObject*> objects;
 	objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetObjects();
@@ -137,6 +146,15 @@ void CNpcScript::RotateCamera()
 	Vector3 npcPos = GetObj()->Transform()->GetLocalPos();
 
 	CToolCamScript* camScript = cam->GetScript<CToolCamScript>();
-	camScript->SetCamState(2);
+
+	if (_eCamState == CAMERA_STATE::FIXED_CAMERA) {
+		//camScript->DeleteCamParent(true);
+		cam->ClearParent();
+	}
+
 	camScript->SetNpcPos(npcPos);
+	camScript->SetCamState(_eCamState);
+
+
+	
 }
