@@ -444,7 +444,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 					MonsterObj->Transform()->SetLocalPos(packet->localVec);
 					MonsterObj->Transform()->SetLocalRot(packet->rotateY);
 					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::WALK);*/
-
 				}
 			}
 		}

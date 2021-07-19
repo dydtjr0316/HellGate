@@ -440,14 +440,16 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 
-
+        cout <<"\t\tMovePacket ¿Â ÈÄ " << packet->localVec.z << endl;
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
         m_pMediator->Find(user_id)->SetDirV(packet->DirVec);
         m_pMediator->Find(user_id)->SetDeadReckoningPacket(packet);
-
+        if (packet->isMoving)cout << "°¡ ¾¾¹ß" << endl;
+        else cout << "°¡???" << endl;
+        //
         m_pMediator->ReckonerAdd(user_id);
 
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
@@ -458,6 +460,8 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
+        if (!packet->isMoving)cout << "¸ØÃç ¾¾¹ß" << endl;
+        else cout << "¸ØÃç???" << endl;
         Do_Stop(user_id, packet->isMoving);
     }
     break;
@@ -565,7 +569,6 @@ void CNetMgr::Add_Timer(const uShort& obj_id, const int& status, system_clock::t
 void CNetMgr::Worker_Thread()
 {
     while (true) {
-        CTimeMgr::GetInst()->update();
         DWORD io_byte;
         ULONG_PTR key;
         WSAOVERLAPPED* over;
@@ -751,6 +754,8 @@ void CNetMgr::Processing_Thead()
     
     while (true)
     {
+        CTimeMgr::GetInst()->update();
+
         if (m_pMediator->ReckonerSize() != 0)
         {
             CGameObject* obj = nullptr;
@@ -758,14 +763,30 @@ void CNetMgr::Processing_Thead()
             Vector3 objPos;
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
+                if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
                 obj = m_pMediator->Find(reckoner);
                 objPos = obj->GetLocalPosVector();
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
                 {
+                    cout << "--------------------------------" << endl;
+                    cout << drmPacket->localVec.x << " || " << drmPacket->localVec.z <<" || " << drmPacket->DirVec.z << endl;
+                    cout << "ÀÌÀü//" <<  "  Speed -> " << obj->GetSpeed() << " XÁÂÇ¥ -> " << obj->GetLocalPosVector().x << " ZÁÂÇ¥ -> " << obj->GetLocalPosVector().z << endl;
+                    cout << obj->GetSpeed() << endl;
+                    cout << DeltaTime << endl;
+                   //obj->GetLock().lock();
                     obj->SetRotateY(drmPacket->rotateY);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                    cout << "ID: " << reckoner << " XÁÂÇ¥ -> " << objPos.x << " ZÁÂÇ¥ -> " << objPos.z << endl;
+                    //obj->GetLock().unlock();
+
+                    if (obj->GetLocalPosVector().x < 0 || obj->GetLocalPosVector().x>25600||
+                        obj->GetLocalPosVector().z < 0 || obj->GetLocalPosVector().z>25600)
+                    {
+                        int i = 0;
+                    }
+                    cout << "ÀÌÈÄ//" <<  "  Speed -> " << obj->GetSpeed() << " XÁÂÇ¥ -> " << obj->GetLocalPosVector().x << " ZÁÂÇ¥ -> " << obj->GetLocalPosVector().z << endl;
+                    cout << "--------------------------------" << endl;
+
  /*                   if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
                     {
                         CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
@@ -777,7 +798,7 @@ void CNetMgr::Processing_Thead()
             }
         }
 
-        if (m_pMediator->MonsterReckonerSize() != 0)
+     /*   if (m_pMediator->MonsterReckonerSize() != 0)
         {
             Vector3 monsterPos;
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
@@ -809,7 +830,7 @@ void CNetMgr::Processing_Thead()
                     CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
                 }
             }
-        }
+        }*/
     }
 }
 

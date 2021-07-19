@@ -23,12 +23,15 @@ void CSendMgr::Send_Packet(const uShort& id, void* packet)
     {
     case SC_PACKET_MOVE:
         temp = "SC_PACKET_MOVE";
+        cout << temp << "패킷 " << id << "에게 전송" << endl;
+
         break;
     case SC_PACKET_STOP:
         temp = "SC_PACKET_STOP";
+        cout << temp << "패킷 " << id << "에게 전송" << endl;
+
         break;
     }
-    cout << temp << "패킷 " << id << "에게 전송" << endl;
 
 }
 
