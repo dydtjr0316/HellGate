@@ -14,7 +14,7 @@
 #include "ToolCamScript.h"
 #include "MonsterScript.h"
 #include "SwordScript.h"
-MONSTER_TYPE;
+int cnt = 0;
 OBJECT_TYPE CheckObjType(const uShort& id)
 {
 	if (id >= 0 && id < MAX_USER)return OBJECT_TYPE::CLIENT;
@@ -22,8 +22,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.7";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.140.59";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
@@ -297,7 +297,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "enter 함" << endl;
 		if (id == g_myid)
 		{
-			//g_Object.find(g_myid)->second->Transform()->SetLocalPos(my_packet->localVec);
 		}
 		else
 		{
@@ -332,17 +331,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 					// ----
 
 					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale_Weapon_Sword.fbx", FBX_TYPE::PLAYER);
-					//pMeshData->Save(pMeshData->GetPath());
-
 
 					CGameObject* pSword = nullptr;
 
 					pSword = pMeshData->Instantiate();
 					pSword->SetName(L"sword");
 					pSword->FrustumCheck(false);
-					//pSword->Transform()->SetLocalPos(Vector3(100.f, 320.f, 150.f));
-					pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
-					//pSword->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+				pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 					pSword->AddComponent(new CCollider);
 					pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
 
@@ -363,8 +358,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
-
-					//pMeshData->Save(pMeshData->GetPath());
 					//
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"FireMonster");
@@ -424,6 +417,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (other_id == g_myid)
 		{
+			cout << "SC_PACKET_MOVE  자신에게 보내는 패킷 횟수"<<cnt++ << endl;
 			//ObjTrans->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
@@ -446,11 +440,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
-					CGameObject* MonsterObj = g_Object.find(other_id)->second;
+					/*CGameObject* MonsterObj = g_Object.find(other_id)->second;
 					MonsterObj->Transform()->SetLocalPos(packet->localVec);
 					MonsterObj->Transform()->SetLocalRot(packet->rotateY);
-					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::IDLE);
-
+					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::WALK);*/
 				}
 			}
 		}

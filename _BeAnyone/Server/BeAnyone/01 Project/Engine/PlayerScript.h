@@ -30,7 +30,7 @@ private:
 
 private:
 	float m_ftimeCount = 0.f;
-	float m_fDelayTime = 1.f;
+	float m_fDelayTime = 0.5f;
 	bool FirstPacket = false;
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;
@@ -94,7 +94,7 @@ public:
 	void op_Move();
 	void SetOtherMovePacket(sc_packet_move* p, const float& rtt);
 	void SetOtherMovePacket__IsMoving(const bool& isMoving) { 
-		m_movePacketTemp->isMoving = isMoving;
+		if(m_movePacketTemp!=nullptr)m_movePacketTemp->isMoving = isMoving;
 	}
 	void DeleteOherMovePaacket() { if (m_movePacketTemp != nullptr) { m_movePacketTemp = nullptr; } }
 	sc_packet_move* GetOtherMovePacket() { return m_movePacketTemp; }

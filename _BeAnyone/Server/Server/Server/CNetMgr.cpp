@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
-
+float packetTimeCnt = 0.f;
 void CNetMgr::error_display(const char* msg, int err_no)     // ¿¡·¯ Ãâ·Â
 {
     WCHAR* lpMsgBuf;
@@ -177,10 +177,43 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
 
+    //_tSector oldSector = pClient->GetSector();
+
+    /*switch (dir)
+    {
+    case MV_UP:
+        if (localVec.y > 0) localVec += dirVec;
+        break;
+    case MV_DOWN:
+        if (localVec.y < (WORLD_HEIGHT - 1)) localVec += dirVec;
+        break;
+    case MV_LEFT:
+        if (localVec.x > 0) localVec += dirVec;
+        break;
+    case MV_RIGHT:
+        if (localVec.x < (WORLD_WIDTH - 1)) localVec += dirVec;
+        break;
+    case MV_FRONT:
+        if (localVec.z < (WORLD_WIDTH - 1)) localVec += dirVec;
+        break;
+    case MV_BACK:
+        if (localVec.z > 0) localVec += dirVec;
+        break;
+    default:
+        cout << "Unknown Direction from Client move packet!\n";
+        DebugBreak();
+        exit(-1);
+    }*/
+
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
 
+    //pClient->Change_Sector();
     unordered_set<uShort> new_viewList;
+
+    //m_pSendMgr->Send_Move_Packet(user_id, user_id, dir);
+    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
+    //
     unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
     if (vSectors.size() != 0)
     {
@@ -194,14 +227,14 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                         WakeUp_Monster(user);
                     else
                     {
-                       // WakeUp_NPC(user);
+                        // WakeUp_NPC(user);
                     }
                 }
             }
             new_viewList.insert(user);
         }
     }
-    
+
 
     for (auto& ob : new_viewList) //½Ã¾ß¿¡ »õ·Î µé¾î¿Â °´Ã¼ ±¸ºÐ
     {
@@ -215,7 +248,6 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                 {
                     CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
                     m_pSendMgr->Send_Enter_Packet(ob, user_id);
-                    
                 }
                 else
                 {
@@ -299,7 +331,7 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
                 }
                 else
                 {
-                    m_pSendMgr->Send_Stop_Packet(ob, user_id,  isMoving);  // ¿©±â¼­ ¶Ç µé¾î¿È
+                    m_pSendMgr->Send_Stop_Packet(ob, user_id, isMoving);  // ¿©±â¼­ ¶Ç µé¾î¿È
                 }
             }
         }
@@ -322,9 +354,6 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
         }
     }
 }
-
-
-
 
 void CNetMgr::Disconnect(const uShort& user_id)
 {
@@ -411,14 +440,16 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 
-
+        cout <<"\t\tMovePacket ¿Â ÈÄ " << packet->localVec.z << endl;
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
         m_pMediator->Find(user_id)->SetDirV(packet->DirVec);
         m_pMediator->Find(user_id)->SetDeadReckoningPacket(packet);
-
+        if (packet->isMoving)cout << "°¡ ¾¾¹ß" << endl;
+        else cout << "°¡???" << endl;
+        //
         m_pMediator->ReckonerAdd(user_id);
 
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
@@ -429,6 +460,8 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
+        if (!packet->isMoving)cout << "¸ØÃç ¾¾¹ß" << endl;
+        else cout << "¸ØÃç???" << endl;
         Do_Stop(user_id, packet->isMoving);
     }
     break;
@@ -718,8 +751,11 @@ void CNetMgr::Worker_Thread()
 
 void CNetMgr::Processing_Thead()
 {
+    
     while (true)
     {
+        CTimeMgr::GetInst()->update();
+
         if (m_pMediator->ReckonerSize() != 0)
         {
             CGameObject* obj = nullptr;
@@ -727,20 +763,42 @@ void CNetMgr::Processing_Thead()
             Vector3 objPos;
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
+                if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
                 obj = m_pMediator->Find(reckoner);
                 objPos = obj->GetLocalPosVector();
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
                 {
+                    cout << "--------------------------------" << endl;
+                    cout << drmPacket->localVec.x << " || " << drmPacket->localVec.z <<" || " << drmPacket->DirVec.z << endl;
+                    cout << "ÀÌÀü//" <<  "  Speed -> " << obj->GetSpeed() << " XÁÂÇ¥ -> " << obj->GetLocalPosVector().x << " ZÁÂÇ¥ -> " << obj->GetLocalPosVector().z << endl;
+                    cout << obj->GetSpeed() << endl;
+                    cout << DeltaTime << endl;
+                   //obj->GetLock().lock();
                     obj->SetRotateY(drmPacket->rotateY);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                   // ¿ë¼® cout << "ID: " << reckoner << " XÁÂÇ¥ -> " << objPos.x << " YÁÂÇ¥ -> " << objPos.z << endl;
-                    //Do_Move(reckoner, drmPacket->dir, obj->GetLocalPosVector(), obj->GetRotateY());
+                    //obj->GetLock().unlock();
+
+                    if (obj->GetLocalPosVector().x < 0 || obj->GetLocalPosVector().x>25600||
+                        obj->GetLocalPosVector().z < 0 || obj->GetLocalPosVector().z>25600)
+                    {
+                        int i = 0;
+                    }
+                    cout << "ÀÌÈÄ//" <<  "  Speed -> " << obj->GetSpeed() << " XÁÂÇ¥ -> " << obj->GetLocalPosVector().x << " ZÁÂÇ¥ -> " << obj->GetLocalPosVector().z << endl;
+                    cout << "--------------------------------" << endl;
+
+ /*                   if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
+                    {
+                        CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
+                        cout << reckoner<<"¹ø ÇÃ·¹ÀÌ¾îÀÇ µ¥µå·¹Ä¿´× µ¿±âÈ­ ÆÐÅ¶ Àü¼Û" << endl;
+                        m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
+                        CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
+                    }*/
                 }
             }
         }
 
-        if (m_pMediator->MonsterReckonerSize() != 0)
+     /*   if (m_pMediator->MonsterReckonerSize() != 0)
         {
             Vector3 monsterPos;
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
@@ -772,7 +830,7 @@ void CNetMgr::Processing_Thead()
                     CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
                 }
             }
-        }
+        }*/
     }
 }
 

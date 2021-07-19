@@ -16,24 +16,11 @@
 #pragma comment(lib, "MSWSock.lib")
 using namespace std;
 using namespace chrono;
-
-
-//	해결
-//#include "../Engine/SimpleMath.h"
-//#include "../Engine/SimpleMath.inl"
-//
-//using DirectX::SimpleMath::Vector2;
-//using DirectX::SimpleMath::Vector3;
-//using DirectX::SimpleMath::Vector4;
-//using DirectX::SimpleMath::Matrix;
-
 class Vector2;
 class Vector3;
 class Vector4;
 class Matrix;
 typedef unsigned short uShort;
-//	문제
-//#include "../Engine/Protocol.h"
 #include "../../../../Server/Server/Server/Protocol.h"
 #include "../Engine/Enum.h"
 #include "../Engine/Struct1.h"

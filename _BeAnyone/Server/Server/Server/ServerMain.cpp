@@ -41,7 +41,7 @@ int main()
     ZeroMemory(&accept_over.over, sizeof(accept_over.over));
     AcceptEx(g_listenSocket, c_socket, accept_over.io_buf, 0, 32, 32, NULL, &accept_over.over);
 
-    CTimeMgr::GetInst();
+    CTimeMgr::GetInst()->init();
     
     // Áö¿ì±â
     Netmgr.GetMediatorMgr()->InitObject();

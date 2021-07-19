@@ -18,6 +18,20 @@ void CSendMgr::Send_Packet(const uShort& id, void* packet)
     WSASend(Netmgr.GetMediatorMgr()->Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
         &exover->over, NULL);
     Netmgr.GetMediatorMgr()->Find(id)->GetLock().unlock();
+    string temp;
+    switch (buf[1])
+    {
+    case SC_PACKET_MOVE:
+        temp = "SC_PACKET_MOVE";
+        cout << temp << "패킷 " << id << "에게 전송" << endl;
+
+        break;
+    case SC_PACKET_STOP:
+        temp = "SC_PACKET_STOP";
+        cout << temp << "패킷 " << id << "에게 전송" << endl;
+
+        break;
+    }
 
 }
 
@@ -114,7 +128,7 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
     p.isAttack = isAttack;
-
+    cout << other_id << "가 " << user_id << "의 시야에서 나감" << endl;
 
     Send_Packet(user_id, &p);
 }

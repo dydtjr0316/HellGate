@@ -94,7 +94,7 @@ public:
 	void op_Move();
 	void SetOtherMovePacket(sc_packet_move* p, const float& rtt);
 	void SetOtherMovePacket__IsMoving(const bool& isMoving) { 
-		m_movePacketTemp->isMoving = isMoving;
+		if(m_movePacketTemp!=nullptr)m_movePacketTemp->isMoving = isMoving;
 	}
 	void DeleteOherMovePaacket() { if (m_movePacketTemp != nullptr) { m_movePacketTemp = nullptr; } }
 	sc_packet_move* GetOtherMovePacket() { return m_movePacketTemp; }

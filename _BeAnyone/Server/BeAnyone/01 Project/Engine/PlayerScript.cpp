@@ -51,6 +51,7 @@ void CPlayerScript::update()
 	bool moveKeyInput = false;
 	op_Move();
 
+
 	// 공격 애니메이션
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
@@ -116,6 +117,9 @@ void CPlayerScript::update()
 		player->SetPlayerDir(worldDir * player->GetSpeed() * DT);
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
+		cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
+		cout << worldDir.z << endl;
+		cout << DT << endl;
 	}
 
 	else if (KEY_HOLD(KEY_TYPE::KEY_S))
@@ -186,7 +190,7 @@ void CPlayerScript::update()
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
 	{
 		ReckonerMove = false;
-		g_netMgr.Send_Stop_Packet(ReckonerMove);
+		g_netMgr.Send_Stop_Packet(false);
 		SetTime_Zero();
 	}
 
@@ -211,9 +215,6 @@ void CPlayerScript::update()
 	{
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
-
-
-
 }
 
 void CPlayerScript::op_Move()
@@ -224,7 +225,7 @@ void CPlayerScript::op_Move()
 	if (g_Object.count(p->id) == 0)return;
 	if (GetObj()->GetID() == p->id)return;
 	if (!p->isMoving)return;
-	if (p->id >= 1000)return;
+	if (p->id >= START_MONSTER)return;
 
 	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 	CTransform* playerTrans = g_Object.find(p->id)->second->Transform();

@@ -79,7 +79,7 @@ protected:
 	char  m_name[MAX_ID_LEN + 1]{"",};
 	char  m_packet_buf[MAX_PACKET_SIZE]{};
 	int	  m_iclinet_time;
-	float m_fspeed;
+	float m_fspeed = 200.f;
 
 	// ±¸Á¶Ã¼
 	OBJSTATUS m_status;
