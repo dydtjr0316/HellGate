@@ -332,6 +332,7 @@ enum class MONSTER_ANI_TYPE
 enum class NPC_ANI_TYPE
 {
 	IDLE,
+	TALK,
 	WALK,
 	WALK_TURN,
 	END,

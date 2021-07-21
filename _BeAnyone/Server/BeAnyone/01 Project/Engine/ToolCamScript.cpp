@@ -154,37 +154,17 @@ void CToolCamScript::SetPlayerFixedCamera()
 
 void CToolCamScript::SetNpcCamera()
 {
-	// 공통
-	//Vector3 vPos = Transform()->GetLocalPos();
-	//CTransform* vPlayerPosa = g_Object.find(g_myid)->second->Transform();
-
-	//// 공통
-	//float fDistance = 500.f; //200.f;
-
-	//vPos = vPlayerPosa->GetLocalPos() + (vPlayerPosa->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
-	//vPos.y = vPlayerPosa->GetLocalPos().y + 450.f; // 200.f;
-
-	//Transform()->SetLocalPos(vPos);
-	//Transform()->SetLocalRot(vPlayerPosa->GetLocalRot() + Vector3(XM_PI / 8.5, XM_PI, 0.f));
-	//cout << "npcCamera" << endl;
-	//--------------------------------------------------
-
-	// real code
 	CTransform* vPlayerTrans = g_Object.find(g_myid)->second->Transform();
 	Vector3		vPlayerPos = vPlayerTrans->GetLocalPos();
 	Vector3 vCenterPoint{};
 	Vector3 vDistanceDiff{};
-	Vector3 vTestPos = m_pTest->Transform()->GetLocalPos();
 	float fDistance = 300.f;
 	
 
 	vCenterPoint = Vector3((vPlayerPos.x + m_NpcPos.x) / 2.f, 0.f, (vPlayerPos.z + m_NpcPos.z) / 2.f);
 	m_pDummy->Transform()->SetLocalPos(vCenterPoint);
 
-	if(vPlayerPos.x < vCenterPoint.x)
-		vDistanceDiff = Vector3(vPlayerPos.x - vCenterPoint.x, 0.f, vPlayerPos.z - vCenterPoint.z) + (vPlayerTrans->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
-	else 
-		vDistanceDiff = Vector3(vPlayerPos.x - vCenterPoint.x, 0.f, vPlayerPos.z - vCenterPoint.z) + (vPlayerTrans->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
+	vDistanceDiff = Vector3(vPlayerPos.x - vCenterPoint.x, 0.f, vPlayerPos.z - vCenterPoint.z) + (vPlayerTrans->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
 	
 	if (m_bSetChild == false) {
 		m_pDummy->AddChild(m_pTest);
@@ -201,11 +181,10 @@ void CToolCamScript::SetNpcCamera()
 		m_dd += DT * 1.0f;
 	
 	m_pDummy->Transform()->SetLocalRot(Vector3(0.0f, m_dd, 0.0f));
-	// muste delete
-	//m_pRealTest->Transform()->SetLocalRot(vPlayerTrans->GetLocalRot() + Vector3(XM_PI / 8.5, XM_PI, 0.0f));
 
 	GetObj()->Transform()->SetLocalRot(vPlayerTrans->GetLocalRot() + Vector3(XM_PI / 8.5, XM_PI, 0.0f));
 
+	// 필요 없어짐 변수도 관련 함수도
 	if (m_bDelCamParent == true)
 		GetObj()->ClearParent();
 }

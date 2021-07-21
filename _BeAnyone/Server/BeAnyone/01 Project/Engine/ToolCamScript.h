@@ -17,6 +17,8 @@ private:
 	CGameObject*	m_pTest;
 	float			m_bSetChild = false;
 	float			m_dd = 0.0f;
+
+	// 필요없을 듯 이 변수랑 관련 함수
 	bool			m_bDelCamParent = false;
 
 	CGameObject* m_pRealTest;

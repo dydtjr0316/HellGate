@@ -72,6 +72,8 @@ void CNpcScript::update()
 
 			// 카메라 회전
 			SetCameraState(CAMERA_STATE::NPC_CAMERA);
+			AnimClipReset();
+			SetAnimation(NPC_ANI_TYPE::TALK);
 			
 		}
 
@@ -80,6 +82,8 @@ void CNpcScript::update()
 
 			if (m_iClickNum == 3) {	// 3번 누르면 나가는 걸로 가정
 				SetCameraState(CAMERA_STATE::FIXED_CAMERA);
+				SetAnimation(NPC_ANI_TYPE::IDLE);
+				m_bisAniReset = false;
 				m_pConversationBox->SetUiRenderCheck(false);
 				m_bIsTalk = false;
 				m_bIsCollision = false;
