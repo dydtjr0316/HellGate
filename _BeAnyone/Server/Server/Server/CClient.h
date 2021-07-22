@@ -60,13 +60,9 @@ private:
 	bool m_bisDead = false;
 	float m_frpc = 0.f;// Refresh Packet Cnt
 
-	// char
-	// server
+
 	unordered_set<uShort> view_list;
 	Vector3 m_v3FirstPos;
-
-
-
 
 };
 

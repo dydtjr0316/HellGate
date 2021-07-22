@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CSendMgr.h"
-int sendentercnt = 1;
 
 void CSendMgr::Send_Packet(const uShort& id, void* packet)
 {
@@ -18,21 +17,6 @@ void CSendMgr::Send_Packet(const uShort& id, void* packet)
     WSASend(Netmgr.GetMediatorMgr()->Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
         &exover->over, NULL);
     Netmgr.GetMediatorMgr()->Find(id)->GetLock().unlock();
-    string temp;
-    switch (buf[1])
-    {
-    case SC_PACKET_MOVE:
-        temp = "SC_PACKET_MOVE";
-        cout << temp << "패킷 " << id << "에게 전송" << endl;
-
-        break;
-    case SC_PACKET_STOP:
-        temp = "SC_PACKET_STOP";
-        cout << temp << "패킷 " << id << "에게 전송" << endl;
-
-        break;
-    }
-
 }
 
 void CSendMgr::Send_LevelUP_Packet(const uShort& id)
@@ -95,9 +79,6 @@ void CSendMgr::Send_LoginOK_Packet(const uShort& user_id)
     p.iMax_exp = pClient->GetMaxEXP();
     p.Attack_Damage = pClient->GetAttackDamage();
 
-
-    // cout << "Login 갯수 -> " << login <<endl;
-
     Send_Packet(user_id, &p);
 }
 
@@ -113,22 +94,18 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
     p.o_type = O_PLAYER;
     if (p.id >= START_MONSTER && p.id < END_MONSTER)
         p.hp = dynamic_cast<CMonster*>(Netmgr.GetMediatorMgr()->Find(other_id))->GetHP();
-
-    cout << "<" << sendentercnt++ << ">     " << user_id << "에게 " << other_id << "가  Enter Packet 전송" << endl;
-
+    
     Send_Packet(user_id, &p);
 }
 
 void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, const bool& isAttack)
 {
     if (Netmgr.GetMediatorMgr()->Count(other_id) == 0)return;
-    //g_QuadTree.Delete(Netmgr.GetMediatorMgr()->Find(other_id));
     sc_packet_leave p;
     p.id = other_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
     p.isAttack = isAttack;
-    cout << other_id << "가 " << user_id << "의 시야에서 나감" << endl;
 
     Send_Packet(user_id, &p);
 }
@@ -180,6 +157,16 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
     p.id = mover_id;
     p.eDir = dir;
   
+    Send_Packet(user_id, &p);
+}
+
+void CSendMgr::Send_Npc_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir)
+{
+    sc_packet_npc_automove p;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_NPC_MOVE;
+    p.id = mover_id;
+
     Send_Packet(user_id, &p);
 }
 

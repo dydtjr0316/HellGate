@@ -22,4 +22,5 @@ extern SOCKET g_listenSocket;
 extern HANDLE g_IocpHandle;
 
 extern seconds monsterAutoMoveTimer;
+extern seconds npcAutoMoveTimer;
 

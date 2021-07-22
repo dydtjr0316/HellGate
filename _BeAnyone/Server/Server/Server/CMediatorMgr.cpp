@@ -23,13 +23,13 @@ void CMediatorMgr::InitObject()
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
         pObj->SetType(OBJECT_TYPE::MONSTER);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
-        Add(pObj, i);
         pObj->Insert_Sector();
+        Add(pObj, i);
         cout << "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP() << endl;
     }
 
     // NPC init
-    /*for (int i = START_NPC; i < END_NPC; ++i)
+    for (int i = START_NPC; i < END_NPC; ++i)
     {
         pObj = new CNPC;
         pObj->SetPosV((float)(rand() % WORLD_WIDTH), (float)(rand() % WORLD_WIDTH), (float)(rand() % WORLD_WIDTH));
@@ -40,9 +40,12 @@ void CMediatorMgr::InitObject()
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         pObj->SetType(OBJECT_TYPE::NPC);
         pObj->Insert_Sector();
-        m_pMediator->Add(pObj, i);
-
-    }*/
+        char dir = rand() % 3;
+        NPC_AUTOMOVE_DIR tempdir = (NPC_AUTOMOVE_DIR)(dir);
+        CAST_NPC(pObj)->SetAutoDir(tempdir);
+        Add(pObj, i);
+        cout << "ID : " << i << "  HP : " << dynamic_cast<CNPC*>(pObj)->GetID() << endl;
+    }
 }
 
 bool CMediatorMgr::IsType(const uShort& id, const OBJECT_TYPE& type)
@@ -106,6 +109,38 @@ const size_t CMediatorMgr::Size()
     return m_ObjectList.size();
 }
 
+void CMediatorMgr::ReckonerAdd(const uShort& id)
+{
+    if (m_ReckonerList.count(id) == 0)
+        m_ReckonerList.emplace(id);
+}
+
+int CMediatorMgr::ReckonerFind(const uShort& id)
+{
+    if (m_ReckonerList.count(id) != 0)
+    {
+        return  id;
+    }
+}
+
+void CMediatorMgr::Delete_Reckoner(const uShort& id)
+{
+    if (m_ReckonerList.count(id) != 0)
+    {
+        m_ReckonerList.erase(id);
+    }
+}
+
+const size_t CMediatorMgr::ReckonerCount(const uShort& id)
+{
+    return m_ReckonerList.count(id);
+}
+
+const size_t CMediatorMgr::ReckonerSize()
+{
+    return m_ReckonerList.size();
+}
+
 void CMediatorMgr::MonsterReckonerAdd(const uShort& id)
 {
     if (m_MonsterReckonerList.count(id) == 0)
@@ -138,34 +173,35 @@ const size_t CMediatorMgr::MonsterReckonerSize()
     return m_MonsterReckonerList.size();
 }
 
-void CMediatorMgr::ReckonerAdd(const uShort& id)
+void CMediatorMgr::NPCReckonerAdd(const uShort& id)
 {
-    if (m_ReckonerList.count(id) == 0)
-        m_ReckonerList.emplace(id);
+    if (m_MonsterReckonerList.count(id) == 0)
+        m_MonsterReckonerList.emplace(id);
 }
 
-int CMediatorMgr::ReckonerFind(const uShort& id)
+int CMediatorMgr::NPCReckonerFind(const uShort& id)
 {
-    if (m_ReckonerList.count(id) != 0)
+    if (m_MonsterReckonerList.count(id) != 0)
     {
         return  id;
     }
 }
 
-void CMediatorMgr::Delete_Reckoner(const uShort& id)
+void CMediatorMgr::Delete_NPCReckoner(const uShort& id)
 {
-    if (m_ReckonerList.count(id) != 0)
+    if (m_MonsterReckonerList.count(id) != 0)
     {
-        m_ReckonerList.erase(id);
+        m_MonsterReckonerList.erase(id);
     }
 }
 
-const size_t CMediatorMgr::ReckonerCount(const uShort& id)
+const size_t CMediatorMgr::NPCReckonerCount(const uShort& id)
 {
-    return m_ReckonerList.count(id);
+    return m_MonsterReckonerList.count(id);
 }
 
-const size_t CMediatorMgr::ReckonerSize()
+const size_t CMediatorMgr::NPCReckonerSize()
 {
-    return m_ReckonerList.size();
+    return m_MonsterReckonerList.size();
 }
+

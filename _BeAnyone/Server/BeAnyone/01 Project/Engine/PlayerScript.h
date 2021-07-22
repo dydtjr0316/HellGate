@@ -30,7 +30,7 @@ private:
 
 private:
 	float m_ftimeCount = 0.f;
-	float m_fDelayTime = 0.5f;
+	float m_fDelayTime = 2.f;
 	bool FirstPacket = false;
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;

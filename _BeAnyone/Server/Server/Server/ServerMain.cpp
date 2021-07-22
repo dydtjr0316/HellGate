@@ -12,8 +12,10 @@ CNetMgr Netmgr;
 CQuadTree g_QuadTree(CBoundary(WORLD_WIDTH/2, WORLD_HEIGHT/2, WORLD_WIDTH / 2, WORLD_HEIGHT / 2), MAX_PLAYER_IN_NODE);
 SOCKET g_listenSocket;
 HANDLE g_IocpHandle;
-seconds monsterAutoMoveTimer = 10s;
 
+// 아래 두개는 상황봐서 조절
+seconds monsterAutoMoveTimer = 10s;
+seconds npcAutoMoveTimer = 5s;      
 
 int main()
 {
@@ -42,8 +44,6 @@ int main()
     AcceptEx(g_listenSocket, c_socket, accept_over.io_buf, 0, 32, 32, NULL, &accept_over.over);
 
     CTimeMgr::GetInst()->init();
-    
-    // 지우기
     Netmgr.GetMediatorMgr()->InitObject();
 
     cout << "**********Play************" << endl;

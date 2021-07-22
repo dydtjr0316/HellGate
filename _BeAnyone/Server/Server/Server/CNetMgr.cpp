@@ -27,7 +27,6 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
         if (m_pMediator->IsType(old_ids, OBJECT_TYPE::CLIENT))
             old_viewList.insert(old_ids);
     }
-
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(0, 3);
@@ -35,16 +34,6 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     
     CAST_MONSTER(MonsterObj)->SetDir(dir);
     CAST_MONSTER(MonsterObj)->SetIsMoving(true);
-    
-
-    //switch (dir)
-    //{   // 캐릭터 바라보는 방향 바꾸는 코드 필요
-    //case 0: if (MonsterPos.x > 0)MonsterPos.x -= 1.f; break;
-    //case 1: if (MonsterPos.x < WORLD_WIDTH - 1)MonsterPos.x += 1.f; break;
-    //case 2: if (MonsterPos.z > 0)MonsterPos.z -= 1.f; break;
-    //case 3: if (MonsterPos.z < WORLD_HEIGHT - 1)MonsterPos.z += 1.f; break;
-    //}
-    //MonsterObj->SetPosV(MonsterPos);
 
     for (auto& new_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id))))
     {
@@ -72,76 +61,58 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     }
 }
 
-//void CNetMgr::Random_Move_NPC(const int& id)
-//{
-//    CGameObject* MonsterObj = m_pMediator->Find( id);
-//    Vector3 monsterPos = MonsterObj->GetLocalPosVector();
-//
-//    _tSector oldSector = MonsterObj->GetSector();
-//
-//    switch (rand() % 4)
-//    {
-//    case 0: if (monsterPos.x > 0)monsterPos.x--; break;
-//    case 1: if (monsterPos.x < WORLD_WIDTH - 1)monsterPos.x++; break;
-//    case 2: if (monsterPos.z > 0)monsterPos.z--; break;
-//    case 3: if (monsterPos.z < WORLD_HEIGHT - 1)monsterPos.z++; break;
-//    }
-//
-//    MonsterObj->SetPosX(monsterPos.x);
-//    MonsterObj->SetPosZ(monsterPos.z);
-//
-//    MonsterObj->Change_Sector(oldSector);
-//
-//    for (auto& vSec : MonsterObj->Search_Sector()) {
-//        for (auto& sec : vSec)
-//        {
-//            if (!m_pMediator->IsType(sec))continue;
-//
-//            CClient* pClient = CAST_CLIENT(m_pMediator->Find(sec));
-//            if (pClient->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
-//
-//            if (is_near(sec, id))    // is near이 필요한가?
-//            {
-//                pClient->GetLock().lock();
-//                if (0 == pClient->GetViewList().count(id))  // 뷰리스트에 몬스터가 없다면 엔터 패킷
-//                {
-//                    pClient->GetLock().unlock();
-//                    pClient->GetViewList().insert(id);
-//                    Send_Enter_Packet(sec, id);
-//                }
-//                else                                        // 뷰리스트에 몬스터가 있으면 무브 패킷
-//                {
-//                    pClient->GetLock().unlock();
-//                    Send_Move_Packet(sec, id);
-//                }
-//            }
-//            else
-//            {
-//                pClient->GetLock().lock();
-//                if (0 == pClient->GetViewList().count(id))
-//                {
-//                    pClient->GetLock().unlock();
-//                    
-//                }
-//                else
-//                {
-//                    pClient->GetLock().unlock();
-//                    pClient->GetViewList().erase(id);
-//                    Send_Leave_Packet(sec, id);
-//                }
-//            }
-//        }
-//    }
-//}
+void CNetMgr::Random_Move_NPC(const uShort& NPC_id)
+{
+    CGameObject* NpcObj = m_pMediator->Find(NPC_id);
+    Vector3 MonsterPos = NpcObj->GetLocalPosVector();
+    unordered_set<uShort> old_viewList;
+    unordered_set<uShort> new_viewList;
+    NPC_AUTOMOVE_DIR CurrentDir = CAST_NPC(NpcObj)->GetAutoDir();
+    switch (CurrentDir)
+    {
+    case NPC_AUTOMOVE_DIR::FRONT:CAST_NPC(NpcObj)->SetAutoDir(NPC_AUTOMOVE_DIR::BACK); break;
+    case NPC_AUTOMOVE_DIR::BACK:CAST_NPC(NpcObj)->SetAutoDir(NPC_AUTOMOVE_DIR::IDLE); break;
+    case NPC_AUTOMOVE_DIR::IDLE:CAST_NPC(NpcObj)->SetAutoDir(NPC_AUTOMOVE_DIR::FRONT); break;
+    }
+
+    for (auto& old_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(NPC_id))))
+    {
+        if (m_pMediator->IsType(old_ids, OBJECT_TYPE::CLIENT))
+            old_viewList.insert(old_ids);
+    }
+
+    CAST_NPC(NpcObj)->SetIsMoving(true);
+
+    for (auto& new_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(NPC_id))))
+    {
+        if (m_pMediator->IsType(new_ids, OBJECT_TYPE::CLIENT))
+            new_viewList.insert(new_ids);
+    }
+
+    // new viewlist를 알아야함 ..
+    for (auto& id : new_viewList)
+    {
+        if (old_viewList.count(id) != 0)
+        {
+            m_pSendMgr->Send_Monster_Move_Packet(id, NPC_id, (char)CAST_NPC(NpcObj)->GetAutoDir());
+        }
+    }
+
+    for (auto& id : old_viewList)
+    {
+        if (new_viewList.count(id) == 0)
+        {
+            dynamic_cast<CClient*>(m_pMediator->Find(id))->GetViewList().erase(NPC_id);
+            m_pSendMgr->Send_Npc_Move_Packet(id, NPC_id, (char)NPC_AUTOMOVE_DIR::IDLE);
+            m_pSendMgr->Send_Leave_Packet(id, NPC_id);
+        }
+    }
+}
 
 void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 {
     CMonster* monster = dynamic_cast<CMonster*>(m_pMediator->Find(victim));
-    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(attacker));// search sector 인자 확인
-
     unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(attacker)));
-    //client 인가 monster인가 
-
     if (monster->GetHP() - 12 >= 0)
     {
         monster->SetHP(monster->GetHP() - 12);
@@ -162,7 +133,6 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 }
 void CNetMgr::Kill_Monster(const uShort& monster_id)
 {
-    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(monster_id));
     if (m_pMediator->Count(monster_id) != 0)
     {
         unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
@@ -174,47 +144,13 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
 {
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
-
     unordered_set<uShort> old_viewList = pClient->GetViewList();
-
-    //_tSector oldSector = pClient->GetSector();
-
-    /*switch (dir)
-    {
-    case MV_UP:
-        if (localVec.y > 0) localVec += dirVec;
-        break;
-    case MV_DOWN:
-        if (localVec.y < (WORLD_HEIGHT - 1)) localVec += dirVec;
-        break;
-    case MV_LEFT:
-        if (localVec.x > 0) localVec += dirVec;
-        break;
-    case MV_RIGHT:
-        if (localVec.x < (WORLD_WIDTH - 1)) localVec += dirVec;
-        break;
-    case MV_FRONT:
-        if (localVec.z < (WORLD_WIDTH - 1)) localVec += dirVec;
-        break;
-    case MV_BACK:
-        if (localVec.z > 0) localVec += dirVec;
-        break;
-    default:
-        cout << "Unknown Direction from Client move packet!\n";
-        DebugBreak();
-        exit(-1);
-    }*/
+    unordered_set<uShort> new_viewList;
+    unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
 
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
 
-    //pClient->Change_Sector();
-    unordered_set<uShort> new_viewList;
-
-    //m_pSendMgr->Send_Move_Packet(user_id, user_id, dir);
-    //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id));
-    //
-    unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
     if (vSectors.size() != 0)
     {
         for (auto& user : vSectors)
@@ -225,16 +161,13 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
                 {
                     if (m_pMediator->IsType(user, OBJECT_TYPE::MONSTER))
                         WakeUp_Monster(user);
-                    else
-                    {
-                        // WakeUp_NPC(user);
-                    }
+                    else if(m_pMediator->IsType(user, OBJECT_TYPE::NPC))
+                        WakeUp_NPC(user);
                 }
             }
             new_viewList.insert(user);
         }
     }
-
 
     for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
     {
@@ -413,8 +346,8 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
          {
              if(m_pMediator->IsType(id, OBJECT_TYPE::MONSTER))
                  WakeUp_Monster(id);
-             /*else if (IsNpc(id))
-                 WakeUp_NPC(id);*/
+             else if (m_pMediator->IsType(id, OBJECT_TYPE::NPC))
+                 WakeUp_NPC(id);
          }
         if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
         {
@@ -439,29 +372,21 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     switch (buf[1]) {
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
-
-        cout <<"\t\tMovePacket 온 후 " << packet->localVec.z << endl;
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
         m_pMediator->Find(user_id)->SetDirV(packet->DirVec);
         m_pMediator->Find(user_id)->SetDeadReckoningPacket(packet);
-        if (packet->isMoving)cout << "가 씨발" << endl;
-        else cout << "가???" << endl;
-        //
         m_pMediator->ReckonerAdd(user_id);
 
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
-
     }
-                break;
+    break;
     case CS_STOP:
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
-        if (!packet->isMoving)cout << "멈춰 씨발" << endl;
-        else cout << "멈춰???" << endl;
         Do_Stop(user_id, packet->isMoving);
     }
     break;
@@ -472,9 +397,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
 
         Enter_Game(user_id, packet->name);
     }
-                 break;
-   
-
+    break;
     case CS_ATTACK:
     {
         cs_packet_attack* packet = reinterpret_cast<cs_packet_attack*>(buf);
@@ -530,9 +453,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
 void CNetMgr::Recv_Packet_Construct(const uShort& user_id, const int& io_byte)
 {
     CGameObject* pObj = dynamic_cast<CGameObject*>(m_pMediator->Find( user_id));
-    //
     EXOVER r_o = (pObj->GetExover());
-
     int rest_byte = io_byte;
     char* p = r_o.io_buf;
     int packet_size = 0;
@@ -560,7 +481,6 @@ void CNetMgr::Recv_Packet_Construct(const uShort& user_id, const int& io_byte)
 void CNetMgr::Add_Timer(const uShort& obj_id, const int& status, system_clock::time_point t)
 {
     event_type ev{ obj_id, t, status };
-
     timer_lock.lock();
     timer_queue.push(ev);
     timer_lock.unlock();
@@ -576,10 +496,7 @@ void CNetMgr::Worker_Thread()
 
         EXOVER* exover = reinterpret_cast<EXOVER*>(over);
         uShort user_id = static_cast<uShort>(key);
-        
-        //cout << "ID: " << user_id << endl;
-        //cout << "iobyte: " << io_byte << endl;
-        //cout << "-----------------------" << endl;
+
         if (user_id != 10000)
         {
 
@@ -605,22 +522,20 @@ void CNetMgr::Worker_Thread()
             break;
         case ENUMOP::OP_ACCEPT:
         {
-           // ghost++;
-            //cout << "Ghost Cnt -> " << ghost << endl;
             uShort user_id = -1;
             uShort i;
             for (i = 0; i < MAX_USER; ++i) {
-                m_pMediator->Find( i)->GetLock().lock();
-                if (m_pMediator->Find( i)->GetStatus() == OBJSTATUS::ST_FREE) {
-                    m_pMediator->Find( i)->SetStatus(OBJSTATUS::ST_ALLOC);
+                m_pMediator->Find(i)->GetLock().lock();
+                if (m_pMediator->Find(i)->GetStatus() == OBJSTATUS::ST_FREE) {
+                    m_pMediator->Find(i)->SetStatus(OBJSTATUS::ST_ALLOC);
                     user_id = i;
                     //
-                    m_pMediator->Find( i)->GetLock().unlock();
+                    m_pMediator->Find(i)->GetLock().unlock();
                     // 여기
 
                     break;
                 }
-                m_pMediator->Find( i)->GetLock().unlock();
+                m_pMediator->Find(i)->GetLock().unlock();
             }
 
             SOCKET c_socket = exover->c_socket;
@@ -633,7 +548,7 @@ void CNetMgr::Worker_Thread()
             if (-1 == user_id)
                 closesocket(c_socket);
             else {
-                CClient* pClient = CAST_CLIENT(m_pMediator->Find( user_id));
+                CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
 
                 pClient->SetPrev_Size(0);
                 pClient->GetExover().op = ENUMOP::OP_RECV;
@@ -651,10 +566,7 @@ void CNetMgr::Worker_Thread()
                     (float)(rand() % 1000));
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
-               // if (pClient->GetLocalPosVector().x == 724.f)
-                    //cout << "귀신이다 !!!!" << endl;
-                ////////////////////////////////////////////////////////
-                
+
                 pClient->SetFirstPos(pClient->GetLocalPosVector());
 
                 CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket), g_IocpHandle, user_id, 0);
@@ -680,36 +592,36 @@ void CNetMgr::Worker_Thread()
             AcceptEx(g_listenSocket, c_socket, exover->io_buf, NULL,
                 sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
             m_pSendMgr->Send_ID_Packet(user_id);
-
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_NPC:
         {
-           //// Random_Move_NPC(user_id); 
-           // bool keep_alive = false;
-           // //active인 플레이어가 주변에 있으면 계속 깨워두기
-           // for (auto& vSec : CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(user_id)))
-           // {
-           //     for (auto& id : vSec)
-           //     {
-           //         if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-           //         {
-           //             if (CSectorMgr::GetInst()->Is_Near(user_id, id))
-           //             {
-           //                 if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
-           //                 {
-           //                     keep_alive = true; 
-           //                     break;
-           //                 }
-           //             }
-           //         }
-           //     }
-           //}
-           // if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_NPC, system_clock::now() + monsterAutoMoveTimer);
-           // else m_pMediator->Find( user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
-           // //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
-           // delete exover;
+            if (!m_pMediator->IsType(user_id, OBJECT_TYPE::NPC))break;
+            if (m_pMediator->Count(user_id) == 0)break;
+            m_pMediator->NPCReckonerAdd(user_id);
+            Random_Move_NPC(user_id);
+            bool keep_alive = false;
+            //active인 플레이어가 주변에 있으면 계속 깨워두기
+            unordered_set<uShort> view = g_QuadTree.search(CBoundary(Netmgr.GetMediatorMgr()->Find(user_id)));
+            for (auto& id : view)
+            {
+                if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+                    if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
+                    {
+                        keep_alive = true;
+                        break;
+                    }
+            }
 
+            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_NPC, system_clock::now() + monsterAutoMoveTimer);
+            else {
+                m_pMediator->Find(user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
+                m_pMediator->Delete_MonsterReckoner(user_id);
+                CAST_NPC(m_pMediator->Find(user_id))->SetIsMoving(false);
+                //for auto viewand send packet;
+            }
+            //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
+            delete exover;
         }
         break;
         case ENUMOP::OP_RAMDON_MOVE_MONSTER:
@@ -728,7 +640,6 @@ void CNetMgr::Worker_Thread()
                     {
                         keep_alive = true;
                         break;
-                        break;
                     }
             }
             
@@ -744,18 +655,14 @@ void CNetMgr::Worker_Thread()
         }
         break;
         }
-   
     }
-
 }
 
 void CNetMgr::Processing_Thead()
 {
-    
     while (true)
     {
         CTimeMgr::GetInst()->update();
-
         if (m_pMediator->ReckonerSize() != 0)
         {
             CGameObject* obj = nullptr;
@@ -769,36 +676,21 @@ void CNetMgr::Processing_Thead()
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
                 {
-                    cout << "--------------------------------" << endl;
-                    cout << drmPacket->localVec.x << " || " << drmPacket->localVec.z <<" || " << drmPacket->DirVec.z << endl;
-                    cout << "이전//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
-                    cout << obj->GetSpeed() << endl;
-                    cout << DeltaTime << endl;
-                   //obj->GetLock().lock();
                     obj->SetRotateY(drmPacket->rotateY);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                    //obj->GetLock().unlock();
 
-                    if (obj->GetLocalPosVector().x < 0 || obj->GetLocalPosVector().x>25600||
-                        obj->GetLocalPosVector().z < 0 || obj->GetLocalPosVector().z>25600)
-                    {
-                        int i = 0;
-                    }
-                    cout << "이후//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
-                    cout << "--------------------------------" << endl;
-
- /*                   if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
+                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
                     {
                         CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                        cout << reckoner<<"번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
+                        cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
                         m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
-                    }*/
+                    }
                 }
             }
         }
 
-     /*   if (m_pMediator->MonsterReckonerSize() != 0)
+        if (m_pMediator->MonsterReckonerSize() != 0)
         {
             Vector3 monsterPos;
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
@@ -830,7 +722,7 @@ void CNetMgr::Processing_Thead()
                     CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
                 }
             }
-        }*/
+        }
     }
 }
 
@@ -885,7 +777,6 @@ void CNetMgr::WakeUp_Monster(const uShort& id)
         //    메모리의 값이 expected면 update로 바꾸고, true 리턴
         //    메모리의 값이 expected가 아니면 false 리턴
         //    WAIT FREE를 유지하는 알고리즘
-
         Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now() + monsterAutoMoveTimer);
     }
 }

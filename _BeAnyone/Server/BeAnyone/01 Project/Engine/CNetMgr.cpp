@@ -2,36 +2,23 @@
 #include "CNetMgr.h"
 #include "GameObject.h"
 #include "Scene.h"
-
 #include "Layer.h"
 #include "Camera.h"
-
 #include "Transform.h"
 #include "MeshRender.h"
 #include "Collider.h"     
-
 #include "PlayerScript.h"
 #include "ToolCamScript.h"
 #include "MonsterScript.h"
 #include "SwordScript.h"
+OBJECT_TYPE CheckObjType(const uShort& id);
 int cnt = 0;
-OBJECT_TYPE CheckObjType(const uShort& id)
-{
-	if (id >= 0 && id < MAX_USER)return OBJECT_TYPE::CLIENT;
-	else if (id >= START_MONSTER && id < END_MONSTER)return OBJECT_TYPE::MONSTER;
-}
-
-//const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.7";
-//const char ip[] = "192.168.0.13";
-//const char ip[] = "192.168.140.59";
-//const char ip[] = "221.151.160.142";
+//const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.13";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
 
 CNetMgr g_netMgr;
-
-int testpacket;
 OBJLIST g_Object;
 int g_myid = -1;
 CAMOBJLIST g_CamObject;
@@ -60,12 +47,9 @@ void CNetMgr::Connect()
 	wcout.imbue(locale("korean"));
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != NULL)err_quit("WSAStartup");
-
-	//g_Socket = WSASocket(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 	g_Socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	ULONG l = 1;
 	ioctlsocket(g_Socket, FIONBIO, (unsigned long*)&l);
-
 
 	if (g_Socket == INVALID_SOCKET)err_quit("WSASocket");
 
@@ -92,7 +76,6 @@ void CNetMgr::Connect()
 	memset(&m_overlapped, 0, sizeof(m_overlapped));
 
 	m_overlapped.hEvent = event;
-
 }
 
 void CNetMgr::Send_Packet(void* _packet)
@@ -105,10 +88,6 @@ void CNetMgr::Send_Packet(void* _packet)
 	dataBuf.wsabuf.buf = (char*)packet;
 	dataBuf.over = m_overlapped;
 
-	testpacket = dataBuf.wsabuf.len;
-
-
-	//if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
 	if (WSASend(g_Socket, &dataBuf.wsabuf, 1, (LPDWORD)&sent, 0, &dataBuf.over, NULL) == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() == WSA_IO_PENDING)
@@ -119,7 +98,6 @@ void CNetMgr::Send_Packet(void* _packet)
 		else
 			err_quit("WSASend");
 	}
-
 }
 
 void CNetMgr::Send_LogIN_Packet()
@@ -127,16 +105,12 @@ void CNetMgr::Send_LogIN_Packet()
 	cs_packet_login l_packet;
 	l_packet.size = sizeof(l_packet);
 	l_packet.type = CS_LOGIN;
-	//int t_id = GetCurrentProcessId();
 	char tempName[MAX_ID_LEN];
 	string tempstring;
 	cout << "nick name : ";
 	cin >> tempName;
 	sprintf_s(l_packet.name, tempName);
 	strcpy_s(name, l_packet.name);
-	cout << "CS_LOGIN 보냄 -> "<<g_myid << endl;
-	//cout << sizeof(l_packet) << endl << endl;
-
 	Send_Packet(&l_packet);
 }
 
@@ -162,7 +136,6 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, c
 	p.rotateY = rotateY;
 
 	Send_Packet(&p);
-
 }
 
 void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local, 
@@ -180,7 +153,6 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local,
 	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
 	p.deltaTime = delta;
 	p.isMoving = isMoving;
-
 
 	Send_Packet(&p);
 }
@@ -232,13 +204,10 @@ void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONS
 	p.id = monster_id;
 	p.aniType = aniType;
 	Send_Packet(&p);
-
 }
 
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 {
-	//cout << "------Setani -> " << (int)type << endl;
-	
 	g_Object.find(id)->second->Animator3D()->SetBones(m_aniData[(int)type]->GetBones());
 	g_Object.find(id)->second->Animator3D()->SetAnimClip(m_aniData[(int)type]->GetAnimClip());
 	g_Object.find(id)->second->MeshRender()->SetMesh(m_aniData[(int)type]);
@@ -257,7 +226,6 @@ void CNetMgr::Recevie_Data()
 	if (ret <= 0)return;
 
 	size_t retbytesize = ret;
-
 
 	if (ret < 0)
 	{
@@ -284,7 +252,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
 		cout << "SC_PACKET_LOGIN_OK :  " << g_myid << endl;
 
-		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
 		g_Object.find(g_myid)->second->SetID(g_myid);
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->initDeadReckoner();
@@ -417,8 +384,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (other_id == g_myid)
 		{
-			cout << "SC_PACKET_MOVE  자신에게 보내는 패킷 횟수"<<cnt++ << endl;
-			//ObjTrans->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -471,7 +436,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
-
 			if (g_Object.count(other_id) == 0)break;
 			if (g_Object.find(other_id)->second == nullptr)break;
 
@@ -510,11 +474,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 					}
 					else
 					{
-
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetBisAttack(my_packet->isAttack);
 					}
 				}
-
 			}
 		}
 	}
@@ -548,8 +510,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
 		g_myid = packet->id;
-
-		cout << "Send_ID_Packet My ID : " << g_myid << endl;
 	}
 	break;
 
@@ -582,8 +542,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		cout << "Monster id -> " << packet->id << endl;
 		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->id, packet->aniType);
-
-		//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 	}
 	break;
 	default:
@@ -592,14 +550,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 }
 
-
 void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 {
 	char* ptr = net_buf;
 	static size_t in_packet_size = 0;
 	static size_t saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF_SIZE];
-
 
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];
@@ -611,8 +567,6 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 				io_byte -= in_packet_size - saved_packet_size;
 				in_packet_size = 0;
 				saved_packet_size = 0;
-			
-			
 		}
 		else {
 			memcpy(packet_buffer + saved_packet_size, ptr, io_byte);
@@ -627,3 +581,8 @@ void CNetMgr::Enter_Player(const int& id)
 
 }
 
+OBJECT_TYPE CheckObjType(const uShort& id)
+{
+	if (id >= 0 && id < MAX_USER)return OBJECT_TYPE::CLIENT;
+	else if (id >= START_MONSTER && id < END_MONSTER)return OBJECT_TYPE::MONSTER;
+}

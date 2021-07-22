@@ -25,12 +25,12 @@ constexpr int MAX_USER = 1000;
 constexpr int END_USER = MAX_USER;
 
 constexpr int START_MONSTER = MAX_USER;
-constexpr int MAX_MONSTER = 1;
+constexpr int MAX_MONSTER = 10;
 constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
 constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
 
 constexpr int START_NPC = END_MONSTER;
-constexpr int MAX_NPC = 2000;
+constexpr int MAX_NPC = 3;
 constexpr int END_NPC = START_NPC + MAX_NPC;
 
 //constexpr int WORLD_WIDTH = 12800;
@@ -78,10 +78,9 @@ constexpr char SC_PACKET_ID = 9;
 constexpr char SC_PACKET_MOUSE = 10;
 constexpr char SC_PACKET_STOP = 11;
 constexpr char SC_PACKET_MONSTER_MOVE = 12;
-
-//°¡¶ó
 constexpr char SC_PACKET_ATTACKANI = 13;
 constexpr char SC_PACKET_MONSTER_ANIMATION = 14;
+constexpr char SC_PACKET_NPC_MOVE = 15;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -203,6 +202,14 @@ struct sc_packet_attack {
 };
 
 struct sc_packet_monster_automove
+{
+	char size;
+	char type;
+	uShort id;
+	char eDir;
+};
+
+struct sc_packet_npc_automove
 {
 	char size;
 	char type;
