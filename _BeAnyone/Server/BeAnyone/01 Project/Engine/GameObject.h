@@ -33,6 +33,7 @@ private:
 
 	// UI
 	bool					m_bUiRenderCheck = true;
+
 public:
 	void awake();
 	void start();

@@ -152,8 +152,8 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 
 	_check = true;
 
-	float fx = _fx / Transform()->GetLocalScale().x * 4.f * (float)TERRAIN_SIZING;
-	float fz = _fz / Transform()->GetLocalScale().z * 4.f * (float)TERRAIN_SIZING;
+	float fx = _fx / Transform()->GetLocalScale().x * 2.f * (float)TERRAIN_SIZING;
+	float fz = _fz / Transform()->GetLocalScale().z * 2.f * (float)TERRAIN_SIZING;
 	
 	int m_nWidth = m_pHeightMap->Width();
 	int m_nLength = m_pHeightMap->Height();		
@@ -171,7 +171,7 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fTopLeft = (float)m_pHeightMapPixels[x + ((z + 1) * m_nWidth)];
 	float fTopRight = (float)m_pHeightMapPixels[(x + 1) + ((z + 1) * m_nWidth)];
 
-	cout << _fx << "\t" << _fz << "\t";
+	//cout << _fx << "\t" << _fz << "\t";
 
 	if (_check) 
 	{
@@ -193,9 +193,10 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
 
 	
-	//cout << fHeight << "\t" << fHeight * 10.f << endl;
 	//return(fHeight );
 
-	float fNormalizedHeight = fHeight / 255.f * Transform()->GetLocalScale().y;
+	float fNormalizedHeight = fHeight / 256.f * Transform()->GetLocalScale().y;
+	cout << fHeight << "\t" << fNormalizedHeight << endl;
+
 	return fNormalizedHeight;
 }

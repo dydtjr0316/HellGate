@@ -67,6 +67,7 @@
     <ClInclude Include="Script.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="StaticUIScript.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="SwordScript.h" />
@@ -127,6 +128,7 @@
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="StaticUIScript.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="SwordScript.cpp" />
     <ClCompile Include="TemperUiScript.cpp" />

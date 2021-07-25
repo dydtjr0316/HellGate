@@ -100,6 +100,35 @@ void CSceneMgr::CreateTargetUI()
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
 
+	vScale = Vector3(300.f, 400.f, 1.f);
+
+	Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
+
+	CGameObject* pObject = new CGameObject;
+	pObject->SetName(L"UI Object");
+	pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+
+	// Transform 설정
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+	pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (3 * vScale.x)
+		, (res.fHeight / 2.f) - (vScale.y / 2.f)
+		, 1.f));
+
+	pObject->Transform()->SetLocalScale(vScale);
+
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+	pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
+
+	// AddGameObject
+	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+
+
 #else
 
 	Ptr<CTexture> UiTexture[2] = {
@@ -594,6 +623,7 @@ void CSceneMgr::init()
 	Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
 	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky01.png");
 	Ptr<CTexture> pSky02 = CResMgr::GetInst()->Load<CTexture>(L"Sky02", L"Texture\\Skybox\\Sky02.jpg");
+	Ptr<CTexture> pitemUI = CResMgr::GetInst()->Load<CTexture>(L"itemUiTex", L"Texture\\Skybox\\Sky02.jpg");
 	
 	// UI
 	Ptr<CTexture> pUiHug = CResMgr::GetInst()->Load<CTexture>(L"UiHug", L"Texture\\hug.png");
@@ -823,7 +853,7 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
 	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 500.f, 0.f));
-	pTerrainObject->Transform()->SetLocalScale(Vector3(500.f, 3000.f, 500.f));		//	하이트맵 텍스쳐의 UV좌표값 기준으로 정규화된 값을 스케일링 함
+	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f, 6000.f, 300.f));		//	하이트맵 텍스쳐의 UV좌표값 기준으로 정규화된 값을 스케일링 함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
