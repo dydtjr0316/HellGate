@@ -46,6 +46,7 @@ private:
 
 	// fbx texture
 	FBX_TYPE						m_fbxType;
+	MONSTER_TYPE					m_eMonsterType;
 
 private:
 	wstring							m_fileName;

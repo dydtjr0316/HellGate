@@ -355,7 +355,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
-					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@walking.fbx", FBX_TYPE::MONSTER);
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
 					//
@@ -379,22 +379,23 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->AddComponent(new CMonsterScript);
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
-
+					
+					CMonsterScript* monsterScript = g_Object.find(id)->second->GetScript<CMonsterScript>();
+					monsterScript->SetMonsterType(MONSTER_TYPE::MONSTER1);
 					//animation
 					//idle
-					CMonsterScript* monsterScript = g_Object.find(id)->second->GetScript<CMonsterScript>();
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
 					//walk
-					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@walking.fbx", FBX_TYPE::MONSTER);
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
 					//dead
-					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_die.fbx", FBX_TYPE::MONSTER);
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@die.fbx", FBX_TYPE::MONSTER);
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
 					//attack
-					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_attack2.fbx", FBX_TYPE::MONSTER);
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@attack2.fbx", FBX_TYPE::MONSTER);
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
 					//damage
-					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_damage2.fbx", FBX_TYPE::MONSTER);
+					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@damage2.fbx", FBX_TYPE::MONSTER);
 					monsterScript->SetAnimationData(pMeshData->GetMesh());
 
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(

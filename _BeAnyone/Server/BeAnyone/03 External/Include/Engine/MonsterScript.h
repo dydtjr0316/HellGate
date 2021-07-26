@@ -5,7 +5,7 @@ class CMonsterScript :
 	public CScript
 {
 private:
-	MONSTER_TYPE m_MType;
+	MONSTER_TYPE m_eMonsterType;
 	float m_fSpeed = 2.0f;
 
 	// ui
@@ -53,6 +53,10 @@ public:
 	void CMonsterScript::SetAnimation(const uShort& other_id, const MONSTER_ANI_TYPE& type);
 		void SetTerrain(CTerrain* _terrain) { m_pTerrainObj = _terrain; }
 	void AnimClipReset();
+
+	// monster type
+	void SetMonsterType(MONSTER_TYPE _eMonsterType) { m_eMonsterType = _eMonsterType; }
+	MONSTER_TYPE GetMonsterType() { return m_eMonsterType; }
 
 	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
 
