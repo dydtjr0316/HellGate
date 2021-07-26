@@ -186,11 +186,11 @@
     <ClCompile Include="StaticUIScript.cpp">
       <Filter>04. GameObject\Script\00.UIScript</Filter>
     </ClCompile>
-    <ClCompile Include="StaticUIMgr.cpp">
-      <Filter>06. Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Button.cpp">
-      <Filter>06. Manager</Filter>
+      <Filter>06. Manager\UIMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticUIMgr.cpp">
+      <Filter>06. Manager\UIMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,11 +369,11 @@
     <ClInclude Include="StaticUIScript.h">
       <Filter>04. GameObject\Script\00.UIScript</Filter>
     </ClInclude>
-    <ClInclude Include="StaticUIMgr.h">
-      <Filter>06. Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Button.h">
-      <Filter>06. Manager</Filter>
+      <Filter>06. Manager\UIMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticUIMgr.h">
+      <Filter>06. Manager\UIMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -454,6 +454,9 @@
     </Filter>
     <Filter Include="04. GameObject\Terrain">
       <UniqueIdentifier>{4930b5dd-5f73-4a2f-abe1-15e99dfe491c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Manager\UIMgr">
+      <UniqueIdentifier>{0c738d68-a828-460d-ba87-9098a2ba9720}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

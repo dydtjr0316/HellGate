@@ -3,6 +3,7 @@
 class CScene;
 class CCamera;
 class CGameObject;
+class CStaticUIMgr;
 
 class CSceneMgr
 {

@@ -1,15 +1,20 @@
 #pragma once
 #include "Script.h"
 
+enum class UI_TYPE
+{
+	ITEM_UI,
+	SHOP_UI,
+};
+
 class StaticUIScript :
 	public CScript
 {
 private:
-	bool			m_bUiCheck;
+	UI_TYPE					m_eType;
+	bool					m_bUiCheck;
 
-	CGameObject*	m_pObject;
-	CGameObject*	m_pTempBar;
-	CGameObject*	m_pUnderTempBar;
+	vector<CGameObject*>	m_vecItemObj;
 
 public:
 	virtual void	update();
@@ -20,7 +25,7 @@ public:
 	CLONE(StaticUIScript);
 
 public:
-	StaticUIScript();
+	StaticUIScript(UI_TYPE _eType);
 	virtual ~StaticUIScript();
 };
 
