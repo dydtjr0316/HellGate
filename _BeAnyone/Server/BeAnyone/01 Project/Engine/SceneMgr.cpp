@@ -581,7 +581,33 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
 
-	
+	// Wall
+
+	float wallX = 1400.f;
+	for (int i = 0; i < 9; ++i) {
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
+
+		pMapObject = new CGameObject;
+
+		pMapObject = pMeshData->Instantiate();
+		pMapObject->SetName(L"Wall");
+		pMapObject->FrustumCheck(false);
+
+
+		z = (int)(30.f / 60.f);
+		bReverseQuad = ((z % 2) != 0);
+		mapY = _terrain->GetHeight(30.f, 30.f, bReverseQuad);
+
+		pMapObject->Transform()->SetLocalPos(Vector3(30.f, mapY * 2, (wallX* i) + wallX / 2));
+		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 100.f, 200.f));//(1.0f, 1.0f, 1.0f));
+		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
+		pMapObject->AddComponent(new CCollider);
+		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
+		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+
+		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+	}
 }
 
 void CSceneMgr::CreateNpc()
@@ -813,6 +839,47 @@ void CSceneMgr::init()
 	m_pCurScene->AddGameObject(L"Player", pSword, false);
 	pPlayerObj->AddChild(pSword);
 
+
+	//=============
+	// monster 2
+	//=============
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@idle.fbx", FBX_TYPE::MONSTER);
+	CGameObject* pMonster = new CGameObject;
+
+	pMonster = pMeshData->Instantiate();
+	pMonster->SetName(L"StoneMonster");
+	pMonster->FrustumCheck(false);
+	pMonster->Transform()->SetLocalPos(Vector3(100.f, 50.f, 100.f));
+
+	pMonster->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+	pMonster->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+	pMonster->AddComponent(new CCollider);
+	pMonster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_idle");
+	pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(),pMonster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	
+	// Script 설정
+	pMonster->AddComponent(new CMonsterScript);
+	CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", pMonster, false);
+
+	CMonsterScript* monsterScript = pMonster->GetScript<CMonsterScript>();
+	monsterScript->SetMonsterType(MONSTER_TYPE::MONSTER2);
+	//animation
+	//idle
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//walk
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Walk Forward With Root Motion.fbx", FBX_TYPE::MONSTER);
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//dead
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@die.fbx", FBX_TYPE::MONSTER);
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//attack
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@meleeattack01.fbx", FBX_TYPE::MONSTER);
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//damage
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	
 	// ==================
 	// Camera Object 생성
 	// ==================
@@ -887,15 +954,16 @@ void CSceneMgr::init()
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 	// monster
-	Ptr<CMeshData> pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_idle.fbx", FBX_TYPE::MONSTER);
+	//idle
+	Ptr<CMeshData> pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@idle.fbx", FBX_TYPE::MONSTER);
 	//walk
-	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_walking.fbx", FBX_TYPE::MONSTER);
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@walking.fbx", FBX_TYPE::MONSTER);
 	//dead
-	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_die.fbx", FBX_TYPE::MONSTER);
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@die.fbx", FBX_TYPE::MONSTER);
 	//attack
-	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_attack2.fbx", FBX_TYPE::MONSTER);
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@attack2.fbx", FBX_TYPE::MONSTER);
 	//damage
-	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3_damage.fbx", FBX_TYPE::MONSTER);
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@damage.fbx", FBX_TYPE::MONSTER);
 
 	//// ====================
 	//// Monster1 오브젝트 생성

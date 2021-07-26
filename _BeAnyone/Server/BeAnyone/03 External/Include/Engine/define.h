@@ -308,6 +308,13 @@ enum class NPC_TYPE
 	END,
 };
 
+//enum class MONSTER_TYPE
+//{
+//	FIRE_TYPE,
+//	STONE_TYPE,
+//	END,
+//};
+
 enum class Ani_TYPE
 {
 	IDLE,
@@ -332,6 +339,7 @@ enum class MONSTER_ANI_TYPE
 enum class NPC_ANI_TYPE
 {
 	IDLE,
+	TALK,
 	WALK,
 	WALK_TURN,
 	END,

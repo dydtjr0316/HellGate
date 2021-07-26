@@ -54,6 +54,23 @@ void CFBXLoader::LoadFbx(const wstring& _strPath, FBX_TYPE _fbxType)
 {
 	m_fileName = CPathMgr::GetFileName(_strPath.c_str());
 
+	if (_fbxType == FBX_TYPE::MONSTER) {
+		wstring fileName;
+		if (m_fileName.find('@') != m_fileName.npos) {
+			int a = m_fileName.find('@');
+			fileName = m_fileName.erase(a);
+		}
+		else {
+			fileName = m_fileName;
+		}
+
+		if (fileName == L"monster3")
+			m_eMonsterType = MONSTER_TYPE::MONSTER1;
+		else if (fileName == L"TreantGuard")
+			m_eMonsterType = MONSTER_TYPE::MONSTER2;
+
+	}
+
 	m_fbxType = _fbxType;
 	m_vecContainer.clear();
 
@@ -262,17 +279,6 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 	string str = _pMtrlSur->GetName();
 	//string str;
 
-	if (m_fbxType == FBX_TYPE::DESERT_MAP) {
-		str = "Desert1";
-	}
-
-	if (m_fbxType == FBX_TYPE::MONSTER) {
-		str = "FireElemental";
-	}
-	
-
-	tMtrlInfo.strMtrlName = wstring(str.begin(), str.end());
-
 	// Diff
 	tMtrlInfo.tMtrl.vMtrlDiff = GetMtrlData(_pMtrlSur
 		, FbxSurfaceMaterial::sDiffuse
@@ -297,6 +303,50 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 	tMtrlInfo.strDiff = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sDiffuse);
 	//tMtrlInfo.strNormal = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sNormalMap);
 	//tMtrlInfo.strSpec = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sSpecular);
+
+	if (m_fbxType == FBX_TYPE::DESERT_MAP) {
+		str = "Desert1";
+
+		if (m_fileName == L"Wall")
+			str = _pMtrlSur->GetName();
+	}
+
+	if (m_fbxType == FBX_TYPE::MONSTER) {
+		str = "FireElemental";
+	}
+	if (m_fbxType == FBX_TYPE::NPC) {
+
+		wstring sMtrlName;
+
+		if (m_fileName.find('@') != m_fileName.npos) {
+			int a = m_fileName.find('@');
+			sMtrlName = m_fileName.erase(a);
+		}
+		else {
+			sMtrlName = m_fileName;
+		}
+
+		str.assign(sMtrlName.begin(), sMtrlName.end());
+		str += "_";
+		str += _pMtrlSur->GetName();
+	}
+	if (m_fbxType == FBX_TYPE::MONSTER)
+	{
+		wstring sMtrlName;
+
+		if (m_fileName.find('@') != m_fileName.npos) {
+			int a = m_fileName.find('@');
+			sMtrlName = m_fileName.erase(a);
+		}
+		else {
+			sMtrlName = m_fileName;
+		}
+
+		str.assign(sMtrlName.begin(), sMtrlName.end());
+	}
+
+
+	tMtrlInfo.strMtrlName = wstring(str.begin(), str.end());
 
 	m_vecContainer.back().vecMtrl.push_back(tMtrlInfo);
 }
@@ -477,27 +527,53 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 	if (m_fbxType == FBX_TYPE::NPC) {
 		strName = _pSurface->GetName();
 		strName += ".png";
-
+		wstring sMtrlName;
 
 		if (m_fileName.find('@') != m_fileName.npos) {
 			int a = m_fileName.find('@');
-			m_fileName = m_fileName.erase(a);
+			sMtrlName = m_fileName.erase(a);
+		}
+		else
+		{
+			sMtrlName = m_fileName;
 		}
 
-		wstrName += m_fileName;
+		wstrName += sMtrlName;
 
 		wstrName += L"_";
 		wstrName += wstring(strName.begin(), strName.end());
 	}
 	if (m_fbxType == FBX_TYPE::DESERT_MAP) {
-		strName = "Desert1";//_pSurface->GetName();
-		strName += ".png";
-		wstrName += wstring(strName.begin(), strName.end());
+		if (m_fileName != L"Wall") {
+			strName = "Desert1";//_pSurface->GetName();
+			strName += ".png";
+			wstrName += wstring(strName.begin(), strName.end());
+		}
+		else if (m_fileName == L"Wall") {
+			strName = _pSurface->GetName();
+			strName += ".png";
+			wstrName += wstring(strName.begin(), strName.end());
+		}
 	}
-	if (m_fbxType == FBX_TYPE::MONSTER) {
+	if (m_fbxType == FBX_TYPE::MONSTER && m_eMonsterType == MONSTER_TYPE::MONSTER1) {
 		strName = "FireElemental";//_pSurface->GetName();
 		strName += ".tga";
 		wstrName += wstring(strName.begin(), strName.end());
+	}
+	else if (m_fbxType == FBX_TYPE::MONSTER && m_eMonsterType == MONSTER_TYPE::MONSTER2)
+	{
+		wstring sMtrlName;
+
+		if (m_fileName.find('@') != m_fileName.npos) {
+			int a = m_fileName.find('@');
+			sMtrlName = m_fileName.erase(a);
+		}
+		else
+		{
+			sMtrlName = m_fileName;
+		}
+		sMtrlName += L".png";
+		wstrName += wstring(sMtrlName.begin(), sMtrlName.end());
 	}
 
 	return wstrName; // wstring(strName.begin(), strName.end());
