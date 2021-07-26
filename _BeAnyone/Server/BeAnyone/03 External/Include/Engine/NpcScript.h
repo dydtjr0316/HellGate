@@ -42,6 +42,8 @@ private:
 public:
 	virtual void update();
 
+	void Move();
+
 	// animation
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const NPC_ANI_TYPE& type);

@@ -70,110 +70,9 @@ CMonsterScript::~CMonsterScript()
 
 void CMonsterScript::update()
 {
-	//if (g_Object.count(m_sId) == 0)return;
+	Move();
+	Attack();
 	
-	CGameObject* monster = GetObj();
-	CTransform* monsterTrans = monster->Transform();
-	Vector3 monsterPos = monsterTrans->GetLocalPos();
-	Vector3 worldDir;
-	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
-	if (m_Packet_autoMove != nullptr)
-	{
-		switch ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir)
-		{
-		case MONSTER_AUTOMOVE_DIR::FRONT:
-			//worlddir 변경
-			// 밑에꺼 처럼 좌표 변경하는 코드
-			
-			worldDir = -monsterTrans->GetLocalDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 20.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-
-			break;
-		case MONSTER_AUTOMOVE_DIR::BACK:
-			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
-			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 20.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-			break;
-		case MONSTER_AUTOMOVE_DIR::LEFT:
-			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
-			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 20.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-			break;
-		case MONSTER_AUTOMOVE_DIR::RIGHT:
-			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
-			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 20.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-			break;
-		case MONSTER_AUTOMOVE_DIR::AUTO:
-			// a* 사용할곳
-			break;
-		case MONSTER_AUTOMOVE_DIR::IDLE:
-			m_Packet_autoMove = nullptr;
-			break;
-		default:
-			break;
-		}
-
-		if ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
-			monsterTrans->SetLocalPos(monsterPos);
-	}
-
-	if (monsterScript->GetBisAttack())
-	{
-		monsterScript->AnimClipReset();
-		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) + DT, MONSTER_ANICNT_TYPE::DEATH_CNT);
-		SetAnimation(MONSTER_ANI_TYPE::DEAD);
-	}
-	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack())
-	{
-		monsterScript->SetBisAttack(false);
-		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
-		m_bisAniReset = false;
-		g_netMgr.Send_MonsterDead_Packet(m_sId);
-		DeleteObject(GetObj());
-		CEventMgr::GetInst()->update();
-		g_Object.erase(m_sId);
-
-	}
-
-	// is damaged
-	if (m_bisDamaged == true && monsterScript->GetBisAttack() == false) {
-		monsterScript->AnimClipReset();
-		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
-		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
-		cout << "What is Getobj.id = " << m_sId << endl;
-		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
-	}
-	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
-		m_bisDamaged = false;
-		m_bisAniReset = false;
-		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
-		SetAnimation(MONSTER_ANI_TYPE::IDLE);
-		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
-		// 서버에 패킷 보내야 함
-	}
-	GetObj()->GetID();
-	// attack
-	if (m_bisPunch) {
-		monsterScript->AnimClipReset();
-		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
-		SetAnimation(MONSTER_ANI_TYPE::ATTACK);
-		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK);
-
-		// packet
-	}
-	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
-		m_bisPunch = false;
-		m_bisAniReset = false;
-		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_CNT);
-		SetAnimation(MONSTER_ANI_TYPE::IDLE);
-		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
-		// packet
-	}
 
 	//------
 	// ui
@@ -258,6 +157,122 @@ void CMonsterScript::AnimClipReset()
 void CMonsterScript::DecreaseHp()
 {
 
+}
+
+void CMonsterScript::Move()
+{
+	CGameObject* monster = GetObj();
+	CTransform* monsterTrans = monster->Transform();
+	Vector3 monsterPos = monsterTrans->GetLocalPos();
+	Vector3 worldDir;
+	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
+	if (m_Packet_autoMove != nullptr)
+	{
+		switch ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir)
+		{
+		case MONSTER_AUTOMOVE_DIR::FRONT:
+			//worlddir 변경
+			// 밑에꺼 처럼 좌표 변경하는 코드
+
+			worldDir = -monsterTrans->GetLocalDir(DIR_TYPE::UP);
+			monsterPos += worldDir * 20.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);
+
+			break;
+		case MONSTER_AUTOMOVE_DIR::BACK:
+			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			monsterPos += worldDir * 20.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);
+			break;
+		case MONSTER_AUTOMOVE_DIR::LEFT:
+			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			monsterPos += worldDir * 20.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);
+			break;
+		case MONSTER_AUTOMOVE_DIR::RIGHT:
+			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			monsterPos += worldDir * 20.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);
+			break;
+		case MONSTER_AUTOMOVE_DIR::AUTO:
+			// a* 사용할곳
+			break;
+		case MONSTER_AUTOMOVE_DIR::IDLE:
+			m_Packet_autoMove = nullptr;
+			break;
+		default:
+			break;
+		}
+
+		if ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+			monsterTrans->SetLocalPos(monsterPos);
+	}
+}
+
+void CMonsterScript::Attack()
+{
+	CGameObject* monster = GetObj();
+	CTransform* monsterTrans = monster->Transform();
+	Vector3 monsterPos = monsterTrans->GetLocalPos();
+	Vector3 worldDir;
+	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
+
+
+	if (monsterScript->GetBisAttack())
+	{
+		monsterScript->AnimClipReset();
+		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) + DT, MONSTER_ANICNT_TYPE::DEATH_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::DEAD);
+	}
+	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && monsterScript->GetBisAttack())
+	{
+		monsterScript->SetBisAttack(false);
+		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
+		m_bisAniReset = false;
+		g_netMgr.Send_MonsterDead_Packet(m_sId);
+		DeleteObject(GetObj());
+		CEventMgr::GetInst()->update();
+		g_Object.erase(m_sId);
+
+	}
+
+	// is damaged
+	if (m_bisDamaged == true && monsterScript->GetBisAttack() == false) {
+		monsterScript->AnimClipReset();
+		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
+		cout << "What is Getobj.id = " << m_sId << endl;
+		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
+	}
+	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+		m_bisDamaged = false;
+		m_bisAniReset = false;
+		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::IDLE);
+		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
+		// 서버에 패킷 보내야 함
+	}
+	GetObj()->GetID();
+	// attack
+	if (m_bisPunch) {
+		monsterScript->AnimClipReset();
+		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::ATTACK);
+		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK);
+
+		// packet
+	}
+	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+		m_bisPunch = false;
+		m_bisAniReset = false;
+		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_CNT);
+		SetAnimation(MONSTER_ANI_TYPE::IDLE);
+		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
+		// packet
+	}
 }
 
 

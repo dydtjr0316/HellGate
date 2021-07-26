@@ -57,6 +57,8 @@ public:
 	CTerrain* GetTerrain() { return this->m_pTerrainObj; }
 
 	void DecreaseHp();
+	void Move();
+	void Attack();
 
 	// void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
 	MONSTER_AUTOMOVE_DIR& GetDir() { return m_eDir; }

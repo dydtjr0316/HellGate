@@ -210,6 +210,15 @@ struct sc_packet_monster_automove
 	char eDir;
 };
 
+struct sc_packet_npc_automove
+{
+	char size;
+	char type;
+	uShort id;
+	char eDir;
+};
+
+
 struct sc_packet_level_up {
 	char size;
 	char type;

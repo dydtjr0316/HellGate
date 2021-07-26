@@ -94,6 +94,15 @@ void CNpcScript::update()
 	}
 }
 
+void CNpcScript::Move()
+{
+	CGameObject* npc = GetObj();
+	CTransform* npcTrans = npc->Transform();
+	Vector3 npcPos = npcTrans->GetLocalPos();
+	Vector3 worldDir;
+	CNpcScript* npcScript = npc->GetScript<CNpcScript>();
+}
+
 void CNpcScript::SetReqMarkMesh(const REQUEST_STATE& _eType)
 {
 	GetObj()->MeshRender()->SetMesh(m_ReqMarkMeshData[(UINT)_eType]);
