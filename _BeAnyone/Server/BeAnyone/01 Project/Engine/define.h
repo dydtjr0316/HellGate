@@ -315,3 +315,10 @@ enum class MONSTER_ANI_TYPE
 	ATTACK,
 	END
 };
+
+enum class ITEM_ID
+{
+	BASIC_SWORD,
+	BASIC_ARROW,
+	END
+};

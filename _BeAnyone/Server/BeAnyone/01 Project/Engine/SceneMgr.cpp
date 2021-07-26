@@ -636,6 +636,11 @@ void CSceneMgr::init()
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
 
+	// item UI texture
+	Ptr<CTexture> pArrowImage = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"UI/Items/Weapons/No_bg/01_Bow_nobg.png");
+	Ptr<CTexture> pSwordImage = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"UI/Items/Weapons/No_bg/02_Sword_nobg.png");
+
+
 	// UAV ¿ë Texture »ý¼º
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024
 		, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
