@@ -29,7 +29,9 @@ public:
 
 public:
 	void init();
-	void update();
+
+	virtual void update();
+	virtual void finalupdate();
 
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);

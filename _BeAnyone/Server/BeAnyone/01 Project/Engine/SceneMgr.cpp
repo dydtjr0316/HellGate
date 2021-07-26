@@ -249,7 +249,7 @@ void CSceneMgr::CreateTargetUI()
 #endif
 
 	CGameObject* pObject = new CGameObject;
-	vScale = Vector3(300.f, 400.f, 1.f);
+	vScale = Vector3(400.f, 600.f, 1.f);
 	pObject->SetName(L"UI Object");
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
@@ -273,17 +273,20 @@ void CSceneMgr::CreateTargetUI()
 	//	Static Ui mgr에 상속된 버튼들 Scene에 Obj로 추가
 	for (int i = 0; i < pObject->StaticUIMgr()->m_vecButton.size(); ++i)
 	{
-		vScale = Vector3(30.f, 40.f, 1.f);
+		vScale = Vector3(80.f, 120.f, 1.f);
 		Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
 		CGameObject* pButtonObj = new CGameObject;
-		pButtonObj->SetName(L"UI Object");
+		pButtonObj->SetName(L"zButton Object");
 		pButtonObj->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 		pButtonObj->AddComponent(new CTransform);
 		pButtonObj->AddComponent(new CMeshRender);
+		//	버튼 Script 설정
 		pButtonObj->AddComponent(pObject->StaticUIMgr()->m_vecButton[i]);
+		pObject->StaticUIMgr()->m_vecButton[i]->SetParent(pObject->StaticUIMgr());
+
 		// Transform 설정
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
-		pButtonObj->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x)
+		pButtonObj->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x) + 200.f
 			, (res.fHeight / 2.f) - (vScale.y / 2.f)
 			, 1.f));
 		pButtonObj->Transform()->SetLocalScale(vScale);
