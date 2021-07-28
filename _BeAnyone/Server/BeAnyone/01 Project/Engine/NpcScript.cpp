@@ -37,7 +37,7 @@ CNpcScript::CNpcScript()
 	m_pConversationBox->Transform()->SetLocalScale(vScale);
 	m_pConversationBox->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-	m_pConversationBox->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	m_pConversationBox->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"CoversationMtrl"));
 	m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"UiBoard").GetPointer());
 	m_pConversationBox->SetUiRenderCheck(false);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pConversationBox);
@@ -63,20 +63,6 @@ void CNpcScript::update()
 
 		POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
 
-		if (m_bIsCollision == true && m_bIsTalk == false) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
-			m_bIsTalk = true;
-			m_pConversationBox->SetUiRenderCheck(true);
-			// 첫 대화가 나와야 함
-			// 클릭할 때마다 다른 대화
-			// 마지막 대화 끝나면 
-
-			// 카메라 회전
-			SetCameraState(CAMERA_STATE::NPC_CAMERA);
-			AnimClipReset();
-			SetAnimation(NPC_ANI_TYPE::TALK);
-			
-		}
-
 		if (m_bIsTalk == true) { // 필요없을 것 같은데
 			++m_iClickNum;
 
@@ -89,6 +75,20 @@ void CNpcScript::update()
 				m_bIsCollision = false;
 				m_iClickNum = 0;
 			}
+		}
+
+		if (m_bIsCollision == true && m_bIsTalk == false) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
+			m_bIsTalk = true;
+			m_pConversationBox->SetUiRenderCheck(true);
+			// 첫 대화가 나와야 함
+			// 클릭할 때마다 다른 대화
+			// 마지막 대화 끝나면 
+
+			// 카메라 회전
+			SetCameraState(CAMERA_STATE::NPC_CAMERA);
+			AnimClipReset();
+			SetAnimation(NPC_ANI_TYPE::TALK);
+			
 		}
 
 	}

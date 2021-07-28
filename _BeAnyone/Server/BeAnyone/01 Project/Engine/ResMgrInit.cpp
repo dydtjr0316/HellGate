@@ -744,6 +744,11 @@ void CResMgr::CreateDefaultMaterial()
 
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"TestShader"));
+    AddRes(L"CoversationMtrl", pMtrl);
+
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"TexShader"));
     AddRes(L"TexMtrl", pMtrl);
 
