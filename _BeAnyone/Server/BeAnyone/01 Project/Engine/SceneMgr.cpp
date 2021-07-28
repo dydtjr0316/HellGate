@@ -35,7 +35,9 @@
 #include "MonsterScript.h"
 #include "NpcScript.h"
 // UI
+#include "StaticUIMgr.h"
 #include "TemperUiScript.h"
+#include "Button.h"
 
 using namespace std;
 
@@ -100,6 +102,7 @@ void CSceneMgr::CreateTargetUI()
 		// AddGameObject
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
+
 
 #else
 
@@ -243,7 +246,59 @@ void CSceneMgr::CreateTargetUI()
 		// AddGameObject
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
+
 #endif
+
+	CGameObject* pObject = new CGameObject;
+	vScale = Vector3(400.f, 600.f, 1.f);
+	pObject->SetName(L"UI Object");
+	pObject->FrustumCheck(false);
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CStaticUIMgr);
+	// Transform 설정
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (3 * vScale.x)
+		, (res.fHeight / 2.f) - (vScale.y / 2.f)
+		, 1.f));
+	pObject->Transform()->SetLocalScale(vScale);
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+	pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+	Ptr<CTexture> itemUI = pObject->StaticUIMgr()->m_pFrame;
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
+	// AddGameObject
+	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+
+	//	Static Ui mgr에 상속된 버튼들 Scene에 Obj로 추가
+	for (int i = 0; i < pObject->StaticUIMgr()->m_vecButton.size(); ++i)
+	{
+		vScale = Vector3(80.f, 120.f, 1.f);
+		Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
+		CGameObject* pButtonObj = new CGameObject;
+		pButtonObj->SetName(L"zButton Object");
+		pButtonObj->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pButtonObj->AddComponent(new CTransform);
+		pButtonObj->AddComponent(new CMeshRender);
+		//	버튼 Script 설정
+		pButtonObj->AddComponent(pObject->StaticUIMgr()->m_vecButton[i]);
+		pObject->StaticUIMgr()->m_vecButton[i]->SetParent(pObject->StaticUIMgr());
+
+		// Transform 설정
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+		pButtonObj->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x) + 200.f
+			, (res.fHeight / 2.f) - (vScale.y / 2.f)
+			, 1.f));
+		pButtonObj->Transform()->SetLocalScale(vScale);
+		// MeshRender 설정
+		pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pButtonObj->MeshRender()->SetMaterial(pMtrl->Clone());
+		pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pObject->StaticUIMgr()->m_vecButton[i]->GetImage().GetPointer());
+		// AddGameObject
+		m_pCurScene->FindLayer(L"UI")->AddGameObject(pButtonObj);
+	}
 }
 
 void CSceneMgr::CreateMap(CTerrain* _terrain)
@@ -705,6 +760,7 @@ void CSceneMgr::init()
 	Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
 	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky01.png");
 	Ptr<CTexture> pSky02 = CResMgr::GetInst()->Load<CTexture>(L"Sky02", L"Texture\\Skybox\\Sky02.jpg");
+	Ptr<CTexture> pitemUI = CResMgr::GetInst()->Load<CTexture>(L"ItemUiTex", L"Texture\\Skybox\\Sky02.jpg");
 	
 	// UI
 	Ptr<CTexture> pUiHug = CResMgr::GetInst()->Load<CTexture>(L"UiHug", L"Texture\\hug.png");
@@ -719,6 +775,9 @@ void CSceneMgr::init()
 
 	// Conversation Box
 	Ptr<CTexture> pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"UiBoard", L"Texture\\UIboard.png");
+	// item UI texture
+	Ptr<CTexture> pArrowImage = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"Texture\\UI\\Items\\Weapons\\No_bg\\01_Bow_nobg.png");
+	Ptr<CTexture> pSwordImage = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"Texture\\UI\\Items\\Weapons\\No_bg\\02_Sword_nobg.png");
 
 	// UAV 용 Texture 생성
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024
@@ -1015,7 +1074,6 @@ void CSceneMgr::init()
 	// AddGameObject
 	//m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
 
-
 	// ====================
 	// Skybox 오브젝트 생성
 	// ====================
@@ -1051,7 +1109,7 @@ void CSceneMgr::init()
 	pObject->GetScript<CGridScript>()->SetToolCamera(pMainCam);
 	pObject->GetScript<CGridScript>()->SetGridColor(Vector3(0.8f, 0.2f, 0.2f));
 	// AddGameObject
-	//m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 
 	// Terrain
@@ -1061,8 +1119,8 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CMeshRender);
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
-	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 50.f, 0.f));
-	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f , 300.f /** TERRAIN_YSIZE*/, 200.f)); // 2배함
+	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 500.f, 0.f));
+	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f, 6000.f, 300.f));		//	하이트맵 텍스쳐의 UV좌표값 기준으로 정규화된 값을 스케일링 함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);

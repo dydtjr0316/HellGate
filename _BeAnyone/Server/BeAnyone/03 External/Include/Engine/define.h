@@ -129,6 +129,7 @@ enum class COMPONENT_TYPE
 	ANIMATOR3D,
 	LIGHT,
 	TERRAIN,
+	UI,
 	END,
 	SCRIPT,
 };
@@ -336,6 +337,7 @@ enum class MONSTER_ANI_TYPE
 	END
 };
 
+<<<<<<< HEAD
 enum class NPC_ANI_TYPE
 {
 	IDLE,
@@ -370,3 +372,12 @@ enum class CAMERA_STATE {
 	END,
 };
 
+=======
+enum class ITEM_ID
+{
+	EMPTY,
+	BASIC_SWORD,
+	BASIC_ARROW,
+	END
+};
+>>>>>>> C2

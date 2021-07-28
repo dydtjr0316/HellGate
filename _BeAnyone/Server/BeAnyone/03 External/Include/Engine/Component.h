@@ -36,11 +36,10 @@ public:
 	CTransform* Transform() { return m_pObject->Transform(); }
 	CMeshRender* MeshRender() { return m_pObject->MeshRender(); }
 	CAnimator3D* Animator3D() { return m_pObject->Animator3D(); }
-	//CAnimator2D* Animator2D() { return m_pObject->Animator2D(); }
 	CCollider* Collider() { return m_pObject->Collider(); }
-	//CLight2D* Light2D() { return m_pObject->Light2D(); }
 	CLight* Light() { return m_pObject->Light(); }
 	CCamera* Camera() { return m_pObject->Camera(); }
+	CStaticUIMgr* StaticUIMgr() { return m_pObject->StaticUIMgr(); }
 
 private:
 	void SetGameObject(CGameObject* _pObject) { m_pObject = _pObject; }

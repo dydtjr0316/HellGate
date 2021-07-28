@@ -11,6 +11,7 @@ class CLight;
 class CCamera;
 //class CToolCamScript;
 class CTerrain;
+class CStaticUIMgr;
 
 class CGameObject :
 	public CEntity
@@ -33,6 +34,7 @@ private:
 
 	// UI
 	bool					m_bUiRenderCheck = true;
+
 public:
 	void awake();
 	void start();
@@ -64,6 +66,8 @@ public:
 	CTerrain* Terrain() { return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN];}
 	CAnimator3D* Animator3D() { return (CAnimator3D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR3D]; }
 	CCollider* Collider() { return (CCollider*)m_arrCom[(UINT)COMPONENT_TYPE::COLLIDER]; }
+
+	CStaticUIMgr* StaticUIMgr() { return (CStaticUIMgr*)m_arrCom[(UINT)COMPONENT_TYPE::UI]; }
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
 	
