@@ -337,7 +337,6 @@ enum class MONSTER_ANI_TYPE
 	END
 };
 
-<<<<<<< HEAD
 enum class NPC_ANI_TYPE
 {
 	IDLE,
@@ -372,7 +371,6 @@ enum class CAMERA_STATE {
 	END,
 };
 
-=======
 enum class ITEM_ID
 {
 	EMPTY,
@@ -380,4 +378,3 @@ enum class ITEM_ID
 	BASIC_ARROW,
 	END
 };
->>>>>>> C2
