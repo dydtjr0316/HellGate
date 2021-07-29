@@ -776,8 +776,14 @@ void CSceneMgr::init()
 	// Conversation Box
 	Ptr<CTexture> pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"UiBoard", L"Texture\\UIboard.png");
 	// item UI texture
+<<<<<<< HEAD
 	Ptr<CTexture> pArrowImage = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"Texture\\UI\\Items\\Weapons\\No_bg\\01_Bow_nobg.png");
 	Ptr<CTexture> pSwordImage = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"Texture\\UI\\Items\\Weapons\\No_bg\\02_Sword_nobg.png");
+=======
+	/*Ptr<CTexture> pArrowImage = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"UI/Items/Weapons/No_bg/01_Bow_nobg.png");
+	Ptr<CTexture> pSwordImage = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"UI/Items/Weapons/No_bg/02_Sword_nobg.png");*/
+
+>>>>>>> 2a08855
 
 	// UAV 용 Texture 생성
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024
@@ -1043,7 +1049,11 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CMeshRender);
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
+<<<<<<< HEAD
 	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 450.f, 0.f));
+=======
+	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 350.f, 0.f));
+>>>>>>> 2a08855
 	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f, 6000.f, 300.f));		//	하이트맵 텍스쳐의 UV좌표값 기준으로 정규화된 값을 스케일링 함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();

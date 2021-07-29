@@ -171,7 +171,6 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fTopLeft = (float)m_pHeightMapPixels[x + ((z + 1) * m_nWidth)];
 	float fTopRight = (float)m_pHeightMapPixels[(x + 1) + ((z + 1) * m_nWidth)];
 
-	//cout << _fx << "\t" << _fz << "\t";
 
 	if (_check) 
 	{
@@ -192,11 +191,7 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
 	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
 
-	
-	//return(fHeight );
-
-	float fNormalizedHeight = fHeight / 256.f * Transform()->GetLocalScale().y / 2.f + 300.f;
-	cout << fHeight << "\t" << fNormalizedHeight << endl;
+	float fNormalizedHeight = fHeight / 256.f * Transform()->GetLocalScale().y / 2.f + 185.f;
 
 	return fNormalizedHeight;
 }
