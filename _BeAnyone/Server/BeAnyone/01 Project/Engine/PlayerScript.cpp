@@ -63,10 +63,6 @@ void CPlayerScript::update()
 
 	if (player->GetAttack() && player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) + DT, PlAYER_ANICNT_TYPE::ATTACK_CNT);
-
-		/* 0728 컨플릭 난거, 문제없으면 이후 삭제.
-	if (player->GetAttack() && player->Getcnt() < g_Object.find(g_myid)->second->Animator3D()->GetAnimClip(0).dTimeLength) {
-		player->Setcnt(player->Getcnt() + DT);*/
 		player->SetAnimation(Ani_TYPE::ATTACK);
 		moveKeyInput = true;
 	}

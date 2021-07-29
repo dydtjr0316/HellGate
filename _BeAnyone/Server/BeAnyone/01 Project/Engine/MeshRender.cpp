@@ -53,6 +53,7 @@ void CMeshRender::render()
 		m_vecMtrl[i]->UpdateData();
 		m_pMesh->render((UINT)i);
 
+		a = 0;
 		m_vecMtrl[i]->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh 알리기
 		m_vecMtrl[i]->SetData(SHADER_PARAM::INT_3, &a); // Animation Mesh 알리기
 	}

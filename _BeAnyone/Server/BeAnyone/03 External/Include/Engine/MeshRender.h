@@ -10,7 +10,7 @@ class CMeshRender :
 	public CComponent
 {
 private:
-	Ptr<CMesh>				m_pMesh;
+	Ptr<CMesh>		m_pMesh;
 	vector<Ptr<CMaterial>>  m_vecMtrl;
 
 	bool					m_bDynamicShadow;
