@@ -857,7 +857,7 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CMeshRender);
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
-	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 500.f, 0.f));
+	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 350.f, 0.f));
 	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f, 6000.f, 300.f));		//	하이트맵 텍스쳐의 UV좌표값 기준으로 정규화된 값을 스케일링 함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();

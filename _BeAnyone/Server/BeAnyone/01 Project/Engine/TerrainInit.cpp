@@ -195,7 +195,7 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	
 	//return(fHeight );
 
-	float fNormalizedHeight = fHeight / 256.f * Transform()->GetLocalScale().y;
+	float fNormalizedHeight = fHeight / 256.f * Transform()->GetLocalScale().y / 2.f + 185.f;
 	cout << fHeight << "\t" << fNormalizedHeight << endl;
 
 	return fNormalizedHeight;
