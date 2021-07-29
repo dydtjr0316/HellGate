@@ -158,6 +158,10 @@ bool CCollisionMgr::IsCollision(CCollider* _pCollider1, CCollider* _pCollider2)
 	if (!_pCollider1->IsActive() || !_pCollider1->GetObj()->IsActive() || !_pCollider2->IsActive() || !_pCollider2->GetObj()->IsActive())
 		return false;
 
+	if (COLLIDER_TYPE::RECT == _pCollider1->GetColliderType() && COLLIDER_TYPE::RECT == _pCollider2->GetColliderType())
+	{
+		return CollisionRect(_pCollider1, _pCollider2);
+	}
 	if (COLLIDER_TYPE::BOX == _pCollider1->GetColliderType() && COLLIDER_TYPE::BOX == _pCollider2->GetColliderType())
 	{
 		return CollisionSphere(_pCollider1, _pCollider2);

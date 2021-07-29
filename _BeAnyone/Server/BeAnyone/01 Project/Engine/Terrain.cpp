@@ -11,11 +11,13 @@
 #include "Camera.h"
 #include "Transform.h"
 
+int i = TERRAIN_SIZING
+
 
 CTerrain::CTerrain()
 	: CComponent( COMPONENT_TYPE::TERRAIN )
-	, m_iFaceX( 64 )	//	64
-	, m_iFaceZ( 64 )	//	64
+	, m_iFaceX( 64 * i )	//	64
+	, m_iFaceZ( 64 * i )	//	64
 	, m_fMaxTess( 4 )	//	4
 	, m_vBrushScale( Vector2( 0.1f, 0.1f ) )
 	, m_iBrushIdx( 0 )
