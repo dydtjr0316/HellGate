@@ -129,7 +129,6 @@ enum class COMPONENT_TYPE
 	ANIMATOR3D,
 	LIGHT,
 	TERRAIN,
-	UI,
 	END,
 	SCRIPT,
 };
@@ -371,10 +370,3 @@ enum class CAMERA_STATE {
 	END,
 };
 
-enum class ITEM_ID
-{
-	EMPTY,
-	BASIC_SWORD,
-	BASIC_ARROW,
-	END
-};

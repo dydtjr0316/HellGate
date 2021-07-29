@@ -5,7 +5,7 @@ class CGridScript :
 	public CScript
 {
 private:
-	CGameObject*	m_pToolCam;
+	CGameObject* m_pToolCam;
 	Vector4			m_vGridColor;
 	Vector4			m_vToolCamPos;
 	float			m_fThickness;

@@ -6,8 +6,7 @@
 #include "Material.h"
 #include "Texture.h"
 
-#define TERRAIN_SIZING 4;
-
+#define TERRAIN_YSIZE 4.f
 
 class CTerrain :
 	public CComponent
