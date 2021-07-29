@@ -73,7 +73,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    if (FAILED(CCore::GetInst()->init(g_hWnd, tResolution{ 1280, 768 }, true)))
+    if (FAILED(CCore::GetInst()->init(g_hWnd, tResolution{ 1600, 900 }, true)))
     {
         return 0;
     }
