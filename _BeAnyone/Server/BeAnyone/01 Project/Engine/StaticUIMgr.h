@@ -11,7 +11,6 @@ enum class UI_TYPE
 
 class CStaticUIMgr
 {
-	SINGLE(CStaticUIMgr);
 
 private:
 	Ptr<CTexture>			m_pFrame;
@@ -24,10 +23,7 @@ private:
 
 public:
 	void update();
-	void clear() { m_vecEvent.clear(); }
-	void AddEvent(tEvent& _event) { m_vecEvent.push_back(_event); }
-
-	const vector<tEvent>& GetEventList() { return m_vecEvent; }
+	
 
 private:
 	CStaticUIMgr();
