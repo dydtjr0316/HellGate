@@ -231,7 +231,8 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 	// 재질의 개수 ( ==> SubSet 개수 ==> Index Buffer Count)
 	int iMtrlCnt = _pFbxMesh->GetNode()->GetMaterialCount();
 
-	if (m_fbxType == FBX_TYPE::NPC) {
+	// 0729효림
+	if (m_fbxType == FBX_TYPE::NPC && iMtrlCnt == 3) {
 		iMtrlCnt = 2;
 	}
 
@@ -326,9 +327,15 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 			sMtrlName = m_fileName;
 		}
 
-		str.assign(sMtrlName.begin(), sMtrlName.end());
-		str += "_";
-		str += _pMtrlSur->GetName();
+		// 0729효림 느낌표랑 말풍선 땜에 어쩔 수 없음 개드러운 코드 .. 
+		if (sMtrlName == L"exclamation_mark" || sMtrlName == L"chat") {
+			str.assign(sMtrlName.begin(), sMtrlName.end());
+		}
+		else {
+			str.assign(sMtrlName.begin(), sMtrlName.end());
+			str += "_";
+			str += _pMtrlSur->GetName();
+		}
 	}
 	if (m_fbxType == FBX_TYPE::MONSTER)
 	{
@@ -538,10 +545,17 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 			sMtrlName = m_fileName;
 		}
 
-		wstrName += sMtrlName;
+		// 0729효림
+		if (sMtrlName == L"exclamation_mark" || sMtrlName == L"chat") {
+			wstrName += sMtrlName;
+			wstrName += L".png";
+		}
+		else {
+			wstrName += sMtrlName;
 
-		wstrName += L"_";
-		wstrName += wstring(strName.begin(), strName.end());
+			wstrName += L"_";
+			wstrName += wstring(strName.begin(), strName.end());
+		}
 	}
 	if (m_fbxType == FBX_TYPE::DESERT_MAP) {
 		if (m_fileName != L"Wall") {
