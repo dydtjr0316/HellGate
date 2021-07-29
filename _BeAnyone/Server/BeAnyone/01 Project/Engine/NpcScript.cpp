@@ -7,19 +7,25 @@ CNpcScript::CNpcScript()
 	: CScript((UINT)COMPONENT_TYPE::SCRIPT) //CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT),
 	, m_eReqState{ REQUEST_STATE::NOT_RECIEVE }
 {
+	// 0729효림
 	// Request Box Create
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Npc\\exclamation_mark@ani.fbx", FBX_TYPE::NPC);
+	
 	m_pRequestMark = new CGameObject;
+	m_pRequestMark = pMeshData->Instantiate();
 	m_pRequestMark->SetName(L"Request_Box");
 	m_pRequestMark->FrustumCheck(false);
-	m_pRequestMark->AddComponent(new CTransform);
-	m_pRequestMark->AddComponent(new CMeshRender);
 	m_pRequestMark->Transform()->SetLocalScale(Vector3(10.f, 20.f, 10.f));
 	m_pRequestMark->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-	m_pRequestMark->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-	m_pRequestMark->MeshRender()->SetMaterial(pMtrl->Clone());
+	
 	// add GameObject
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Npc")->AddGameObject(m_pRequestMark);
+
+	// 느낌표 추가
+	SetReqMarkData(pMeshData->GetMesh());
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Npc\\chat_ani.fbx", FBX_TYPE::NPC);
+	//// 말풍선 추가
+	//SetReqMarkData(pMeshData->GetMesh());
 
 	// Conversation Box Create
 	Vector3 vScale(1100.f, 230.f, 1.f);

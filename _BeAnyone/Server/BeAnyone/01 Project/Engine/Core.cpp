@@ -42,7 +42,6 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 	CDevice::GetInst()->CreateConstBuffer(L"ANIM2D", sizeof(tMtrlParam), 512, CONST_REGISTER::b2);
 
 	// 전역 상수버퍼 변수(1프레임 동안 레지스터에서 지속되야함)
-	//CDevice::GetInst()->CreateConstBuffer(L"LIGHT2D", sizeof(tLightInfo), 1, CONST_REGISTER::b3, true);
 	CDevice::GetInst()->CreateConstBuffer(L"LIGHT3D", sizeof(tLightInfo), 1, CONST_REGISTER::b3, true);
 
 	// 매니저 초기화
