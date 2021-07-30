@@ -23,3 +23,7 @@ _BeAnyone/Client/BeAnyone/01 Project/Engine/x64/Debug/Engine.vcxproj.FileListAbs
 _BeAnyone/Server/BeAnyone/01 Project/Client/x64/Release/*.recipe
 _BeAnyone/Server/BeAnyone/01 Project/Client/x64/Release/*.txt
 _BeAnyone/Server/BeAnyone/03 External/Library/Engine/*.lib
+_BeAnyone/Server/BeAnyone/01 Project/Engine/x64/Release/Engine.lib.recipe
+_BeAnyone/Server/BeAnyone/02 File/bin/Client.iobj
+_BeAnyone/Server/BeAnyone/02 File/bin/Client.ipdb
+_BeAnyone/Server/BeAnyone/02 File/bin/content/Material/PlayerMale02.mtrl
