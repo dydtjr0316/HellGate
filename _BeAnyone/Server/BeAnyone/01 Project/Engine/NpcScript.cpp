@@ -15,17 +15,19 @@ CNpcScript::CNpcScript()
 	m_pRequestMark = pMeshData->Instantiate();
 	m_pRequestMark->SetName(L"Request_Box");
 	m_pRequestMark->FrustumCheck(false);
-	m_pRequestMark->Transform()->SetLocalScale(Vector3(10.f, 20.f, 10.f));
+	m_pRequestMark->Transform()->SetLocalScale(Vector3(5.f, 5.f, 5.f));
 	m_pRequestMark->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 	
 	// add GameObject
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Npc")->AddGameObject(m_pRequestMark);
 
 	// 느낌표 추가
-	SetReqMarkData(pMeshData->GetMesh());
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Npc\\chat_ani.fbx", FBX_TYPE::NPC);
-	//// 말풍선 추가
-	//SetReqMarkData(pMeshData->GetMesh());
+	SetReqMarkData(pMeshData->GetMesh(), pMeshData->GetMtrl());
+	// 말풍선 추가
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Npc\\chat.fbx", FBX_TYPE::NPC);
+	SetReqMarkData(pMeshData->GetMesh(), pMeshData->GetMtrl());
+	// request state 설정
+	//m_eReqState = REQUEST_STATE::REQUESTING;
 
 	// Conversation Box Create
 	Vector3 vScale(1100.f, 230.f, 1.f);
@@ -61,9 +63,15 @@ void CNpcScript::update()
 	Vector3 PlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
 
 
-	RequestPos = Vector3(NpcPos.x, NpcPos.y + 200.f, NpcPos.z);
+	RequestPos = Vector3(NpcPos.x, NpcPos.y + 150.f, NpcPos.z);
 	m_pRequestMark->Transform()->SetLocalPos(RequestPos);
-	m_pRequestMark->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
+
+	if(m_eReqState == REQUEST_STATE::NOT_RECIEVE)
+		m_pRequestMark->Transform()->SetLocalRot(PlayerRot + Vector3(0.0f, XM_PI, 0.f)); // - XM_PI / 2 말풍선일 때 x
+	else if (m_eReqState == REQUEST_STATE::REQUESTING) {
+		m_pRequestMark->Transform()->SetLocalRot(PlayerRot + Vector3(-XM_PI / 2, 0.f, 0.f)); // - XM_PI / 2 말풍선일 때 x
+		m_pRequestMark->Transform()->SetLocalScale(Vector3(2.0f, 2.0f, 2.0f));
+	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 
@@ -80,12 +88,20 @@ void CNpcScript::update()
 				m_bIsTalk = false;
 				m_bIsCollision = false;
 				m_iClickNum = 0;
+
+				// 3번 누르면 req mark 사라지게 해야 함
+				m_pRequestMark->SetUiRenderCheck(false);
+				SetReqMarkMesh(REQUEST_STATE::NOT_RECIEVE); // 느낌표로 변경
+
 			}
 		}
 
 		if (m_bIsCollision == true && m_bIsTalk == false) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
 			m_bIsTalk = true;
 			m_pConversationBox->SetUiRenderCheck(true);
+			m_eReqState = REQUEST_STATE::REQUESTING;
+			SetReqMarkMesh(m_eReqState);
+
 			// 첫 대화가 나와야 함
 			// 클릭할 때마다 다른 대화
 			// 마지막 대화 끝나면 
@@ -111,11 +127,8 @@ void CNpcScript::Move()
 
 void CNpcScript::SetReqMarkMesh(const REQUEST_STATE& _eType)
 {
-	GetObj()->MeshRender()->SetMesh(m_ReqMarkMeshData[(UINT)_eType]);
-	
-	for (int i = 0; i < m_ReqMarkMtrlData[(UINT)_eType].size(); ++i) {
-		GetObj()->MeshRender()->SetMaterial(m_ReqMarkMtrlData[(UINT)_eType][i], i);
-	}
+	m_pRequestMark->MeshRender()->SetMesh(m_ReqMarkMeshData[(UINT)_eType]);
+	m_pRequestMark->MeshRender()->SetMaterial(m_ReqMarkMtrlData[(UINT)_eType]);
 }
 
 

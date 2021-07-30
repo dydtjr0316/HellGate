@@ -26,6 +26,7 @@ public:
 
 	CGameObject* Instantiate();
 	Ptr<CMesh> GetMesh() { return m_pMesh; }
+	Ptr<CMaterial> GetMtrl(UINT _iSubSet = 0) { return m_vecMtrl[_iSubSet]; }
 
 public:
 	CMeshData();

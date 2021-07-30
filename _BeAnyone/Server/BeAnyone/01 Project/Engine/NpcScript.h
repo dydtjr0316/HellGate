@@ -27,7 +27,7 @@ private:
 	CGameObject*		m_pRequestMark;
 	REQUEST_STATE		m_eReqState;
 	vector<Ptr<CMesh>>	m_ReqMarkMeshData;
-	vector<vector<Ptr<CMaterial>>> m_ReqMarkMtrlData;
+	vector<Ptr<CMaterial>> m_ReqMarkMtrlData;
 
 	// Conversation Box
 	CGameObject*		m_pConversationBox;
@@ -50,9 +50,10 @@ public:
 	void AnimClipReset();
 
 	// Request Mar
-	void SetReqMarkData(Ptr<CMesh> _meshData) { m_ReqMarkMeshData.push_back(_meshData); }
+	void SetReqMarkData(Ptr<CMesh> _meshData, Ptr<CMaterial> _mtrlData) { m_ReqMarkMeshData.push_back(_meshData); m_ReqMarkMtrlData.push_back(_mtrlData); }
+	//void SetReqMarkMtrlData(vector<Ptr<CMaterial>> _mtrlData) { m_ReqMarkMtrlData.push_back(_mtrlData) }
 	void SetReqMarkMesh(const REQUEST_STATE& _eType);
-
+	
 	// collision
 	void OnCollisionEnter(CCollider* _pOther);
 	void OnCollisionExit(CCollider* _pOther);
