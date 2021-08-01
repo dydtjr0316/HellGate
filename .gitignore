@@ -27,3 +27,5 @@ _BeAnyone/Server/BeAnyone/01 Project/Engine/x64/Release/Engine.lib.recipe
 _BeAnyone/Server/BeAnyone/02 File/bin/Client.iobj
 _BeAnyone/Server/BeAnyone/02 File/bin/Client.ipdb
 _BeAnyone/Server/BeAnyone/02 File/bin/content/Material/PlayerMale02.mtrl
+_BeAnyone/Server/BeAnyone/02 File/bin/content/Material/PlayerMale01.mtrl
+_BeAnyone/Server/BeAnyone/02 File/bin/content/Mesh/PlayerMale@nIdle1.mesh
