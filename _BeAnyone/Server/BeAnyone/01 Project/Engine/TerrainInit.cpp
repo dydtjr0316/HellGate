@@ -120,7 +120,7 @@ void CTerrain::CreateHeightmapPixelsInfo()
 
 	BYTE* pHeightMapPixels = new BYTE[m_nWidth * m_nLength];
 
-	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\HeightMap.raw"
+	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\test2.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
 	/*HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\T3.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);*/

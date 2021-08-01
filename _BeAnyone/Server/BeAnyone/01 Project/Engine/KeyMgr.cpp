@@ -27,6 +27,8 @@ int arrVK[(UINT)KEY_TYPE::KEY_END] =
 	'E',
 	'R',
 	'Z',
+	'I',
+	'P',
 
 	VK_LBUTTON,
 	VK_RBUTTON,

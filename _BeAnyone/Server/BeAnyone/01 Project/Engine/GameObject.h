@@ -9,8 +9,8 @@ class CAnimator3D;
 class CScript;
 class CLight;
 class CCamera;
-//class CToolCamScript;
 class CTerrain;
+class CStaticUI;
 
 class CGameObject :
 	public CEntity
@@ -64,6 +64,7 @@ public:
 	CTerrain* Terrain() { return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN];}
 	CAnimator3D* Animator3D() { return (CAnimator3D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR3D]; }
 	CCollider* Collider() { return (CCollider*)m_arrCom[(UINT)COMPONENT_TYPE::COLLIDER]; }
+	CStaticUI* StaticUI() { return (CStaticUI*)m_arrCom[(UINT)COMPONENT_TYPE::UI]; }
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
 	
