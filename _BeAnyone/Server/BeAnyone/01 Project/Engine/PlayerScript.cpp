@@ -153,7 +153,7 @@ void CPlayerScript::update()
 	if (moveKeyInput)
 	{
 		int z = (int)(localPos.z / xmf3Scale.z);
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, ((z % 2) != 0)) * 2.f /*+ 100.f*/;
+		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, ((z % 2) != 0)) * 2.f + 100.f;
 
 		if (localPos.y != fHeight)
 			localPos.y = fHeight;

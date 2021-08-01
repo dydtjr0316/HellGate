@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="BulletScript.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CDeadReckoner.h" />
     <ClInclude Include="CNetMgr.h" />
@@ -68,6 +69,7 @@
     <ClInclude Include="Script.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="StaticUI.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="SwordScript.h" />
@@ -82,6 +84,7 @@
   <ItemGroup>
     <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="BulletScript.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CDeadReckoner.cpp" />
     <ClCompile Include="CNetMgr.cpp" />
@@ -129,6 +132,7 @@
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="StaticUI.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="SwordScript.cpp" />
     <ClCompile Include="TemperUiScript.cpp" />

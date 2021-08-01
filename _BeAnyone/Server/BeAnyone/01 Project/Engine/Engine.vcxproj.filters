@@ -186,6 +186,12 @@
     <ClCompile Include="NpcScript.cpp">
       <Filter>04. GameObject\Script</Filter>
     </ClCompile>
+    <ClCompile Include="StaticUI.cpp">
+      <Filter>04. GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>04. GameObject\Script\00.UIScript</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h" />
@@ -362,6 +368,12 @@
     </ClInclude>
     <ClInclude Include="NpcScript.h">
       <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticUI.h">
+      <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>04. GameObject\Script\00.UIScript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -965,57 +965,6 @@ void CSceneMgr::init()
 	//damage
 	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@damage.fbx", FBX_TYPE::MONSTER);
 
-	//// ====================
-	//// Monster1 오브젝트 생성
-	//// ====================
-	//pObject = new CGameObject;
-	//pObject->SetName(L"Monster Object 1");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CMeshRender);
-	//// Transform 설정
-	//pObject->Transform()->SetLocalPos(Vector3(1000.f, 300.f, 500.f));
-	//pObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
-	//// MeshRender 설정
-	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPositionTargetTex.GetPointer());
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-	//// Collider 설정
-	//pObject->AddComponent(new CCollider);
-	//pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
-	//pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f,2.f,2.f)));
-	//pObject->Collider()->SetBoundingSphere(BoundingSphere(pObject->Transform()->GetLocalPos(), 50.f));
-	// Script 설정
-	//pObject->AddComponent(new CMonsterScript);
-	// AddGameObject
-	//m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
-
-
-	// ====================
-	// Monster2 오브젝트 생성(comput shader test)
-	// ====================
-	//pObject = new CGameObject;
-	//pObject->SetName(L"Monster Object 2");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CMeshRender);
-	//// Transform 설정
-	//pObject->Transform()->SetLocalPos(Vector3(500.f, 300.f, 500.f));
-	//pObject->Transform()->SetLocalScale(Vector3(140.f, 166.f, 54.f));
-	//// MeshRender 설정
-	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTestUAVTexture.GetPointer());
-	//// Collider 설정
-	//pObject->AddComponent(new CCollider);
-	//pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
-	//pObject->Collider()->SetBoundingBox(BoundingBox(pObject->Transform()->GetLocalPos(), pObject->Transform()->GetLocalScale() / XMFLOAT3(2.f, 2.f, 2.f)));
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pNormalTargetTex.GetPointer());	
-	// Script 설정
-//	pObject->AddComponent(new CMonsterScript);
-	// AddGameObject
-	//m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject);
-
-
 	// ====================
 	// Skybox 오브젝트 생성
 	// ====================
@@ -1061,8 +1010,8 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CMeshRender);
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
-	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 50.f, 0.f));
-	pTerrainObject->Transform()->SetLocalScale(Vector3(200.f , 300.f /** TERRAIN_YSIZE*/, 200.f)); // 2배함
+	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 450.f, 0.f));
+	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f , 6000.f, 300.f)); // 2배함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
