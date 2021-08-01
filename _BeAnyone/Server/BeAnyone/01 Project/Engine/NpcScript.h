@@ -6,16 +6,19 @@ enum class REQUEST_STATE
 	NOT_RECIEVE,
 	REQUESTING,
 	REQUEST_RESOLUTION,
+	COMPLETE,
 	END,
 };
 
-//enum class REQUEST_STATE
-//{
-//	NOT_RECIEVE,
-//	REQUESTING,
-//	REQUEST_RESOLUTION,
-//	END,
-//};
+enum class NPC_QUEST {
+	KILL_MONSTER,
+	GET_ITEM,
+	BUY_WEAPON,
+	BUY_POTION,
+	WHY,
+	DONE,
+	END,
+};
 
 class CNpcScript :
 	public CScript
@@ -23,11 +26,17 @@ class CNpcScript :
 private:
 	NPC_TYPE m_eNpcType;
 
-	// Request
+	// Request Mark
 	CGameObject*		m_pRequestMark;
 	REQUEST_STATE		m_eReqState;
 	vector<Ptr<CMesh>>	m_ReqMarkMeshData;
 	vector<Ptr<CMaterial>> m_ReqMarkMtrlData;
+
+	// Quest
+	NPC_QUEST			m_eQuestType;
+	vector<REQUEST_STATE>	m_vIsQuest;
+	bool				m_CompleteQuest1;
+	bool				m_COmpleteQuest2;
 
 	// Conversation Box
 	CGameObject*		m_pConversationBox;
@@ -49,10 +58,14 @@ public:
 	void SetAnimation(const NPC_ANI_TYPE& type);
 	void AnimClipReset();
 
-	// Request Mar
+	// Request Mark
 	void SetReqMarkData(Ptr<CMesh> _meshData, Ptr<CMaterial> _mtrlData) { m_ReqMarkMeshData.push_back(_meshData); m_ReqMarkMtrlData.push_back(_mtrlData); }
 	//void SetReqMarkMtrlData(vector<Ptr<CMaterial>> _mtrlData) { m_ReqMarkMtrlData.push_back(_mtrlData) }
 	void SetReqMarkMesh(const REQUEST_STATE& _eType);
+
+	// quest 
+	void DecideQuestType();
+	void ChangeBoxTexture();
 	
 	// collision
 	void OnCollisionEnter(CCollider* _pOther);

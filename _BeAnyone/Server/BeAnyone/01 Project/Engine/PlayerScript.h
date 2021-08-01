@@ -29,24 +29,27 @@ private:
 	Vector3				m_vecPlayerDir;
 
 private:
-	float m_ftimeCount = 0.f;
-	float m_fDelayTime = 0.5f;
-	bool FirstPacket = false;
-	bool m_bisAttack = false;
-	bool m_bisAniReset = false;
-	bool m_bisDamage = false;
-	float m_fAnimationCnt[(UINT)PlAYER_ANICNT_TYPE::END]{};
+	float			m_ftimeCount = 0.f;
+	float			m_fDelayTime = 0.5f;
+	bool			FirstPacket = false;
+	bool			m_bisAttack = false;
+	bool			m_bisAniReset = false;
+	bool			m_bisDamage = false;
+	float			m_fAnimationCnt[(UINT)PlAYER_ANICNT_TYPE::END]{};
 
-	CTerrain* m_pTerrainObj;
-	XMFLOAT3 m_xmf3Velocity;
-	float m_fSpeed;
-	Ani_TYPE m_eAniType;
-	CDeadReckoner* m_pDeadReckoner;
+	CTerrain*		m_pTerrainObj;
+	XMFLOAT3		m_xmf3Velocity;
+	float			m_fSpeed;
+	Ani_TYPE		m_eAniType;
+	CDeadReckoner*	m_pDeadReckoner;
 	sc_packet_move* m_movePacketTemp = nullptr;
-	float m_fRTT;
-	Vector2 m_v2Interpolation_Point[4];
-	Vector2 m_v2Origin_Point[4];
-	int m_iInterpolationCnt = 0;
+	float			m_fRTT;
+	Vector2			m_v2Interpolation_Point[4];
+	Vector2			m_v2Origin_Point[4];
+	int				m_iInterpolationCnt = 0;
+
+	// quest 
+	int				m_iMonsterKillNum = 0;
 public:
 	bool GetAniReset() { return m_bisAniReset; }
 	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
@@ -60,7 +63,8 @@ public:
 	void SetCnt(const float& cnt, PlAYER_ANICNT_TYPE _AniCntType) { m_fAnimationCnt[(UINT)_AniCntType] = cnt; }
 	float GetCnt(PlAYER_ANICNT_TYPE _AniCntType) { return m_fAnimationCnt[(UINT)_AniCntType]; }
 	
-	//bool
+	// quest
+	int GetKillNum() { return m_iMonsterKillNum; }
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }

@@ -49,6 +49,21 @@ CNpcScript::CNpcScript()
 	m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"UiBoard").GetPointer());
 	m_pConversationBox->SetUiRenderCheck(false);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pConversationBox);
+
+	//vector<REQUEST_STATE> vTemp;
+	//// Quest bool값 초기화
+	//for (int i = 0; i < 2; ++i) {
+	//	for (int j = 0; j < 2; ++j) {
+	//		vTemp.push_back(REQUEST_STATE::NOT_RECIEVE);
+	//	}
+	//	m_vIsQuest.push_back(vTemp);
+	//	vTemp.clear();
+	//}
+
+	// Quest bool값 초기화
+	for (int i = 0; i < 2; ++i) {
+		m_vIsQuest.push_back(REQUEST_STATE::NOT_RECIEVE);
+	}
 }
 
 CNpcScript::~CNpcScript()
@@ -89,13 +104,14 @@ void CNpcScript::update()
 				m_bIsCollision = false;
 				m_iClickNum = 0;
 
+				// -------로직 생각해야 함
 				// 3번 누르면 req mark 사라지게 해야 함
-				m_pRequestMark->SetUiRenderCheck(false);
+				//m_pRequestMark->SetUiRenderCheck(false);
 				// 느낌표로 변경
-				m_eReqState = REQUEST_STATE::NOT_RECIEVE;
-				SetReqMarkMesh(m_eReqState); 
-				m_pRequestMark->Animator3D()->SetAniUse(true);
-
+				//m_eReqState = REQUEST_STATE::NOT_RECIEVE;
+				//SetReqMarkMesh(m_eReqState); 
+				// m_pRequestMark->Animator3D()->SetAniUse(true);
+				// -----------------
 			}
 		}
 
@@ -106,18 +122,123 @@ void CNpcScript::update()
 			SetReqMarkMesh(m_eReqState);
 			m_bIsTalk = true;
 			m_pConversationBox->SetUiRenderCheck(true);
-			
-
-			// 첫 대화가 나와야 함
-			// 클릭할 때마다 다른 대화
-			// 마지막 대화 끝나면 
 
 			// 카메라 회전
 			SetCameraState(CAMERA_STATE::NPC_CAMERA);
 			AnimClipReset();
 			SetAnimation(NPC_ANI_TYPE::TALK);
+
+			// 첫 대화가 나와야 함
+			// 클릭할 때마다 다른 대화
+			// 마지막 대화 끝나면 미션 true로 
+		}
+
+		// 대화 상자 텍스트 바꾸기
+		ChangeBoxTexture();
+	}
+}
+
+void CNpcScript::DecideQuestType()
+{
+	if (m_vIsQuest[0] == REQUEST_STATE::NOT_RECIEVE && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE) {
+		if (GetObj()->GetName() == L"Npc_1")
+			m_eQuestType = NPC_QUEST::KILL_MONSTER;
+		else if(GetObj()->GetName() == L"Npc_2")
+			m_eQuestType = NPC_QUEST::BUY_WEAPON;
+	}
+	else if(m_vIsQuest[0] == REQUEST_STATE::REQUESTING && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE
+		|| m_vIsQuest[0] == REQUEST_STATE::COMPLETE && m_vIsQuest[1] == REQUEST_STATE::REQUESTING){
+		m_eQuestType = NPC_QUEST::WHY;
+	}
+	else if (m_vIsQuest[0] == REQUEST_STATE::REQUEST_RESOLUTION && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE
+		|| m_vIsQuest[0] == REQUEST_STATE::COMPLETE && m_vIsQuest[1] == REQUEST_STATE::REQUEST_RESOLUTION) {
+		m_eQuestType = NPC_QUEST::DONE;
+	}
+	else if (m_vIsQuest[0] == REQUEST_STATE::COMPLETE && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE) {
+		if (GetObj()->GetName() == L"Npc_1")
+			m_eQuestType = NPC_QUEST::GET_ITEM;
+		else if (GetObj()->GetName() == L"Npc_2")
+			m_eQuestType = NPC_QUEST::BUY_POTION;
+	}
+}
+
+void CNpcScript::ChangeBoxTexture()
+{
+	DecideQuestType();
+
+	//NPC_1
+	if (GetObj()->GetName() == L"Npc_1") {
+
+		if (m_eQuestType == NPC_QUEST::KILL_MONSTER) {
+			switch (m_iClickNum) {
+			case 0:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_quest1(1)").GetPointer());
+				break;
+			case 1:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_quest1(2)").GetPointer());
+				break;
+			case 2:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_quest1(3)").GetPointer());
+				m_vIsQuest[0] = REQUEST_STATE::REQUESTING;
+				break;
+			}
+
 			
 		}
+		else if (m_eQuestType == NPC_QUEST::GET_ITEM) {
+			switch (m_iClickNum) {
+			case 0:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_quest2(1)").GetPointer());
+				break;
+			case 1:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_quest2(2)").GetPointer());
+				break;
+			case 2:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_quest2(3)").GetPointer());
+				break;
+			}
+		}
+		else if (m_eQuestType == NPC_QUEST::WHY) {
+			m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_why").GetPointer());
+		}
+		else if (m_eQuestType == NPC_QUEST::DONE) {
+			m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_done").GetPointer());
+		}
+	}
+	// NPC_2
+	else if (GetObj()->GetName() == L"Npc_2") {
+		if (m_eQuestType == NPC_QUEST::BUY_WEAPON) {
+			switch (m_iClickNum) {
+			case 0:
+				cout << "1" << endl;
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			}
+		}
+		else if (m_eQuestType == NPC_QUEST::BUY_POTION) {
+			switch (m_iClickNum) {
+			case 0:
+				cout << "1" << endl;
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			}
+		}
+		else if (m_eQuestType == NPC_QUEST::WHY) {
+
+		}
+		else if (m_eQuestType == NPC_QUEST::DONE) {
+
+		}
+	}
+
+	//NPC_3
+	else if (GetObj()->GetName() == L"Npc_3") {
 
 	}
 }
@@ -188,11 +309,12 @@ void CNpcScript::SetCameraState(CAMERA_STATE _eCamState)
 	if (_eCamState == CAMERA_STATE::FIXED_CAMERA) {
 		//camScript->DeleteCamParent(true);
 		cam->ClearParent();
+		camScript->GetTestObj()->ClearParent();
+		camScript->SetIsChild(false);
+		camScript->ResetNpcCamAngle();
 	}
 
 	camScript->SetNpcPos(npcPos);
 	camScript->SetCamState(_eCamState);
-
-
 	
 }
