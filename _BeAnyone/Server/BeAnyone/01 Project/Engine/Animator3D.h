@@ -27,6 +27,8 @@ private:
 	CStructuredBuffer*			m_pBoneSwordFinalMat;  // 특정 프레임의 최종 행렬(무기)
 	bool						m_bFinalMatUpdate; // 최종행렬 연산 수행여부
 
+	bool						m_bAniUse; // animator 사용할 건지 말 건지
+
 public:
 	void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; m_vecFinalBoneMat.resize(m_pVecBones->size()); }
 	void SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip);
@@ -38,6 +40,10 @@ public:
 	// vector<Matrix>& GetFinalBoneMat() { return m_vecFinalBoneMat; }// 안 씀
 	CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMat; }
 	CStructuredBuffer* GetSwordFinalBoneMat() { return m_pBoneSwordFinalMat; }
+
+	// animator 돌리기 여부
+	void SetAniUse(bool _aniUse) { m_bAniUse = _aniUse; }
+	bool GetAniUse() { return m_bAniUse; }
 
 private:
 	void check_mesh(Ptr<CMesh> _pMesh);

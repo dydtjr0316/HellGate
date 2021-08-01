@@ -91,16 +91,22 @@ void CNpcScript::update()
 
 				// 3번 누르면 req mark 사라지게 해야 함
 				m_pRequestMark->SetUiRenderCheck(false);
-				SetReqMarkMesh(REQUEST_STATE::NOT_RECIEVE); // 느낌표로 변경
+				// 느낌표로 변경
+				m_eReqState = REQUEST_STATE::NOT_RECIEVE;
+				SetReqMarkMesh(m_eReqState); 
+				m_pRequestMark->Animator3D()->SetAniUse(true);
 
 			}
 		}
 
 		if (m_bIsCollision == true && m_bIsTalk == false) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
-			m_bIsTalk = true;
-			m_pConversationBox->SetUiRenderCheck(true);
+			// 말풍선으로 변경
+			m_pRequestMark->Animator3D()->SetAniUse(false);
 			m_eReqState = REQUEST_STATE::REQUESTING;
 			SetReqMarkMesh(m_eReqState);
+			m_bIsTalk = true;
+			m_pConversationBox->SetUiRenderCheck(true);
+			
 
 			// 첫 대화가 나와야 함
 			// 클릭할 때마다 다른 대화
