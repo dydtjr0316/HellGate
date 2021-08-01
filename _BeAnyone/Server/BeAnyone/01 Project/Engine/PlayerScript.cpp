@@ -107,7 +107,7 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
 	{
 		player->SetChangeSpeed();
-		cout << localPos.x << "\t" << localPos.z << endl;
+		//cout << localPos.x << "\t" << localPos.z << endl;
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
@@ -118,9 +118,9 @@ void CPlayerScript::update()
 		player->SetPlayerDir(worldDir * player->GetSpeed() * DT);
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
-		cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
+		/*cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
 		cout << worldDir.z << endl;
-		cout << DT << endl;
+		cout << DT << endl;*/
 	}
 
 	else if (KEY_HOLD(KEY_TYPE::KEY_S))

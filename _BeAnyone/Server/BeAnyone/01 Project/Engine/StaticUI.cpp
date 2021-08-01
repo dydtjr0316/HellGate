@@ -3,6 +3,7 @@
 #include "ResMgr.h"
 #include "KeyMgr.h"
 #include "CollisionMgr.h"
+#include "RenderMgr.h"
 #include "Button.h"
 
 void CStaticUI::init()
@@ -47,8 +48,10 @@ void CStaticUI::update()
 	{
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 		{
-			m_pMousePoint->Transform()->SetLocalPos(Vector3(CKeyMgr::GetInst()->GetMousePos().x, CKeyMgr::GetInst()->GetMousePos().y, 1.f));
-			cout << m_pMousePoint->Transform()->GetLocalPos().x << "\t" << m_pMousePoint->Transform()->GetLocalPos().y << endl;
+			auto mPos = CKeyMgr::GetInst()->GetMousePos();
+		
+			m_pMousePoint->Transform()->SetLocalPos(Vector3(mPos.x, mPos.y, 1.f));
+			cout << mPos.x << "\t" << mPos.y << endl;
 		}
 	}
 }

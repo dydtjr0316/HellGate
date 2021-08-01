@@ -76,7 +76,6 @@ void CRenderMgr::CreateMRT()
 		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->Create(3, arrRT, pDSTex); // 깊이 텍스쳐는 SwapChain 것을 사용한다.
 	}
 
-
 	// ============
 	// Light MRT
 	// ============

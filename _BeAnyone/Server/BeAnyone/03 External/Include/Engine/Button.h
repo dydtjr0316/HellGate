@@ -3,6 +3,7 @@
 #include "Script.h"
 #include "Collider.h"
 #include "Texture.h"
+#include "Camera.h"
 
 class CButton 
 	: public CScript
@@ -16,7 +17,7 @@ private:
 
 private:
 	POINT					m_vecOldPoint;
-
+	CGameObject*			m_pCamera;
 
 public:
 	void					init();
@@ -35,6 +36,7 @@ public:
 	CLONE(CButton);
 
 public:
+	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	Ptr<CTexture> GetImage() { return m_pItemImage; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }

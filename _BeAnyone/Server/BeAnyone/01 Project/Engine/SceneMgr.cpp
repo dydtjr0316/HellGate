@@ -65,7 +65,7 @@ CSceneMgr::~CSceneMgr()
 	SAFE_DELETE(m_pCurScene);
 }
 
-void CSceneMgr::CreateTargetUI()
+void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 {
 #ifdef _DEBUG
 	Vector3 vScale(150.f, 150.f, 1.f);
@@ -254,6 +254,8 @@ void CSceneMgr::CreateTargetUI()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	pObject->AddComponent(new CStaticUI);
+	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
+	pObject->StaticUI()->SetCameraProj(_camObj->Camera());
 	// Transform 설정
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (3 * vScale.x)
@@ -281,7 +283,6 @@ void CSceneMgr::CreateTargetUI()
 		pButtonObj->AddComponent(new CMeshRender);
 		pButtonObj->AddComponent(new CCollider);
 		pButtonObj->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
-
 		//	버튼 Script 설정
 		pButtonObj->AddComponent(pObject->StaticUI()->m_vecButton[i]);
 		pObject->StaticUI()->m_vecButton[i]->SetParent(pObject->StaticUI());
@@ -768,9 +769,14 @@ void CSceneMgr::init()
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pNormal = CResMgr::GetInst()->Load<CTexture>(L"Tile_n", L"Texture\\Tile\\TILE_03_N.tga");
 
+	Ptr<CTexture> piSword = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"Texture\\UI\\Items\\Weapons\\02_Sword.png");
+	Ptr<CTexture> piBow = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"Texture\\UI\\Items\\Weapons\\01_BOW.png");
+
+
 	Ptr<CTexture> pDiffuseTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex");
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
+
 
 	// Conversation Box
 	Ptr<CTexture> pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"UiBoard", L"Texture\\UIboard.png");
@@ -970,7 +976,7 @@ void CSceneMgr::init()
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pUICam);
 	pUICam->Camera()->SetWidth(CRenderMgr::GetInst()->GetResolution().fWidth);
 	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
-	CreateTargetUI();
+	CreateTargetUI(pUICam);
 
 
 

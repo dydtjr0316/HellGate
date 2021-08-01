@@ -27,7 +27,14 @@ public:
 public:
 	vector<CGameObject*>	m_vecItemObj;
 	vector<CButton*>		m_vecButton;
+
 	CGameObject*			m_pMousePoint;
+	CCamera*				m_pCameraProj;
+
+public:
+	CCamera* GetCameraProj() { return m_pCameraProj; }
+
+	void SetCameraProj(CCamera* _cam) { m_pCameraProj = _cam; }
 
 public:
 	void init();

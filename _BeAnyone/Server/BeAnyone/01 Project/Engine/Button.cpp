@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "StaticUI.h"
 #include "Button.h"
 #include "ResMgr.h"
 #include "KeyMgr.h"
@@ -68,7 +69,10 @@ CButton::CButton()
 	, m_eItemId(ITEM_ID::EMPTY)
 	, m_bActive(false)
 {
-	m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD_IMG");
+	if(UINT(rand() % 2))
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD_IMG");
+	else
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
 }
 
 
@@ -90,7 +94,11 @@ void CButton::OnCollisionEnter(CCollider* _pOther)
 
 void CButton::OnCollision(CCollider* _pOther)
 {
-	
+	Vector3 vec = CKeyMgr::GetInst()->GetTransformedPoint(m_pComParent->GetObj()->StaticUI()->GetCameraProj()->GetProjMat());
+
+
+	cout << "충돌 버튼 위치 : " << Transform()->GetLocalPos().x << "\t" << Transform()->GetLocalPos().y << endl;
+	cout << "수정 버튼 위치 : " << vec.x << "\t" << vec.y << endl;
 	Vector3 localPos = _pOther->Transform()->GetLocalPos();
 	GetObj()->Transform()->SetLocalPos(localPos);
 
@@ -98,4 +106,9 @@ void CButton::OnCollision(CCollider* _pOther)
 
 void CButton::OnCollisionExit(CCollider* _pOther)
 {
+}
+
+void TransformPoint(Vector3 _vec)
+{
+
 }
