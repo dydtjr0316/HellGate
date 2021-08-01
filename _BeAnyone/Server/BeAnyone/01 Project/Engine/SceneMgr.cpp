@@ -584,7 +584,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	// Wall
 
 	float wallX = 1400.f;
-	for (int i = 0; i < 9; ++i) {
+	for (int i = 0; i < 81; ++i) {
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
 
 		pMapObject = new CGameObject;
@@ -596,10 +596,10 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 
 		z = (int)(30.f / 60.f);
 		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(30.f, 30.f, bReverseQuad);
+		mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(30.f, mapY * 2, (wallX* i) + wallX / 2));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 100.f, 200.f));//(1.0f, 1.0f, 1.0f));
+		pMapObject->Transform()->SetLocalPos(Vector3(250.f, mapY * 2, (wallX* i) + wallX / 2));
+		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 400.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
@@ -610,17 +610,17 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	}
 }
 
-void CSceneMgr::CreateNpc()
+void CSceneMgr::CreateNpc(CTerrain* _terrain)
 {
+
 	// Npc_1
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_4@Idle.fbx", FBX_TYPE::NPC);
 	//Ptr<CMeshData> pAniData = CResMgr::GetInst()->LoadFBX(L"FBX\\Animation\\itempack@spraying.fbx", FBX_TYPE::ANI);
-
 	CGameObject* pNpcObject = nullptr;
 	pNpcObject = pMeshData->Instantiate();
 	pNpcObject->SetName(L"Npc_1");
 	pNpcObject->FrustumCheck(false);
-	pNpcObject->Transform()->SetLocalPos(Vector3(2300.f, 240.f, 4300.f));
+	pNpcObject->Transform()->SetLocalPos(Vector3(2300.f, _terrain->GetHeight(2300.f, 4300.f, true) * 2 + 60.f/*240.f*/, 4300.f));
 	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
 	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 	pNpcObject->AddComponent(new CCollider);
@@ -648,7 +648,7 @@ void CSceneMgr::CreateNpc()
 	pNpcObject = pMeshData->Instantiate();
 	pNpcObject->SetName(L"Npc_2");
 	pNpcObject->FrustumCheck(false);
-	pNpcObject->Transform()->SetLocalPos(Vector3(1300.f, 240.f, 3700.f));
+	pNpcObject->Transform()->SetLocalPos(Vector3(1300.f, _terrain->GetHeight(1300.f, 3700.f, true) * 2 + 60.f/*240.f*/, 3700.f));
 	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
 	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 	pNpcObject->AddComponent(new CCollider);
@@ -675,7 +675,7 @@ void CSceneMgr::CreateNpc()
 	pNpcObject = pMeshData->Instantiate();
 	pNpcObject->SetName(L"Npc_3");
 	pNpcObject->FrustumCheck(false);
-	pNpcObject->Transform()->SetLocalPos(Vector3(1300.f, 240.f, 5000.f));
+	pNpcObject->Transform()->SetLocalPos(Vector3(1300.f, _terrain->GetHeight(1300.f, 5000.f, true) * 2 + 60.f/*240.f*/, 5000.f));
 	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
 	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 	pNpcObject->AddComponent(new CCollider);
@@ -754,7 +754,7 @@ void CSceneMgr::init()
 	CGameObject* pObject = nullptr;
 
 //	CreateMap();
-	CreateNpc();
+//	CreateNpc();
 
 	// =============
    // FBX 파일 로드
@@ -1019,6 +1019,7 @@ void CSceneMgr::init()
 	g_netMgr.SetObj(pPlayerObj);
 	
 	CreateMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
+	CreateNpc(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 
 
 	// ====================
