@@ -29,11 +29,7 @@ void CButton::update()
 	case ITEM_ID::END:
 		return;
 	}
-}
 
-void CButton::finalupdate()
-{
-	GetObj()->StaticUI();
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 
@@ -41,13 +37,34 @@ void CButton::finalupdate()
 		{
 			GetObj()->StaticUI();
 		}
-		//CCollisionMgr::GetInst()->CollisionRect();
-		auto mPos = CKeyMgr::GetInst()->GetMousePos();
+		//CGameObject* pObject = new CGameObject;
+		//pObject->SetName(L"MousePoint");
+		//pObject->AddComponent(new CTransform);
+		//pObject->AddComponent(new CCollider);
+		//pObject->FrustumCheck(false);
+		//pObject->Transform()->SetLocalPos(Vector3(0.f, 450.f, 1.f));
+		//pObject->Transform()->SetLocalScale(Vector3(300.f, 6000.f, 300.f)); // 2น่วิ
+		//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"RectMtrl"));
+		//CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+		////g_netMgr.SetObj(pObject);
+
+		////CCollisionMgr::GetInst()->CollisionRect();
+		//auto mPos = CKeyMgr::GetInst()->GetMousePos();
+
+	}
+	else
+	{
+		m_vecOldPoint = CKeyMgr::GetInst()->GetPreMousePos();
 	}
 }
 
+void CButton::finalupdate()
+{
+
+}
+
 CButton::CButton()
-	: CScript(0)
+	: CScript((UINT)SCRIPT_TYPE::TESTSCRIPT)
 	, m_eItemId(ITEM_ID::EMPTY)
 	, m_bActive(false)
 {
@@ -64,5 +81,21 @@ void CButton::SaveToScene(FILE* _pFile)
 }
 
 void CButton::LoadFromScene(FILE* _pFile)
+{
+}
+
+void CButton::OnCollisionEnter(CCollider* _pOther)
+{
+}
+
+void CButton::OnCollision(CCollider* _pOther)
+{
+	
+	Vector3 localPos = _pOther->Transform()->GetLocalPos();
+	GetObj()->Transform()->SetLocalPos(localPos);
+
+}
+
+void CButton::OnCollisionExit(CCollider* _pOther)
 {
 }

@@ -16,6 +16,7 @@
 #include "Transform.h"
 #include "MeshRender.h"
 #include "Light.h"
+#include "Button.h"
 
 #include "TimeMgr.h"
 #include "KeyMgr.h"
@@ -36,6 +37,7 @@
 #include "NpcScript.h"
 // UI
 #include "TemperUiScript.h"
+#include "StaticUI.h"
 
 using namespace std;
 
@@ -244,6 +246,59 @@ void CSceneMgr::CreateTargetUI()
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
 #endif
+
+	CGameObject* pObject = new CGameObject;
+	vScale = Vector3(400.f, 600.f, 1.f);
+	pObject->SetName(L"UI Object");
+	pObject->FrustumCheck(false);
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CStaticUI);
+	// Transform 설정
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (3 * vScale.x)
+		, (res.fHeight / 2.f) - (vScale.y / 2.f)
+		, 1.f));
+	pObject->Transform()->SetLocalScale(vScale);
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+	pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+	Ptr<CTexture> itemUI = pObject->StaticUI()->m_pFrame;
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
+	// AddGameObject
+	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+
+	//	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
+	for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
+	{
+		vScale = Vector3(80.f, 120.f, 1.f);
+		Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
+		CGameObject* pButtonObj = new CGameObject;
+		pButtonObj->SetName(L"Button Object");
+		pButtonObj->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pButtonObj->AddComponent(new CTransform);
+		pButtonObj->AddComponent(new CMeshRender);
+		pButtonObj->AddComponent(new CCollider);
+		pButtonObj->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
+
+		//	버튼 Script 설정
+		pButtonObj->AddComponent(pObject->StaticUI()->m_vecButton[i]);
+		pObject->StaticUI()->m_vecButton[i]->SetParent(pObject->StaticUI());
+		// Transform 설정
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+		pButtonObj->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x) + 200.f
+			, (res.fHeight / 2.f) - (vScale.y / 2.f)
+			, 1.f));
+		pButtonObj->Transform()->SetLocalScale(vScale);
+		// MeshRender 설정
+		pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pButtonObj->MeshRender()->SetMaterial(pMtrl->Clone());
+		pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pObject->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
+		// AddGameObject
+		m_pCurScene->FindLayer(L"UI")->AddGameObject(pButtonObj);
+	}
 }
 
 void CSceneMgr::CreateMap(CTerrain* _terrain)
@@ -750,15 +805,13 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(5)->SetName(L"Bullet");
 
 	m_pCurScene->GetLayer(30)->SetName(L"UI");
+	m_pCurScene->GetLayer(31)->SetName(L"PUI");
 
 	CGameObject* pObject = nullptr;
 
-//	CreateMap();
-//	CreateNpc();
-
 	// =============
-   // FBX 파일 로드
-   // =============
+    // FBX 파일 로드
+    // =============
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 	pMeshData->Save(pMeshData->GetPath());
 	
@@ -913,6 +966,7 @@ void CSceneMgr::init()
 	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 	pUICam->Camera()->SetFar(100.f);
 	pUICam->Camera()->SetLayerCheck(30, true);
+	pUICam->Camera()->SetLayerCheck(31, true);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pUICam);
 	pUICam->Camera()->SetWidth(CRenderMgr::GetInst()->GetResolution().fWidth);
 	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
@@ -1036,7 +1090,7 @@ void CSceneMgr::init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
-
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"UI", L"PUI");
 	
 
 	m_pCurScene->awake();

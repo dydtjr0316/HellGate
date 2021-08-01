@@ -238,7 +238,7 @@ bool CCollisionMgr::CollisionBox(CCollider* _pCollider1, CCollider* _pCollider2)
 bool CCollisionMgr::CollisionRect(CCollider* _pCollider1, CCollider* _pCollider2)
 {
 	static Vector3 arrLocal[4] = {					// 0 -- 1
-		  Vector3(-0.5f, 0.5f, 0.f)				// |	|
+		  Vector3(-0.5f, 0.5f, 0.f)					// |	|
 		, Vector3(0.5f, 0.5f, 0.f)					// 3 -- 2
 		, Vector3(0.5f, -0.5f, 0.f)
 		, Vector3(-0.5f, -0.5f, 0.f) };
