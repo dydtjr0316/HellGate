@@ -12,7 +12,7 @@ CNetMgr Netmgr;
 CQuadTree g_QuadTree(CBoundary(WORLD_WIDTH/2, WORLD_HEIGHT/2, WORLD_WIDTH / 2, WORLD_HEIGHT / 2), MAX_PLAYER_IN_NODE);
 SOCKET g_listenSocket;
 HANDLE g_IocpHandle;
-seconds monsterAutoMoveTimer = 10s;
+seconds monsterAutoMoveTimer = 3s;
 
 
 int main()

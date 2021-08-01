@@ -18,9 +18,14 @@ void CMediatorMgr::InitObject()
     srand((unsigned int)time(NULL));
     for (int i = START_MONSTER; i < END_MONSTER; ++i) {
         pObj = new CMonster;
-        pObj->SetPosV((float)(1500), 300.f, (float)(5000 + (i - 1000) * 400));
+        pObj->SetPosV((float)(1500), 2750.f, (float)(5000 + (i - 1000) * 400));
         pObj->SetID(i);
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> dis(0, 3);
+        MONSTER_AUTOMOVE_DIR dir = (MONSTER_AUTOMOVE_DIR)(dis(gen));
+        CAST_MONSTER(pObj)->SetDir(dir);
         pObj->SetType(OBJECT_TYPE::MONSTER);
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         Add(pObj, i);

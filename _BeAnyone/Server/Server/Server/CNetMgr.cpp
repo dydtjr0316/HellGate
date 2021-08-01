@@ -28,23 +28,15 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
             old_viewList.insert(old_ids);
     }
 
+    
+
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(0, 3);
     MONSTER_AUTOMOVE_DIR dir = (MONSTER_AUTOMOVE_DIR)(dis(gen));
-    
+
     CAST_MONSTER(MonsterObj)->SetDir(dir);
     CAST_MONSTER(MonsterObj)->SetIsMoving(true);
-    
-
-    //switch (dir)
-    //{   // 캐릭터 바라보는 방향 바꾸는 코드 필요
-    //case 0: if (MonsterPos.x > 0)MonsterPos.x -= 1.f; break;
-    //case 1: if (MonsterPos.x < WORLD_WIDTH - 1)MonsterPos.x += 1.f; break;
-    //case 2: if (MonsterPos.z > 0)MonsterPos.z -= 1.f; break;
-    //case 3: if (MonsterPos.z < WORLD_HEIGHT - 1)MonsterPos.z += 1.f; break;
-    //}
-    //MonsterObj->SetPosV(MonsterPos);
 
     for (auto& new_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id))))
     {
@@ -728,7 +720,6 @@ void CNetMgr::Worker_Thread()
                     {
                         keep_alive = true;
                         break;
-                        break;
                     }
             }
             
@@ -798,7 +789,7 @@ void CNetMgr::Processing_Thead()
             }
         }
 
-     /*   if (m_pMediator->MonsterReckonerSize() != 0)
+        if (m_pMediator->MonsterReckonerSize() != 0)
         {
             Vector3 monsterPos;
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
@@ -809,16 +800,16 @@ void CNetMgr::Processing_Thead()
                     switch (CAST_MONSTER(m_pMediator->Find(monster))->GetDir())
                     {
                     case MONSTER_AUTOMOVE_DIR::FRONT:
-                        monsterPos.z += 20.f * DT;
+                        monsterPos.z += 100.f * DT;
                         break;
                     case MONSTER_AUTOMOVE_DIR::BACK:
-                        monsterPos.z -= 20.f * DT;
+                        monsterPos.z -= 100.f * DT;
                         break;
                     case MONSTER_AUTOMOVE_DIR::LEFT:
-                        monsterPos.x -= 20.f * DT;
+                        monsterPos.x -= 100.f * DT;
                         break;
                     case MONSTER_AUTOMOVE_DIR::RIGHT:
-                        monsterPos.x += 20.f * DT;
+                        monsterPos.x += 100.f * DT;
                         break;
                     case MONSTER_AUTOMOVE_DIR::AUTO:
                         break;
@@ -830,7 +821,7 @@ void CNetMgr::Processing_Thead()
                     CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
                 }
             }
-        }*/
+        }
     }
 }
 

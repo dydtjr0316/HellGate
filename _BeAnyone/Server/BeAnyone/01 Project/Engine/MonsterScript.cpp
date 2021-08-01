@@ -175,26 +175,26 @@ void CMonsterScript::Move()
 			// ¹Ø¿¡²¨ Ã³·³ ÁÂÇ¥ º¯°æÇÏ´Â ÄÚµå
 
 			worldDir = -monsterTrans->GetLocalDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 20.f * DT;
+			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 
 			break;
 		case MONSTER_AUTOMOVE_DIR::BACK:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 20.f * DT;
+			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 			break;
 		case MONSTER_AUTOMOVE_DIR::LEFT:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 20.f * DT;
+			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 			break;
 		case MONSTER_AUTOMOVE_DIR::RIGHT:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 20.f * DT;
+			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 			break;
 		case MONSTER_AUTOMOVE_DIR::AUTO:
@@ -208,7 +208,10 @@ void CMonsterScript::Move()
 		}
 
 		if ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+		{
 			monsterTrans->SetLocalPos(monsterPos);
+			cout << "tl~~~qkf" << endl;
+		}
 	}
 }
 
