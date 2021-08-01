@@ -33,7 +33,7 @@ static type* GetInst()\
 #define ROTATE_SPEED 0.5f
 #define PLAYER_SPEED_IDLE 200.f
 //#define PLAYER_SPEED_DASH 600.f
-#define PLAYER_SPEED_DASH 3000.f
+#define PLAYER_SPEED_DASH 6000.f
 
 //typedef DirectX::SimpleMath::Vector2 Vec2;
 //typedef DirectX::SimpleMath::Vector3 Vec3;

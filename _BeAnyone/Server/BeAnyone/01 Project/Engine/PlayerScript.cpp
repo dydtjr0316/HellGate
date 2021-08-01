@@ -107,6 +107,7 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
 	{
 		player->SetChangeSpeed();
+		cout << localPos.x << "\t" << localPos.z << endl;
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W))
