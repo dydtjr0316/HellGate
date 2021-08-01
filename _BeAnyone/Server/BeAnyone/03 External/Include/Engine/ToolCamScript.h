@@ -18,9 +18,6 @@ private:
 	float			m_bSetChild = false;
 	float			m_dd = 0.0f;
 
-	// 필요없을 듯 이 변수랑 관련 함수
-	bool			m_bDelCamParent = false;
-
 	CGameObject* m_pRealTest;
 
 	//	임시 카메라 기준 변수		
@@ -39,7 +36,9 @@ public:
 	// npc
 	void SetNpcPos(const Vector3& _vPos) { m_NpcPos = _vPos; }
 	void SetCamState(CAMERA_STATE _eCamState) { m_eCamState = _eCamState; }
-	void DeleteCamParent(bool _eDelCamParent) { m_bDelCamParent = _eDelCamParent; }
+	CGameObject* GetTestObj() { return m_pTest; }	// camera parent 가져오기
+	void SetIsChild(bool _bSetChild) { m_bSetChild = _bSetChild; }
+	void ResetNpcCamAngle() { m_dd = 0.0f; }
 
 public:
 	CLONE(CToolCamScript);

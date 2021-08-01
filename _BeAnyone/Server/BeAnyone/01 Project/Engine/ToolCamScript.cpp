@@ -161,10 +161,10 @@ void CToolCamScript::SetNpcCamera()
 	float fDistance = 300.f;
 	
 
-	vCenterPoint = Vector3((vPlayerPos.x + m_NpcPos.x) / 2.f, 0.f, (vPlayerPos.z + m_NpcPos.z) / 2.f);
+	vCenterPoint = Vector3((vPlayerPos.x + m_NpcPos.x) / 2.f, m_NpcPos.y - 200.f, (vPlayerPos.z + m_NpcPos.z) / 2.f);
 	m_pDummy->Transform()->SetLocalPos(vCenterPoint);
 
-	vDistanceDiff = Vector3(vPlayerPos.x - vCenterPoint.x, 0.f, vPlayerPos.z - vCenterPoint.z) + (vPlayerTrans->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
+	vDistanceDiff = Vector3(vPlayerPos.x - vCenterPoint.x, m_NpcPos.y - 200.f, vPlayerPos.z - vCenterPoint.z) + (vPlayerTrans->GetWorldDir(DIR_TYPE::FRONT) * fDistance);
 	
 	if (m_bSetChild == false) {
 		m_pDummy->AddChild(m_pTest);
@@ -184,7 +184,4 @@ void CToolCamScript::SetNpcCamera()
 
 	GetObj()->Transform()->SetLocalRot(vPlayerTrans->GetLocalRot() + Vector3(XM_PI / 8.5, XM_PI, 0.0f));
 
-	// 필요 없어짐 변수도 관련 함수도
-	if (m_bDelCamParent == true)
-		GetObj()->ClearParent();
 }

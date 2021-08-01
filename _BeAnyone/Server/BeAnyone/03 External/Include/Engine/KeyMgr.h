@@ -25,6 +25,9 @@ enum class KEY_TYPE
 	KEY_R,
 	KEY_Z,
 
+	KEY_I,
+	KEY_P,
+
 	KEY_LBTN,
 	KEY_RBTN,
 
