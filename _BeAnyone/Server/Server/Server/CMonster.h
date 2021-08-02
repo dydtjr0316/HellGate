@@ -45,7 +45,7 @@ private:
 	int		m_iFirstY = 0;
 	//int   m_prev_size = 0;
 	bool	m_bisMoving = false;
-	MONSTER_AUTOMOVE_DIR		m_dir = MONSTER_AUTOMOVE_DIR::IDLE;
+	MONSTER_AUTOMOVE_DIR		m_dir = MONSTER_AUTOMOVE_DIR::RIGHT;
 
 	//unordered_set<int> view_list;
 

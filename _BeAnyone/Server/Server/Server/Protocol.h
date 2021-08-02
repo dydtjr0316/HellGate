@@ -25,7 +25,7 @@ constexpr int MAX_USER = 1000;
 constexpr int END_USER = MAX_USER;
 
 constexpr int START_MONSTER = MAX_USER;
-constexpr int MAX_MONSTER = 3;
+constexpr int MAX_MONSTER = 1;
 constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
 constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
 
@@ -35,8 +35,8 @@ constexpr int END_NPC = START_NPC + MAX_NPC;
 
 //constexpr int WORLD_WIDTH = 12800;
 //constexpr int WORLD_HEIGHT = 12800;
-constexpr int WORLD_WIDTH = 25600;
-constexpr int WORLD_HEIGHT = 25600;
+constexpr int WORLD_WIDTH = 76700;
+constexpr int WORLD_HEIGHT = 76700;
 
 constexpr int VIEW_LIMIT =  1280;				// 시야 반지름
 

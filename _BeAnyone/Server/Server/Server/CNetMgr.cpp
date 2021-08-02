@@ -26,6 +26,13 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     {
         if (m_pMediator->IsType(old_ids, OBJECT_TYPE::CLIENT))
             old_viewList.insert(old_ids);
+
+        cout << "old viewlist client status" << endl;
+        cout << old_ids << endl;
+        cout << m_pMediator->Find(old_ids)->GetLocalPosVector().x << endl;
+        cout << m_pMediator->Find(old_ids)->GetLocalPosVector().z << endl;
+        cout << "o===================================" << endl;
+
     }
 
     
