@@ -295,6 +295,7 @@ enum class FBX_TYPE
 {
 	PLAYER,
 	DESERT_MAP,
+	NEW_DESERT_MAP,
 	MONSTER,
 	NPC,
 	ANI,

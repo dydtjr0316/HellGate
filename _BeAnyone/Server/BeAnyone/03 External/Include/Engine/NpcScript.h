@@ -10,14 +10,6 @@ enum class REQUEST_STATE
 	END,
 };
 
-//enum class NPC1_QUEST {
-//	KILL_MONSTER,
-//	GET_ITEM,
-//	WHY,
-//	DONE,
-//	END,
-//};
-
 enum class NPC_QUEST {
 	KILL_MONSTER,
 	GET_ITEM,
@@ -41,10 +33,10 @@ private:
 	vector<Ptr<CMaterial>> m_ReqMarkMtrlData;
 
 	// Quest
-	// bool				m_bIsQuest;
 	NPC_QUEST			m_eQuestType;
-	//NPC2_QUEST			m_eQuestType2;
 	vector<REQUEST_STATE>	m_vIsQuest;
+	bool				m_CompleteQuest1;
+	bool				m_COmpleteQuest2;
 
 	// Conversation Box
 	CGameObject*		m_pConversationBox;

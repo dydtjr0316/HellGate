@@ -647,7 +647,7 @@ void CNetMgr::Worker_Thread()
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(
                     (float)(rand() % 1000), // ¼öÁ¤ real float
-                    (float)(290.f),
+                    (float)(240.f),
                     (float)(rand() % 1000));
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;

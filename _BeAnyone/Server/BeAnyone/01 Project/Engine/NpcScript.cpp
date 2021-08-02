@@ -134,7 +134,8 @@ void CNpcScript::update()
 		}
 
 		// 대화 상자 텍스트 바꾸기
-		ChangeBoxTexture();
+		if (m_bIsCollision == true)
+			ChangeBoxTexture();
 	}
 }
 
@@ -207,39 +208,43 @@ void CNpcScript::ChangeBoxTexture()
 	}
 	// NPC_2
 	else if (GetObj()->GetName() == L"Npc_2") {
-		if (m_eQuestType == NPC_QUEST::BUY_WEAPON) {
+		if (m_eQuestType == NPC_QUEST::BUY_POTION) {
 			switch (m_iClickNum) {
 			case 0:
-				cout << "1" << endl;
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(1)").GetPointer());
 				break;
 			case 1:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(2)").GetPointer());
 				break;
 			case 2:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(3)").GetPointer());
 				break;
 			}
 		}
-		else if (m_eQuestType == NPC_QUEST::BUY_POTION) {
+		else if (m_eQuestType == NPC_QUEST::BUY_WEAPON) {
 			switch (m_iClickNum) {
 			case 0:
-				cout << "1" << endl;
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(1)").GetPointer());
 				break;
 			case 1:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(2)").GetPointer());
 				break;
 			case 2:
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(3)").GetPointer());
 				break;
 			}
 		}
 		else if (m_eQuestType == NPC_QUEST::WHY) {
-
+			m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_why").GetPointer());
 		}
 		else if (m_eQuestType == NPC_QUEST::DONE) {
-
+			m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_done").GetPointer());
 		}
 	}
 
 	//NPC_3
 	else if (GetObj()->GetName() == L"Npc_3") {
-
+		m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc3_start").GetPointer());
 	}
 }
 
