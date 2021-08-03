@@ -46,17 +46,20 @@ void CStaticUI::update()
 		return;
 	else
 	{
-		if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+		if (KEY_HOLD(KEY_TYPE::KEY_LBTN))		//	피킹 후 드래그
 		{
 			Vector3 vec = CKeyMgr::GetInst()->GetTransformedPoint(m_pCameraProj->GetProjMat());
 			m_pMousePoint->Transform()->SetLocalPos(Vector3(vec.x, vec.y, 1.f));
 		}
-		else if (KEY_TAB(KEY_TYPE::KEY_LBTN))
+		else if (KEY_TAB(KEY_TYPE::KEY_LBTN))	//	키를 눌렸을 때 충돌검사를 하고 충돌 됐으면 BT_ACTIVE 상태값을 충돌된 버튼만 수정한다/
 		{	
-			
+			for (int i = 0; i < m_vecButton.size(); ++i)
+			{
+				m_vecButton[i]->GetActive();
+			}
 
 		}
-		else if (KEY_AWAY(KEY_TYPE::KEY_LBTN))
+		else if (KEY_AWAY(KEY_TYPE::KEY_LBTN))	//	피킹 후 상태 이상이 없으면 다시 제자리로 돌아간다.
 		{
 			for (int i = 0; i < m_vecButton.size(); ++i)
 			{

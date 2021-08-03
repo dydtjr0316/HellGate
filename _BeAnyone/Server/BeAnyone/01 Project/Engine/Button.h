@@ -9,25 +9,31 @@ enum class BT_STATE
 {
 	NONE,
 	CLICKED,
-
 	SELL,
+};
 
+enum class BT_ACTIVE
+{
+	ACTIVE,
+	PASSIVE,
 };
 
 class CButton
 	: public CScript
 {
 private:
-	bool					m_bActive;
+	bool					m_bActive;		//	·»´õ¸µ on / off
 
 	ITEM_ID					m_eItemId;
 	Ptr<CTexture>			m_pItemImage;
-	CComponent* m_pComParent;
+	CComponent*				m_pComParent;
 
 private:
 	Vector3					m_vecOldPos;
-	CGameObject* m_pCamera;
+	CGameObject*			m_pCamera;
+
 	BT_STATE				m_bState;
+	BT_ACTIVE				m_bCheckActive;
 
 public:
 	void					init();
@@ -48,6 +54,7 @@ public:
 public:
 	Ptr<CTexture> GetImage() { return m_pItemImage; }
 	BT_STATE GetState() { return m_bState; }
+	BT_ACTIVE GetActive() { return m_bCheckActive; }
 
 	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }

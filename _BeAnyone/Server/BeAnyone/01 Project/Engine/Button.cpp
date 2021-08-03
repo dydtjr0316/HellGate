@@ -64,6 +64,9 @@ void CButton::OnCollisionEnter(CCollider* _pOther)
 
 void CButton::OnCollision(CCollider* _pOther)
 {
+	if (m_bCheckActive == BT_ACTIVE::PASSIVE)
+		return;
+
 	m_bState = BT_STATE::CLICKED;
 
 	Vector3 localPos = _pOther->Transform()->GetLocalPos();
@@ -94,6 +97,7 @@ CButton::CButton()
 	, m_eItemId(ITEM_ID::EMPTY)
 	, m_bActive(false)
 	, m_bState(BT_STATE::NONE)
+	, m_bCheckActive(BT_ACTIVE::PASSIVE)
 {
 	//	test
 	if (UINT(rand() % 2))
