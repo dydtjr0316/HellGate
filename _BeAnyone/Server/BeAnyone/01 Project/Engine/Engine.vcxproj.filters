@@ -192,6 +192,9 @@
     <ClCompile Include="Button.cpp">
       <Filter>04. GameObject\Script\00.UIScript</Filter>
     </ClCompile>
+    <ClCompile Include="TreeScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h" />
@@ -374,6 +377,9 @@
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>04. GameObject\Script\00.UIScript</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeScript.h">
+      <Filter>04. GameObject\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,8 @@
 #include "SwordScript.h"
 #include "MonsterScript.h"
 #include "NpcScript.h"
+#include "TreeScript.h"
+
 // UI
 #include "TemperUiScript.h"
 
@@ -734,7 +736,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
 
 			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
-			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 180.f, 100.f));//(1.0f, 1.0f, 1.0f));
+			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
@@ -763,7 +765,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
 
 			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
-			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 180.f, 100.f));//(1.0f, 1.0f, 1.0f));
+			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
@@ -792,7 +794,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
 
 			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
-			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 180.f, 100.f));//(1.0f, 1.0f, 1.0f));
+			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
@@ -1289,6 +1291,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 	}
 
 	// --------------------- 오른쪽 --------------------- 
+	{}
 	// 집4
 	{
 		// 집3
@@ -1521,6 +1524,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject = pMeshData->Instantiate();
 		pMapObject->SetName(L"Tree");
 		pMapObject->FrustumCheck(false);
+		pMapObject->AddComponent(new CTreeScript);
 		
 		z = (int)(3000.f / 60.f);
 		bReverseQuad = ((z % 2) != 0);
@@ -1534,6 +1538,8 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+		// 나무 충돌 스크립트
+		CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
 		
 		// 가운데 나무2
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Tree_07.fbx", FBX_TYPE::NEW_DESERT_MAP);
@@ -1723,110 +1729,112 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 	{
 
 	}
+	//Wall
+	{
+		//왼쪽
+		float wallX = 1400.f;
+		for (int i = 0; i < 55; ++i) {
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
 
-	//왼쪽
-	float wallX = 1400.f;
-	for (int i = 0; i < 55; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
+			pMapObject = new CGameObject;
 
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Wall");
-		pMapObject->FrustumCheck(true);
-
-
-		z = (int)(30.f / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
-
-		pMapObject->Transform()->SetLocalPos(Vector3(250.f, mapY * 2, (wallX * i) + wallX / 2));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
-		/*pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	//오른쪽
-	for (int i = 0; i < 55; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Wall");
-		pMapObject->FrustumCheck(true);
+			pMapObject = pMeshData->Instantiate();
+			pMapObject->SetName(L"Wall");
+			pMapObject->FrustumCheck(true);
 
 
-		z = (int)(30.f / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
+			z = (int)(30.f / 60.f);
+			bReverseQuad = ((z % 2) != 0);
+			mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(76500.f, mapY * 2, (wallX * i) + wallX / 2));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
-		/*pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
+			pMapObject->Transform()->SetLocalPos(Vector3(250.f, mapY * 2, (wallX * i) + wallX / 2));
+			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
+			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
+			/*pMapObject->AddComponent(new CCollider);
+			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
+			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
 
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
+			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+		}
 
-	// 위
-	for (int i = 0; i < 55; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
+		//오른쪽
+		for (int i = 0; i < 55; ++i) {
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
 
-		pMapObject = new CGameObject;
+			pMapObject = new CGameObject;
 
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Wall");
-		pMapObject->FrustumCheck(true);
-
-
-		z = (int)(30.f / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 76300.f, true);
-
-		pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2, 76300.f));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-		/*pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	// 아래
-	for (int i = 0; i < 55; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Wall");
-		pMapObject->FrustumCheck(true);
+			pMapObject = pMeshData->Instantiate();
+			pMapObject->SetName(L"Wall");
+			pMapObject->FrustumCheck(true);
 
 
-		z = (int)(30.f / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 300.f, true);
+			z = (int)(30.f / 60.f);
+			bReverseQuad = ((z % 2) != 0);
+			mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
 
-		pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2, 300.f));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
-		/*pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
+			pMapObject->Transform()->SetLocalPos(Vector3(76500.f, mapY * 2, (wallX * i) + wallX / 2));
+			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
+			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
+			/*pMapObject->AddComponent(new CCollider);
+			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
+			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
 
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+		}
+
+		// 위
+		for (int i = 0; i < 55; ++i) {
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
+
+			pMapObject = new CGameObject;
+
+			pMapObject = pMeshData->Instantiate();
+			pMapObject->SetName(L"Wall");
+			pMapObject->FrustumCheck(true);
+
+
+			z = (int)(30.f / 60.f);
+			bReverseQuad = ((z % 2) != 0);
+			mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 76300.f, true);
+
+			pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2, 76300.f));
+			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
+			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
+			/*pMapObject->AddComponent(new CCollider);
+			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
+			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
+
+			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+		}
+
+		// 아래
+		for (int i = 0; i < 55; ++i) {
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
+
+			pMapObject = new CGameObject;
+
+			pMapObject = pMeshData->Instantiate();
+			pMapObject->SetName(L"Wall");
+			pMapObject->FrustumCheck(true);
+
+
+			z = (int)(30.f / 60.f);
+			bReverseQuad = ((z % 2) != 0);
+			mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 300.f, true);
+
+			pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2, 300.f));
+			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
+			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
+			/*pMapObject->AddComponent(new CCollider);
+			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
+			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
+
+			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+		}
 	}
 
 }
@@ -2066,12 +2074,13 @@ void CSceneMgr::init()
 	pSword = pMeshData->Instantiate();
 	pSword->SetName(L"sword");
 	pSword->FrustumCheck(false);
-	//pSword->Transform()->SetLocalPos(Vector3(100.f, 320.f, 150.f));
 	pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 	//pSword->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pSword->AddComponent(new CCollider);
 	pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
-
+	pSword->Collider()->SetBoundingBox(BoundingBox(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pSword->Collider()->SetBoundingSphere(BoundingSphere(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	//pNpcObject->MeshRender()->SetDynamicShadow(true);
 
 	// Script 설정
 	pSword->AddComponent(new CSwordScript);
