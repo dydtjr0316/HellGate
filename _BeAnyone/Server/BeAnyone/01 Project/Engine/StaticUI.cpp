@@ -48,10 +48,21 @@ void CStaticUI::update()
 	{
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 		{
-			auto mPos = CKeyMgr::GetInst()->GetMousePos();
-		
-			m_pMousePoint->Transform()->SetLocalPos(Vector3(mPos.x, mPos.y, 1.f));
-			cout << mPos.x << "\t" << mPos.y << endl;
+			Vector3 vec = CKeyMgr::GetInst()->GetTransformedPoint(m_pCameraProj->GetProjMat());
+			m_pMousePoint->Transform()->SetLocalPos(Vector3(vec.x, vec.y, 1.f));
+		}
+		else if (KEY_TAB(KEY_TYPE::KEY_LBTN))
+		{	
+			
+
+		}
+		else if (KEY_AWAY(KEY_TYPE::KEY_LBTN))
+		{
+			for (int i = 0; i < m_vecButton.size(); ++i)
+			{
+				if(m_vecButton[i]->GetState() == BT_STATE::CLICKED)
+					m_vecButton[i]->OnCollisionExit(m_pMousePoint->Collider());
+			}
 		}
 	}
 }

@@ -5,7 +5,16 @@
 #include "Texture.h"
 #include "Camera.h"
 
-class CButton 
+enum class BT_STATE
+{
+	NONE,
+	CLICKED,
+
+	SELL,
+
+};
+
+class CButton
 	: public CScript
 {
 private:
@@ -13,11 +22,12 @@ private:
 
 	ITEM_ID					m_eItemId;
 	Ptr<CTexture>			m_pItemImage;
-	CComponent*				m_pComParent;
+	CComponent* m_pComParent;
 
 private:
-	POINT					m_vecOldPoint;
-	CGameObject*			m_pCamera;
+	Vector3					m_vecOldPos;
+	CGameObject* m_pCamera;
+	BT_STATE				m_bState;
 
 public:
 	void					init();
@@ -36,8 +46,10 @@ public:
 	CLONE(CButton);
 
 public:
-	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	Ptr<CTexture> GetImage() { return m_pItemImage; }
+	BT_STATE GetState() { return m_bState; }
+
+	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
 

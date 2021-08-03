@@ -28,8 +28,8 @@ public:
 	vector<CGameObject*>	m_vecItemObj;
 	vector<CButton*>		m_vecButton;
 
-	CGameObject*			m_pMousePoint;
-	CCamera*				m_pCameraProj;
+	CGameObject* m_pMousePoint;
+	CCamera* m_pCameraProj;
 
 public:
 	CCamera* GetCameraProj() { return m_pCameraProj; }
