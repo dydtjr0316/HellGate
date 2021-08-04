@@ -72,7 +72,6 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 {
 	const vector<CGameObject*>& vecObj1 = _pLayer1->GetObjects();
 	const vector<CGameObject*>& vecObj2 = _pLayer2->GetObjects();
-
 	map<DWORD_PTR, bool>::iterator iter;
 
 	for (size_t i = 0; i < vecObj1.size(); ++i)
@@ -100,11 +99,17 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 
 			bool IsDead = false;
 			if (pCollider1->GetObj()->IsDead() || pCollider2->GetObj()->IsDead())
+			{
+
 				IsDead = true;
+			}
 
 			// 충돌했다.
 			if (IsCollision(pCollider1, pCollider2))
 			{
+
+				
+				
 				// 충돌 중이다
 				if (m_mapCol.end() != iter && iter->second == true)
 				{
@@ -141,6 +146,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 			}
 			else // 충돌하지 않는다.
 			{
+				
 				if (m_mapCol.end() != iter && true == iter->second)
 				{
 					pCollider1->OnCollisionExit(pCollider2);
@@ -197,7 +203,7 @@ bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollide
 		wstring a = _pCollider1->GetObj()->GetName();
 		wstring b = _pCollider2->GetObj()->GetName();
 
-
+		cout<<_pCollider1->GetObj()->GetID()<<"와 "<< _pCollider2->GetObj()<<"간의 충돌 "<<endl;
 		//wcout << a << L"의 ";
 		//cout << "중점 :   \t" << bBX1.Center.x << "\t" << bBX1.Center.y << "\t" << bBX1.Center.z << endl;
 		//cout << "반지름 : \t" << bBX1.Radius << endl << endl;

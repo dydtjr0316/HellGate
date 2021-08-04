@@ -356,6 +356,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 					if (id == 1000)
 					{
 						Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@walking.fbx", FBX_TYPE::MONSTER);
+						Ptr<CMeshData> pIdleMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@idle.fbx", FBX_TYPE::MONSTER);
+
 						CGameObject* pObject = new CGameObject;
 						g_Object.emplace(id, pObject);
 						//
@@ -370,10 +372,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 						// Collider 물어보기
 						g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_idle");
 						g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos()
-							, g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+							, pIdleMeshData->GetMesh()->GetBoundingBoxExtents()));
 						g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere
 						(g_Object.find(id)->second->Transform()->GetLocalPos(),
-							g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+							pIdleMeshData->GetMesh()->GetBoundingSphereRadius()));
 
 						// Script 설정
 						g_Object.find(id)->second->AddComponent(new CMonsterScript);

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MonsterScript.h"
 #include "RenderMgr.h"
+#include "Terrain.h"
 
 int attackcnt = 0;
 
@@ -166,6 +167,8 @@ void CMonsterScript::Move()
 	Vector3 monsterPos = monsterTrans->GetLocalPos();
 	Vector3 worldDir;
 	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
+	CTerrain* pTerrain = monsterScript->GetTerrain();
+	const Vector3& xmf3Scale = GetObj()->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
 	string temp;
 	if (monsterScript->GetPacketMove() != nullptr)
 	{
@@ -174,7 +177,6 @@ void CMonsterScript::Move()
 		case MONSTER_AUTOMOVE_DIR::FRONT:
 			//worlddir º¯°æ
 			// ¹Ø¿¡²¨ Ã³·³ ÁÂÇ¥ º¯°æÇÏ´Â ÄÚµå
-
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
@@ -210,10 +212,16 @@ void CMonsterScript::Move()
 		default:
 			break;
 		}
-		cout <<"ID : "<< GetObj()->GetID() << "\tdir : " << temp << endl;
+		//cout <<"ID : "<< GetObj()->GetID() << "\tdir : " << temp << endl;
 
 		if ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
 		{
+			int z = (int)(monsterPos.z / xmf3Scale.z);
+	
+			float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f + 100.f;
+
+			if (monsterPos.y != fHeight)
+				monsterPos.y = fHeight;
 			monsterTrans->SetLocalPos(monsterPos);
 		}
 	}
