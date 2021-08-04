@@ -166,51 +166,55 @@ void CMonsterScript::Move()
 	Vector3 monsterPos = monsterTrans->GetLocalPos();
 	Vector3 worldDir;
 	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
-	if (m_Packet_autoMove != nullptr)
+	string temp;
+	if (monsterScript->GetPacketMove() != nullptr)
 	{
-		switch ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir)
+		switch ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir)
 		{
 		case MONSTER_AUTOMOVE_DIR::FRONT:
 			//worlddir 변경
 			// 밑에꺼 처럼 좌표 변경하는 코드
 
-			worldDir = -monsterTrans->GetLocalDir(DIR_TYPE::UP);
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
-
+			temp = "front";
 			break;
 		case MONSTER_AUTOMOVE_DIR::BACK:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
+			temp = "back";
 			break;
 		case MONSTER_AUTOMOVE_DIR::LEFT:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
+			temp = "left";
 			break;
 		case MONSTER_AUTOMOVE_DIR::RIGHT:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
+			temp = "right";
 			break;
 		case MONSTER_AUTOMOVE_DIR::AUTO:
 			// a* 사용할곳
 			break;
 		case MONSTER_AUTOMOVE_DIR::IDLE:
-			m_Packet_autoMove = nullptr;
+			monsterScript->SetPacketMove(nullptr);
 			break;
 		default:
 			break;
 		}
+		cout <<"ID : "<< GetObj()->GetID() << "\tdir : " << temp << endl;
 
-		if ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+		if ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
 		{
 			monsterTrans->SetLocalPos(monsterPos);
-			cout << "tl~~~qkf" << endl;
 		}
 	}
 }

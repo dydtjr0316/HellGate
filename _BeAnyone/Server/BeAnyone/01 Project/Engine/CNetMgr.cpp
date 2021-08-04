@@ -22,10 +22,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.7";
-//const char ip[] = "192.168.0.13";
-//const char ip[] = "192.168.140.59";
-//const char ip[] = "221.151.160.142";
+//const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.13";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
 
@@ -355,7 +353,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
-					if (id < 1001)
+					if (id == 1000)
 					{
 						Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@walking.fbx", FBX_TYPE::MONSTER);
 						CGameObject* pObject = new CGameObject;
@@ -453,6 +451,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 						//damage
 						pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
 						monsterScript->SetAnimationData(pMeshData->GetMesh());
+
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
+							g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
+						);
+						g_Object.find(id)->second->SetID(id);
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 					}
 				}
 			}
@@ -504,8 +509,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int monster_id = packet->id;
 		if (g_Object.find(packet->id)->second == nullptr)break;
 		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
-
-		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+		cout << "*******----------------------------------***************" << endl;
+		cout << "ID :   "<< monster_id<<"     dir   : "<<(int)packet->eDir << endl;
+		cout << "*******----------------------------------***************" << endl;
+		g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 		// 여기서부터 
 	}
 	break;
