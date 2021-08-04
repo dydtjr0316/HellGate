@@ -59,7 +59,10 @@ void CButton::LoadFromScene(FILE* _pFile)
 
 void CButton::OnCollisionEnter(CCollider* _pOther)
 {
+	m_bCheckActive = BT_ACTIVE::ACTIVE;
+
 	m_vecOldPos = Transform()->GetLocalPos();
+
 }
 
 void CButton::OnCollision(CCollider* _pOther)
@@ -89,6 +92,7 @@ void CButton::OnCollisionExit(CCollider* _pOther)
 	}
 
 	m_bState = BT_STATE::NONE;
+	m_bCheckActive = BT_ACTIVE::PASSIVE;
 }
 
 

@@ -55,6 +55,7 @@ void CStaticUI::update()
 		{	
 			for (int i = 0; i < m_vecButton.size(); ++i)
 			{
+				
 				m_vecButton[i]->GetActive();
 			}
 
