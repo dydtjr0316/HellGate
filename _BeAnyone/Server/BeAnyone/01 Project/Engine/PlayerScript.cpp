@@ -118,9 +118,9 @@ void CPlayerScript::update()
 		player->SetPlayerDir(worldDir * player->GetSpeed() * DT);
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
-		cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
-		cout << worldDir.z << endl;
-		cout << DT << endl;
+		//cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
+		//cout << worldDir.z << endl;
+		//cout << DT << endl;
 	}
 
 	else if (KEY_HOLD(KEY_TYPE::KEY_S))

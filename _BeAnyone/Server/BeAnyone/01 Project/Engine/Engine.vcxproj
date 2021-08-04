@@ -80,6 +80,7 @@
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="ToolCamScript.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="TreeScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator3D.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="ToolCamScript.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TreeScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
