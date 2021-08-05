@@ -67,8 +67,8 @@ float4 PS_Test(VS_OUTPUT _input) : SV_Target
         vOutColor = _input.vOutColor;
     }
 
-   // float4 vOutColor = _input.vOutColor;
-  //  float4 vOutColor = g_tex_0.Sample(g_sam_0, _input.vUV);
+    // float4 vOutColor = _input.vOutColor;
+    //  float4 vOutColor = g_tex_0.Sample(g_sam_0, _input.vUV);
     float4 vNormal = g_tex_1.Sample(g_sam_0, _input.vUV);
     vNormal = vNormal * 2.f - 1.f; // 표면 좌표에서의 Normal
 

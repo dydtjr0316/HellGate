@@ -59,6 +59,12 @@ void CButton::LoadFromScene(FILE* _pFile)
 
 void CButton::OnCollisionEnter(CCollider* _pOther)
 {
+	vector<CButton*> vecButton = m_pComParent->GetObj()->StaticUI()->GetButton();
+	for (int i = 0; i < vecButton.size(); ++i)
+	{
+		if (vecButton[i]->GetActive() == BT_ACTIVE::ACTIVE)
+			return;
+	}
 	m_bCheckActive = BT_ACTIVE::ACTIVE;
 
 	m_vecOldPos = Transform()->GetLocalPos();
