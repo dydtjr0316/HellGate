@@ -1518,7 +1518,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 	// 가운데 나무, 돌
 	{
 		// 가운데 나무
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Tree_07.fbx", FBX_TYPE::NEW_DESERT_MAP);
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Tree_01.fbx", FBX_TYPE::NEW_DESERT_MAP);
 		//pMeshData->Save(pMeshData->GetPath());
 		pMapObject = new CGameObject;
 		pMapObject = pMeshData->Instantiate();
@@ -1540,6 +1540,28 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		// 나무 충돌 스크립트
 		CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
+		//-------item load---------
+		// 물약 1
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Bottle_03.fbx", FBX_TYPE::ITEM);
+		pTreeScript->SetItemData(pMeshData);
+		// 물약 2
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Bottle_04.fbx", FBX_TYPE::ITEM);
+		pTreeScript->SetItemData(pMeshData);
+		// 고기
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Steak_02.fbx", FBX_TYPE::ITEM);
+		pTreeScript->SetItemData(pMeshData);
+		// 돈
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\MoneyBag.fbx", FBX_TYPE::ITEM);
+		pTreeScript->SetItemData(pMeshData);
+		// 당근
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Carrot.fbx", FBX_TYPE::ITEM);
+		pTreeScript->SetItemData(pMeshData);
+		//-----------
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_01.fbx", FBX_TYPE::NEW_DESERT_MAP);
+		pTreeScript->SetStumpData(pMeshData);
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_04.fbx", FBX_TYPE::NEW_DESERT_MAP);
+		pTreeScript->SetStumpData(pMeshData);
+		//-----------------------------------
 		
 		// 가운데 나무2
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Tree_07.fbx", FBX_TYPE::NEW_DESERT_MAP);
@@ -1998,6 +2020,7 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(3)->SetName(L"Map");
 	m_pCurScene->GetLayer(4)->SetName(L"Npc");
 	m_pCurScene->GetLayer(5)->SetName(L"Bullet");
+	m_pCurScene->GetLayer(6)->SetName(L"Item");
 
 	m_pCurScene->GetLayer(30)->SetName(L"UI");
 
@@ -2130,6 +2153,8 @@ void CSceneMgr::init()
 	//damage
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
 	monsterScript->SetAnimationData(pMeshData->GetMesh());
+
+
 	
 	// ==================
 	// Camera Object 생성
@@ -2287,6 +2312,7 @@ void CSceneMgr::init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Monster");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Map");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
 
 	

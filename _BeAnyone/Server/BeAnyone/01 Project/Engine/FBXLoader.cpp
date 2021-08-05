@@ -318,7 +318,9 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 		if (m_fileName == L"Wall")
 			str = _pMtrlSur->GetName();
 	}
-
+	if (m_fbxType == FBX_TYPE::ITEM) {
+		str = "Texture_01";
+	}
 	if (m_fbxType == FBX_TYPE::MONSTER) {
 		str = "FireElemental";
 	}
@@ -520,6 +522,9 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 	else if (m_fbxType == FBX_TYPE::NPC) {
 		wstrName += L"Texture\\Npc\\";
 	}
+	else if (m_fbxType == FBX_TYPE::ITEM) {
+		wstrName += L"Texture\\Item\\";
+	}
 
 	FbxProperty TextureProperty = _pSurface->FindProperty(_pMtrlProperty);
 	if (TextureProperty.IsValid())
@@ -579,6 +584,11 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 			wstrName += wstring(strName.begin(), strName.end());
 		}
 	}
+	if (m_fbxType == FBX_TYPE::ITEM) {
+		strName = "Texture_01";//_pSurface->GetName();
+		strName += ".png";
+		wstrName += wstring(strName.begin(), strName.end());
+	}
 	if (m_fbxType == FBX_TYPE::NEW_DESERT_MAP) {
 		if (m_fileName != L"Wall") {
 			strName = "Texture_01";//_pSurface->GetName();
@@ -611,6 +621,7 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 		sMtrlName += L".png";
 		wstrName += wstring(sMtrlName.begin(), sMtrlName.end());
 	}
+	
 
 	return wstrName; // wstring(strName.begin(), strName.end());
 }
