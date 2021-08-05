@@ -123,7 +123,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 	{
 		// 여기 두번들어감 // 용석
 		g_netMgr.Send_Attack_Packet(m_sId);
-		cout << "sid : " << m_sId << endl;
+	
 		
 		m_bisDamaged = true;
 	}
@@ -259,7 +259,7 @@ void CMonsterScript::Attack()
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
-		cout << "What is Getobj.id = " << m_sId << endl;
+		
 		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
 	}
 	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {

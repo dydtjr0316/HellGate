@@ -474,7 +474,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (other_id == g_myid)
 		{
 			cout << "SC_PACKET_MOVE  자신에게 보내는 패킷 횟수"<<cnt++ << endl;
-			//ObjTrans->SetLocalPos(packet->localVec);
+			g_Object.find(other_id)->second->Transform()->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -511,9 +511,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int monster_id = packet->id;
 		if (g_Object.find(packet->id)->second == nullptr)break;
 		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
-		cout << "*******----------------------------------***************" << endl;
-		cout << "ID :   "<< monster_id<<"     dir   : "<<(int)packet->eDir << endl;
-		cout << "*******----------------------------------***************" << endl;
 		g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 		// 여기서부터 
 	}
@@ -638,7 +635,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int id = packet->id;
 		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
 
-		cout << "Monster id -> " << packet->id << endl;
+		
 		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->id, packet->aniType);
 
 		//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);

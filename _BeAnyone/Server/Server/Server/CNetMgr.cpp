@@ -41,10 +41,7 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     std::uniform_int_distribution<int> dis(0, 3);
     MONSTER_AUTOMOVE_DIR dir = (MONSTER_AUTOMOVE_DIR)(dis(gen));
 
-    cout << "**********************" << endl;
-    CAST_MONSTER(MonsterObj)->SetDir(dir);
-    cout << "ID : " << Monster_id << "     dir : " << (int)dir << endl;
-    cout << "**********************" << endl;
+
     CAST_MONSTER(MonsterObj)->SetIsMoving(true);
 
     for (auto& new_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id))))
@@ -449,7 +446,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 
-        cout <<"\t\tMovePacket 온 후 " << packet->localVec.z << endl;
+        //cout <<"\t\tMovePacket 온 후 " << packet->localVec.z << endl;
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
@@ -653,9 +650,9 @@ void CNetMgr::Worker_Thread()
 
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(
-                    (float)(rand() % 1000), // 수정 real float
+                    (float)(rand() % 1000)+500.f, // 수정 real float
                     (float)(240.f),
-                    (float)(rand() % 1000));
+                    (float)(rand() % 1000) + 500.f);
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
                // if (pClient->GetLocalPosVector().x == 724.f)
@@ -781,35 +778,30 @@ void CNetMgr::Processing_Thead()
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
                 {
-                  /*  cout << "--------------------------------" << endl;
-                    cout << drmPacket->localVec.x << " || " << drmPacket->localVec.z <<" || " << drmPacket->DirVec.z << endl;
-                    cout << "이전//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
-                    cout << obj->GetSpeed() << endl;
-                    cout << DeltaTime << endl;*/
-                   //obj->GetLock().lock();
+                    /*  cout << "--------------------------------" << endl;
+                      cout << drmPacket->localVec.x << " || " << drmPacket->localVec.z <<" || " << drmPacket->DirVec.z << endl;
+                      cout << "이전//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
+                      cout << obj->GetSpeed() << endl;
+                      cout << DeltaTime << endl;*/
+                      //obj->GetLock().lock();
                     obj->SetRotateY(drmPacket->rotateY);
-                    
+
                     //여기
-                    //g_QuadTree.Delete(obj);
+                    /*obj->GetLock().lock();
+                    g_QuadTree.Delete(obj);*/
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                    //g_QuadTree.Insert(obj);
+                    /*g_QuadTree.Insert(obj);
+                    obj->GetLock().unlock();*/
+
                     //obj->GetLock().unlock();
 
-                    if (obj->GetLocalPosVector().x < 0 || obj->GetLocalPosVector().x>25600||
-                        obj->GetLocalPosVector().z < 0 || obj->GetLocalPosVector().z>25600)
-                    {
-                        int i = 0;
-                    }
-                   /* cout << "이후//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
-                    cout << "--------------------------------" << endl;*/
-
- /*                   if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
+                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 1.f)
                     {
                         CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                        cout << reckoner<<"번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
+                        cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
                         m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
-                    }*/
+                    }
                 }
             }
         }

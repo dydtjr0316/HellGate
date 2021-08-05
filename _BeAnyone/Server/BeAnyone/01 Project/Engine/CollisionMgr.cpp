@@ -202,16 +202,6 @@ bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollide
 		//	바운딩 구 중점, 크기 check용 cout.
 		wstring a = _pCollider1->GetObj()->GetName();
 		wstring b = _pCollider2->GetObj()->GetName();
-
-		cout<<_pCollider1->GetObj()->GetID()<<"와 "<< _pCollider2->GetObj()<<"간의 충돌 "<<endl;
-		//wcout << a << L"의 ";
-		//cout << "중점 :   \t" << bBX1.Center.x << "\t" << bBX1.Center.y << "\t" << bBX1.Center.z << endl;
-		//cout << "반지름 : \t" << bBX1.Radius << endl << endl;
-
-		//wcout << b << L"의 ";
-		//cout << "중점 :   \t" << bBX2.Center.x << "\t" << bBX2.Center.y << "\t" << bBX2.Center.z << endl;
-		//cout << "반지름 : \t" << bBX2.Radius << endl << endl;
-
 		return true;
 	}
 	return false;
@@ -227,13 +217,7 @@ bool CCollisionMgr::CollisionBox(CCollider* _pCollider1, CCollider* _pCollider2)
 		//	바운딩 박스 중점, 크기 check용 cout.
 		wstring a = _pCollider1->GetObj()->GetName();
 		wstring b = _pCollider2->GetObj()->GetName();
-		//wcout << a << L"와 \t" << b << L"가 충돌" << endl;
-		//cout << "중점 : \t" << bBX1.Center.x << "\t" << bBX1.Center.y << "\t" << bBX1.Center.z << endl;
-		//cout << "크기 : \t" << bBX1.Extents.x << "\t" << bBX1.Extents.y << "\t" << bBX1.Extents.z << endl << endl;
-
-		//cout << "중점 : \t" << bBX2.Center.x << "\t" << bBX2.Center.y << "\t" << bBX2.Center.z << endl;
-		//cout << "크기 : \t" << bBX2.Extents.x << "\t" << bBX2.Extents.y << "\t" << bBX2.Extents.z << endl << endl;
-
+	
 		return true;
 	}
 
