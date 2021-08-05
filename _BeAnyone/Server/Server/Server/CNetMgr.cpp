@@ -787,11 +787,14 @@ void CNetMgr::Processing_Thead()
                     obj->SetRotateY(drmPacket->rotateY);
 
                     //여기
-                    /*obj->GetLock().lock();
-                    g_QuadTree.Delete(obj);*/
+                  
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                    /*g_QuadTree.Insert(obj);
-                    obj->GetLock().unlock();*/
+                    obj->GetLock().lock();
+                    g_QuadTree.Delete(obj);
+                    g_QuadTree.Insert(obj);
+                    obj->GetLock().unlock();
+
+
 
                     //obj->GetLock().unlock();
 
@@ -836,9 +839,11 @@ void CNetMgr::Processing_Thead()
                         break;
                     }
                     //여기
-                   // g_QuadTree.Delete(m_pMediator->Find(monster));
+                    m_pMediator->Find(monster)->GetLock().lock();
+                    g_QuadTree.Delete(m_pMediator->Find(monster));
                     CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
-                   // g_QuadTree.Insert(m_pMediator->Find(monster));
+                    g_QuadTree.Insert(m_pMediator->Find(monster));
+                    m_pMediator->Find(monster)->GetLock().unlock();
                 }
             }
         }

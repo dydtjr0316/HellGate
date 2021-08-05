@@ -36,6 +36,7 @@ CBoundary::CBoundary(CGameObject* player, const float& searchsize)
 
 	this->m_fw = searchsize;
 	this->m_fh = searchsize;
+	m_sID = player->GetID();
 }
 
 CBoundary::CBoundary(CClient* player, const float& searchsize)
@@ -44,6 +45,7 @@ CBoundary::CBoundary(CClient* player, const float& searchsize)
 	this->m_fz = player->GetLocalPosVector().z;
 	this->m_fw = searchsize;
 	this->m_fh = searchsize;
+	m_sID = player->GetID();
 }
 
 bool CBoundary::contains(CGameObject* p)

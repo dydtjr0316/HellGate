@@ -16,12 +16,15 @@ public: //set
 	void SetZ(const float& z) { m_fz = z; }
 	void SetW(const float& w) { m_fw = w; }
 	void SetH(const float& h) { m_fh = h; }
+	void SetID(const float& h) { m_sID = h; }
 public:	//get
 	float GetX() { return m_fx; }
 	float GetZ() { return m_fz; }
 	float GetW() { return m_fw; }
 	float GetH() { return m_fh; }
+	float GetID() { return m_sID; }
 private:
 	float m_fx, m_fz, m_fw, m_fh;
+	uShort m_sID;
 };
 

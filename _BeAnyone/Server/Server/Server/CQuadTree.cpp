@@ -2,7 +2,7 @@
 #include "CQuadTree.h"
 #include "CGameObject.h"
 #include "CBoundary.h"
-
+mutex quadlock;
 CQuadTree::CQuadTree(const CBoundary& _m_boundary, const int& n)
 {
 	m_boundary = _m_boundary; m_icapacity = n;
@@ -80,50 +80,47 @@ void CQuadTree::Delete(CGameObject* p)
 		{
 			if (IsSameObject(playerID, p->GetID()))
 			{
+				quadlock.lock();
 				m_vpPlayers.erase(playerID);
+				quadlock.unlock();
 				break;
 			}
 		}
-		// if 해당노드가 속한 부모노드에 있는 모든 자식노드의 플레이어 갯수가 4개인지 판단
-
 
 		// 4개이상이면 패스
 		// 4개이하라면 4개이상인 부모노드를 찾을 때 까지 재귀호출
-		for (auto& obj : m_pParent->GetChild())
-		{
-			cnt += obj->GetPoint().size();
-		}
-		if (cnt <= 4)
+		if (m_iDepth != 0)
 		{
 			for (auto& obj : m_pParent->GetChild())
 			{
-				for (auto& sub : obj->GetPoint())	//0629 이근처 부분 뒤죽박죽임 m_vplayer를쓸거면 그거만 쓰는걸로 정리하기 존나 헷갈리네 ㅅㅂ
-				{
-					m_pParent->GetPoint().emplace(sub);
-					if (m_pParent->m_bisDivide)
-						m_pParent->m_bisDivide = false;
-				}
+				cnt += obj->GetPoint().size();
 			}
+			if (cnt <= 4)
+			{
+				for (auto& obj : m_pParent->GetChild())
+				{
+					for (auto& sub : obj->GetPoint())	//0629 이근처 부분 뒤죽박죽임 m_vplayer를쓸거면 그거만 쓰는걸로 정리하기 존나 헷갈리네 ㅅㅂ
+					{
+						quadlock.lock();
+						m_pParent->GetPoint().emplace(sub);
+						quadlock.unlock();
+						if (m_pParent->m_bisDivide)
+							m_pParent->m_bisDivide = false;
+					}
+				}
 
+			}
 		}
-		//m_pParent->m_bisDivide = false;
 	}
 	else
 	{
-		//if (m_pChild.size() ==0)return;
 		for (auto& childNode : m_pChild)
 		{
 			childNode->Delete(p);
 		}
 
 	}
-	//
-	// 
-	// 
-	// 
-	//  << endl;
-	//cout << "Delete********************" << endl;
-	//PrintQuadTree();
+
 }
 bool CQuadTree::IsSameObject(const uShort& p1, const uShort& p2)
 {
@@ -165,7 +162,9 @@ void CQuadTree::SubDivideToChild()
 			if (childNode->m_boundary.contains(Netmgr.GetMediatorMgr()->Find(player)))
 			{
 				/*m_vpPlayers.erase(player);*/
+				quadlock.lock();
 				childNode->m_vpPlayers.emplace(player);
+				quadlock.unlock();
 				break;
 			}
 		}
@@ -180,6 +179,7 @@ void CQuadTree::SubDivideToChild()
 unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 {
 	//  쿼드트리 부모 자식 구조 바꾸면서 이부분 안바꿔도 되는지 확인해 볼 것
+	
 	unordered_set<uShort> found;
 	{
 		/*if (!m_boundary.intersects(range))
@@ -196,11 +196,19 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 	CBoundary temp = range;
 	if (m_boundary.intersects(temp))
 	{
+		cout << "search 시작" << endl;
+			quadlock.lock();
 		for (auto& p : m_vpPlayers)
 		{
+			if (Netmgr.GetMediatorMgr()->Count(p) == 0)continue;
+			cout << p << endl;
+			if (p > 10000)continue;
 			if (temp.contains(Netmgr.GetMediatorMgr()->Find(p)))
 				found.emplace(p);
+
 		}
+			quadlock.unlock();
+		cout << "-*---------------" << endl;
 	}
 	if (m_bisDivide)
 	{
@@ -212,12 +220,6 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 			}
 		}
 	}
-	/*cout << "Search****************************" << endl;
-	for (auto& obj : found)
-	{
-		cout <<"ID : "<< obj << endl;
-	}
-	cout << "---------------------------" << endl;*/
 
 	return found;
 
