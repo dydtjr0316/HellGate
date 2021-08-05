@@ -299,6 +299,7 @@ enum class FBX_TYPE
 	MONSTER,
 	NPC,
 	ANI,
+	ITEM,
 	END,
 };
 
