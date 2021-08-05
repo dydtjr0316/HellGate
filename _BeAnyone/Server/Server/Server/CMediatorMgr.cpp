@@ -31,7 +31,11 @@ void CMediatorMgr::InitObject()
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         Add(pObj, i);
         pObj->Insert_Sector();
-        cout << "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP() << endl;
+        
+        
+        
+        
+        cout<< "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP() << endl;
     }
 
     // NPC init

@@ -289,7 +289,7 @@ void CNpcScript::OnCollisionEnter(CCollider* _pOther)
 
 void CNpcScript::OnCollisionExit(CCollider* _pOther)
 {
-	cout << "³ª°¨" << endl;
+	
 }
 
 void CNpcScript::SetCameraState(CAMERA_STATE _eCamState)

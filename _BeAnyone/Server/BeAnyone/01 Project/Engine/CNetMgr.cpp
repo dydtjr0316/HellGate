@@ -22,10 +22,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.7";
-//const char ip[] = "192.168.0.13";
-//const char ip[] = "192.168.140.59";
-//const char ip[] = "221.151.160.142";
+//const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.13";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
 
@@ -355,9 +353,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
-					if (id < 1001)
+					if (id == 1000)
 					{
 						Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@walking.fbx", FBX_TYPE::MONSTER);
+						Ptr<CMeshData> pIdleMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@idle.fbx", FBX_TYPE::MONSTER);
+
 						CGameObject* pObject = new CGameObject;
 						g_Object.emplace(id, pObject);
 						//
@@ -372,10 +372,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 						// Collider 물어보기
 						g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_idle");
 						g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos()
-							, g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+							, pIdleMeshData->GetMesh()->GetBoundingBoxExtents()));
 						g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere
 						(g_Object.find(id)->second->Transform()->GetLocalPos(),
-							g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+							pIdleMeshData->GetMesh()->GetBoundingSphereRadius()));
 
 						// Script 설정
 						g_Object.find(id)->second->AddComponent(new CMonsterScript);
@@ -453,6 +453,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 						//damage
 						pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
 						monsterScript->SetAnimationData(pMeshData->GetMesh());
+
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
+							g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
+						);
+						g_Object.find(id)->second->SetID(id);
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 					}
 				}
 			}
@@ -467,7 +474,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (other_id == g_myid)
 		{
 			cout << "SC_PACKET_MOVE  자신에게 보내는 패킷 횟수"<<cnt++ << endl;
-			//ObjTrans->SetLocalPos(packet->localVec);
+			g_Object.find(other_id)->second->Transform()->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -504,8 +511,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int monster_id = packet->id;
 		if (g_Object.find(packet->id)->second == nullptr)break;
 		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
-
-		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+		g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 		// 여기서부터 
 	}
 	break;
@@ -629,7 +635,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int id = packet->id;
 		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
 
-		cout << "Monster id -> " << packet->id << endl;
+		
 		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->id, packet->aniType);
 
 		//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);

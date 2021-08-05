@@ -117,7 +117,11 @@ void CQuadTree::Delete(CGameObject* p)
 		}
 
 	}
-	//cout << endl;
+	//
+	// 
+	// 
+	// 
+	//  << endl;
 	//cout << "Delete********************" << endl;
 	//PrintQuadTree();
 }

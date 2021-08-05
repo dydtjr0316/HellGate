@@ -79,7 +79,8 @@
 //						//			show_error();
 //						//		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO)
 //						//		{
-//						//			wcout << i + 1 << " : " << ID << ", " << szName << ", " << LEVEL << endl;
+//						//			w
+//  << i + 1 << " : " << ID << ", " << szName << ", " << LEVEL << endl;
 //						//		}
 //						//		else
 //						//			break;

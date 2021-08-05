@@ -24,14 +24,13 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     unordered_set<uShort> new_viewList;
     for (auto& old_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id))))
     {
-        if (m_pMediator->IsType(old_ids, OBJECT_TYPE::CLIENT))
             old_viewList.insert(old_ids);
 
-        cout << "old viewlist client status" << endl;
-        cout << old_ids << endl;
-        cout << m_pMediator->Find(old_ids)->GetLocalPosVector().x << endl;
-        cout << m_pMediator->Find(old_ids)->GetLocalPosVector().z << endl;
-        cout << "o===================================" << endl;
+        //cout << "old viewlist client status" << endl;
+        //cout << old_ids << endl;
+        //cout << m_pMediator->Find(old_ids)->GetLocalPosVector().x << endl;
+        //cout << m_pMediator->Find(old_ids)->GetLocalPosVector().z << endl;
+        //cout << "o===================================" << endl;
 
     }
 
@@ -42,12 +41,12 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     std::uniform_int_distribution<int> dis(0, 3);
     MONSTER_AUTOMOVE_DIR dir = (MONSTER_AUTOMOVE_DIR)(dis(gen));
 
-    CAST_MONSTER(MonsterObj)->SetDir(dir);
+
     CAST_MONSTER(MonsterObj)->SetIsMoving(true);
 
     for (auto& new_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(Monster_id))))
     {
-        if (m_pMediator->IsType(new_ids, OBJECT_TYPE::CLIENT))
+
             new_viewList.insert(new_ids);
     }
 
@@ -56,7 +55,11 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     {
         if (old_viewList.count(id) != 0)
         {
-            m_pSendMgr->Send_Monster_Move_Packet(id, Monster_id, (char)dir);
+            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+            {
+                //cout << "new_viewlist ID : " << id << endl;
+                m_pSendMgr->Send_Monster_Move_Packet(id, Monster_id, (char)dir);
+            }
         }
     }
 
@@ -64,9 +67,13 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
     {
         if (new_viewList.count(id) == 0)
         {
-            dynamic_cast<CClient*>(m_pMediator->Find(id))->GetViewList().erase(Monster_id);
-            m_pSendMgr->Send_Monster_Move_Packet(id, Monster_id, (char)MONSTER_AUTOMOVE_DIR::IDLE);
-            m_pSendMgr->Send_Leave_Packet(id, Monster_id);
+            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+            {
+                //cout << "old_viewlist ID : " << id << endl;
+                dynamic_cast<CClient*>(m_pMediator->Find(id))->GetViewList().erase(Monster_id);
+                m_pSendMgr->Send_Monster_Move_Packet(id, Monster_id, (char)MONSTER_AUTOMOVE_DIR::IDLE);
+                m_pSendMgr->Send_Leave_Packet(id, Monster_id);
+            }
         }
     }
 }
@@ -439,15 +446,14 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 
-        cout <<"\t\tMovePacket 온 후 " << packet->localVec.z << endl;
+        //cout <<"\t\tMovePacket 온 후 " << packet->localVec.z << endl;
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
         m_pMediator->Find(user_id)->SetDirV(packet->DirVec);
         m_pMediator->Find(user_id)->SetDeadReckoningPacket(packet);
-        if (packet->isMoving)cout << "가 씨발" << endl;
-        else cout << "가???" << endl;
+   
         //
         m_pMediator->ReckonerAdd(user_id);
 
@@ -459,8 +465,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
-        if (!packet->isMoving)cout << "멈춰 씨발" << endl;
-        else cout << "멈춰???" << endl;
+
         Do_Stop(user_id, packet->isMoving);
     }
     break;
@@ -510,10 +515,10 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         for (auto& user : new_viewList)
         {
             if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
-            {
+            {/*
                 cout << "monster animation user id -> " << user << endl;
                 cout << "monster animation monster id -> " << packet->id << endl;
-                cout << "monster animation ani type -> " << (int)packet->aniType << endl;
+                cout << "monster animation ani type -> " << (int)packet->aniType << endl;*/
                 m_pSendMgr->Send_Monster_Animation_Packet(packet->id, user, packet->aniType);
             }
         }
@@ -645,9 +650,9 @@ void CNetMgr::Worker_Thread()
 
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(
-                    (float)(rand() % 1000), // 수정 real float
+                    (float)(rand() % 1000)+500.f, // 수정 real float
                     (float)(240.f),
-                    (float)(rand() % 1000));
+                    (float)(rand() % 1000) + 500.f);
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
                // if (pClient->GetLocalPosVector().x == 724.f)
@@ -730,7 +735,13 @@ void CNetMgr::Worker_Thread()
                     }
             }
             
-            if (true == keep_alive) Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + monsterAutoMoveTimer);
+            if (true == keep_alive) {
+                if (user_id < 1001)
+                    Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 4 + 5));
+                else
+                    Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 2 + 3));
+
+            }
             else {
                 m_pMediator->Find(user_id)->SetStatus(OBJSTATUS::ST_SLEEP);
                 m_pMediator->Delete_MonsterReckoner(user_id);
@@ -767,31 +778,30 @@ void CNetMgr::Processing_Thead()
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
                 {
-                    cout << "--------------------------------" << endl;
-                    cout << drmPacket->localVec.x << " || " << drmPacket->localVec.z <<" || " << drmPacket->DirVec.z << endl;
-                    cout << "이전//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
-                    cout << obj->GetSpeed() << endl;
-                    cout << DeltaTime << endl;
-                   //obj->GetLock().lock();
+                    /*  cout << "--------------------------------" << endl;
+                      cout << drmPacket->localVec.x << " || " << drmPacket->localVec.z <<" || " << drmPacket->DirVec.z << endl;
+                      cout << "이전//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
+                      cout << obj->GetSpeed() << endl;
+                      cout << DeltaTime << endl;*/
+                      //obj->GetLock().lock();
                     obj->SetRotateY(drmPacket->rotateY);
+
+                    //여기
+                    /*obj->GetLock().lock();
+                    g_QuadTree.Delete(obj);*/
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
+                    /*g_QuadTree.Insert(obj);
+                    obj->GetLock().unlock();*/
+
                     //obj->GetLock().unlock();
 
-                    if (obj->GetLocalPosVector().x < 0 || obj->GetLocalPosVector().x>25600||
-                        obj->GetLocalPosVector().z < 0 || obj->GetLocalPosVector().z>25600)
-                    {
-                        int i = 0;
-                    }
-                    cout << "이후//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
-                    cout << "--------------------------------" << endl;
-
- /*                   if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 2.f)
+                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 1.f)
                     {
                         CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                        cout << reckoner<<"번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
+                        cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
                         m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
-                    }*/
+                    }
                 }
             }
         }
@@ -825,7 +835,10 @@ void CNetMgr::Processing_Thead()
                     default:
                         break;
                     }
+                    //여기
+                   // g_QuadTree.Delete(m_pMediator->Find(monster));
                     CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
+                   // g_QuadTree.Insert(m_pMediator->Find(monster));
                 }
             }
         }
@@ -868,15 +881,17 @@ bool CAS(int* addr, int exp, int update)        // cas
 void CNetMgr::WakeUp_NPC(const uShort& id)
 {
     int status = OBJSTATUS::ST_SLEEP;
+    
     if (CAS((int*)(&(m_pMediator->Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
-        Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + monsterAutoMoveTimer);
+        Add_Timer(id, OP_RAMDON_MOVE_NPC, system_clock::now() + (seconds)(rand() % 4 + 5));
     }
 }
 
 void CNetMgr::WakeUp_Monster(const uShort& id)
 {
     int status = OBJSTATUS::ST_SLEEP;
+    srand((unsigned int)time(NULL));
     if (CAS((int*)(&(m_pMediator->Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         //CAS(메모리, expected, update)
@@ -884,6 +899,9 @@ void CNetMgr::WakeUp_Monster(const uShort& id)
         //    메모리의 값이 expected가 아니면 false 리턴
         //    WAIT FREE를 유지하는 알고리즘
 
-        Add_Timer(id, OP_RAMDON_MOVE_MONSTER, system_clock::now() + monsterAutoMoveTimer);
+        if (id < 1001)
+            Add_Timer(id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 4 + 5));
+        else
+            Add_Timer(id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 2 + 3));
     }
 }

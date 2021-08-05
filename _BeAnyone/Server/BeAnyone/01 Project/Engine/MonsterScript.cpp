@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MonsterScript.h"
 #include "RenderMgr.h"
+#include "Terrain.h"
 
 int attackcnt = 0;
 
@@ -122,7 +123,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 	{
 		// 여기 두번들어감 // 용석
 		g_netMgr.Send_Attack_Packet(m_sId);
-		cout << "sid : " << m_sId << endl;
+	
 		
 		m_bisDamaged = true;
 	}
@@ -166,51 +167,62 @@ void CMonsterScript::Move()
 	Vector3 monsterPos = monsterTrans->GetLocalPos();
 	Vector3 worldDir;
 	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
-	if (m_Packet_autoMove != nullptr)
+	CTerrain* pTerrain = monsterScript->GetTerrain();
+	const Vector3& xmf3Scale = GetObj()->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
+	string temp;
+	if (monsterScript->GetPacketMove() != nullptr)
 	{
-		switch ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir)
+		switch ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir)
 		{
 		case MONSTER_AUTOMOVE_DIR::FRONT:
 			//worlddir 변경
 			// 밑에꺼 처럼 좌표 변경하는 코드
-
-			worldDir = -monsterTrans->GetLocalDir(DIR_TYPE::UP);
+			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
-
+			temp = "front";
 			break;
 		case MONSTER_AUTOMOVE_DIR::BACK:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
+			temp = "back";
 			break;
 		case MONSTER_AUTOMOVE_DIR::LEFT:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
+			temp = "left";
 			break;
 		case MONSTER_AUTOMOVE_DIR::RIGHT:
 			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
 			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
+			temp = "right";
 			break;
 		case MONSTER_AUTOMOVE_DIR::AUTO:
 			// a* 사용할곳
 			break;
 		case MONSTER_AUTOMOVE_DIR::IDLE:
-			m_Packet_autoMove = nullptr;
+			monsterScript->SetPacketMove(nullptr);
 			break;
 		default:
 			break;
 		}
+		//cout <<"ID : "<< GetObj()->GetID() << "\tdir : " << temp << endl;
 
-		if ((MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+		if ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
 		{
+			int z = (int)(monsterPos.z / xmf3Scale.z);
+	
+			float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f + 100.f;
+
+			if (monsterPos.y != fHeight)
+				monsterPos.y = fHeight;
 			monsterTrans->SetLocalPos(monsterPos);
-			cout << "tl~~~qkf" << endl;
 		}
 	}
 }
@@ -247,7 +259,7 @@ void CMonsterScript::Attack()
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
-		cout << "What is Getobj.id = " << m_sId << endl;
+		
 		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
 	}
 	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {

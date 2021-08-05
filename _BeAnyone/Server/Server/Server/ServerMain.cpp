@@ -17,7 +17,11 @@ seconds monsterAutoMoveTimer = 5s;
 
 int main()
 {
-    std::wcout.imbue(locale("Korean"));
+    std::w
+        
+        
+        
+        .imbue(locale("Korean"));
     WSADATA WSAData;
     int start = WSAStartup(MAKEWORD(2, 2), &WSAData);
     g_IocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
