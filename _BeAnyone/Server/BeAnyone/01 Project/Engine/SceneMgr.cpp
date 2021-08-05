@@ -727,6 +727,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject = pMeshData->Instantiate();
 			pMapObject->SetName(L"Tree" + i);
 			pMapObject->FrustumCheck(true);
+			pMapObject->AddComponent(new CTreeScript);
 
 			float randomX = uid(dre);
 			float randomZ = uid(dre);
@@ -741,9 +742,26 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
+			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
 
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			// 나무 충돌 스크립트
+			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
+			//-------item load---------
+			// 나뭇가지
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Branch.fbx", FBX_TYPE::ITEM);
+			pTreeScript->SetItemData(pMeshData);
+			// 사과
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Apple.fbx", FBX_TYPE::ITEM);
+			pTreeScript->SetItemData(pMeshData);
+			//-----------
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_01.fbx", FBX_TYPE::NEW_DESERT_MAP);
+			pTreeScript->SetStumpData(pMeshData);
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_04.fbx", FBX_TYPE::NEW_DESERT_MAP);
+			pTreeScript->SetStumpData(pMeshData);
+			pTreeScript->SetTerrain(_terrain);	// Terrain
+			//-----------------------------------		
+		
 		}
 
 		// 죽은 나무
@@ -756,6 +774,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject = pMeshData->Instantiate();
 			pMapObject->SetName(L"Tree" + i);
 			pMapObject->FrustumCheck(true);
+			pMapObject->AddComponent(new CTreeScript);
 
 			float randomX = uid(dre);
 			float randomZ = uid(dre);
@@ -770,9 +789,23 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
+			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
 
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
+			//-------item load---------
+			// 나뭇가지
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Branch.fbx", FBX_TYPE::ITEM);
+			pTreeScript->SetItemData(pMeshData);
+			// 사과
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Apple.fbx", FBX_TYPE::ITEM);
+			pTreeScript->SetItemData(pMeshData);
+			//-----------
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_01.fbx", FBX_TYPE::NEW_DESERT_MAP);
+			pTreeScript->SetStumpData(pMeshData);
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_04.fbx", FBX_TYPE::NEW_DESERT_MAP);
+			pTreeScript->SetStumpData(pMeshData);
+			pTreeScript->SetTerrain(_terrain);	// Terrain
 		}
 
 		// 뾰족한 나무
@@ -785,6 +818,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject = pMeshData->Instantiate();
 			pMapObject->SetName(L"Tree" + i);
 			pMapObject->FrustumCheck(true);
+			pMapObject->AddComponent(new CTreeScript);
 
 			float randomX = uid(dre);
 			float randomZ = uid(dre);
@@ -799,9 +833,23 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
+			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
 
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
+			//-------item load---------
+			// 나뭇가지
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Branch.fbx", FBX_TYPE::ITEM);
+			pTreeScript->SetItemData(pMeshData);
+			// 사과
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Apple.fbx", FBX_TYPE::ITEM);
+			pTreeScript->SetItemData(pMeshData);
+			//-----------
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_01.fbx", FBX_TYPE::NEW_DESERT_MAP);
+			pTreeScript->SetStumpData(pMeshData);
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_04.fbx", FBX_TYPE::NEW_DESERT_MAP);
+			pTreeScript->SetStumpData(pMeshData);
+			pTreeScript->SetTerrain(_terrain);	// Terrain
 		}
 	}
 	// 집1
@@ -2046,7 +2094,7 @@ void CSceneMgr::init()
 	pPlayerObj->AddComponent(new CCollider);
 	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	pPlayerObj->MeshRender()->SetDynamicShadow(true);
 
 	// Script 설정
@@ -2081,7 +2129,10 @@ void CSceneMgr::init()
 	// Damage
 	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@Damage_Strong.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
-	
+
+	// PIck_UP
+	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@PickUp.fbx", FBX_TYPE::PLAYER);
+	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
 
 	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
 
@@ -2103,7 +2154,7 @@ void CSceneMgr::init()
 	pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
 	pSword->Collider()->SetBoundingBox(BoundingBox(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pSword->Collider()->SetBoundingSphere(BoundingSphere(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-	//pNpcObject->MeshRender()->SetDynamicShadow(true);
+	pSword->MeshRender()->SetDynamicShadow(true);
 
 	// Script 설정
 	pSword->AddComponent(new CSwordScript);
@@ -2314,7 +2365,8 @@ void CSceneMgr::init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Map");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
-
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Item");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Item");
 	
 
 	m_pCurScene->awake();

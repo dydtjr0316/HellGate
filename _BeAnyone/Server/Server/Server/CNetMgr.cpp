@@ -173,7 +173,7 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
     {
         unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
 
-        g_QuadTree.Delete(m_pMediator->Find(monster_id));
+       // g_QuadTree.Delete(m_pMediator->Find(monster_id));
         m_pMediator->Delete_Obj(monster_id);
     }
 }
@@ -387,7 +387,7 @@ void CNetMgr::Disconnect(const uShort& user_id)
             }
         }
     }
-
+    
     pUser->SetStatus(OBJSTATUS::ST_FREE);
     CAST_CLIENT(pUser)->GetViewList().clear();
     pUser->GetLock().unlock();
@@ -812,6 +812,8 @@ void CNetMgr::Processing_Thead()
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
                 monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();
+
+                //CAST_MONSTER(m_pMediator->Find(monster).get
                 if (CAST_MONSTER(m_pMediator->Find(monster))->GetIsMoving())
                 {
                     switch (CAST_MONSTER(m_pMediator->Find(monster))->GetDir())

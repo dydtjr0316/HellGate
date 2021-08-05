@@ -48,6 +48,9 @@ private:
 	Vector2			m_v2Origin_Point[4];
 	int				m_iInterpolationCnt = 0;
 
+	// pickup
+	bool			m_bIsPick = false;
+
 	// quest 
 	int				m_iMonsterKillNum = 0;
 public:
@@ -77,6 +80,9 @@ public:
 	Vector3 GetPlayerDir() { return m_vecPlayerDir; }
 	void SetPlayerDir(Vector3 _a) { m_vecPlayerDir = _a; }
 	void Attack_Default();
+
+	// pick up item
+	void PickUp_Default();
 
 public: 
 	//¿ë¼®

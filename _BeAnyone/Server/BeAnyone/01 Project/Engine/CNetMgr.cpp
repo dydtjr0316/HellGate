@@ -22,8 +22,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-//const char ip[] = "192.168.0.7";
-const char ip[] = "192.168.0.13";
+const char ip[] = "192.168.0.7";
+//const char ip[] = "192.168.0.13";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
 
@@ -416,7 +416,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.emplace(id, pObject);
 						//
 						g_Object.find(id)->second = pMeshData->Instantiate();
-						g_Object.find(id)->second->SetName(L"FireMonster");
+						g_Object.find(id)->second->SetName(L"GreenMonster");
 						g_Object.find(id)->second->FrustumCheck(false);
 						g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 
@@ -424,7 +424,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 						g_Object.find(id)->second->AddComponent(new CCollider);
 						// Collider 물어보기
-						g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_idle");
+						g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"GreenMonster");
 						g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos()
 							, g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 						g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere

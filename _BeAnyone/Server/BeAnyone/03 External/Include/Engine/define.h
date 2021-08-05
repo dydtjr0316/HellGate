@@ -326,6 +326,7 @@ enum class Ani_TYPE
 	RUN,
 	ATTACK,
 	DAMAGE,
+	PICK_UP,
 	END
 };
 
@@ -352,6 +353,7 @@ enum class PlAYER_ANICNT_TYPE
 {
 	ATTACK_CNT,
 	DAMAGE_CNT,
+	PICKUP_CNT,
 	END,
 
 };

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TreeScript.h"
+#include "Terrain.h"
 #include <random>
+#include "ItemScript.h"
 //#include <chrono>
 //
 //auto current = chrono::system_clock::now();
@@ -10,7 +12,7 @@
 //mt19937_64 genMT(millis);
 
 default_random_engine dreItem;
-uniform_int_distribution<int> uidItem(0, 4);
+uniform_int_distribution<int> uidItem(0, 1);
 
 uniform_int_distribution<int> uidStump(0, 1);
 
@@ -20,8 +22,6 @@ CTreeScript::CTreeScript()
 	, m_iAttackNum(0)
 {
 	// m_pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nWalk_F.fbx", FBX_TYPE::PLAYER);
-	
-	MakeItem();
 }
 
 CTreeScript::~CTreeScript()
@@ -30,8 +30,11 @@ CTreeScript::~CTreeScript()
 
 void CTreeScript::update()
 {
-	if (m_bIsAttack == true)
+	if (m_bIsAttack == true) {
+		if(m_bMakeObjects == true)
+			MakeItem(); m_bMakeObjects = false;
 		DestroyTree();
+	}
 }
 
 void CTreeScript::OnCollisionEnter(CCollider* _pOther)
@@ -57,24 +60,25 @@ void CTreeScript::OnCollisionExit(CCollider* _pOther)
 void CTreeScript::DestroyTree()
 {
 	Vector3 vTreePos = GetObj()->Transform()->GetLocalPos();
+	float   mapY = m_Terrain->GetHeight(vTreePos.x, vTreePos.z, true) * 2.f + 50.f;
 	
 	// item1
-	Vector3 vItem1Pos = m_pItem1->Transform()->GetLocalPos();
-	Vector3 vItem1Rot = m_pItem1->Transform()->GetLocalRot();
-	Vector3 vItem1FromtDir = m_pItem1->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	Vector3 vItem1UpDir = m_pItem1->Transform()->GetWorldDir(DIR_TYPE::UP);
+	Vector3 vItem1Pos = m_vItem[0]->Transform()->GetLocalPos();
+	Vector3 vItem1Rot = m_vItem[0]->Transform()->GetLocalRot();
+	Vector3 vItem1FromtDir = m_vItem[0]->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vector3 vItem1UpDir = m_vItem[0]->Transform()->GetWorldDir(DIR_TYPE::UP);
 
 	// item2
-	Vector3 vItem2Pos = m_pItem2->Transform()->GetLocalPos();
-	Vector3 vItem2Rot = m_pItem2->Transform()->GetLocalRot();
-	Vector3 vItem2FromtDir = m_pItem2->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	Vector3 vItem2UpDir = m_pItem2->Transform()->GetWorldDir(DIR_TYPE::UP);
+	Vector3 vItem2Pos = m_vItem[1]->Transform()->GetLocalPos();
+	Vector3 vItem2Rot = m_vItem[1]->Transform()->GetLocalRot();
+	Vector3 vItem2FromtDir = m_vItem[1]->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vector3 vItem2UpDir = m_vItem[1]->Transform()->GetWorldDir(DIR_TYPE::UP);
 
 	// item3
-	Vector3 vItem3Pos = m_pItem3->Transform()->GetLocalPos();
-	Vector3 vItem3Rot = m_pItem3->Transform()->GetLocalRot();
-	Vector3 vItem3FromtDir = m_pItem3->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	Vector3 vItem3UpDir = m_pItem3->Transform()->GetWorldDir(DIR_TYPE::UP);
+	Vector3 vItem3Pos = m_vItem[2]->Transform()->GetLocalPos();
+	Vector3 vItem3Rot = m_vItem[2]->Transform()->GetLocalRot();
+	Vector3 vItem3FromtDir = m_vItem[2]->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vector3 vItem3UpDir = m_vItem[2]->Transform()->GetWorldDir(DIR_TYPE::UP);
 
 	if (m_bFirst == true) {
 		vItem1Pos = vTreePos;
@@ -86,20 +90,16 @@ void CTreeScript::DestroyTree()
 		vItem2Rot.y = XM_PI / 8;
 		vItem3Rot.y = XM_PI;
 	
-		m_pItem1->Transform()->SetLocalRot(vItem1Rot);
-		m_pItem2->Transform()->SetLocalRot(vItem2Rot);
-		m_pItem3->Transform()->SetLocalRot(vItem3Rot);
+		m_vItem[0]->Transform()->SetLocalRot(vItem1Rot);
+		m_vItem[1]->Transform()->SetLocalRot(vItem2Rot);
+		m_vItem[2]->Transform()->SetLocalRot(vItem3Rot);
 
-		int randNum = uidItem(dreItem);
-		m_pItem1->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
-		m_pItem1->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
-		randNum = uidItem(dreItem);
-		m_pItem2->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
-		m_pItem2->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
-		randNum = uidItem(dreItem);
-		m_pItem3->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
-		m_pItem3->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
-
+		int randNum;
+		for (int i = 0; i < m_vItem.size(); ++i) {
+			randNum = uidItem(dreItem);
+			m_vItem[i]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
+			m_vItem[i]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
+		}
 		randNum = uidStump(dreItem);
 		GetObj()->MeshRender()->SetMesh(m_pStumpMeshData[randNum]->GetMesh());
 		GetObj()->MeshRender()->SetMaterial(m_pStumpMeshData[randNum]->GetMtrl());
@@ -109,7 +109,7 @@ void CTreeScript::DestroyTree()
 	}
 
 	// up
-	if (vItem1Pos.y <= 2850.f && m_bisUp == true) {
+	if (vItem1Pos.y <= mapY + 50.f && m_bisUp == true) {
 		// m_iTemTime += DT;
 		vItem1Pos += 60.f * DT * vItem1FromtDir;	// item1
 		vItem1Pos += 50.f * DT * vItem1UpDir;
@@ -124,7 +124,7 @@ void CTreeScript::DestroyTree()
 	}
 
 	// down
-	if (vItem1Pos.y >= 2768.f && m_bisDown == true) {
+	if (vItem1Pos.y >= mapY && m_bisDown == true) {
 		vItem1Pos += 60.f * DT * vItem1FromtDir;	// item1
 		vItem1Pos += 50.f * DT * -vItem1UpDir;
 		vItem2Pos += 60.f * DT * vItem2FromtDir;	// item2
@@ -136,56 +136,81 @@ void CTreeScript::DestroyTree()
 		m_bisDown = false;
 	}
 
-	m_pItem1->Transform()->SetLocalPos(vItem1Pos);
-	m_pItem2->Transform()->SetLocalPos(vItem2Pos);
-	m_pItem3->Transform()->SetLocalPos(vItem3Pos);
+	m_vItem[0]->Transform()->SetLocalPos(vItem1Pos);
+	m_vItem[1]->Transform()->SetLocalPos(vItem2Pos);
+	m_vItem[2]->Transform()->SetLocalPos(vItem3Pos);
 
 }
 
 void CTreeScript::MakeItem()
 {
+	//
+
+
+	// -------------------
 	// item1
-	m_pItem1 = new CGameObject;
-	m_pItem1->SetName(L"Item1");
-	m_pItem1->FrustumCheck(true);
-	m_pItem1->AddComponent(new CTransform);
-	m_pItem1->AddComponent(new CMeshRender);
-	m_pItem1->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
-	m_pItem1->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
-	m_pItem1->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-	m_pItem1->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-	m_pItem1->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	CGameObject* pItem = new CGameObject;
+	pItem->SetName(L"Item1");
+	pItem->FrustumCheck(true);
+	pItem->AddComponent(new CTransform);
+	pItem->AddComponent(new CMeshRender);
+	pItem->AddComponent(new CItemScript);
+	pItem->AddComponent(new CCollider);
+	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
+	pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+	pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
+	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	//m_pItem1->SetUiRenderCheck(false);
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_pItem1);
+	CItemScript* pItemScript = pItem->GetScript<CItemScript>();
+
+	m_vItem.push_back(pItem);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_vItem[0]);
 
 	// item2
-	m_pItem2 = new CGameObject;
-	m_pItem2->SetName(L"Item2");
-	m_pItem2->FrustumCheck(true);
-	m_pItem2->AddComponent(new CTransform);
-	m_pItem2->AddComponent(new CMeshRender);
-	m_pItem2->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
-	m_pItem2->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
-	m_pItem2->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-	m_pItem2->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-	m_pItem2->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	pItem = new CGameObject;
+	pItem->SetName(L"Item2");
+	pItem->FrustumCheck(true);
+	pItem->AddComponent(new CTransform);
+	pItem->AddComponent(new CMeshRender);
+	pItem->AddComponent(new CItemScript);
+	pItem->AddComponent(new CCollider);
+	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
+	pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+	pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
+	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	//m_pItem2->SetUiRenderCheck(false);
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_pItem2);
+	pItemScript = pItem->GetScript<CItemScript>();
+
+	m_vItem.push_back(pItem);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_vItem[1]);
 
 	// item3
-	m_pItem3 = new CGameObject;
-	m_pItem3->SetName(L"Item3");
-	m_pItem3->FrustumCheck(true);
-	m_pItem3->AddComponent(new CTransform);
-	m_pItem3->AddComponent(new CMeshRender);
-	m_pItem3->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
-	m_pItem3->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
-	m_pItem3->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-	m_pItem3->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-	m_pItem3->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	pItem = new CGameObject;
+	pItem ->SetName(L"Item3");
+	pItem->FrustumCheck(true);
+	pItem->AddComponent(new CTransform);
+	pItem->AddComponent(new CMeshRender);
+	pItem->AddComponent(new CItemScript);
+	pItem->AddComponent(new CCollider);
+	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
+	pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+	pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
+	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	//m_pItem3->SetUiRenderCheck(false);
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_pItem3);
+	pItemScript = pItem->GetScript<CItemScript>();
+
+	m_vItem.push_back(pItem);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_vItem[2]);
 }

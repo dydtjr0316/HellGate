@@ -177,28 +177,49 @@ void CMonsterScript::Move()
 		case MONSTER_AUTOMOVE_DIR::FRONT:
 			//worlddir º¯°æ
 			// ¹Ø¿¡²¨ Ã³·³ ÁÂÇ¥ º¯°æÇÏ´Â ÄÚµå
-			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			if (monster->GetName() == L"GreenMonster")
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+			else
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 			temp = "front";
 			break;
 		case MONSTER_AUTOMOVE_DIR::BACK:
-			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
-			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			if (monster->GetName() == L"GreenMonster") {
+				monsterTrans->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+			}
+			else {
+				monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			}
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 			temp = "back";
 			break;
 		case MONSTER_AUTOMOVE_DIR::LEFT:
-			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
-			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			if (monster->GetName() == L"GreenMonster") {
+				monsterTrans->SetLocalRot(Vector3(0.f, -XM_PI / 2, 0.f));
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+			}
+			else {
+				monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			}
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 			temp = "left";
 			break;
 		case MONSTER_AUTOMOVE_DIR::RIGHT:
-			monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
-			worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			if (monster->GetName() == L"GreenMonster") {
+				monsterTrans->SetLocalRot(Vector3(0.f, XM_PI / 2, 0.f));
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+			}
+			else {
+				monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			}
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
 			temp = "right";

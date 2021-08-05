@@ -76,6 +76,25 @@ void CPlayerScript::update()
 
 	}
 
+	// 아이템 줍기 애니메이션
+	if (KEY_TAB(KEY_TYPE::KEY_E)) {
+		player->AnimClipReset();
+		//player->SetAnimation(Ani_TYPE::PICK_UP);
+		m_bIsPick = true;
+	}
+	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) + DT, PlAYER_ANICNT_TYPE::PICKUP_CNT);
+		player->SetAnimation(Ani_TYPE::PICK_UP);
+	}
+	else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
+	{
+		PickUp_Default();
+
+		m_bIsPick = false;
+		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
+
+	}
+
 	// 데미지 애니메이션
 	if (KEY_TAB(KEY_TYPE::KEY_Q)) {
 		player->AnimClipReset();
@@ -469,3 +488,33 @@ void CPlayerScript::Attack_Default()
 	CreateObject(pBullet, L"Bullet");
 }
 
+void CPlayerScript::PickUp_Default()
+{
+	Vector3 vPos = GetObj()->Transform()->GetLocalPos();
+
+	vector<CGameObject*> vecObj;
+	CSceneMgr::GetInst()->FindGameObjectByTag(L"PickUP Object", vecObj);
+
+	if (!vecObj.empty())
+	{
+		cout << "총알 객체 생성 안됌" << endl;
+		return;
+	}
+	else
+		cout << "생성" << endl << endl;
+
+	CGameObject* pBullet = new CGameObject;
+	pBullet->SetName(L"PickUP Object");
+
+	vPos += -GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);// *GetObj()->Collider()->GetBoundingSphere().Radius;
+	pBullet->AddComponent(new CTransform());
+	pBullet->Transform()->SetLocalPos(vPos);
+
+	pBullet->AddComponent(new CCollider);
+	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
+
+	pBullet->AddComponent(new CBulletScript);
+
+	CreateObject(pBullet, L"Bullet");
+}
