@@ -4,7 +4,7 @@ class CMonster : public CGameObject
 {
 public:
 	CMonster() {}	//¸â¹ö º¯¼ö ÃÊ±âÈ­ ÇØ¾ßµÊ .. ±âÈ¹µû¶ó
-	~CMonster() {}
+	virtual ~CMonster() {}
 
 public:
 	// Get
@@ -13,7 +13,7 @@ public:
 	const int& GetAttackDamage() { return m_iAttack_Damage; }
 	const int& GetFirstX() { return m_iFirstX; }
 	const int& GetFirstY() { return m_iFirstY; }
-	const bool& GetIsMoving() { return m_bisMoving; }
+	const bool GetIsMoving() { return m_bisMoving; }
 	const MONSTER_AUTOMOVE_DIR& GetDir() { return m_dir; }
 	//const MONSTER_TYPE& GetType() { return m_Type; }
 	//int Get_Prev_Size() { return m_prev_size; }

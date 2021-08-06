@@ -196,19 +196,18 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 	CBoundary temp = range;
 	if (m_boundary.intersects(temp))
 	{
-		cout << "search 시작" << endl;
+		//cout << "search 시작" << endl;
 			quadlock.lock();
 		for (auto& p : m_vpPlayers)
 		{
 			if (Netmgr.GetMediatorMgr()->Count(p) == 0)continue;
-			cout << p << endl;
-			if (p > 10000)continue;
+			// 이부분 확실하지 않음
 			if (temp.contains(Netmgr.GetMediatorMgr()->Find(p)))
 				found.emplace(p);
 
 		}
 			quadlock.unlock();
-		cout << "-*---------------" << endl;
+		//cout << "-*---------------" << endl;
 	}
 	if (m_bisDivide)
 	{

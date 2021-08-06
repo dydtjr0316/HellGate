@@ -170,6 +170,7 @@ void CMonsterScript::Move()
 	CTerrain* pTerrain = monsterScript->GetTerrain();
 	const Vector3& xmf3Scale = GetObj()->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
 	string temp;
+
 	if (monsterScript->GetPacketMove() != nullptr)
 	{
 		switch ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir)
@@ -248,6 +249,8 @@ void CMonsterScript::Attack()
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
 		m_bisAniReset = false;
 		g_netMgr.Send_MonsterDead_Packet(m_sId);
+
+		// 여기가 죽는 부분
 		DeleteObject(GetObj());
 		CEventMgr::GetInst()->update();
 		g_Object.erase(m_sId);

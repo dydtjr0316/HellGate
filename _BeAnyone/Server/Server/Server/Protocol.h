@@ -198,8 +198,8 @@ struct sc_packet_attack {
 	char size;
 	char type;
 	uShort  id;
-
 	uShort hp;
+	bool isMoving;
 };
 
 struct sc_packet_monster_automove
