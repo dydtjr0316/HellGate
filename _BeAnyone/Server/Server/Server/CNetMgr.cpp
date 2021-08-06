@@ -171,17 +171,10 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
     //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(monster_id));
     if (m_pMediator->Count(monster_id) != 0)
     {
-        //unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
-       // GetMediatorMgr()->Find(monster_id)->SetIsMoving(false);
-        unordered_set<uShort> tempSector = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
-        for (auto& user_id : tempSector)
-            Netmgr.GetSendMgr()->Send_Monster_Move_Packet(monster_id, user_id, (char)MONSTER_AUTOMOVE_DIR::IDLE);
+        unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
 
-        m_pMediator->Find(monster_id)->GetLock().lock();
-        g_QuadTree.Delete(m_pMediator->Find(monster_id));
+       // g_QuadTree.Delete(m_pMediator->Find(monster_id));
         m_pMediator->Delete_Obj(monster_id);
-        m_pMediator->Delete_MonsterReckoner(monster_id);
-        m_pMediator->Find(monster_id)->GetLock().unlock();
     }
 }
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
@@ -394,7 +387,7 @@ void CNetMgr::Disconnect(const uShort& user_id)
             }
         }
     }
-
+    
     pUser->SetStatus(OBJSTATUS::ST_FREE);
     CAST_CLIENT(pUser)->GetViewList().clear();
     pUser->GetLock().unlock();
@@ -497,7 +490,6 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_packet_MonsterDead* packet = reinterpret_cast<cs_packet_MonsterDead*>(buf);
         if(m_pMediator->Count(packet->id)!=0)
             Kill_Monster(packet->id);
-        
     }
     break;
     case CS_ATTACK_ANIMATION:
@@ -823,37 +815,38 @@ void CNetMgr::Processing_Thead()
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
                 monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();
-                if(CAST_MONSTER(m_pMediator->Find(monster))!=nullptr)
-                    if (CAST_MONSTER(m_pMediator->Find(monster))->GetIsMoving())
+
+                //CAST_MONSTER(m_pMediator->Find(monster).get
+                if (CAST_MONSTER(m_pMediator->Find(monster))->GetIsMoving())
+                {
+                    switch (CAST_MONSTER(m_pMediator->Find(monster))->GetDir())
                     {
-                        switch (CAST_MONSTER(m_pMediator->Find(monster))->GetDir())
-                        {
-                        case MONSTER_AUTOMOVE_DIR::FRONT:
-                            monsterPos.z += 100.f * DT;
-                            break;
-                        case MONSTER_AUTOMOVE_DIR::BACK:
-                            monsterPos.z -= 100.f * DT;
-                            break;
-                        case MONSTER_AUTOMOVE_DIR::LEFT:
-                            monsterPos.x -= 100.f * DT;
-                            break;
-                        case MONSTER_AUTOMOVE_DIR::RIGHT:
-                            monsterPos.x += 100.f * DT;
-                            break;
-                        case MONSTER_AUTOMOVE_DIR::AUTO:
-                            break;
-                        case MONSTER_AUTOMOVE_DIR::IDLE:
-                            break;
-                        default:
-                            break;
-                        }
-                        //여기
-                        m_pMediator->Find(monster)->GetLock().lock();
-                        g_QuadTree.Delete(m_pMediator->Find(monster));
-                        CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
-                        g_QuadTree.Insert(m_pMediator->Find(monster));
-                        m_pMediator->Find(monster)->GetLock().unlock();
+                    case MONSTER_AUTOMOVE_DIR::FRONT:
+                        monsterPos.z += 100.f * DT;
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::BACK:
+                        monsterPos.z -= 100.f * DT;
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::LEFT:
+                        monsterPos.x -= 100.f * DT;
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::RIGHT:
+                        monsterPos.x += 100.f * DT;
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::AUTO:
+                        break;
+                    case MONSTER_AUTOMOVE_DIR::IDLE:
+                        break;
+                    default:
+                        break;
                     }
+                    //여기
+                    m_pMediator->Find(monster)->GetLock().lock();
+                    g_QuadTree.Delete(m_pMediator->Find(monster));
+                    CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
+                    g_QuadTree.Insert(m_pMediator->Find(monster));
+                    m_pMediator->Find(monster)->GetLock().unlock();
+                }
             }
         }
     }
