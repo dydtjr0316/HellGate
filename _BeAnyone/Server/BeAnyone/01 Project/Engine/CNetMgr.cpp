@@ -635,8 +635,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		int id = packet->id;
 		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
 
-		
-		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->id, packet->aniType);
+		if (g_Object.find(packet->id)->second != nullptr)
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 
 		//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 	}

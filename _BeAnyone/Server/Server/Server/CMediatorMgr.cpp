@@ -90,7 +90,7 @@ void CMediatorMgr::Add(CGameObject* pObj, const uShort& id)
 
 CGameObject* CMediatorMgr::Find(const uShort& id)
 {
-    if (m_ObjectList.count(id) != 0)
+    if (m_ObjectList.count(id) != 0&& m_ObjectList.find(id)->second !=nullptr)
     {
         return  m_ObjectList.find(id)->second;
     }

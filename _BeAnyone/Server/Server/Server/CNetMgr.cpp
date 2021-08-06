@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CNetMgr.h"
 float packetTimeCnt = 0.f;
+mutex tempLock;
 void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 {
     WCHAR* lpMsgBuf;
@@ -179,7 +180,10 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
         unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
 
        // g_QuadTree.Delete(m_pMediator->Find(monster_id));
+        tempLock.lock();
         m_pMediator->Delete_Obj(monster_id);
+        m_pMediator->Delete_MonsterReckoner(monster_id);
+        tempLock.unlock();
     }
 }
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
@@ -725,6 +729,7 @@ void CNetMgr::Worker_Thread()
         break;
         case ENUMOP::OP_RAMDON_MOVE_MONSTER:
         {
+            if (m_pMediator->Find(user_id) == nullptr)break;
             if (!m_pMediator->IsType(user_id, OBJECT_TYPE::MONSTER))break;
             if (m_pMediator->Count(user_id) == 0)break;
             m_pMediator->MonsterReckonerAdd(user_id);
@@ -819,15 +824,18 @@ void CNetMgr::Processing_Thead()
         if (m_pMediator->MonsterReckonerSize() != 0)
         {
             Vector3 monsterPos;
+            MONSTER_AUTOMOVE_DIR monsterDir;
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
                 if (m_pMediator->Find(monster) == nullptr)continue;
+                if (m_pMediator->MonsterReckonerCount(monster) == 0)continue;
                 monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();
-
+                monsterDir = CAST_MONSTER(m_pMediator->Find(monster))->GetDir();
+               
                 //CAST_MONSTER(m_pMediator->Find(monster).get
                 if (CAST_MONSTER(m_pMediator->Find(monster))->GetIsMoving())
                 {
-                    switch (CAST_MONSTER(m_pMediator->Find(monster))->GetDir())
+                    switch (monsterDir)
                     {
                     case MONSTER_AUTOMOVE_DIR::FRONT:
                         monsterPos.z += 100.f * DT;
@@ -849,11 +857,14 @@ void CNetMgr::Processing_Thead()
                         break;
                     }
                     //여기
-                    m_pMediator->Find(monster)->GetLock().lock();
-                    g_QuadTree.Delete(m_pMediator->Find(monster));
-                    CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
-                    g_QuadTree.Insert(m_pMediator->Find(monster));
-                    m_pMediator->Find(monster)->GetLock().unlock();
+                    if (m_pMediator->Find(monster) != nullptr)
+                    {
+                        tempLock.lock();
+                        g_QuadTree.Delete(m_pMediator->Find(monster));
+                        CAST_MONSTER(m_pMediator->Find(monster))->SetPosV(monsterPos);
+                        g_QuadTree.Insert(m_pMediator->Find(monster));
+                        tempLock.unlock();
+                    }
                 }
             }
         }
