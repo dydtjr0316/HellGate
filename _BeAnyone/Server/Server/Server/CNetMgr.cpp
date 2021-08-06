@@ -19,6 +19,7 @@ void CNetMgr::error_display(const char* msg, int err_no)     // 에러 출력
 void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
 {
     CGameObject* MonsterObj = m_pMediator->Find(Monster_id);
+    if (MonsterObj == nullptr)return;
     Vector3 MonsterPos = MonsterObj->GetLocalPosVector();
     unordered_set<uShort> old_viewList;
     unordered_set<uShort> new_viewList;
@@ -143,6 +144,8 @@ void CNetMgr::Random_Move_Monster(const uShort& Monster_id)
 void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 {
     CMonster* monster = dynamic_cast<CMonster*>(m_pMediator->Find(victim));
+    if (monster == nullptr)return;
+
     //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(attacker));// search sector 인자 확인
 
     unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(attacker)));
@@ -168,6 +171,8 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 }
 void CNetMgr::Kill_Monster(const uShort& monster_id)
 {
+    if (m_pMediator->Find(monster_id) == nullptr)return;
+
     //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(monster_id));
     if (m_pMediator->Count(monster_id) != 0)
     {
@@ -180,6 +185,7 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
 {
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
+    if (pClient == nullptr)return;
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
 
@@ -299,6 +305,7 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 {
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
+    if (pClient == nullptr)return;
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
 
@@ -814,6 +821,7 @@ void CNetMgr::Processing_Thead()
             Vector3 monsterPos;
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
+                if (m_pMediator->Find(monster) == nullptr)continue;
                 monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();
 
                 //CAST_MONSTER(m_pMediator->Find(monster).get
