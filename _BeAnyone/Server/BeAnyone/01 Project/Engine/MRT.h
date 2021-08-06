@@ -38,6 +38,9 @@ public:
 	Ptr<CTexture> GetDSTex() { return m_pDSTex; }
 
 public:
+	D3D12_VIEWPORT GetView() { return m_tVP; }
+
+public:
 	CMRT();
 	virtual ~CMRT();
 };
