@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "StaticUI.h"
 #include "Button.h"
 #include "ResMgr.h"
 #include "KeyMgr.h"
@@ -29,11 +30,7 @@ void CButton::update()
 	case ITEM_ID::END:
 		return;
 	}
-}
 
-void CButton::finalupdate()
-{
-	GetObj()->StaticUI();
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 
@@ -41,22 +38,15 @@ void CButton::finalupdate()
 		{
 			GetObj()->StaticUI();
 		}
-		//CCollisionMgr::GetInst()->CollisionRect();
-		auto mPos = CKeyMgr::GetInst()->GetMousePos();
+	}
+	else
+	{
 	}
 }
 
-CButton::CButton()
-	: CScript(0)
-	, m_eItemId(ITEM_ID::EMPTY)
-	, m_bActive(false)
+void CButton::finalupdate()
 {
-	m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD_IMG");
-}
 
-
-CButton::~CButton()
-{
 }
 
 void CButton::SaveToScene(FILE* _pFile)
@@ -64,5 +54,68 @@ void CButton::SaveToScene(FILE* _pFile)
 }
 
 void CButton::LoadFromScene(FILE* _pFile)
+{
+}
+
+void CButton::OnCollisionEnter(CCollider* _pOther)
+{
+	vector<CButton*> vecButton = m_pComParent->GetObj()->StaticUI()->GetButton();
+	for (int i = 0; i < vecButton.size(); ++i)
+	{
+		if (vecButton[i]->GetActive() == BT_ACTIVE::ACTIVE)
+			return;
+	}
+	m_bCheckActive = BT_ACTIVE::ACTIVE;
+
+	m_vecOldPos = Transform()->GetLocalPos();
+
+}
+
+void CButton::OnCollision(CCollider* _pOther)
+{
+	if (m_bCheckActive == BT_ACTIVE::PASSIVE)
+		return;
+
+	m_bState = BT_STATE::CLICKED;
+
+	Vector3 localPos = _pOther->Transform()->GetLocalPos();
+	GetObj()->Transform()->SetLocalPos(localPos);
+}
+
+void CButton::OnCollisionExit(CCollider* _pOther)
+{
+	switch (m_bState)
+	{
+	case BT_STATE::NONE:
+		break;
+
+	case BT_STATE::CLICKED:
+		Transform()->SetLocalPos(m_vecOldPos);
+		break;
+
+	case BT_STATE::SELL:
+		break;
+	}
+
+	m_bState = BT_STATE::NONE;
+	m_bCheckActive = BT_ACTIVE::PASSIVE;
+}
+
+
+CButton::CButton()
+	: CScript((UINT)SCRIPT_TYPE::TESTSCRIPT)
+	, m_eItemId(ITEM_ID::EMPTY)
+	, m_bActive(false)
+	, m_bState(BT_STATE::NONE)
+	, m_bCheckActive(BT_ACTIVE::PASSIVE)
+{
+	//	test
+	if (UINT(rand() % 2))
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD_IMG");
+	else
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
+}
+
+CButton::~CButton()
 {
 }

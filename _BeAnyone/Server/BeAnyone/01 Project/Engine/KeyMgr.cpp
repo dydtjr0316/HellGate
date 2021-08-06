@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "KeyMgr.h"
-
+#include "Camera.h"
 #include "Device.h"
 #include "RenderMgr.h"
+#include "MRT.h"
 
 // KEY_TYPE 에 대응하는 가상키
 int arrVK[(UINT)KEY_TYPE::KEY_END] =
@@ -109,4 +110,51 @@ void CKeyMgr::update() {
 	ScreenToClient(CRenderMgr::GetInst()->GetHwnd(), &m_ptMouse);
 
 	m_vDragDir = Vector2((float)(m_ptMouse.x - m_ptOldMouse.x), (float)(m_ptOldMouse.y - m_ptMouse.y));
+}
+
+Vector3 CKeyMgr::GetTransformedPoint(Matrix _mat)
+{
+	POINT mousePoint = GetMousePos();
+	POINT fPoint{};
+
+	D3D12_VIEWPORT view = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetView();
+	Matrix matProj = _mat;
+
+	fPoint.x = (((2.f * mousePoint.x) / view.Width) - 1.f) / matProj._11;
+	fPoint.y = (((-2.f * mousePoint.y) / view.Height) + 1.f) / matProj._22;
+
+	//D3DXMATRIX matView, m, matWorld;
+	//pd3ddevice->GetTransform(D3DTS_VIEW, &matView);  //View matrix 정보를 얻어온다.
+	//D3DXMatrixInverse(&m, NULL, &matView);    //View matrix 의 역행렬을 구한다.
+	//vPickRayOrig = D3DXVECTOR3(m._41, m._42, m._43); //시점이 되는 백터 
+	//vPickRayDir.x = px * m._11 + py * m._21 + 1.f * m._31; //종점이 되는 벡터
+	//vPickRayDir.y = px * m._12 + py * m._22 + 1.f * m._32;
+	//vPickRayDir.z = px * m._13 + py * m._23 + 1.f * m._33;
+	//D3DXPLANE pPlane = D3DXPLANE(0.f, 0.f, 1.f, 0.f);  //평면을 정의한다.	
+
+	return Vector3(fPoint.x, fPoint.y, 1.f);
+}
+
+
+Vector3 CKeyMgr::GetTransformedPoint(CGameObject* _cam)
+{
+	POINT mousePoint = GetMousePos();
+	POINT fPoint{};
+
+	D3D12_VIEWPORT view = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetView();
+	Matrix matProj = _cam->Camera()->GetProjMat();
+	
+	fPoint.x = (((2.f * mousePoint.x) / view.Width) - 1.f) / matProj._11;
+	fPoint.y = (((-2.f * mousePoint.y) / view.Height) + 1.f) / matProj._22;
+
+	//D3DXMATRIX matView, m, matWorld;
+	//pd3ddevice->GetTransform(D3DTS_VIEW, &matView);  //View matrix 정보를 얻어온다.
+	//D3DXMatrixInverse(&m, NULL, &matView);    //View matrix 의 역행렬을 구한다.
+	//vPickRayOrig = D3DXVECTOR3(m._41, m._42, m._43); //시점이 되는 백터 
+	//vPickRayDir.x = px * m._11 + py * m._21 + 1.f * m._31; //종점이 되는 벡터
+	//vPickRayDir.y = px * m._12 + py * m._22 + 1.f * m._32;
+	//vPickRayDir.z = px * m._13 + py * m._23 + 1.f * m._33;
+	//D3DXPLANE pPlane = D3DXPLANE(0.f, 0.f, 1.f, 0.f);  //평면을 정의한다.	
+
+	return Vector3(fPoint.x, fPoint.y, 1.f);
 }

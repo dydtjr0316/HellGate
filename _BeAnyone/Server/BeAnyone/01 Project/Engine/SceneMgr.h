@@ -24,7 +24,7 @@ public:
 
 
 public:
-	void CreateTargetUI();
+	void CreateTargetUI(CGameObject*);
 	void CreateMap(CTerrain*);
 	void CreateNpc(CTerrain*);
 	void CreateNewMap(CTerrain*);

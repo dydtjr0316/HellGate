@@ -59,6 +59,8 @@ struct tKeyState
 	bool		bPrevPress;
 };
 
+class CGameObject;
+
 class CKeyMgr
 {
 	SINGLE(CKeyMgr);
@@ -77,6 +79,7 @@ public:
 	KEY_STATE GetKeyState(KEY_TYPE _eKey) { return m_vecKey[(UINT)_eKey].eState; }
 	const POINT& GetMousePos() { return m_ptMouse; }
 	const POINT& GetPreMousePos() { return m_ptOldMouse; }
+	Vector3 GetTransformedPoint(CGameObject*);
 
 	Vector2 GetDragDir() { return m_vDragDir; }
 
