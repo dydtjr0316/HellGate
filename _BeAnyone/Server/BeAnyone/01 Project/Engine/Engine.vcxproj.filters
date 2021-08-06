@@ -195,8 +195,14 @@
     <ClCompile Include="TreeScript.cpp">
       <Filter>04. GameObject\Script</Filter>
     </ClCompile>
+    <ClCompile Include="DummyItemScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
     <ClCompile Include="ItemScript.cpp">
       <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemMgr.cpp">
+      <Filter>06. Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,8 +390,14 @@
     <ClInclude Include="TreeScript.h">
       <Filter>04. GameObject\Script</Filter>
     </ClInclude>
+    <ClInclude Include="DummyItemScript.h">
+      <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
     <ClInclude Include="ItemScript.h">
       <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemMgr.h">
+      <Filter>06. Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

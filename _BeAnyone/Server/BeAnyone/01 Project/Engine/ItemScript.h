@@ -21,4 +21,3 @@ public:
 	CItemScript();
 	virtual ~CItemScript();
 };
-

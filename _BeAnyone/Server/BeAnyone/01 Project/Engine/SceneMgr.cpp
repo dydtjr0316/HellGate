@@ -25,6 +25,7 @@
 #include "CollisionMgr.h"
 #include "EventMgr.h"
 #include "RenderMgr.h"
+#include "ItemMgr.h"
 #include "Device.h"
 #include "Core.h"
 
@@ -2205,7 +2206,17 @@ void CSceneMgr::init()
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
 	monsterScript->SetAnimationData(pMeshData->GetMesh());
 
+	// ==================
+	//	item 객체 생성
+	// ==================
+	//CGameObject* pItem = new CGameObject;
+	//pItem->SetName("")
 
+	CItemMgr::GetInst()->SetItemData(CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Bottle_03.fbx", FBX_TYPE::ITEM)); // 물약1
+	CItemMgr::GetInst()->SetItemData(CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Bottle_04.fbx", FBX_TYPE::ITEM));	// 물약2
+	CItemMgr::GetInst()->SetItemData(CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Steak_02.fbx", FBX_TYPE::ITEM));	// 고기
+	CItemMgr::GetInst()->SetItemData(CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\MoneyBag.fbx", FBX_TYPE::ITEM));	// 돈
+	CItemMgr::GetInst()->SetItemData(CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Carrot.fbx", FBX_TYPE::ITEM));	// 당근
 	
 	// ==================
 	// Camera Object 생성
@@ -2348,6 +2359,8 @@ void CSceneMgr::init()
 	//CreateMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CreateNpc(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CreateNewMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
+	CItemMgr::GetInst()->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
+
 
 
 	// ====================
@@ -2384,6 +2397,7 @@ void CSceneMgr::update()
 	m_pCurScene->finalupdate();
 
 	// 충돌 처리
+	CItemMgr::GetInst()->update();
 	CCollisionMgr::GetInst()->update();
 }
 

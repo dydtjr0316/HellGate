@@ -46,6 +46,8 @@
     <ClInclude Include="GridScript.h" />
     <ClInclude Include="HpUiScript.h" />
     <ClInclude Include="HugUiScript.h" />
+    <ClInclude Include="DummyItemScript.h" />
+    <ClInclude Include="ItemMgr.h" />
     <ClInclude Include="ItemScript.h" />
     <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="Layer.h" />
@@ -107,6 +109,8 @@
     <ClCompile Include="GridScript.cpp" />
     <ClCompile Include="HpUiScript.cpp" />
     <ClCompile Include="HugUiScript.cpp" />
+    <ClCompile Include="DummyItemScript.cpp" />
+    <ClCompile Include="ItemMgr.cpp" />
     <ClCompile Include="ItemScript.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="Layer.cpp" />

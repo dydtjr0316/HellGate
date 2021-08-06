@@ -2,7 +2,7 @@
 #include "TreeScript.h"
 #include "Terrain.h"
 #include <random>
-#include "ItemScript.h"
+#include "DummyItemScript.h"
 //#include <chrono>
 //
 //auto current = chrono::system_clock::now();
@@ -154,7 +154,7 @@ void CTreeScript::MakeItem()
 	pItem->FrustumCheck(true);
 	pItem->AddComponent(new CTransform);
 	pItem->AddComponent(new CMeshRender);
-	pItem->AddComponent(new CItemScript);
+	pItem->AddComponent(new CDummyItemScript);
 	pItem->AddComponent(new CCollider);
 	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
 	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
@@ -165,7 +165,7 @@ void CTreeScript::MakeItem()
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	//m_pItem1->SetUiRenderCheck(false);
-	CItemScript* pItemScript = pItem->GetScript<CItemScript>();
+	CDummyItemScript* pItemScript = pItem->GetScript<CDummyItemScript>();
 
 	m_vItem.push_back(pItem);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_vItem[0]);
@@ -176,7 +176,7 @@ void CTreeScript::MakeItem()
 	pItem->FrustumCheck(true);
 	pItem->AddComponent(new CTransform);
 	pItem->AddComponent(new CMeshRender);
-	pItem->AddComponent(new CItemScript);
+	pItem->AddComponent(new CDummyItemScript);
 	pItem->AddComponent(new CCollider);
 	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
 	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
@@ -187,7 +187,7 @@ void CTreeScript::MakeItem()
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	//m_pItem2->SetUiRenderCheck(false);
-	pItemScript = pItem->GetScript<CItemScript>();
+	pItemScript = pItem->GetScript<CDummyItemScript>();
 
 	m_vItem.push_back(pItem);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_vItem[1]);
@@ -198,7 +198,7 @@ void CTreeScript::MakeItem()
 	pItem->FrustumCheck(true);
 	pItem->AddComponent(new CTransform);
 	pItem->AddComponent(new CMeshRender);
-	pItem->AddComponent(new CItemScript);
+	pItem->AddComponent(new CDummyItemScript);
 	pItem->AddComponent(new CCollider);
 	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
 	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
@@ -209,7 +209,7 @@ void CTreeScript::MakeItem()
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	//m_pItem3->SetUiRenderCheck(false);
-	pItemScript = pItem->GetScript<CItemScript>();
+	pItemScript = pItem->GetScript<CDummyItemScript>();
 
 	m_vItem.push_back(pItem);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(m_vItem[2]);

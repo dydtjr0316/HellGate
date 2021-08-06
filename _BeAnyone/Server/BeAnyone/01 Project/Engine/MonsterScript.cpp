@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MonsterScript.h"
 #include "RenderMgr.h"
+#include "ItemMgr.h"
 #include "Terrain.h"
 
 int attackcnt = 0;
@@ -123,7 +124,8 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 	{
 		// 여기 두번들어감 // 용석
 		g_netMgr.Send_Attack_Packet(m_sId);
-	
+		CItemMgr::GetInst()->SetItemPos(GetObj()->Transform()->GetLocalPos());
+		CItemMgr::GetInst()->SetIsMake(true);
 		
 		m_bisDamaged = true;
 	}
@@ -267,7 +269,7 @@ void CMonsterScript::Attack()
 	{
 		monsterScript->SetBisAttack(false);
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
-		m_bisAniReset = false;
+		monsterScript->SetAniReset(false); // m_bisAniReset = false;
 		g_netMgr.Send_MonsterDead_Packet(m_sId);
 		DeleteObject(GetObj());
 		CEventMgr::GetInst()->update();
@@ -276,16 +278,17 @@ void CMonsterScript::Attack()
 	}
 
 	// is damaged
-	if (m_bisDamaged == true && monsterScript->GetBisAttack() == false) {
+	if (monsterScript->GetIsDamage() && monsterScript->GetBisAttack() == false) {// (m_bisDamaged == true && monsterScript->GetBisAttack() == false) {
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
 		
+
 		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
 	}
 	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
-		m_bisDamaged = false;
-		m_bisAniReset = false;
+		monsterScript->SetIsDamage(false); //m_bisDamaged = false;
+		monsterScript->SetAniReset(false); //m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
 		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
@@ -293,7 +296,7 @@ void CMonsterScript::Attack()
 	}
 	GetObj()->GetID();
 	// attack
-	if (m_bisPunch) {
+	if (monsterScript->GetIsPunch()) {// (m_bisPunch) {
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::ATTACK);
@@ -302,8 +305,8 @@ void CMonsterScript::Attack()
 		// packet
 	}
 	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
-		m_bisPunch = false;
-		m_bisAniReset = false;
+		monsterScript->SetIsPunch(false); // m_bisPunch = false;
+		monsterScript->SetAniReset(false); // m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
 		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);

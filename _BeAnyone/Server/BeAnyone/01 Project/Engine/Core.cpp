@@ -9,6 +9,7 @@
 #include "SceneMgr.h"
 #include "EventMgr.h"
 #include "RenderMgr.h"
+#include "ItemMgr.h"
 
 #include "PathMgr.h"
 #include "ConstantBuffer.h"
@@ -54,6 +55,7 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 
 	CSceneMgr::GetInst()->init();
 
+	CItemMgr::GetInst()->init();
 	// TestInit();
 
 	return S_OK;
