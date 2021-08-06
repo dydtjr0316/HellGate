@@ -16,6 +16,7 @@ CBoundary::CBoundary(const float& x, const float& z, const float& w, const float
 
 CBoundary::CBoundary(CGameObject* player, const float& searchsize)
 {
+	if (player == nullptr)return;
 	switch (player->GetType())
 	{
 	case OBJECT_TYPE::CLIENT:

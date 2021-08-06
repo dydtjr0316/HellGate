@@ -270,6 +270,7 @@ void CMonsterScript::Attack()
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
 		m_bisAniReset = false;
 		g_netMgr.Send_MonsterDead_Packet(m_sId);
+		monsterScript->GetPacketMove()->eDir = (char)MONSTER_AUTOMOVE_DIR::AUTO;
 
 		// 여기가 죽는 부분
 		DeleteObject(GetObj());
