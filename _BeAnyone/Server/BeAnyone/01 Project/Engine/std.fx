@@ -68,7 +68,7 @@ float4 PS_Test(VS_OUTPUT _input) : SV_Target
     }
 
     // float4 vOutColor = _input.vOutColor;
-    //  float4 vOutColor = g_tex_0.Sample(g_sam_0, _input.vUV);
+    // float4 vOutColor = g_tex_0.Sample(g_sam_0, _input.vUV);
     float4 vNormal = g_tex_1.Sample(g_sam_0, _input.vUV);
     vNormal = vNormal * 2.f - 1.f; // 표면 좌표에서의 Normal
 
@@ -464,5 +464,49 @@ float4 PS_Grid(VTX_OUT _in) : SV_Target
     return float4(0.f, 0.f, 0.f, 0.f);
 }
 
+// =============================
+// UI Texture Shader
+// g_tex_0 : Output Texture
+// g_float_0 : 알파값
+// AlphaBlend = true;
+// =============================
+struct UITEX_INPUT
+{
+    float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
+};
 
+struct UITEX_OUTPUT
+{
+    float4 vOutPos : SV_Position;
+    float2 vUV : TEXCOORD;
+};
+
+UITEX_OUTPUT VS_UITex(UITEX_INPUT _input)
+{
+    UITEX_OUTPUT output = (UITEX_OUTPUT)0;
+
+    // 투영좌표계를 반환할 때에는 float4 4번째 w 요소에 1.f 을 넣어준다.
+    float4 vWorldPos = mul(float4(_input.vPos, 1.f), g_matWorld);
+    float4 vViewPos = mul(vWorldPos, g_matView);
+    float4 vProjPos = mul(vViewPos, g_matProj);
+
+    output.vOutPos = vProjPos;
+    output.vUV = _input.vUV;
+
+    return output;
+}
+
+float4 PS_UITex(UITEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+    if (tex_0)
+        vColor = g_tex_0.Sample(g_sam_1, _input.vUV);
+    else
+        vColor = float4(1.f, 0.f, 1.f, 1.f);
+
+    float4 vOut = float4(g_tex_0.Sample(g_sam_1, _input.vUV).xyz, g_float_0);
+    return vOut;
+}
 #endif

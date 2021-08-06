@@ -558,18 +558,14 @@ void CResMgr::CreateDefaultShader()
     // int 1 개 필요
     //=============
     Ptr<CShader> pShader = nullptr;
-
-    pShader = new CShader;\
+    pShader = new CShader;
     pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Test", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Test", "ps_5_0");
-
     // BlendState 설정
-    //pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
     //pShader->SetRasterizerType(RS_TYPE::WIRE_FRAME);
     pShader->Create(SHADER_POV::FORWARD);
-
-    pShader->AddShaderParam(tShaderParam{ L"Test Value", SHADER_PARAM::INT_0 });
-
+    pShader->AddShaderParam(tShaderParam{ L"Test Value", SHADER_PARAM::INT_0 }); 
     AddRes(L"TestShader", pShader);
 
     // ==============
@@ -578,19 +574,30 @@ void CResMgr::CreateDefaultShader()
     pShader = new CShader;
     pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Tex", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Tex", "ps_5_0");
-
     // BlendState 설정
-    // pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
-
+    //pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
     // DSState
     pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
-
     // Shader Parameter 알림
     pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
-
     pShader->Create(SHADER_POV::FORWARD);
-
     AddRes(L"TexShader", pShader);
+
+    // ==============
+    // UI_Texture Shader
+    // ==============
+    pShader = new CShader;
+    pShader->CreateVertexShader(L"Shader\\std.fx", "VS_UITex", "vs_5_0");
+    pShader->CreatePixelShader(L"Shader\\std.fx", "PS_UITex", "ps_5_0");
+    // BlendState 설정
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+    // DSState
+    pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+    // Shader Parameter 알림
+    pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+    pShader->AddShaderParam(tShaderParam{ L"Alpha Value", SHADER_PARAM::FLOAT_0 });
+    pShader->Create(SHADER_POV::FORWARD);
+    AddRes(L"UITexShader", pShader);
 
     // ============
     // Std3D Shader
@@ -641,18 +648,14 @@ void CResMgr::CreateDefaultShader()
     pShader = new CShader;
     pShader->CreateVertexShader(L"Shader\\light.fx", "VS_DirLight", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\light.fx", "PS_DirLight", "ps_5_0");
-
     // One-One Blend
     pShader->SetBlendState(BLEND_TYPE::ONEBLEND);
-
     // No Depth Test, No Depth Write
     pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
-
     pShader->AddShaderParam(tShaderParam{ L"Light Index", SHADER_PARAM::INT_0 });
     pShader->AddShaderParam(tShaderParam{ L"Normal Target Texture", SHADER_PARAM::TEX_0 });
     pShader->AddShaderParam(tShaderParam{ L"Position Target Texture", SHADER_PARAM::TEX_1 });
     pShader->Create(SHADER_POV::LIGHTING);
-
     AddRes(L"DirLightShader", pShader);
 
     // ==================
@@ -661,21 +664,16 @@ void CResMgr::CreateDefaultShader()
     pShader = new CShader;
     pShader->CreateVertexShader(L"Shader\\light.fx", "VS_PointLight", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\light.fx", "PS_PointLight", "ps_5_0");
-
     // One-One Blend
     pShader->SetBlendState(BLEND_TYPE::ONEBLEND);
-
     // No Depth Test, No Depth Write
     pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
-
     // Cull_None
     pShader->SetRasterizerType(RS_TYPE::CULL_FRONT);
-
     pShader->AddShaderParam(tShaderParam{ L"Light Index", SHADER_PARAM::INT_0 });
     pShader->AddShaderParam(tShaderParam{ L"Normal Target Texture", SHADER_PARAM::TEX_0 });
     pShader->AddShaderParam(tShaderParam{ L"Position Target Texture", SHADER_PARAM::TEX_1 });
     pShader->AddShaderParam(tShaderParam{ L"Render Target Resolution", SHADER_PARAM::VEC2_0 });
-
     pShader->Create(SHADER_POV::LIGHTING);
     AddRes(L"PointLightShader", pShader);
 
@@ -685,14 +683,11 @@ void CResMgr::CreateDefaultShader()
     pShader = new CShader;
     pShader->CreateVertexShader(L"Shader\\light.fx", "VS_MergeLight", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\light.fx", "PS_MergeLight", "ps_5_0");
-
     // No Depth Test, No Depth Write
     pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
-
     pShader->AddShaderParam(tShaderParam{ L"Diffuse Target Texture", SHADER_PARAM::TEX_0 });
     pShader->AddShaderParam(tShaderParam{ L"Light Target Texture", SHADER_PARAM::TEX_1 });
     pShader->AddShaderParam(tShaderParam{ L"Specular Target Texture", SHADER_PARAM::TEX_2 });
-
     pShader->Create(SHADER_POV::LIGHTING);
     AddRes(L"MergeLightShader", pShader);
 
@@ -751,6 +746,11 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"TexShader"));
     AddRes(L"TexMtrl", pMtrl);
+
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"UITexShader"));
+    AddRes(L"UITexMtrl", pMtrl);
 
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();

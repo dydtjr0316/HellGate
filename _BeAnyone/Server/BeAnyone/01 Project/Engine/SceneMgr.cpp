@@ -249,7 +249,7 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 
 	//	item UI, 상속되는 버튼들
 	CGameObject* pObject = new CGameObject;
-	vScale = Vector3(400.f, 600.f, 1.f);
+	vScale = Vector3(600.f, 800.f, 1.f);
 	pObject->SetName(L"Item UI Object");
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
@@ -261,16 +261,16 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 	pObject->StaticUI()->SetCameraProj(_camObj->Camera());
 	// Transform 설정
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (3 * vScale.x)
-		, (res.fHeight / 2.f) - (vScale.y / 2.f)
-		, 1.f));
+	pObject->Transform()->SetLocalPos(Vector3(100.f, 80.f, 1.f));
 	pObject->Transform()->SetLocalScale(vScale);
-	// MeshRender 설정
+	// MeshRender 설정	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"UITexMtrl");
 	pObject->MeshRender()->SetMaterial(pMtrl->Clone());
 	Ptr<CTexture> itemUI = pObject->StaticUI()->m_pFrame;
+	float fUI = 0.5f;
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
 	// AddGameObject
 	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 
@@ -297,7 +297,7 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 		pButtonObj->Transform()->SetLocalScale(vScale);
 		// MeshRender 설정
 		pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl");
 		pButtonObj->MeshRender()->SetMaterial(pMtrl->Clone());
 		pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pObject->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
 		// AddGameObject
