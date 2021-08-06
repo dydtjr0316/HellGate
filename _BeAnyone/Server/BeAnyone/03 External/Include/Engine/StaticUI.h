@@ -28,6 +28,7 @@ public:
 	vector<CGameObject*>	m_vecItemObj;
 	vector<CButton*>		m_vecButton;
 
+	CGameObject*			m_pMousePoint;
 
 public:
 	void init();

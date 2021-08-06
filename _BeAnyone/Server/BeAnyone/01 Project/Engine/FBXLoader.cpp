@@ -222,6 +222,8 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 		float fRadiusAver = (vecAver.x + vecAver.y + vecAver.z) / 3;
 		CreateBoundingSphereCollisionMesh(fRadiusAver, m_fileName);
 
+		//	CreateBoundingSphereCollisonMesh 주석처리하고 하면 리소스매니저 등록안하고 메쉬 데이터 크기만 가져가서 바운딩스피어 정의 가능하지 않을까?
+
 
 	}
 

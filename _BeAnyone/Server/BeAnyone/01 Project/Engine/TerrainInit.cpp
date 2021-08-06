@@ -18,12 +18,10 @@ void CTerrain::init(Ptr<CTexture> _pMap) {
 	pMtrl->SetData( SHADER_PARAM::INT_2, &m_iFaceZ );
 
 	// 높이맵 텍스쳐 Create	
-	if(_pMap != nullptr)
+	if (_pMap != nullptr)
 		m_pHeightMap = _pMap;
 	else
 		m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\test2.bmp");
-		//m_pHeightMap = CResMgr::GetInst()->Load<CTexture>( L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg" );
-
 	
 	Vector2 vHeightMapRes = Vector2( m_pHeightMap->Width(), m_pHeightMap->Height() );
 
@@ -122,8 +120,6 @@ void CTerrain::CreateHeightmapPixelsInfo()
 
 	HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\test2.raw"
 		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);
-	/*HANDLE hFile = ::CreateFile(L"../\\../\\02 File\\bin\\content\\Texture\\Terrain\\T3.raw"
-		, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_READONLY, NULL);*/
 	DWORD dwBytesRead;
 	::ReadFile(hFile, pHeightMapPixels, (m_nWidth * m_nLength), &dwBytesRead, NULL);
 	::CloseHandle(hFile);
