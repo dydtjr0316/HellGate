@@ -76,7 +76,7 @@ void CPlayerScript::update()
 
 	}
 
-	// 아이템 줍기 애니메이션
+	// 아이템 줍기 애니메이션 효림 0807(서버 붙일 거)
 	if (KEY_TAB(KEY_TYPE::KEY_E)) {
 		player->AnimClipReset();
 		//player->SetAnimation(Ani_TYPE::PICK_UP);
