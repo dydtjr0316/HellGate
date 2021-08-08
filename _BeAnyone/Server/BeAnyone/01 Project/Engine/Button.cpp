@@ -51,6 +51,9 @@ void CButton::update()
 	case ITEM_ID::END:
 		return;
 	}
+	auto temp = m_pComParent->GetObj()->StaticUI()->GetButton();
+	MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pItemImage.GetPointer());
+
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
@@ -59,9 +62,6 @@ void CButton::update()
 		{
 			GetObj()->StaticUI();
 		}
-	}
-	else
-	{
 	}
 
 	for (int i = 0; i < m_vItemNum.size(); ++i) {
@@ -135,7 +135,6 @@ void CButton::OnCollisionExit(CCollider* _pOther)
 	m_bCheckActive = BT_ACTIVE::PASSIVE;
 }
 
-
 void CButton::ChangeTexture()
 {
 }
@@ -151,13 +150,25 @@ CButton::CButton()
 	switch (UINT(rand() % 3))
 	{
 	case 0:
-		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"HP_POTION_IMG");
+		m_eItemId = ITEM_ID::EMPTY;
 		break;
 	case 1:
-		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD_IMG");
+		m_eItemId = ITEM_ID::BASIC_SWORD;
 		break;
 	case 2:
-		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
+		m_eItemId = ITEM_ID::BASIC_ARROW;
+		break;
+	case 3:
+		m_eItemId = ITEM_ID::BRANCH;
+		break;
+	case 4:
+		m_eItemId = ITEM_ID::APPLE;
+		break;
+	case 5:
+		m_eItemId = ITEM_ID::BOTTLE_STAMINA;
+		break;
+	case 6:
+		m_eItemId = ITEM_ID::BOTTLE_DASH;
 		break;
 	}
 }
@@ -165,7 +176,6 @@ CButton::CButton()
 CButton::~CButton()
 {
 }
-
 
 void CButton::SaveToScene(FILE* _pFile)
 {
