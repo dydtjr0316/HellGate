@@ -145,8 +145,10 @@ void CTreeScript::DestroyTree()
 		vItem3Pos += 60.f * DT * vItem3FromtDir;	// item3
 		vItem3Pos += 50.f * DT * -vItem3UpDir;
 	}
-	else {
+	else if (m_bisUp != true) {
 		m_bisDown = false;
+		m_bIsAttack = false;
+		m_bMakeObjects = true;
 	}
 
 	m_vItem[0]->Transform()->SetLocalPos(vItem1Pos);

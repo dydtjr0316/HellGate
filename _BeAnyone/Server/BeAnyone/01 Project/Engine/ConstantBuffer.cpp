@@ -85,6 +85,8 @@ void CConstantBuffer::Create(UINT _iBufferSize, UINT _iMaxCount, CONST_REGISTER 
 
 UINT CConstantBuffer::AddData(void* _pSrc)
 {
+	/*if (m_iCurCount > 500)
+		int a = 0;*/
 	// 지정한 크기의 상수버퍼를 넘어서게 데이터가 들어오는 경우
 	assert(!(m_iCurCount >= m_iMaxCount));
 

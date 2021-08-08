@@ -74,7 +74,6 @@ public:
 
 	// number texture, pos 
 	void ChangeTexture();
-	//void 
 
 public:
 	CButton();

@@ -20,8 +20,8 @@ enum class BT_ACTIVE
 
 enum class ITEM_NUM 
 {
-	TEN,
 	UNIT,
+	TEN,
 	END,
 };
 
@@ -74,7 +74,6 @@ public:
 
 	// number texture, pos 
 	void ChangeTexture();
-	//void 
 
 public:
 	CButton();

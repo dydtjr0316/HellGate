@@ -8,11 +8,30 @@
 
 void CButton::init()
 {
-	
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+	// item number create
+	for (int i = 0; i < (UINT)ITEM_NUM::END; ++i) {
+		CGameObject* pItemNum = new CGameObject;
+		pItemNum->SetName(L"ItemNum");
+		pItemNum->FrustumCheck(false);
+		pItemNum->AddComponent(new CTransform);
+		pItemNum->AddComponent(new CMeshRender);
+		pItemNum->Transform()->SetLocalPos(Vector3(-res.fWidth / 2, -res.fHeight / 2, 1.f));
+		pItemNum->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
+		//MeshRender 설정
+		pItemNum->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pItemNum->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+		pItemNum->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pItemNum);
+
+		m_vItemNum.push_back(pItemNum);
+	}
 }
 
 void CButton::update()
 {
+
 	GetObj()->SetUiRenderCheck(m_bActive);
 
 	switch (m_eItemId)
@@ -52,7 +71,7 @@ void CButton::update()
 		Vector3 vNumScale = m_vItemNum[i]->Transform()->GetLocalPos();
 
 		vNumPos = vButtonPos;
-		vNumPos += Vector3((vButtonScale.x / 2 - vNumScale.x / 2) - (i * vNumScale.x), -(vButtonScale.y / 2 - vNumScale.y / 2), 0.f);
+		//vNumPos += Vector3((vButtonScale.x / 2 - vNumScale.x / 2) - (i * vNumScale.x), -(vButtonScale.y / 2 - vNumScale.y / 2), 0.f);
 
 		m_vItemNum[i]->Transform()->SetLocalPos(vNumPos);
 	}
@@ -117,6 +136,10 @@ void CButton::OnCollisionExit(CCollider* _pOther)
 }
 
 
+void CButton::ChangeTexture()
+{
+}
+
 CButton::CButton()
 	: CScript((UINT)SCRIPT_TYPE::TESTSCRIPT)
 	, m_eItemId(ITEM_ID::EMPTY)
@@ -136,26 +159,6 @@ CButton::CButton()
 	case 2:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
 		break;
-	}
-
-	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	
-	// item number create
-	for (int i = 0; i < (UINT)ITEM_NUM::END; ++i) {
-		CGameObject* pItemNum = new CGameObject;
-		pItemNum->SetName(L"ItemNum");
-		pItemNum->FrustumCheck(false);
-		pItemNum->AddComponent(new CTransform);
-		pItemNum->AddComponent(new CMeshRender);
-		pItemNum->Transform()->SetLocalPos(Vector3(-res.fWidth / 2, -res.fHeight / 2, 1.f));
-		pItemNum->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
-		//MeshRender 설정
-		pItemNum->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		pItemNum->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
-		pItemNum->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pItemNum);
-
-		m_vItemNum.push_back(pItemNum);
 	}
 }
 

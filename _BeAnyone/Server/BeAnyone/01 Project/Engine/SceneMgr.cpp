@@ -2169,6 +2169,8 @@ void CSceneMgr::init()
 		pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pObject->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
 		// AddGameObject
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pButtonObj);
+
+		pObject->StaticUI()->m_vecButton[i]->init();
 	}
 
 	////	ªÛ¡° UI
