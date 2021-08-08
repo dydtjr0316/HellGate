@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "BulletScript.h"
+#include "RenderMgr.h"
 #include <iostream>
 
 
@@ -19,6 +20,115 @@ CPlayerScript::CPlayerScript()
 {
 	m_fSpeed = PLAYER_SPEED_IDLE;
 	m_eAniType = Ani_TYPE::IDLE;
+
+	// ui create
+	Ptr<CTexture> UiTexture[2] = {
+		CResMgr::GetInst()->FindRes<CTexture>(L"UiHug"),
+		CResMgr::GetInst()->FindRes<CTexture>(L"UiTemper")
+	};
+
+	Vector3 vScale(350.f, 10.f, 1.f);
+	CGameObject* pObject = new CGameObject;
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+	for (int i = 0; i < 4; ++i) {
+		pObject = new CGameObject;
+		pObject->SetName(L"UI Object");
+		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
+
+		if (i == 0 || i == 1) {
+			if (i == 1) {
+				vScale = Vector3(350.f, 20.f, 1.f);
+			}
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
+				, 1.f));
+		}
+		else if (i == 2 || i == 3) {
+			vScale = Vector3(360.f, 2.f, 1.f);
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
+				, 1.f));
+		}
+		pObject->Transform()->SetLocalScale(vScale);
+		// MeshRender 설정
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+		// AddGameObject
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+
+		if (i == 0 || i == 1)
+			m_vUiBar.push_back(pObject);
+		else if (i == 2 || i == 3)
+			m_vUnderBar.push_back(pObject);
+	}
+
+	vScale = Vector3(350.f, 10.f, 1.f);
+
+	for (int i = 0; i < 4; ++i) {
+
+		pObject = new CGameObject;
+		pObject->SetName(L"UI Object");
+		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
+
+		if (i == 0 || i == 1) {
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 600.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
+				, 1.f));
+		}
+		else if (i == 2 || i == 3) {
+			vScale = Vector3(360.f, 2.f, 1.f);
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 600.f
+				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
+				, 1.f));
+		}
+		pObject->Transform()->SetLocalScale(vScale);
+
+		// MeshRender 설정
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+		pObject->SetUiRenderCheck(false);
+		// AddGameObject
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+
+		if (i == 0 || i == 1)
+			m_vUiBar.push_back(pObject);
+		else if (i == 2 || i == 3)
+			m_vUnderBar.push_back(pObject);
+	}
+
+	vScale = Vector3(40.f, 40.f, 1.f);
+
+	for (int i = 0; i < 2; ++i) {
+
+		pObject = new CGameObject;
+		pObject->SetName(L"UI Object");
+		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
+
+		pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 10.f + (410 * i)
+			, (res.fHeight / 2.f) - (vScale.y / 2.f) - 10.f
+			, 1.f));
+		pObject->Transform()->SetLocalScale(vScale);
+
+		// MeshRender 설정
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, UiTexture[i].GetPointer());
+		// AddGameObject
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+
+		m_vUiButton.push_back(pObject);
+	}
+
 }
 
 CPlayerScript::~CPlayerScript()
@@ -116,6 +226,8 @@ void CPlayerScript::update()
 
 	}
 
+	// stamina ui
+	ClickUiButton();
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
@@ -187,11 +299,6 @@ void CPlayerScript::update()
 	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
 		player->GetReckoner()->DeadReckoning(GetObj());
 
-	
-
-
-
-
 	if (((player->GetReckoner()->isFollowing() || !ReckonerMove) &&
 		((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))))
 	{
@@ -204,9 +311,6 @@ void CPlayerScript::update()
 		player->GetReckoner()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
 		CountTime();
 	}
-
-
-
 
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
 	{
@@ -518,4 +622,36 @@ void CPlayerScript::PickUp_Default()
 	pBullet->AddComponent(new CBulletScript);
 
 	CreateObject(pBullet, L"Bullet");
+}
+
+void CPlayerScript::ClickUiButton()
+{
+	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
+		POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
+
+		for (int i = 0; i < m_vUiButton.size(); ++i) {
+			Vector3 vUiButtonPos = m_vUiButton[i]->Transform()->GetLocalPos();
+			Vector3 vUiButtonScale = m_vUiButton[i]->Transform()->GetLocalScale();
+			tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+			vUiButtonPos.x += res.fWidth / 2;
+			vUiButtonPos.y += -(res.fHeight / 2);
+
+			if (pMousePos.x >= vUiButtonPos.x - (vUiButtonScale.x / 2) && pMousePos.x <= vUiButtonPos.x + (vUiButtonScale.x / 2)
+				&& pMousePos.y <= -vUiButtonPos.y + (vUiButtonScale.x / 2) && pMousePos.y >= -vUiButtonPos.y - (vUiButtonScale.x / 2)) {
+
+				if (m_bUiCheck == true) {
+					// m_pObject->Transform()->SetLocalScale(Vector3(90.f, 90.f, 1.f));
+					m_vUiBar[(UINT)UI_BAR::HUG + i]->SetUiRenderCheck(true);
+					m_vUnderBar[(UINT)UI_BAR::HUG + i]->SetUiRenderCheck(true);
+					m_bUiCheck = false;
+				}
+				else if (m_bUiCheck == false) {
+					m_vUiBar[(UINT)UI_BAR::HUG + i]->SetUiRenderCheck(false);
+					m_vUnderBar[(UINT)UI_BAR::HUG + i]->SetUiRenderCheck(false);
+					m_bUiCheck = true;
+				}
+			}
+		}
+	}
 }

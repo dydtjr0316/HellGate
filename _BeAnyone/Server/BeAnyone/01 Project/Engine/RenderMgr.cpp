@@ -166,3 +166,10 @@ void CRenderMgr::render_shadowmap()
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SHADOWMAP)->TargetToResBarrier();
 }
 
+CCamera* CRenderMgr::GetMainCam()
+{
+	for (int i = 0; i < m_vecCam.size(); ++i) {
+		if (m_vecCam[i]->GetObj()->GetName() == L"MainCam")
+			return m_vecCam[i];
+	}
+}
