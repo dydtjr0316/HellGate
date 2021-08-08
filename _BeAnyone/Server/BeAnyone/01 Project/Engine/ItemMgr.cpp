@@ -124,7 +124,7 @@ void CItemMgr::MakeItem()
 
 	for (int i = m_iOldPosNum; i < m_vItemPos.size(); ++i) {
 
-		mapY = m_Terrain->GetHeight(m_vItemPos[i].x, m_vItemPos[i].z, true) * 2.f + 50.f;
+		mapY = m_Terrain->GetHeight(m_vItemPos[i].x, m_vItemPos[i].z, true) * 2.f;
 
 		// item1
 		Vector3 vItem1Pos = m_vItem[0 + (i * 3)]->Transform()->GetLocalPos();

@@ -2,12 +2,13 @@
 #include "StaticUI.h"
 #include "Button.h"
 #include "ResMgr.h"
+#include "RenderMgr.h"
 #include "KeyMgr.h"
 #include "CollisionMgr.h"
 
 void CButton::init()
 {
-
+	
 }
 
 void CButton::update()
@@ -42,6 +43,18 @@ void CButton::update()
 	}
 	else
 	{
+	}
+
+	for (int i = 0; i < m_vItemNum.size(); ++i) {
+		Vector3 vButtonPos = GetObj()->Transform()->GetLocalPos();
+		Vector3 vButtonScale = GetObj()->Transform()->GetLocalScale();
+		Vector3 vNumPos = m_vItemNum[i]->Transform()->GetLocalPos();
+		Vector3 vNumScale = m_vItemNum[i]->Transform()->GetLocalPos();
+
+		vNumPos = vButtonPos;
+		vNumPos += Vector3((vButtonScale.x / 2 - vNumScale.x / 2) - (i * vNumScale.x), -(vButtonScale.y / 2 - vNumScale.y / 2), 0.f);
+
+		m_vItemNum[i]->Transform()->SetLocalPos(vNumPos);
 	}
 }
 
@@ -123,6 +136,26 @@ CButton::CButton()
 	case 2:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
 		break;
+	}
+
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	
+	// item number create
+	for (int i = 0; i < (UINT)ITEM_NUM::END; ++i) {
+		CGameObject* pItemNum = new CGameObject;
+		pItemNum->SetName(L"ItemNum");
+		pItemNum->FrustumCheck(false);
+		pItemNum->AddComponent(new CTransform);
+		pItemNum->AddComponent(new CMeshRender);
+		pItemNum->Transform()->SetLocalPos(Vector3(-res.fWidth / 2, -res.fHeight / 2, 1.f));
+		pItemNum->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
+		//MeshRender ¼³Á¤
+		pItemNum->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pItemNum->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+		pItemNum->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pItemNum);
+
+		m_vItemNum.push_back(pItemNum);
 	}
 }
 

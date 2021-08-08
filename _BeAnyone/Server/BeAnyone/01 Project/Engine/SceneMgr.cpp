@@ -159,7 +159,7 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
 		pButtonObj->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x) + 200.f
 			, (res.fHeight / 2.f) - (vScale.y / 2.f)
-			, 1.f));
+			, 2.f));
 		pButtonObj->Transform()->SetLocalScale(vScale);
 		// MeshRender 설정
 		pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -1992,7 +1992,9 @@ void CSceneMgr::init()
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
 
-	// Conversation Box--------
+	//==========================
+	// Conversation Box
+	//==========================
 	Ptr<CTexture> pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"UiBoard", L"Texture\\UIboard.png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(1)", L"Texture\\Quest\\npc1_quest1(1).png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(2)", L"Texture\\Quest\\npc1_quest1(2).png");
@@ -2011,8 +2013,24 @@ void CSceneMgr::init()
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_done", L"Texture\\Quest\\npc2_done.png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_why", L"Texture\\Quest\\npc2_why.png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc3_start", L"Texture\\Quest\\npc3_start.png");
-	//-------------------
+	
+	//===========================
+	// number texture
+	//==========================
+	Ptr<CTexture> pNumber = CResMgr::GetInst()->Load<CTexture>(L"0", L"Texture\\Number\\0.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"1", L"Texture\\Number\\1.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"2", L"Texture\\Number\\2.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"3", L"Texture\\Number\\3.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"4", L"Texture\\Number\\4.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"5", L"Texture\\Number\\5.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"6", L"Texture\\Number\\6.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"7", L"Texture\\Number\\7.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"8", L"Texture\\Number\\8.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"9", L"Texture\\Number\\9.png");
+
+	//==========================
 	// UAV 용 Texture 생성
+	//==========================
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024
 		, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
 		, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
@@ -2342,11 +2360,11 @@ void CSceneMgr::init()
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Item");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Map");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Item");
+	// CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Item");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Item");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"UI", L"PUI");
 	
 

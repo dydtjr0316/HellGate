@@ -102,7 +102,7 @@ public:
 	void Attack_Default();
 
 	// pick up item
-	void PickUp_Default();
+	//void PickUp_Default();
 	
 	// quest
 	int GetKillNum() { return m_iMonsterKillNum; }
