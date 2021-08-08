@@ -22,6 +22,9 @@
     <FxCompile Include="value.fx">
       <Filter>10. ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="particle.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="desc.cpp">
@@ -203,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="ItemMgr.cpp">
       <Filter>06. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -398,6 +404,9 @@
     </ClInclude>
     <ClInclude Include="ItemMgr.h">
       <Filter>06. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

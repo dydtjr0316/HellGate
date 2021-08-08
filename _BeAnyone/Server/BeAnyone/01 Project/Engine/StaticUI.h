@@ -28,8 +28,8 @@ public:
 	vector<CGameObject*>	m_vecItemObj;
 	vector<CButton*>		m_vecButton;
 
-	CGameObject* m_pMousePoint;
-	CCamera* m_pCameraProj;
+	CGameObject*			m_pMousePoint;
+	CCamera*				m_pCameraProj;
 
 public:
 	void CreatePickingObj();
@@ -42,6 +42,7 @@ public:
 
 	void SetCameraProj(CCamera* _cam) { m_pCameraProj = _cam; }
 	void SetType(UI_TYPE _ui) { m_eType = _ui; }
+	void SetButton(ITEM_ID);
 
 public:
 	void init(UI_TYPE );

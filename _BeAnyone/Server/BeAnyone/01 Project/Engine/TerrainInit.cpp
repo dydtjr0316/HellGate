@@ -179,7 +179,7 @@ float CTerrain::GetHeight(float _fx, float _fz, bool _check)
 	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
 	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
 
-	float NormalizedHeight = fHeight / 255.f * Transform()->GetLocalScale().y / 2.f + 200.f;
+	float NormalizedHeight = fHeight / 255.f * Transform()->GetLocalScale().y / 2.f + 235.f;
 
 	return NormalizedHeight;
 }

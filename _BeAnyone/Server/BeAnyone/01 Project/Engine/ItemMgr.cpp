@@ -34,7 +34,7 @@ void CItemMgr::update()
 {
 	if (m_bMakeItem == true) {
 		if (m_bFirst == true) {
-			for (int i = 0; i < m_vItemPos.size(); ++i) {
+			for (int i = 0; i < m_vItemPos.size() - m_iOldPosNum; ++i) {
 				m_bMakeFirst.push_back(true);
 				m_bisUp.push_back(false);
 				m_bisDown.push_back(false);
@@ -122,9 +122,9 @@ void CItemMgr::MakeItem()
 	float mapY;
 	int randNum;
 
-	for (int i = 0; i < m_vItemPos.size(); ++i) {
+	for (int i = m_iOldPosNum; i < m_vItemPos.size(); ++i) {
 
-		mapY = m_Terrain->GetHeight(m_vItemPos[i].x, m_vItemPos[i].z, true) * 2.f + 50.f;
+		mapY = m_Terrain->GetHeight(m_vItemPos[i].x, m_vItemPos[i].z, true) * 2.f;
 
 		// item1
 		Vector3 vItem1Pos = m_vItem[0 + (i * 3)]->Transform()->GetLocalPos();
@@ -149,17 +149,26 @@ void CItemMgr::MakeItem()
 			vItem2Pos = m_vItemPos[i];
 			vItem3Pos = m_vItemPos[i];
 
+			vItem1Pos.y -= 30.f;
+			vItem2Pos.y -= 30.f;
+			vItem3Pos.y -= 30.f;
+
 			// È¸Àü
-			vItem1Rot = Vector3(XM_PI / 2, XM_PI / 2, 0.f);
-			vItem2Rot = Vector3(XM_PI / 2, XM_PI / 8, 0.f);
-			vItem3Rot = Vector3(XM_PI / 2, XM_PI, 0.f);
+			vItem1Rot.y = XM_PI / 2;
+			vItem2Rot.y = XM_PI / 8;
+			vItem3Rot.y = XM_PI;
+
+			/*vItem1Rot.x = XM_PI / 2;
+			vItem2Rot.x = XM_PI / 2;
+			vItem3Rot.x = XM_PI / 2;*/
 
 			m_vItem[0 + (i * 3)]->Transform()->SetLocalRot(vItem1Rot);
 			m_vItem[1 + (i * 3)]->Transform()->SetLocalRot(vItem2Rot);
 			m_vItem[2 + (i * 3)]->Transform()->SetLocalRot(vItem3Rot);
 
-			for (int j = 0; j < m_vItem.size(); ++j) {
+			for (int j = m_iOldPosNum * 3; j < m_vItem.size(); ++j) {
 				randNum = uidMonsterItem(dreMonsterItem);
+
 				m_vItem[j]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
 				m_vItem[j]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
 			}
@@ -192,10 +201,11 @@ void CItemMgr::MakeItem()
 			vItem3Pos += 60.f * DT * vItem3FromtDir;	// item3
 			vItem3Pos += 50.f * DT * -vItem3UpDir;
 		}
-		else {
+		else if(m_bisUp[i] != true){
 			m_bisDown[i] = false;
 			m_bMakeItem = false;
 			m_bFirst = true;
+			m_iOldPosNum = m_vItemPos.size();
 		}
 
 		m_vItem[0 + (i * 3)]->Transform()->SetLocalPos(vItem1Pos);

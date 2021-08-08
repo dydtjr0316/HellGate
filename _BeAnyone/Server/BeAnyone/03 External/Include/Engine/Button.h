@@ -5,20 +5,45 @@
 #include "Texture.h"
 #include "Camera.h"
 
-class CButton 
+enum class BT_STATE
+{
+	NONE,
+	CLICKED,
+	SELL,
+};
+
+enum class BT_ACTIVE
+{
+	ACTIVE,
+	PASSIVE,
+};
+
+enum class ITEM_NUM 
+{
+	UNIT,
+	TEN,
+	END,
+};
+
+class CButton
 	: public CScript
 {
 private:
-	bool					m_bActive;
+	bool					m_bActive;		//	·»´õ¸µ on / off
 
 	ITEM_ID					m_eItemId;
 	Ptr<CTexture>			m_pItemImage;
 	CComponent*				m_pComParent;
 
-
 private:
-	POINT					m_vecOldPoint;
+	Vector3					m_vecOldPos;
 	CGameObject*			m_pCamera;
+
+	BT_STATE				m_bState;
+	BT_ACTIVE				m_bCheckActive;
+
+	// item number
+	vector<CGameObject*>	m_vItemNum;
 
 public:
 	void					init();
@@ -30,7 +55,6 @@ public:
 	void SaveToScene(FILE* _pFile);
 	void LoadFromScene(FILE* _pFile);
 
-public:
 	virtual void OnCollisionEnter(CCollider* _pOther);
 	virtual void OnCollision(CCollider* _pOther);
 	virtual void OnCollisionExit(CCollider* _pOther);
@@ -38,10 +62,18 @@ public:
 	CLONE(CButton);
 
 public:
-	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
+	ITEM_ID GetItemID() { return m_eItemId; }
 	Ptr<CTexture> GetImage() { return m_pItemImage; }
+	BT_STATE GetState() { return m_bState; }
+	BT_ACTIVE GetActive() { return m_bCheckActive; }
+	
+	void SetItemID(ITEM_ID _id) { m_eItemId = _id; }
+	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
+
+	// number texture, pos 
+	void ChangeTexture();
 
 public:
 	CButton();

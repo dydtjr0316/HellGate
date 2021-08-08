@@ -51,7 +51,6 @@ void CTreeScript::OnCollsion(CCollider* _pOther)
 	cout << "Tree collider aaaaa" << endl;
 }
 
-
 void CTreeScript::OnCollisionExit(CCollider* _pOther)
 {
 	//cout << "³ª°¨" << endl;
@@ -60,7 +59,7 @@ void CTreeScript::OnCollisionExit(CCollider* _pOther)
 void CTreeScript::DestroyTree()
 {
 	Vector3 vTreePos = GetObj()->Transform()->GetLocalPos();
-	float   mapY = m_Terrain->GetHeight(vTreePos.x, vTreePos.z, true) * 2.f + 50.f;
+	float   mapY = m_Terrain->GetHeight(vTreePos.x, vTreePos.z, true) * 2.f;
 	
 	// item1
 	Vector3 vItem1Pos = m_vItem[0]->Transform()->GetLocalPos();
@@ -99,6 +98,20 @@ void CTreeScript::DestroyTree()
 			randNum = uidItem(dreItem);
 			m_vItem[i]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
 			m_vItem[i]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
+
+			if (m_vItem[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\Branch.mesh") {
+				/*switch (i) {
+				case 0:
+					vItem1Rot.x = XM_PI / 2; break;
+				case 1:
+					vItem2Rot.x = XM_PI / 2; break;
+				case 2:
+					vItem3Rot.x = XM_PI / 2; break;
+				default:
+					break;
+				}*/
+				m_vItem[i]->Transform()->SetLocalScale(Vector3(120.f, 120.f, 120.f));
+			}
 		}
 		randNum = uidStump(dreItem);
 		GetObj()->MeshRender()->SetMesh(m_pStumpMeshData[randNum]->GetMesh());
@@ -132,8 +145,10 @@ void CTreeScript::DestroyTree()
 		vItem3Pos += 60.f * DT * vItem3FromtDir;	// item3
 		vItem3Pos += 50.f * DT * -vItem3UpDir;
 	}
-	else {
+	else if (m_bisUp != true) {
 		m_bisDown = false;
+		m_bIsAttack = false;
+		m_bMakeObjects = true;
 	}
 
 	m_vItem[0]->Transform()->SetLocalPos(vItem1Pos);
@@ -144,9 +159,6 @@ void CTreeScript::DestroyTree()
 
 void CTreeScript::MakeItem()
 {
-	//
-
-
 	// -------------------
 	// item1
 	CGameObject* pItem = new CGameObject;
@@ -163,7 +175,7 @@ void CTreeScript::MakeItem()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 	//m_pItem1->SetUiRenderCheck(false);
 	CDummyItemScript* pItemScript = pItem->GetScript<CDummyItemScript>();
 
@@ -185,7 +197,7 @@ void CTreeScript::MakeItem()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 	//m_pItem2->SetUiRenderCheck(false);
 	pItemScript = pItem->GetScript<CDummyItemScript>();
 
@@ -207,7 +219,7 @@ void CTreeScript::MakeItem()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 	//m_pItem3->SetUiRenderCheck(false);
 	pItemScript = pItem->GetScript<CDummyItemScript>();
 

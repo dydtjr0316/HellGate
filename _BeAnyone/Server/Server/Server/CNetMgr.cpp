@@ -799,7 +799,7 @@ void CNetMgr::Processing_Thead()
             Vector3 monsterPos;
             MONSTER_AUTOMOVE_DIR monsterDir;
             bool ismoving = false;
-            
+
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
                 if (m_pMediator->Find(monster) == nullptr)continue;

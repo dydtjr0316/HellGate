@@ -18,6 +18,13 @@ enum class BT_ACTIVE
 	PASSIVE,
 };
 
+enum class ITEM_NUM 
+{
+	UNIT,
+	TEN,
+	END,
+};
+
 class CButton
 	: public CScript
 {
@@ -34,6 +41,9 @@ private:
 
 	BT_STATE				m_bState;
 	BT_ACTIVE				m_bCheckActive;
+
+	// item number
+	vector<CGameObject*>	m_vItemNum;
 
 public:
 	void					init();
@@ -52,13 +62,18 @@ public:
 	CLONE(CButton);
 
 public:
+	ITEM_ID GetItemID() { return m_eItemId; }
 	Ptr<CTexture> GetImage() { return m_pItemImage; }
 	BT_STATE GetState() { return m_bState; }
 	BT_ACTIVE GetActive() { return m_bCheckActive; }
-
+	
+	void SetItemID(ITEM_ID _id) { m_eItemId = _id; }
 	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
+
+	// number texture, pos 
+	void ChangeTexture();
 
 public:
 	CButton();

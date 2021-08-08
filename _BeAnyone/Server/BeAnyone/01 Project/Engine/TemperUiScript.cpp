@@ -19,13 +19,13 @@ void CTemperUiScript::update()
 	Vector3 vUiPos = m_pObject->Transform()->GetLocalPos();
 	Vector3 vUiScale = m_pObject->Transform()->GetLocalScale();
 
-	vUiPos.x += 640.f;
-	vUiPos.y += -384.f;
-
-
+	
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN))
 	{
 		POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
+		
+		vUiPos.x += 800.f;
+		vUiPos.y += -384.f;
 
 		if (pMousePos.x >= vUiPos.x - (vUiScale.x / 2) && pMousePos.x <= vUiPos.x + (vUiScale.x / 2)
 			&& pMousePos.y <= -vUiPos.y + (vUiScale.x / 2) && pMousePos.y >= -vUiPos.y - (vUiScale.x / 2)) {

@@ -23,8 +23,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 
 //const char ip[] = "192.168.0.11";
 //const char ip[] = "192.168.0.7";
-const char ip[] = "192.168.0.13";
-//const char ip[] = "221.151.160.142";
+//const char ip[] = "192.168.0.13";
+const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
 
@@ -338,7 +338,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					pSword = pMeshData->Instantiate();
 					pSword->SetName(L"sword");
 					pSword->FrustumCheck(false);
-				pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+					pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 					pSword->AddComponent(new CCollider);
 					pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
 
