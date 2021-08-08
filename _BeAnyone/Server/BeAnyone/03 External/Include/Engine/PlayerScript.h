@@ -41,6 +41,7 @@ public:
 
 private:
 	Vector3				m_vecPlayerDir;
+	CGameObject*		m_pItemUIObj;
 
 private:
 	float			m_ftimeCount = 0.f;
@@ -102,6 +103,8 @@ public:
 	void Attack_Default();
 
 	// pick up item
+	CGameObject* GetUIObj() { return m_pItemUIObj; }
+	void SetUIObj(CGameObject* _obj) { m_pItemUIObj = _obj; }
 	void PickUp_Default();
 	
 	// quest

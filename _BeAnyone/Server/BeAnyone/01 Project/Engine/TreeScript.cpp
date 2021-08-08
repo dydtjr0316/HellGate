@@ -173,7 +173,7 @@ void CTreeScript::MakeItem()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 	//m_pItem1->SetUiRenderCheck(false);
 	CDummyItemScript* pItemScript = pItem->GetScript<CDummyItemScript>();
 
@@ -195,7 +195,7 @@ void CTreeScript::MakeItem()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 	//m_pItem2->SetUiRenderCheck(false);
 	pItemScript = pItem->GetScript<CDummyItemScript>();
 
@@ -217,7 +217,7 @@ void CTreeScript::MakeItem()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 	//m_pItem3->SetUiRenderCheck(false);
 	pItemScript = pItem->GetScript<CDummyItemScript>();
 

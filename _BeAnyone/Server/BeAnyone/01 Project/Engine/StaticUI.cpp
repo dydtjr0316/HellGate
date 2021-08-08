@@ -83,6 +83,21 @@ void CStaticUI::CreateButton(CCamera* _camObj)
 	}
 }
 
+void CStaticUI::SetButton(ITEM_ID _id)
+{
+	for (int i = 0; i < m_vecButton.size(); ++i)
+	{
+		if (m_vecButton[i]->GetItemID() == ITEM_ID::EMPTY)
+		{
+			//*(m_vecButton[i]->GetObj()) = *_obj;
+			m_vecButton[i]->SetItemID(_id);
+			return;
+		}
+		else
+			cout << "아이템 창 꽉 참" << endl;
+	}
+}
+
 void CStaticUI::init(UI_TYPE _eType)
 {
 	m_bActive = false;
@@ -90,7 +105,9 @@ void CStaticUI::init(UI_TYPE _eType)
 	m_pFrame = CResMgr::GetInst()->Load<CTexture>(L"ButtonFrame", L"Texture\\Terrain\\Lava1.png");
 
 	for (int i = 0; i < 16; ++i)
+	{
 		m_vecButton.push_back(new CButton);
+	}
 }
 
 void CStaticUI::update()
@@ -144,19 +161,19 @@ void CStaticUI::finalupdate()
 	GetObj()->SetUiRenderCheck(m_bActive);
 }
 
+CStaticUI::CStaticUI()
+	: CComponent(COMPONENT_TYPE::UI)
+{
+}
+
+CStaticUI::~CStaticUI()
+{
+}
+
 void CStaticUI::SaveToScene(FILE* _pFile)
 {
 }
 
 void CStaticUI::LoadFromScene(FILE* _pFile)
-{
-}
-
-CStaticUI::CStaticUI()
-	: CComponent(COMPONENT_TYPE::UI)
-{
- }
-
-CStaticUI::~CStaticUI()
 {
 }
