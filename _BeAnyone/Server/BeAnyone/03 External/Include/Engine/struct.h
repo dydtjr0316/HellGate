@@ -78,6 +78,12 @@ struct tLightInfo
 	Vector3     vPadding;
 };
 
+struct tGlobalValue
+{
+	tResolution vResolution;
+	float fDT;
+	float fAccTime;
+};
 
 //================
 // Struct of FBX 
@@ -185,4 +191,22 @@ struct tMTAnimClip
 	float		fUpdateTime; // 이거 안씀
 
 	FbxTime::EMode eMode;
+};
+
+struct tParticle
+{
+	Vector3 vWorldPos;		// 위치	
+	Vector3 vWorldDir;		// 이동 방향
+
+	float m_fCurTime;	// 현재 시간
+	float m_fLifeTime;	// 최대 생명주기
+
+	int  iAlive;
+	int  arrPading[3];
+};
+
+struct tParticleShared
+{
+	int iAddCount;
+	int arrPading[3];
 };

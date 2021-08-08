@@ -42,13 +42,13 @@ CPlayerScript::CPlayerScript()
 			if (i == 1) {
 				vScale = Vector3(350.f, 20.f, 1.f);
 			}
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) 
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
 				, 1.f));
 		}
 		else if (i == 2 || i == 3) {
 			vScale = Vector3(360.f, 2.f, 1.f);
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) 
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
 				, 1.f));
 		}

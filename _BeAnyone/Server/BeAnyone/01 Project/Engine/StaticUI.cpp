@@ -126,8 +126,14 @@ void CStaticUI::update()
 		{
 			for (int i = 0; i < m_vecButton.size(); ++i)
 			{
-				if(m_vecButton[i]->GetState() == BT_STATE::CLICKED)
+				if (m_vecButton[i]->GetState() == BT_STATE::CLICKED)
+				{
 					m_vecButton[i]->OnCollisionExit(m_pMousePoint->Collider());
+
+
+				}
+
+
 			}
 		}
 	}

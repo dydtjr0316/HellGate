@@ -51,7 +51,6 @@ void CTreeScript::OnCollsion(CCollider* _pOther)
 	cout << "Tree collider aaaaa" << endl;
 }
 
-
 void CTreeScript::OnCollisionExit(CCollider* _pOther)
 {
 	//cout << "³ª°¨" << endl;
@@ -158,9 +157,6 @@ void CTreeScript::DestroyTree()
 
 void CTreeScript::MakeItem()
 {
-	//
-
-
 	// -------------------
 	// item1
 	CGameObject* pItem = new CGameObject;

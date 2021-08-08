@@ -108,7 +108,6 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 
 #else
 
-	
 	Vector3 vScale;
 
 #endif
@@ -245,7 +244,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	bool bReverseQuad = ((z % 2) != 0);
 	float mapY = _terrain->GetHeight(1000.f, 3000, bReverseQuad);
 
-	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 + 60.f, 3000.f));
+	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 , 3000.f));
 	pMapObject->Transform()->SetLocalScale(Vector3(60.f,60.f, 60.f));//(1.0f, 1.0f, 1.0f));
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
@@ -316,7 +315,7 @@ void CSceneMgr::CreateMap(CTerrain* _terrain)
 	bReverseQuad = ((z % 2) != 0);
 	mapY = _terrain->GetHeight(1000.f, 5500.f, bReverseQuad);
 
-	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 + 60.f, 5500.f));
+	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 , 5500.f));
 	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 50.f));//(1.0f, 1.0f, 1.0f));
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
@@ -676,18 +675,14 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 	// Tree
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Tree_01.fbx", FBX_TYPE::NEW_DESERT_MAP);
 	//pMeshData->Save(pMeshData->GetPath());
-
 	CGameObject* pMapObject = nullptr;
-
 	pMapObject = pMeshData->Instantiate();
 	pMapObject->SetName(L"Tree");
 	pMapObject->FrustumCheck(false);
-
 	int z = (int)(3000.f / 60.f);
 	bool bReverseQuad = ((z % 2) != 0);
 	float mapY = _terrain->GetHeight(1000.f, 3000, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 + 60.f, 3000.f));
+	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 , 3000.f));
 	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 60.f));//(1.0f, 1.0f, 1.0f));
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
@@ -717,7 +712,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
+			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2, randomZ));
 			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -764,7 +759,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
+			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2, randomZ));
 			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -808,7 +803,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
+			pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2, randomZ));
 			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -846,7 +841,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1000.f, 3000, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 + 60.f, 3000.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2, 3000.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(130.f, 130.f, 130.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -867,7 +862,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1600.f, 3000.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1600.f, mapY * 2 + 60.f, 3000.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1600.f, mapY * 2, 3000.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(150.f, 200.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 4, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -888,7 +883,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1100.f, 3300.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2 + 60.f, 3400.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2, 3400.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -910,7 +905,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(1300.f, 3300.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2 + 60.f, 3400.f));
+			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2, 3400.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -933,7 +928,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(1720.f, 2300.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(1720.f, mapY * 2 + 60.f, 2300.f + (210 * i)));
+			pMapObject->Transform()->SetLocalPos(Vector3(1720.f, mapY * 2, 2300.f + (210 * i)));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -956,7 +951,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1000.f, 1630.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 + 60.f, 1630.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2, 1630.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(130.f, 130.f, 130.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -977,7 +972,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1600.f, 1700.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1600.f, mapY * 2 + 60.f, 1700.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1600.f, mapY * 2, 1700.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(150.f, 250.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 4, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -998,7 +993,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1100.f, 2100.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2 + 60.f, 2100.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2, 2100.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1019,7 +1014,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1100.f, 1150.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2 + 60.f, 1150.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2, 1150.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1041,7 +1036,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(1300.f, 1050.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2 + 60.f, 1050.f));
+			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2, 1050.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1064,7 +1059,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(1300.f, 2100.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2 + 60.f, 2100.f));
+			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2 , 2100.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1087,7 +1082,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(1720.f, 1260.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(1720.f, mapY * 2 + 60.f, 1260.f + (210 * i)));
+			pMapObject->Transform()->SetLocalPos(Vector3(1720.f, mapY * 2 , 1260.f + (210 * i)));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1112,7 +1107,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1300.f, 3600.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1300.f, mapY * 2 + 60.f, 3600.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1300.f, mapY * 2 , 3600.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(150.f, 100.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1133,7 +1128,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1300.f, 4100.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1300.f, mapY * 2 + 60.f, 4100.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1300.f, mapY * 2 , 4100.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(300.f, 200.f, 200.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1154,7 +1149,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1300.f, 4100.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1300.f, mapY * 2 + 60.f, 4100.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1300.f, mapY * 2 , 4100.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(300.f, 200.f, 200.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1175,7 +1170,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1600.f, 4400.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1600.f, mapY * 2 + 60.f, 4400.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1600.f, mapY * 2 , 4400.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 150.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1198,7 +1193,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1000.f, 5200.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 + 60.f, 5200.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 , 5200.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(130.f, 130.f, 130.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1219,7 +1214,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1100.f, 4720.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2 + 60.f, 4720.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2 , 4720.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1240,7 +1235,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(1100.f, 5680.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2 + 60.f, 5680.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2 , 5680.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1262,7 +1257,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(1300.f, 4610.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2 + 60.f, 4610.f));
+			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2 , 4610.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1285,7 +1280,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(1300.f, 5790.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2 + 60.f, 5790.f));
+			pMapObject->Transform()->SetLocalPos(Vector3(1300.f + (210.f * i), mapY * 2 , 5790.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1308,7 +1303,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(1720.f, 4820.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(1720.f, mapY * 2 + 60.f, 4820.f + (210 * i)));
+			pMapObject->Transform()->SetLocalPos(Vector3(1720.f, mapY * 2 , 4820.f + (210 * i)));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1335,7 +1330,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(6000.f, 2000.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(6000.f, mapY * 2 + 60.f, 2000.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(6000.f, mapY * 2 , 2000.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(130.f, 130.f, 130.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1356,7 +1351,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(5500.f, 1820.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(5500.f, mapY * 2 + 60.f, 1820.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(5500.f, mapY * 2 , 1820.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(150.f, 250.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 4, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1377,7 +1372,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(5700.f, 1530.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(5700.f, mapY * 2 + 60.f, 1530.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(5700.f, mapY * 2 , 1530.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1398,7 +1393,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(5700.f, 2850.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(5700.f, mapY * 2 + 60.f, 2850.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(5700.f, mapY * 2 , 2850.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1420,7 +1415,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(5490.f, 1430.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(5490.f - (210.f * i), mapY * 2 + 60.f, 1430.f));
+			pMapObject->Transform()->SetLocalPos(Vector3(5490.f - (210.f * i), mapY * 2 , 1430.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1443,7 +1438,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(5490.f, 2950.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(5490.f - (210.f * i), mapY * 2 + 60.f, 2950.f));
+			pMapObject->Transform()->SetLocalPos(Vector3(5490.f - (210.f * i), mapY * 2 , 2950.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1466,7 +1461,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(5280.f, 2750.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(5280.f, mapY * 2 + 60.f, 2750.f - (210 * i)));
+			pMapObject->Transform()->SetLocalPos(Vector3(5280.f, mapY * 2 , 2750.f - (210 * i)));
 			pMapObject->Transform()->SetLocalScale(Vector3(100.f, 150.f, 100.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1487,7 +1482,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(5800.f, 2850.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(5800.f, mapY * 2 + 60.f, 3100.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(5800.f, mapY * 2 , 3100.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(400.f, 300.f, 300.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1514,7 +1509,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(5800.f, 3750.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(5800.f, mapY * 2 + 60.f, 3750.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(5800.f, mapY * 2 , 3750.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(300.f, 200.f, 200.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1535,7 +1530,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(5800.f, 3750.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(5800.f, mapY * 2 + 60.f, 3750.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(5800.f, mapY * 2 , 3750.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(300.f, 200.f, 200.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1559,7 +1554,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(3000.f, 3000.f, bReverseQuad);
 		
-		pMapObject->Transform()->SetLocalPos(Vector3(3000.f, mapY * 2 + 60.f, 3000.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(3000.f, mapY * 2 , 3000.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(200.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1597,7 +1592,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(3100.f, 2700.f, bReverseQuad);
 		
-		pMapObject->Transform()->SetLocalPos(Vector3(3100.f, mapY * 2 + 60.f, 2700.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(3100.f, mapY * 2 , 2700.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(210.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1618,7 +1613,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(3000.f, 2400.f, bReverseQuad);
 		
-		pMapObject->Transform()->SetLocalPos(Vector3(3000.f, mapY * 2 + 60.f, 2400.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(3000.f, mapY * 2 , 2400.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(500.f, 350.f, 400.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1639,7 +1634,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(3300.f, 2600.f, bReverseQuad);
 		
-		pMapObject->Transform()->SetLocalPos(Vector3(3300.f, mapY * 2 + 60.f, 2600.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(3300.f, mapY * 2 , 2600.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(400.f, 550.f, 550.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1660,7 +1655,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(3200.f, 2900.f, bReverseQuad);
 		
-		pMapObject->Transform()->SetLocalPos(Vector3(3200.f, mapY * 2 + 60.f, 2900.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(3200.f, mapY * 2 , 2900.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(450., 450.f, 450.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1683,7 +1678,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		bReverseQuad = ((z % 2) != 0);
 		mapY = _terrain->GetHeight(3200.f, 3700.f, bReverseQuad);
 
-		pMapObject->Transform()->SetLocalPos(Vector3(3200.f, mapY * 2 + 60.f, 3700.f));
+		pMapObject->Transform()->SetLocalPos(Vector3(3200.f, mapY * 2 , 3700.f));
 		pMapObject->Transform()->SetLocalScale(Vector3(300.f, 300.f, 300.f));//(1.0f, 1.0f, 1.0f));
 		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 		pMapObject->AddComponent(new CCollider);
@@ -1705,7 +1700,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(3900.f, 2800.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(3900.f, mapY * 2 + 60.f, 2800.f - (900.f * i)));
+			pMapObject->Transform()->SetLocalPos(Vector3(3900.f, mapY * 2 , 2800.f - (900.f * i)));
 			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 150.f, 130.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1728,7 +1723,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(3900.f, 2950.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(3900.f, mapY * 2 + 60.f, 2950.f - (300.f * i)));
+			pMapObject->Transform()->SetLocalPos(Vector3(3900.f, mapY * 2 , 2950.f - (300.f * i)));
 			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 150.f, 130.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1751,7 +1746,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(3900.f, 2050.f, bReverseQuad);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(3900.f, mapY * 2 + 60.f, 2050.f - (300.f * i)));
+			pMapObject->Transform()->SetLocalPos(Vector3(3900.f, mapY * 2 , 2050.f - (300.f * i)));
 			pMapObject->Transform()->SetLocalScale(Vector3(200.f, 150.f, 130.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			pMapObject->AddComponent(new CCollider);
@@ -1883,6 +1878,13 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 
 }
 
+void CSceneMgr::LoadRes()
+{
+	Ptr<CTexture> piBow = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"Texture\\UI\\Items\\Weapons\\01_BOW.png");
+	Ptr<CTexture> piSword = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"Texture\\UI\\Items\\Weapons\\02_Sword.png");
+	Ptr<CTexture> piHealPotion = CResMgr::GetInst()->Load<CTexture>(L"HP_POTION_IMG", L"Texture\\UI\\Items\\Resources\\15_Heal_potion.png");
+}
+
 void CSceneMgr::CreateNpc(CTerrain* _terrain)
 {
 
@@ -1893,7 +1895,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject = pMeshData->Instantiate();
 	pNpcObject->SetName(L"Npc_1");
 	pNpcObject->FrustumCheck(false);
-	pNpcObject->Transform()->SetLocalPos(Vector3(5500.f, _terrain->GetHeight(5500.f, 3200.f, true) * 2 + 60.f/*240.f*/, 3200.f));
+	pNpcObject->Transform()->SetLocalPos(Vector3(5500.f, _terrain->GetHeight(5500.f, 3200.f, true) * 2 /*240.f*/, 3200.f));
 	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
 	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 	pNpcObject->AddComponent(new CCollider);
@@ -1921,7 +1923,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject = pMeshData->Instantiate();
 	pNpcObject->SetName(L"Npc_2");
 	pNpcObject->FrustumCheck(false);
-	pNpcObject->Transform()->SetLocalPos(Vector3(1600.f, _terrain->GetHeight(1600.f, 1500.f, true) * 2 + 60.f/*240.f*/, 1500.f));
+	pNpcObject->Transform()->SetLocalPos(Vector3(1600.f, _terrain->GetHeight(1600.f, 1500.f, true) * 2 /*240.f*/, 1500.f));
 	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
 	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 	pNpcObject->AddComponent(new CCollider);
@@ -1948,7 +1950,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject = pMeshData->Instantiate();
 	pNpcObject->SetName(L"Npc_3");
 	pNpcObject->FrustumCheck(false);
-	pNpcObject->Transform()->SetLocalPos(Vector3(1600.f, _terrain->GetHeight(1600.f, 4200.f, true) * 2 + 60.f/*240.f*/, 4200.f));
+	pNpcObject->Transform()->SetLocalPos(Vector3(1600.f, _terrain->GetHeight(1600.f, 4200.f, true) * 2 /*240.f*/, 4200.f));
 	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
 	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 	pNpcObject->AddComponent(new CCollider);
@@ -1973,22 +1975,18 @@ void CSceneMgr::init()
 	// 필요한 리소스 로딩
 	// =================
 	// Texture 로드
+
+	LoadRes();
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
 	Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
 	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky01.png");
 	Ptr<CTexture> pSky02 = CResMgr::GetInst()->Load<CTexture>(L"Sky02", L"Texture\\Skybox\\Sky02.jpg");
-	
 	// UI
 	Ptr<CTexture> pUiHug = CResMgr::GetInst()->Load<CTexture>(L"UiHug", L"Texture\\hug.png");
 	Ptr<CTexture> pUiTemper = CResMgr::GetInst()->Load<CTexture>(L"UiTemper", L"Texture\\temper.png");
-
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pNormal = CResMgr::GetInst()->Load<CTexture>(L"Tile_n", L"Texture\\Tile\\TILE_03_N.tga");
-
-	Ptr<CTexture> piSword = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"Texture\\UI\\Items\\Weapons\\02_Sword.png");
-	Ptr<CTexture> piBow = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"Texture\\UI\\Items\\Weapons\\01_BOW.png");
-
 
 	Ptr<CTexture> pDiffuseTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex");
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
@@ -1996,7 +1994,6 @@ void CSceneMgr::init()
 
 	// Conversation Box--------
 	Ptr<CTexture> pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"UiBoard", L"Texture\\UIboard.png");
-
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(1)", L"Texture\\Quest\\npc1_quest1(1).png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(2)", L"Texture\\Quest\\npc1_quest1(2).png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(3)", L"Texture\\Quest\\npc1_quest1(3).png");
@@ -2005,7 +2002,6 @@ void CSceneMgr::init()
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest2(3)", L"Texture\\Quest\\npc1_quest2(3).png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_done", L"Texture\\Quest\\npc1_done.png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_why", L"Texture\\Quest\\npc1_why.png");
-
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(1)", L"Texture\\Quest\\npc2_quest1(1).png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(2)", L"Texture\\Quest\\npc2_quest1(2).png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(3)", L"Texture\\Quest\\npc2_quest1(3).png");
@@ -2014,22 +2010,16 @@ void CSceneMgr::init()
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest2(3)", L"Texture\\Quest\\npc2_quest2(3).png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_done", L"Texture\\Quest\\npc2_done.png");
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_why", L"Texture\\Quest\\npc2_why.png");
-
 	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc3_start", L"Texture\\Quest\\npc3_start.png");
 	//-------------------
-
 	// UAV 용 Texture 생성
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024
 		, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
 		, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-
 	Ptr<CMaterial> pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
 	pPM->SetData(SHADER_PARAM::TEX_3, pSky01.GetPointer());
-
 	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
 	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
-
-
 
 	// ===============
 	// Test Scene 생성
@@ -2325,7 +2315,7 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CMeshRender);
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
-	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 450.f, 0.f));
+	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 470.f, 0.f));
 	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f , 6000.f, 300.f)); // 2배함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();

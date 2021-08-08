@@ -17,6 +17,7 @@ void CButton::update()
 	switch (m_eItemId)
 	{
 	case ITEM_ID::EMPTY:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"HP_POTION_IMG");
 		break;
 
 	case ITEM_ID::BASIC_SWORD:
@@ -49,14 +50,6 @@ void CButton::finalupdate()
 
 }
 
-void CButton::SaveToScene(FILE* _pFile)
-{
-}
-
-void CButton::LoadFromScene(FILE* _pFile)
-{
-}
-
 void CButton::OnCollisionEnter(CCollider* _pOther)
 {
 	vector<CButton*> vecButton = m_pComParent->GetObj()->StaticUI()->GetButton();
@@ -80,6 +73,13 @@ void CButton::OnCollision(CCollider* _pOther)
 
 	Vector3 localPos = _pOther->Transform()->GetLocalPos();
 	GetObj()->Transform()->SetLocalPos(localPos);
+
+	/*if (_pOther->GetObj()->StaticUI()->GetType() == UI_TYPE::PUBLIC_SHOP_UI)
+		m_bState = BT_STATE::SELL;
+
+	else*/
+		m_bState = BT_STATE::CLICKED;
+
 }
 
 void CButton::OnCollisionExit(CCollider* _pOther)
@@ -94,6 +94,8 @@ void CButton::OnCollisionExit(CCollider* _pOther)
 		break;
 
 	case BT_STATE::SELL:
+		Transform()->SetLocalPos(m_vecOldPos);
+		m_eItemId == ITEM_ID::EMPTY;
 		break;
 	}
 
@@ -110,12 +112,29 @@ CButton::CButton()
 	, m_bCheckActive(BT_ACTIVE::PASSIVE)
 {
 	//	test
-	if (UINT(rand() % 2))
+	switch (UINT(rand() % 3))
+	{
+	case 0:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"HP_POTION_IMG");
+		break;
+	case 1:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD_IMG");
-	else
+		break;
+	case 2:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
+		break;
+	}
 }
 
 CButton::~CButton()
+{
+}
+
+
+void CButton::SaveToScene(FILE* _pFile)
+{
+}
+
+void CButton::LoadFromScene(FILE* _pFile)
 {
 }
