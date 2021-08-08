@@ -13,15 +13,13 @@ public:
 	const int& GetAttackDamage() { return m_iAttack_Damage; }
 	const int& GetFirstX() { return m_iFirstX; }
 	const int& GetFirstY() { return m_iFirstY; }
-	const bool& GetIsMoving() { 
-		cout << m_bisMoving << "         ¹¹°íÀÌ°Å" << endl;
-		return m_bisMoving; 
-	}
+	const bool& GetIsMoving() { return m_bisMoving; }
 	const MONSTER_AUTOMOVE_DIR& GetDir() { return m_dir; }
 	//const MONSTER_TYPE& GetType() { return m_Type; }
 	//int Get_Prev_Size() { return m_prev_size; }
 	//char* Get_Packet_buf() { return m_packet_buf; }
 	//unordered_set<int>& GetViewList() { return view_list; }
+	const float& GetRefreshPacketCnt() { return m_frpc; }
 
 	// SET
 
@@ -34,6 +32,8 @@ public:
 	void SetBisDead(const bool& isdead) { m_bisDead = isdead; }
 	void SetBisMoving(const bool* isMove) { m_bisMoving = isMove; }
 	void SetDir(const MONSTER_AUTOMOVE_DIR& dir) { m_dir = dir; }
+	void SetRefreshPacketCnt_Zero() { m_frpc = 0.f; }
+	void CountRefreshPacketCnt(const float& dt) { m_frpc += dt; }
 
 	//view list
 	//void InsertViewList(const int& id) { view_list.emplace(id); }
@@ -55,6 +55,7 @@ private:
 	// bool 
 	bool m_bisDead = false;
 
+	float m_frpc = 0.f;
 	// char
 	//char  m_packet_buf[MAX_PACKET_SIZE]{};
 	char  m_name[MAX_ID_LEN + 1]{};

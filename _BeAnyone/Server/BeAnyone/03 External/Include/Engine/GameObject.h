@@ -111,7 +111,8 @@ template<typename T>
 inline T* CGameObject::GetScript()
 {
 	T* pScript = nullptr;
-	for (size_t i = 0; i < m_vecScript.size(); ++i)
+	if (this == nullptr)return nullptr;
+  	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
 		pScript = dynamic_cast<T*>(m_vecScript[i]);
 		if (nullptr != pScript)

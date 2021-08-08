@@ -44,6 +44,7 @@ bool CQuadTree::Insert(CGameObject* p)
 		if (m_vpPlayers.size() < m_icapacity)	// leaf node ÀÏ¶§
 		{
 			m_vpPlayers.emplace(p->GetID());
+			m_icapacity++;
 		}
 		else
 		{
@@ -108,7 +109,6 @@ void CQuadTree::Delete(CGameObject* p)
 							m_pParent->m_bisDivide = false;
 					}
 				}
-
 			}
 		}
 	}
@@ -169,8 +169,8 @@ void CQuadTree::SubDivideToChild()
 			}
 		}
 	}
-	if (m_bisDivide)
 		m_vpPlayers.clear();
+		m_icapacity = 0;
 }
 
 
@@ -216,10 +216,11 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 			for (auto player : obj->search(range))
 			{
 				found.emplace(player);
+				
 			}
 		}
 	}
-
+	
 	return found;
 
 }

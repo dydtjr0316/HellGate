@@ -5,7 +5,7 @@
 constexpr float MOVE_SPEED = 5.f; // 이동패킷 구조변경 성공시 삭제
 constexpr short CHILD_NODE_SIZE = 4;
 constexpr short MAX_PLAYER_IN_NODE = 4;
-constexpr float SEARCH_SIZE = 1000.f;
+constexpr float SEARCH_SIZE = 3000.f;
 
 // 추후  수정
 constexpr int NAME_LEN = 50;
@@ -25,7 +25,7 @@ constexpr int MAX_USER = 1000;
 constexpr int END_USER = MAX_USER;
 
 constexpr int START_MONSTER = MAX_USER;
-constexpr int MAX_MONSTER = 2;
+constexpr int MAX_MONSTER =30;
 constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
 constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
 
@@ -206,8 +206,10 @@ struct sc_packet_monster_automove
 {
 	char size;
 	char type;
+	Vector3 pos;
 	uShort id;
 	char eDir;
+
 };
 
 struct sc_packet_npc_automove

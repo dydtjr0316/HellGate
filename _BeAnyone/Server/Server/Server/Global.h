@@ -21,5 +21,6 @@ extern CQuadTree g_QuadTree;
 extern SOCKET g_listenSocket;
 extern HANDLE g_IocpHandle;
 
+extern int cnt;
 extern seconds monsterAutoMoveTimer;
 

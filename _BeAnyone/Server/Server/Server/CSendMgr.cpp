@@ -98,12 +98,15 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
     strcpy_s(p.name, Netmgr.GetMediatorMgr()->Find(other_id)->GetName());    // data race???
     p.o_type = O_PLAYER;
     if (p.id >= START_MONSTER && p.id < END_MONSTER)
+    {
         p.hp = dynamic_cast<CMonster*>(Netmgr.GetMediatorMgr()->Find(other_id))->GetHP();
 
-    cout << "********************" << endl;
-    cout<< other_id << "가 " << user_id << "에게  Enter Packet 전송" << endl;
-    cout << "********************" << endl;
-
+        cout << "********************" << endl;
+        cout << other_id << "가 " << user_id << "에게  Enter Packet 전송" << endl;
+        cout << "Monster POS ->   <" << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().x << ", "
+            << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().z << ">" << endl;
+        cout << "********************" << endl << endl;
+    }
     Send_Packet(user_id, &p);
 }
 
@@ -116,10 +119,16 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
     p.isAttack = isAttack;
-    cout << "********************" << endl;
-    cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
-    cout << "********************" << endl;
-
+    if (p.id >= START_MONSTER && p.id < END_MONSTER)
+    {
+        cout << "********************" << endl;
+        cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
+        cout << "player POS ->   <" << Netmgr.GetMediatorMgr()->Find(user_id)->GetLocalPosVector().x << ", "
+            << Netmgr.GetMediatorMgr()->Find(user_id)->GetLocalPosVector().z << ">" << endl;
+        cout << "Monster POS ->   <" << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().x << ", "
+            << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().z << ">" << endl;
+         cout << "********************" << endl<<endl;
+    }
     Send_Packet(user_id, &p);
 }
 
@@ -169,6 +178,8 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
     p.type = SC_PACKET_MONSTER_MOVE;
     p.id = mover_id;
     p.eDir = dir;
+    p.pos = Netmgr.GetMediatorMgr()->Find(p.id)->GetLocalPosVector();
+
   
     Send_Packet(user_id, &p);
 }
