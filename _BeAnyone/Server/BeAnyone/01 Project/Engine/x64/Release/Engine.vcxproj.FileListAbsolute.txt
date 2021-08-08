@@ -5,3 +5,4 @@ C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\B
 C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso
 C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso
 C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\particle.cso

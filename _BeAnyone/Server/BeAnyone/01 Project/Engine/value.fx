@@ -88,6 +88,13 @@ cbuffer LIGHT : register(b3)
     int3            paddingLight;
 };
 
+cbuffer GLOBAL : register(b4)
+{
+    float2  g_vResolution;
+    float   g_fDT;
+    float   g_fAccTime;
+}
+
 Texture2D g_tex_0 : register(t0);
 Texture2D g_tex_1 : register(t1);
 Texture2D g_tex_2 : register(t2);
