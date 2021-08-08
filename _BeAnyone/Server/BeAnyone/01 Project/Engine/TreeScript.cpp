@@ -59,7 +59,7 @@ void CTreeScript::OnCollisionExit(CCollider* _pOther)
 void CTreeScript::DestroyTree()
 {
 	Vector3 vTreePos = GetObj()->Transform()->GetLocalPos();
-	float   mapY = m_Terrain->GetHeight(vTreePos.x, vTreePos.z, true) * 2.f + 50.f;
+	float   mapY = m_Terrain->GetHeight(vTreePos.x, vTreePos.z, true) * 2.f;
 	
 	// item1
 	Vector3 vItem1Pos = m_vItem[0]->Transform()->GetLocalPos();

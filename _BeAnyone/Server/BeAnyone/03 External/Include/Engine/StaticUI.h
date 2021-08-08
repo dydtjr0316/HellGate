@@ -44,6 +44,7 @@ public:
 	void SetType(UI_TYPE _ui) { m_eType = _ui; }
 	void SetButton(ITEM_ID);
 
+
 public:
 	void init(UI_TYPE );
 

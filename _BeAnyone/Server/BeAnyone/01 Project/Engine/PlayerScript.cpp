@@ -198,7 +198,7 @@ void CPlayerScript::update()
 	}
 	else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
-		PickUp_Default();
+		//PickUp_Default();
 
 		m_bIsPick = false;
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
@@ -593,36 +593,36 @@ void CPlayerScript::Attack_Default()
 	CreateObject(pBullet, L"Bullet");
 }
 
-void CPlayerScript::PickUp_Default()
-{
-	Vector3 vPos = GetObj()->Transform()->GetLocalPos();
-
-	vector<CGameObject*> vecObj;
-	CSceneMgr::GetInst()->FindGameObjectByTag(L"PickUP Object", vecObj);
-
-	if (!vecObj.empty())
-	{
-		cout << "醚舅 按眉 积己 救壩" << endl;
-		return;
-	}
-	else
-		cout << "积己" << endl << endl;
-
-	CGameObject* pBullet = new CGameObject;
-	pBullet->SetName(L"PickUP Object");
-
-	vPos += -GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);// *GetObj()->Collider()->GetBoundingSphere().Radius;
-	pBullet->AddComponent(new CTransform());
-	pBullet->Transform()->SetLocalPos(vPos);
-
-	pBullet->AddComponent(new CCollider);
-	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
-	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
-
-	pBullet->AddComponent(new CBulletScript);
-
-	CreateObject(pBullet, L"Bullet");
-}
+//void CPlayerScript::PickUp_Default()
+//{
+//	Vector3 vPos = GetObj()->Transform()->GetLocalPos();
+//
+//	vector<CGameObject*> vecObj;
+//	CSceneMgr::GetInst()->FindGameObjectByTag(L"PickUP Object", vecObj);
+//
+//	if (!vecObj.empty())
+//	{
+//		cout << "醚舅 按眉 积己 救壩" << endl;
+//		return;
+//	}
+//	else
+//		cout << "积己" << endl << endl;
+//
+//	CGameObject* pBullet = new CGameObject;
+//	pBullet->SetName(L"PickUP Object");
+//
+//	vPos += -GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);// *GetObj()->Collider()->GetBoundingSphere().Radius;
+//	pBullet->AddComponent(new CTransform());
+//	pBullet->Transform()->SetLocalPos(vPos);
+//
+//	pBullet->AddComponent(new CCollider);
+//	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+//	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
+//
+//	pBullet->AddComponent(new CBulletScript);
+//
+//	CreateObject(pBullet, L"Bullet");
+//}
 
 void CPlayerScript::ClickUiButton()
 {

@@ -18,6 +18,13 @@ enum class BT_ACTIVE
 	PASSIVE,
 };
 
+enum class ITEM_NUM 
+{
+	TEN,
+	UNIT,
+	END,
+};
+
 class CButton
 	: public CScript
 {
@@ -34,6 +41,9 @@ private:
 
 	BT_STATE				m_bState;
 	BT_ACTIVE				m_bCheckActive;
+
+	// item number
+	vector<CGameObject*>	m_vItemNum;
 
 public:
 	void					init();
@@ -61,6 +71,10 @@ public:
 	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
+
+	// number texture, pos 
+	void ChangeTexture();
+	//void 
 
 public:
 	CButton();
