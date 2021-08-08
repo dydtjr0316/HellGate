@@ -31,7 +31,7 @@ static type* GetInst()\
 
 #define MAX_LAYER 32
 #define ROTATE_SPEED 0.5f
-#define PLAYER_SPEED_IDLE 200.f
+#define PLAYER_SPEED_IDLE 600.f
 //#define PLAYER_SPEED_DASH 600.f
 #define PLAYER_SPEED_DASH 6000.f
 

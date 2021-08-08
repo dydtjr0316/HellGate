@@ -824,7 +824,7 @@ void CNetMgr::Processing_Thead()
         if (m_pMediator->MonsterReckonerSize() != 0)
         {
             Vector3 monsterPos;
-            MONSTER_AUTOMOVE_DIR monsterDir;
+            MONSTER_AUTOMOVE_DIR monsterDir; 
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
                 if (m_pMediator->Find(monster) == nullptr)continue;

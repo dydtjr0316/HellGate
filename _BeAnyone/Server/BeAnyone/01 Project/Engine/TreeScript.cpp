@@ -99,6 +99,20 @@ void CTreeScript::DestroyTree()
 			randNum = uidItem(dreItem);
 			m_vItem[i]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
 			m_vItem[i]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
+
+			if (m_vItem[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\Branch.mesh") {
+				/*switch (i) {
+				case 0:
+					vItem1Rot.x = XM_PI / 2; break;
+				case 1:
+					vItem2Rot.x = XM_PI / 2; break;
+				case 2:
+					vItem3Rot.x = XM_PI / 2; break;
+				default:
+					break;
+				}*/
+				m_vItem[i]->Transform()->SetLocalScale(Vector3(120.f, 120.f, 120.f));
+			}
 		}
 		randNum = uidStump(dreItem);
 		GetObj()->MeshRender()->SetMesh(m_pStumpMeshData[randNum]->GetMesh());

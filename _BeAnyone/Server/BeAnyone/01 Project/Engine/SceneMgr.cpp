@@ -108,148 +108,12 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 
 #else
 
-	Ptr<CTexture> UiTexture[2] = {
-		CResMgr::GetInst()->FindRes<CTexture>(L"UiHug"),
-		CResMgr::GetInst()->FindRes<CTexture>(L"UiTemper")
-	};
+	
+	Vector3 vScale;
 
-	Vector3 vScale(350.f, 10.f, 1.f);
-
-	for (int i = 0; i < 4; ++i) {
-
-		CGameObject* pObject = new CGameObject;
-		pObject->SetName(L"UI Object");
-		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CMeshRender);
-
-		tResolution res = CRenderMgr::GetInst()->GetResolution();
-
-		if (i == 0 || i == 1) {
-			if (i == 1) {
-				vScale = Vector3(350.f, 20.f, 1.f);
-			}
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
-				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
-				, 1.f));
-		}
-		else if (i == 2 || i == 3) {
-			vScale = Vector3(360.f, 2.f, 1.f);
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
-				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
-				, 1.f));
-		}
-
-		pObject->Transform()->SetLocalScale(vScale);
-
-		// MeshRender 설정
-		Ptr<CMesh> hp = new CMesh;
-		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-
-
-		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
-
-		// AddGameObject
-		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
-	}
-
-	vector<CGameObject*> vUiObject;
-
-	vScale = Vector3(350.f, 10.f, 1.f);
-
-	for (int i = 0; i < 4; ++i) {
-
-		CGameObject* pUiObject = new CGameObject;
-		pUiObject->SetName(L"UI Object");
-		pUiObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-		pUiObject->AddComponent(new CTransform);
-		pUiObject->AddComponent(new CMeshRender);
-
-		tResolution res = CRenderMgr::GetInst()->GetResolution();
-
-		if (i == 0 || i == 1) {
-			//if (i == 1) {
-			//	vScale = Vector3(350.f, 20.f, 1.f);
-			//}
-			pUiObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 600.f
-				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
-				, 1.f));
-		}
-		else if (i == 2 || i == 3) {
-			vScale = Vector3(360.f, 2.f, 1.f);
-			pUiObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 600.f
-				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
-				, 1.f));
-		}
-
-		pUiObject->Transform()->SetLocalScale(vScale);
-
-		// MeshRender 설정
-		Ptr<CMesh> hp = new CMesh;
-		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-
-
-		pUiObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-		pUiObject->MeshRender()->SetMaterial(pMtrl->Clone());
-		pUiObject->SetUiRenderCheck(false);
-
-		vUiObject.push_back(pUiObject);
-
-		// AddGameObject
-		m_pCurScene->FindLayer(L"UI")->AddGameObject(pUiObject);
-	}
-
-	vScale = Vector3(40.f, 40.f, 1.f);
-
-	for (int i = 0; i < 2; ++i) {
-
-		CGameObject* pObject = new CGameObject;
-		pObject->SetName(L"UI Object");
-		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CMeshRender);
-		pObject->AddComponent(new CTemperUiScript);
-
-		tResolution res = CRenderMgr::GetInst()->GetResolution();
-
-
-		pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 10.f + (410 * i)
-			, (res.fHeight / 2.f) - (vScale.y / 2.f) - 10.f
-			, 1.f));
-
-
-		pObject->Transform()->SetLocalScale(vScale);
-
-		// MeshRender 설정
-		Ptr<CMesh> hp = new CMesh;
-		hp = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-
-
-		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
-		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
-		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, UiTexture[i].GetPointer());
-
-
-		CTemperUiScript* uiScript = pObject->GetScript<CTemperUiScript>();
-		uiScript->SetObject(pObject);
-
-		if (i == 0) {
-			uiScript->SetTempBar(vUiObject[0]);
-			uiScript->SetUnderTempBar(vUiObject[2]);
-		}
-		else if (i == 1) {
-			uiScript->SetTempBar(vUiObject[1]);
-			uiScript->SetUnderTempBar(vUiObject[3]);
-		}
-		// AddGameObject
-		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
-	}
 #endif
 
+	
 	//	item UI, 상속되는 버튼들
 	CGameObject* pObject = new CGameObject;
 	vScale = Vector3(600.f, 800.f, 1.f);
@@ -1704,28 +1568,21 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		// 나무 충돌 스크립트
+		// 나무 충돌 스크립트
 		CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
 		//-------item load---------
-		// 물약 1
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Bottle_03.fbx", FBX_TYPE::ITEM);
+		// 나뭇가지
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Branch.fbx", FBX_TYPE::ITEM);
 		pTreeScript->SetItemData(pMeshData);
-		// 물약 2
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Bottle_04.fbx", FBX_TYPE::ITEM);
-		pTreeScript->SetItemData(pMeshData);
-		// 고기
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Steak_02.fbx", FBX_TYPE::ITEM);
-		pTreeScript->SetItemData(pMeshData);
-		// 돈
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\MoneyBag.fbx", FBX_TYPE::ITEM);
-		pTreeScript->SetItemData(pMeshData);
-		// 당근
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Carrot.fbx", FBX_TYPE::ITEM);
+		// 사과
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Apple.fbx", FBX_TYPE::ITEM);
 		pTreeScript->SetItemData(pMeshData);
 		//-----------
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_01.fbx", FBX_TYPE::NEW_DESERT_MAP);
 		pTreeScript->SetStumpData(pMeshData);
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\Stump_04.fbx", FBX_TYPE::NEW_DESERT_MAP);
 		pTreeScript->SetStumpData(pMeshData);
+		pTreeScript->SetTerrain(_terrain);	// Terrain
 		//-----------------------------------
 		
 		// 가운데 나무2
@@ -2190,6 +2047,7 @@ void CSceneMgr::init()
 	m_pCurScene->GetLayer(4)->SetName(L"Npc");
 	m_pCurScene->GetLayer(5)->SetName(L"Bullet");
 	m_pCurScene->GetLayer(6)->SetName(L"Item");
+	m_pCurScene->GetLayer(7)->SetName(L"Terrain");	// 카메라 순서 때문에 오류나서 일단 터레인 레이어 추가함
 
 	m_pCurScene->GetLayer(30)->SetName(L"UI");
 	m_pCurScene->GetLayer(31)->SetName(L"PUI");
@@ -2471,7 +2329,7 @@ void CSceneMgr::init()
 	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f , 6000.f, 300.f)); // 2배함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
-	m_pCurScene->FindLayer(L"Default")->AddGameObject(pTerrainObject);
+	m_pCurScene->FindLayer(L"Terrain")->AddGameObject(pTerrainObject);
 	pPlayerObj->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
 	g_netMgr.SetObj(pPlayerObj);
 	

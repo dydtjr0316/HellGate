@@ -4,6 +4,20 @@
 #include "CDeadReckoner.h"
 #include "Mesh.h"
 
+enum class UI_BAR {
+	STAMINA,
+	DASH,
+	HUG,
+	TEMPER,
+	END,
+};
+
+enum class UI_BUTTON {
+	HUG,
+	TEMPER,
+	END,
+};
+
 class CDeadReckoner;
 class CPlayerScript
 	: public CScript
@@ -53,6 +67,13 @@ private:
 
 	// quest 
 	int				m_iMonsterKillNum = 0;
+
+	// ui
+	vector<CGameObject*>		m_vUnderBar;
+	vector<CGameObject*>		m_vUiBar;
+	vector<CGameObject*>		m_vUiButton;
+	bool						m_bUiCheck = true;
+
 public:
 	bool GetAniReset() { return m_bisAniReset; }
 	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
@@ -66,8 +87,7 @@ public:
 	void SetCnt(const float& cnt, PlAYER_ANICNT_TYPE _AniCntType) { m_fAnimationCnt[(UINT)_AniCntType] = cnt; }
 	float GetCnt(PlAYER_ANICNT_TYPE _AniCntType) { return m_fAnimationCnt[(UINT)_AniCntType]; }
 	
-	// quest
-	int GetKillNum() { return m_iMonsterKillNum; }
+	
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }
 	void SetVelocity(XMFLOAT3 _fVelocity) { m_xmf3Velocity = _fVelocity; }
@@ -83,7 +103,12 @@ public:
 
 	// pick up item
 	void PickUp_Default();
+	
+	// quest
+	int GetKillNum() { return m_iMonsterKillNum; }
 
+	// ui
+	void ClickUiButton();
 public: 
 	//¿ë¼®
 	//animation
