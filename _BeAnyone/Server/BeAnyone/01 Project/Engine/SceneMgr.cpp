@@ -1913,6 +1913,19 @@ void CSceneMgr::init()
 	pNumber = CResMgr::GetInst()->Load<CTexture>(L"8", L"Texture\\Number\\8.png");
 	pNumber = CResMgr::GetInst()->Load<CTexture>(L"9", L"Texture\\Number\\9.png");
 
+	//===========================
+	// number texture
+	//==========================
+	Ptr<CTexture> pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BRANCH", L"Texture\\ItemButton\\BranchTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"APPLE", L"Texture\\ItemButton\\AppleTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_STAMINA", L"Texture\\ItemButton\\BottleStaminaTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_DASH", L"Texture\\ItemButton\\BottleDashTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"STEAK", L"Texture\\ItemButton\\MeatTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"MONEYBAG", L"Texture\\ItemButton\\MoneyTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"CARROT", L"Texture\\ItemButton\\CarrotTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EMPTY", L"Texture\\ItemButton\\EmptyTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"SWORD", L"Texture\\ItemButton\\SwordTex.png");
+
 	//==========================
 	// UAV 용 Texture 생성
 	//==========================
@@ -2141,10 +2154,15 @@ void CSceneMgr::init()
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
 	// AddGameObject
 	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+	
 	//	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
+	vScale = Vector3(80.f, 120.f, 1.f);
+	Vector3 vObjectPos = pObject->Transform()->GetLocalPos();
+	Vector3 vObjectScale = pObject->Transform()->GetLocalScale(); 
+	float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;
+	float	fEmptyX = (vObjectScale.x - (vScale.x * 4.f)) / 5.f;
 	for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
 	{
-		vScale = Vector3(80.f, 120.f, 1.f);
 		Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
 		CGameObject* pButtonObj = new CGameObject;
 		pButtonObj->SetName(L"Button Object");
@@ -2158,9 +2176,10 @@ void CSceneMgr::init()
 		pObject->StaticUI()->m_vecButton[i]->SetParent(pObject->StaticUI());
 		// Transform 설정
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
-		pButtonObj->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x) + 200.f
-			, (res.fHeight / 2.f) - (vScale.y / 2.f)
-			, 1.f));
+		Vector3 result = Vector3(vObjectPos.x - (vObjectScale.x / 2.f) + (vScale.x / 2.f + fEmptyX) + ((vScale.x + fEmptyX) * (i % 4))
+			, vObjectPos.y + (vObjectScale.y / 2.f) - (vScale.y / 2.f + fEmptyY) - ((vScale.y + fEmptyY) * (i / 4))
+			, 1.f);
+		pButtonObj->Transform()->SetLocalPos(result);
 		pButtonObj->Transform()->SetLocalScale(vScale);
 		// MeshRender 설정
 		pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));

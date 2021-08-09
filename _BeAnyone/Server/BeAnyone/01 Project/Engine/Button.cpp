@@ -33,27 +33,10 @@ void CButton::update()
 {
 
 	GetObj()->SetUiRenderCheck(m_bActive);
+	for (int i = 0; i < m_vItemNum.size(); ++i)
+		m_vItemNum[i]->SetUiRenderCheck(m_bActive);
 
-	switch (m_eItemId)
-	{
-	case ITEM_ID::EMPTY:
-		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"HP_POTION_IMG");
-		break;
-
-	case ITEM_ID::BASIC_SWORD:
-		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD_IMG");
-		break;
-
-	case ITEM_ID::BASIC_ARROW:
-		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
-		break;
-
-	case ITEM_ID::END:
-		return;
-	}
-	auto temp = m_pComParent->GetObj()->StaticUI()->GetButton();
-	MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pItemImage.GetPointer());
-
+	ChangeButtonTexture();
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
@@ -68,10 +51,10 @@ void CButton::update()
 		Vector3 vButtonPos = GetObj()->Transform()->GetLocalPos();
 		Vector3 vButtonScale = GetObj()->Transform()->GetLocalScale();
 		Vector3 vNumPos = m_vItemNum[i]->Transform()->GetLocalPos();
-		Vector3 vNumScale = m_vItemNum[i]->Transform()->GetLocalPos();
+		Vector3 vNumScale = m_vItemNum[i]->Transform()->GetLocalScale();
 
 		vNumPos = vButtonPos;
-		//vNumPos += Vector3((vButtonScale.x / 2 - vNumScale.x / 2) - (i * vNumScale.x), -(vButtonScale.y / 2 - vNumScale.y / 2), 0.f);
+		vNumPos += Vector3((vButtonScale.x / 2 - vNumScale.x / 2) - (i * vNumScale.x), -(vButtonScale.y / 2 - vNumScale.y / 2), 0.f);
 
 		m_vItemNum[i]->Transform()->SetLocalPos(vNumPos);
 	}
@@ -135,8 +118,63 @@ void CButton::OnCollisionExit(CCollider* _pOther)
 	m_bCheckActive = BT_ACTIVE::PASSIVE;
 }
 
-void CButton::ChangeTexture()
+void CButton::ChangeButtonTexture()
 {
+	switch (m_eItemId)
+	{
+	case ITEM_ID::EMPTY:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"EMPTY");
+		break;
+
+	case ITEM_ID::BASIC_SWORD:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD");
+		break;
+
+	case ITEM_ID::BASIC_ARROW:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
+		break;
+
+	case ITEM_ID::BRANCH:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BRANCH");
+		break;
+
+	case ITEM_ID::APPLE:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"APPLE");
+		break;
+
+	case ITEM_ID::BOTTLE_STAMINA:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_STAMINA");
+		break;
+
+	case ITEM_ID::BOTTLE_DASH:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_DASH");
+		break;
+
+	case ITEM_ID::STEAK:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"STEAK");
+		break;
+
+	case ITEM_ID::MONEYBAG:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"MONEYBAG");
+		break;
+
+	case ITEM_ID::CARROT:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"CARROT");
+		break;
+
+	case ITEM_ID::END:
+		return;
+	}
+	auto temp = m_pComParent->GetObj()->StaticUI()->GetButton();
+	MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pItemImage.GetPointer());
+
+}
+
+void CButton::ChangeNumTexture()
+{
+	if (m_iItemCount / 10 < 1) {	// 개수가 1의 자리
+		m_vItemNum[(UINT)ITEM_NUM::UNIT]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
+	}
 }
 
 CButton::CButton()
@@ -147,30 +185,30 @@ CButton::CButton()
 	, m_bCheckActive(BT_ACTIVE::PASSIVE)
 {
 	//	test
-	switch (UINT(rand() % 3))
-	{
-	case 0:
-		m_eItemId = ITEM_ID::EMPTY;
-		break;
-	case 1:
-		m_eItemId = ITEM_ID::BASIC_SWORD;
-		break;
-	case 2:
-		m_eItemId = ITEM_ID::BASIC_ARROW;
-		break;
-	case 3:
-		m_eItemId = ITEM_ID::BRANCH;
-		break;
-	case 4:
-		m_eItemId = ITEM_ID::APPLE;
-		break;
-	case 5:
-		m_eItemId = ITEM_ID::BOTTLE_STAMINA;
-		break;
-	case 6:
-		m_eItemId = ITEM_ID::BOTTLE_DASH;
-		break;
-	}
+	//switch (UINT(rand() % 3))
+	//{
+	//case 0:
+	//	m_eItemId = ITEM_ID::EMPTY;
+	//	break;
+	//case 1:
+	//	m_eItemId = ITEM_ID::BASIC_SWORD;
+	//	break;
+	//case 2:
+	//	m_eItemId = ITEM_ID::BASIC_ARROW;
+	//	break;
+	//case 3:
+	//	m_eItemId = ITEM_ID::BRANCH;
+	//	break;
+	//case 4:
+	//	m_eItemId = ITEM_ID::APPLE;
+	//	break;
+	//case 5:
+	//	m_eItemId = ITEM_ID::BOTTLE_STAMINA;
+	//	break;
+	//case 6:
+	//	m_eItemId = ITEM_ID::BOTTLE_DASH;
+	//	break;
+	//}
 }
 
 CButton::~CButton()
