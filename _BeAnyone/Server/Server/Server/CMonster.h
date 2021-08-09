@@ -30,11 +30,12 @@ public:
 	//void SetType(const MONSTER_TYPE& t) { m_Type = t; }
 	//void SetPrev_Size(const int& size) { m_prev_size = size; }
 	void SetBisDead(const bool& isdead) { m_bisDead = isdead; }
-	void SetBisMoving(const bool* isMove) { m_bisMoving = isMove; }
+	void SetBisMoving(const bool& isMove) { m_bisMoving = isMove; }
 	void SetDir(const MONSTER_AUTOMOVE_DIR& dir) { m_dir = dir; }
 	void SetRefreshPacketCnt_Zero() { m_frpc = 0.f; }
 	void CountRefreshPacketCnt(const float& dt) { m_frpc += dt; }
 
+	MONSTER_AUTOMOVE_DIR		m_dir = (MONSTER_AUTOMOVE_DIR)(rand()%4);
 	//view list
 	//void InsertViewList(const int& id) { view_list.emplace(id); }
 private:
@@ -48,7 +49,6 @@ private:
 	int		m_iFirstY = 0;
 	//int   m_prev_size = 0;
 	bool	m_bisMoving = false;
-	MONSTER_AUTOMOVE_DIR		m_dir = MONSTER_AUTOMOVE_DIR::RIGHT;
 
 	//unordered_set<int> view_list;
 

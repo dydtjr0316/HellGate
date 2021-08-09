@@ -23,10 +23,10 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 
 //const char ip[] = "192.168.0.11";
 //const char ip[] = "192.168.0.7";
-//const char ip[] = "192.168.0.13";
-const char ip[] = "221.151.160.142";
-const char office[] = "192.168.102.43";
-const char KPUIP[] = "192.168.140.245";
+const char ip[] = "192.168.0.13";
+//const char ip[] = "221.151.160.142";
+//const char office[] = "192.168.102.43";
+//const char KPUIP[] = "192.168.140.245";
 
 CNetMgr g_netMgr;
 
@@ -280,9 +280,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_LOGIN_OK:
 	{
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
-		cout << "ok id -> " << p->id << endl;
+		//cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
-		cout << "SC_PACKET_LOGIN_OK :  " << g_myid << endl;
+		//cout << "SC_PACKET_LOGIN_OK :  " << g_myid << endl;
 
 		// 여기 패킷아이디로 바꾸자
 		g_Object.emplace(g_myid, m_pObj);
@@ -294,10 +294,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
-		cout << "enter packet" << endl;
+		//cout << "enter packet" << endl;
 
 		if (id == g_myid)
 		{
+
 		}
 		else
 		{
@@ -305,6 +306,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id)/*&& (g_Object.find(id)!= g_Object.end())*/)
 				{
+					cout << "enter" << endl;
 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 
 					CGameObject* pObject = new CGameObject;
@@ -319,7 +321,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, my_packet->RotateY, 0.f));
 					g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
-
+					cout << "324줄" << endl;
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
 
 					g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
@@ -330,7 +332,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					// ----
 					// 무기
 					// ----
-
+					cout << "무기시작" << endl;
 					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale_Weapon_Sword.fbx", FBX_TYPE::PLAYER);
 
 					CGameObject* pSword = nullptr;
@@ -348,12 +350,16 @@ void CNetMgr::ProcessPacket(char* ptr)
 					CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
 					SwordScript->SetBoneFinalMat(g_Object.find(id)->second->Animator3D()->GetSwordFinalBoneMat());
 
+
+
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pSword, false);
 					g_Object.find(id)->second->AddChild(pSword);
+					cout << "무기 끝" << endl;
 				}
 			}
 			else if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
 			{
+
 				if (0 == g_Object.count(id))
 				{
 					if (id == 1000)
@@ -472,7 +478,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 					}
 
-					cout << my_packet->id<<"번 몬스터 -- " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
+					//cout << my_packet->id<<"번 몬스터 -- " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
 
 				}
 			}
@@ -487,7 +493,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (other_id == g_myid)
 		{
 		//	cout << "SC_PACKET_MOVE  자신에게 보내는 패킷 횟수"<<cnt++ << endl;
-			g_Object.find(other_id)->second->Transform()->SetLocalPos(packet->localVec);
+			cout << "여기니?" << endl;
+			//g_Object.find(other_id)->second->Transform()->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -528,20 +535,31 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (g_Object.find(packet->id)->second == nullptr)break;
 		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
 
-		if(monster_id == 1000)
-			ctnt++;
-		g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
-		if ((MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::AUTO && (MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+		/*if ((MONSTER_AUTOMOVE_DIR)packet->eDir == MONSTER_AUTOMOVE_DIR::SELF)
 		{
-			if (monster_id == 1000)
-			{
-				cout << "packet localpos     ->       " << packet->pos.x << ", " << packet->pos.z << endl;
-				cout << "real   localpos     ->       " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << ", " <<
-					g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;
-				cout << "---------------------------------------------------------" << endl;
-			}
 			g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
 		}
+		else
+		{*/
+			/*if ((MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::SELF && (MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+			{*/
+
+
+					cout << "----------------------------------" << endl;
+					cout <<"id :  "<<monster_id << "   패킷 방향  : " << (int)packet->eDir << endl;
+					cout << "----------------------------------" << endl;
+			
+					g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+					
+					/*cout << "packet localpos     ->       " << packet->pos.x << ", " << packet->pos.z << endl;
+					cout << "real   localpos     ->       " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << ", " <<
+						g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;*/
+					cout << "---------------------------------------------------------" << endl;
+					g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
+				
+			//}
+		//}
+		
 		// 여기서부터 
 	}
 	break;
@@ -568,7 +586,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
-		cout << "leave packet" << endl;
+		//cout << "leave packet" << endl;
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
