@@ -21,6 +21,7 @@ extern system_clock::time_point MoveStart;
 extern system_clock::time_point MoveEnd;
 
 //temp
+extern int ctnt;
  extern int anicnt;
 // 
 // State Description

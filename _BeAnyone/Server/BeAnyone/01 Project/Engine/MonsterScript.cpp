@@ -4,6 +4,7 @@
 #include "ItemMgr.h"
 #include "Terrain.h"
 
+
 int attackcnt = 0;
 
 CMonsterScript::CMonsterScript()
@@ -178,17 +179,6 @@ void CMonsterScript::Move()
 		switch ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir)
 		{
 		case MONSTER_AUTOMOVE_DIR::FRONT:
-			//worlddir 변경
-			// 밑에꺼 처럼 좌표 변경하는 코드
-			if (monster->GetName() == L"GreenMonster")
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
-			else
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 100.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-			temp = "front";
-			break;
-		case MONSTER_AUTOMOVE_DIR::BACK:
 			if (monster->GetName() == L"GreenMonster") {
 				monsterTrans->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
@@ -199,22 +189,19 @@ void CMonsterScript::Move()
 			}
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
-			temp = "back";
 			break;
-		case MONSTER_AUTOMOVE_DIR::LEFT:
-			if (monster->GetName() == L"GreenMonster") {
-				monsterTrans->SetLocalRot(Vector3(0.f, -XM_PI / 2, 0.f));
+			
+		case MONSTER_AUTOMOVE_DIR::BACK:
+			//worlddir 변경
+			// 밑에꺼 처럼 좌표 변경하는 코드
+			if (monster->GetName() == L"GreenMonster")
 				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
-			}
-			else {
-				monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
+			else
 				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			}
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
-			temp = "left";
 			break;
-		case MONSTER_AUTOMOVE_DIR::RIGHT:
+		case MONSTER_AUTOMOVE_DIR::LEFT:
 			if (monster->GetName() == L"GreenMonster") {
 				monsterTrans->SetLocalRot(Vector3(0.f, XM_PI / 2, 0.f));
 				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
@@ -225,29 +212,47 @@ void CMonsterScript::Move()
 			}
 			monsterPos += worldDir * 100.f * DT;
 			monsterTrans->SetLocalPos(monsterPos);
-			temp = "right";
 			break;
+		case MONSTER_AUTOMOVE_DIR::RIGHT:
+			if (monster->GetName() == L"GreenMonster") {
+				monsterTrans->SetLocalRot(Vector3(0.f, -XM_PI / 2, 0.f));
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+			}
+			else {
+				monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
+				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+			}
+			monsterPos += worldDir * 100.f * DT;
+			monsterTrans->SetLocalPos(monsterPos);
+			break;
+			
 		case MONSTER_AUTOMOVE_DIR::AUTO:
 			// a* 사용할곳
 			break;
 		case MONSTER_AUTOMOVE_DIR::IDLE:
-			monsterScript->SetPacketMove(nullptr);
+			//monsterScript->SetPacketMove(nullptr);
 			break;
 		default:
 			break;
 		}
-		//cout <<"ID : "<< GetObj()->GetID() << "\tdir : " << temp << endl;
-
-		if ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+		if (GetObj()->GetID() == 1000)
 		{
-			int z = (int)(monsterPos.z / xmf3Scale.z);
+			/*cout << "dir -> " << (int)(MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir << endl;
 	
-			float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f + 100.f;
-
-			if (monsterPos.y != fHeight)
-				monsterPos.y = fHeight;
-			monsterTrans->SetLocalPos(monsterPos);
+			cout << ctnt << "     ID : " << GetObj()->GetID() << "   pos : " << GetObj()->Transform()->GetLocalPos().x << ",  " << GetObj()->Transform()->GetLocalPos().z << endl<<endl;
+			cout << "-----------------------------" << endl;*/
 		}
+		if (monsterScript->GetPacketMove() != nullptr)
+			if ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+			{
+				int z = (int)(monsterPos.z / xmf3Scale.z);
+
+				float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f + 100.f;
+
+				if (monsterPos.y != fHeight)
+					monsterPos.y = fHeight;
+				monsterTrans->SetLocalPos(monsterPos);
+			}
 	}
 }
 

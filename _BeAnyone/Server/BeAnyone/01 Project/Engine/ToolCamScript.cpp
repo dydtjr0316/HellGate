@@ -139,6 +139,7 @@ void CToolCamScript::SetFreeCamera()
 void CToolCamScript::SetPlayerFixedCamera()
 {
     // °øÅë
+	if (g_myid < 0)return;
     Vector3 vPos = Transform()->GetLocalPos();
     CTransform* vPlayerPos = g_Object.find(g_myid)->second->Transform();
 

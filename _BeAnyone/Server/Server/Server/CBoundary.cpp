@@ -59,6 +59,7 @@ bool CBoundary::contains(CGameObject* p)
 
 bool CBoundary::intersects(CBoundary& range)
 {
+	if (this == nullptr)return false;
 	return !(range.GetX() - range.GetW() > m_fx + m_fw ||
 		range.GetX() + range.GetW() < m_fx - m_fw ||
 		range.GetZ() - range.GetH() > m_fz + m_fh ||

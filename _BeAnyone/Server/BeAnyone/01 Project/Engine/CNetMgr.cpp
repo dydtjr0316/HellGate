@@ -31,6 +31,7 @@ const char KPUIP[] = "192.168.140.245";
 CNetMgr g_netMgr;
 
 int testpacket;
+int ctnt = 0;
 OBJLIST g_Object;
 int g_myid = -1;
 CAMOBJLIST g_CamObject;
@@ -293,7 +294,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
-		cout << "enter 함" << endl;
+		cout << "enter packet" << endl;
+
 		if (id == g_myid)
 		{
 		}
@@ -407,8 +409,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
-						cout << "---------------------" << endl;
-						cout << "ID : " << id << "    packet HP : " << my_packet->hp << endl;
+						
 					}
 					else
 					{
@@ -419,9 +420,17 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second = pMeshData->Instantiate();
 						g_Object.find(id)->second->SetName(L"GreenMonster");
 						g_Object.find(id)->second->FrustumCheck(false);
+						
+						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+						{
+							int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
+							float fHeight = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(my_packet->localVec.x, my_packet->localVec.z, ((z % 2) != 0)) * 2.f + 65.f;
+
+							if (my_packet->localVec.y != fHeight)
+								my_packet->localVec.y = fHeight;
+						}
 						g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 
-						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 						g_Object.find(id)->second->AddComponent(new CCollider);
 						// Collider 물어보기
@@ -462,6 +471,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 					}
+
+					cout << my_packet->id<<"번 몬스터 -- " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
+
 				}
 			}
 		}
@@ -474,7 +486,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (other_id == g_myid)
 		{
-			cout << "SC_PACKET_MOVE  자신에게 보내는 패킷 횟수"<<cnt++ << endl;
+		//	cout << "SC_PACKET_MOVE  자신에게 보내는 패킷 횟수"<<cnt++ << endl;
 			g_Object.find(other_id)->second->Transform()->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
@@ -494,6 +506,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
+
+					
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
@@ -510,9 +524,24 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_monster_automove* packet = reinterpret_cast<sc_packet_monster_automove*>(ptr);
 		int monster_id = packet->id;
+		if (g_Object.count(packet->id) == 0)break;
 		if (g_Object.find(packet->id)->second == nullptr)break;
 		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
+
+		if(monster_id == 1000)
+			ctnt++;
 		g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+		if ((MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::AUTO && (MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+		{
+			if (monster_id == 1000)
+			{
+				cout << "packet localpos     ->       " << packet->pos.x << ", " << packet->pos.z << endl;
+				cout << "real   localpos     ->       " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << ", " <<
+					g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;
+				cout << "---------------------------------------------------------" << endl;
+			}
+			g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
+		}
 		// 여기서부터 
 	}
 	break;
@@ -539,7 +568,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
-
+		cout << "leave packet" << endl;
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
@@ -558,15 +587,16 @@ void CNetMgr::ProcessPacket(char* ptr)
 				{
 					if (!my_packet->isAttack)
 					{
+						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetPacketMove(nullptr);
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->DeleteObject(g_Object.find(other_id)->second);
 						CEventMgr::GetInst()->update();
-						CEventMgr::GetInst()->update();
+						//CEventMgr::GetInst()->update();
 						g_Object.erase(other_id);
 
 					}
 					else
 					{
-
+						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetPacketMove(nullptr);
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetBisAttack(my_packet->isAttack);
 					}
 				}
