@@ -29,11 +29,7 @@ void CDummyItemScript::OnCollisionEnter(CCollider* _pOther)
 		CGameObject* obj = _pOther->GetObj()->GetScript<CPlayerScript>()->GetUIObj();
 		wstring strName = GetObj()->MeshRender()->GetMesh()->GetName();
 
-		if (strName == L"Mesh\\Branch.mesh")
-		{
-			int a = 0;
-			obj->StaticUI()->SetButton(ITEM_ID::BASIC_ARROW);
-		}
+		CheckItemMesh(strName, obj);
 			
 	}
 
@@ -46,4 +42,22 @@ void CDummyItemScript::OnCollisionExit(CCollider* _pOther)
 
 void CDummyItemScript::OnCollsion(CCollider* _pOther)
 {
+}
+
+void CDummyItemScript::CheckItemMesh(wstring _str, CGameObject* _obj)
+{
+	if (_str == L"Mesh\\Branch.mesh")
+		_obj->StaticUI()->SetButton(ITEM_ID::BRANCH);
+	else if(_str == L"Mesh\\Apple.mesh")
+		_obj->StaticUI()->SetButton(ITEM_ID::APPLE);
+	else if (_str == L"Mesh\\Bottle_03.mesh")
+		_obj->StaticUI()->SetButton(ITEM_ID::BOTTLE_STAMINA);
+	else if (_str == L"Mesh\\Bottle_04.mesh")
+		_obj->StaticUI()->SetButton(ITEM_ID::BOTTLE_DASH);
+	else if (_str == L"Mesh\\Steak_02.mesh")
+		_obj->StaticUI()->SetButton(ITEM_ID::STEAK);
+	else if (_str == L"Mesh\\MoneyBag.mesh")
+		_obj->StaticUI()->SetButton(ITEM_ID::MONEYBAG);
+	else if (_str == L"Mesh\\Carrot.mesh")
+		_obj->StaticUI()->SetButton(ITEM_ID::CARROT);
 }

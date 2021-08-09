@@ -44,6 +44,8 @@ private:
 
 	// item number
 	vector<CGameObject*>	m_vItemNum;
+	int						m_iItemCount = 0;
+	bool					m_bChangeCount;
 
 public:
 	void					init();
@@ -72,8 +74,12 @@ public:
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
 
-	// number texture, pos 
-	void ChangeTexture();
+	// number 
+	void ChangeButtonTexture(); // texture, pos
+	void ChangeNumTexture();
+	void AddItemCount() { m_iItemCount++; }
+
+	
 
 public:
 	CButton();

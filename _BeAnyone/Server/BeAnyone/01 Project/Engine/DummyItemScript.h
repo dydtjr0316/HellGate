@@ -17,6 +17,9 @@ public:
 	virtual void OnCollisionExit(CCollider* _pOther);
 	virtual void OnCollsion(CCollider* _pOther);
 
+	// item check
+	void CheckItemMesh(wstring _str, CGameObject* _obj);
+
 public:
 	CDummyItemScript();
 	virtual ~CDummyItemScript();
