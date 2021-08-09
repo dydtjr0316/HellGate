@@ -89,12 +89,14 @@ void CStaticUI::SetButton(ITEM_ID _id)
 	{
 		if (m_vecButton[i]->GetItemID() == _id) {
 			m_vecButton[i]->AddItemCount(); return;
+		//	m_vecButton[i]->SetChangeCount(true);
 		}
 		else if (m_vecButton[i]->GetItemID() == ITEM_ID::EMPTY)
 		{
 			//*(m_vecButton[i]->GetObj()) = *_obj;
 			m_vecButton[i]->SetItemID(_id);
 			m_vecButton[i]->AddItemCount();
+		//	m_vecButton[i]->SetChangeCount(true);
 			return;
 		}
 		else

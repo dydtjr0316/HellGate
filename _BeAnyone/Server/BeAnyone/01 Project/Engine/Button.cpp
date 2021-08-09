@@ -37,6 +37,9 @@ void CButton::update()
 		m_vItemNum[i]->SetUiRenderCheck(m_bActive);
 
 	ChangeButtonTexture();
+	
+	if(m_bChangeCount)
+		ChangeNumTexture();
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
@@ -173,8 +176,24 @@ void CButton::ChangeButtonTexture()
 void CButton::ChangeNumTexture()
 {
 	if (m_iItemCount / 10 < 1) {	// 개수가 1의 자리
-		m_vItemNum[(UINT)ITEM_NUM::UNIT]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
+		string str = to_string(m_iItemCount);
+		wstring wstr = wstring(str.begin(), str.end());
+		m_vItemNum[(UINT)ITEM_NUM::UNIT]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
 	}
+	else {
+		int unit = m_iItemCount % 10;
+		int ten = m_iItemCount / 10;
+		// 1의 자리
+		string str = to_string(unit);
+		wstring wstr = wstring(str.begin(), str.end());
+		m_vItemNum[(UINT)ITEM_NUM::UNIT]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+		// 10의 자리
+		str = to_string(ten);
+		wstr = wstring(str.begin(), str.end());
+		m_vItemNum[(UINT)ITEM_NUM::TEN]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+	}
+
+	m_bChangeCount = false;
 }
 
 CButton::CButton()
@@ -184,31 +203,6 @@ CButton::CButton()
 	, m_bState(BT_STATE::NONE)
 	, m_bCheckActive(BT_ACTIVE::PASSIVE)
 {
-	//	test
-	//switch (UINT(rand() % 3))
-	//{
-	//case 0:
-	//	m_eItemId = ITEM_ID::EMPTY;
-	//	break;
-	//case 1:
-	//	m_eItemId = ITEM_ID::BASIC_SWORD;
-	//	break;
-	//case 2:
-	//	m_eItemId = ITEM_ID::BASIC_ARROW;
-	//	break;
-	//case 3:
-	//	m_eItemId = ITEM_ID::BRANCH;
-	//	break;
-	//case 4:
-	//	m_eItemId = ITEM_ID::APPLE;
-	//	break;
-	//case 5:
-	//	m_eItemId = ITEM_ID::BOTTLE_STAMINA;
-	//	break;
-	//case 6:
-	//	m_eItemId = ITEM_ID::BOTTLE_DASH;
-	//	break;
-	//}
 }
 
 CButton::~CButton()

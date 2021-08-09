@@ -2,11 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-<<<<<<< HEAD
       <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\02 File\bin_debug\Client.exe</FullPath>
-=======
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\02 File\bin_debug\Client.exe</FullPath>
->>>>>>> 63ac1aae38ada4b9bdcc948a743b5a301979d80f
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
