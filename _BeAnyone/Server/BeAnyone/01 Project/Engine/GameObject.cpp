@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameObject.h"
 #include "PlayerScript.h"
+#include "MonsterScript.h"
 #include "Component.h"
 #include "MeshRender.h"
 #include "Script.h"
@@ -221,14 +222,24 @@ void CGameObject::update()
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
-		/*if (GetName() == L"PlayerMale") {
+		if (GetName() == L"PlayerMale") {
 			if (GetID() == g_myid && g_Object.size() != 0 && g_Object.find(g_myid)->second != nullptr)
 				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->update();
-		}
-		else
-			m_vecScript[i]->update();*/
 		
-		m_vecScript[i]->update();
+		}
+		else if (GetName() == L"FireMonster" || GetName() == L"GreenMonster")
+		{
+			if (g_Object.count(GetID()) != 0)
+			{
+				if (g_Object.find(GetID())->second != nullptr)
+				{
+					g_Object.find(GetID())->second->GetScript<CMonsterScript>()->update();
+				}
+			}
+		}
+		else/* if(GetLayerIdx())*/
+			m_vecScript[i]->update();
+
 	}
 	
 }

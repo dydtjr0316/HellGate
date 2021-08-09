@@ -306,7 +306,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id)/*&& (g_Object.find(id)!= g_Object.end())*/)
 				{
-					cout << "enter" << endl;
+
 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 
 					CGameObject* pObject = new CGameObject;
@@ -321,7 +321,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, my_packet->RotateY, 0.f));
 					g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
-					cout << "324줄" << endl;
+
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
 
 					g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
@@ -332,7 +332,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					// ----
 					// 무기
 					// ----
-					cout << "무기시작" << endl;
+
 					pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale_Weapon_Sword.fbx", FBX_TYPE::PLAYER);
 
 					CGameObject* pSword = nullptr;
@@ -354,7 +354,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pSword, false);
 					g_Object.find(id)->second->AddChild(pSword);
-					cout << "무기 끝" << endl;
+
 				}
 			}
 			else if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
@@ -534,33 +534,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (g_Object.count(packet->id) == 0)break;
 		if (g_Object.find(packet->id)->second == nullptr)break;
 		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
-
-		/*if ((MONSTER_AUTOMOVE_DIR)packet->eDir == MONSTER_AUTOMOVE_DIR::SELF)
 		{
+			g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+
+			cout << "---------------------------------------------------------" << endl;
 			g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
 		}
-		else
-		{*/
-			/*if ((MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::SELF && (MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
-			{*/
 
 
-					cout << "----------------------------------" << endl;
-					cout <<"id :  "<<monster_id << "   패킷 방향  : " << (int)packet->eDir << endl;
-					cout << "----------------------------------" << endl;
-			
-					g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
-					
-					/*cout << "packet localpos     ->       " << packet->pos.x << ", " << packet->pos.z << endl;
-					cout << "real   localpos     ->       " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << ", " <<
-						g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;*/
-					cout << "---------------------------------------------------------" << endl;
-					g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
-				
-			//}
-		//}
-		
-		// 여기서부터 
 	}
 	break;
 	case SC_PACKET_STOP:

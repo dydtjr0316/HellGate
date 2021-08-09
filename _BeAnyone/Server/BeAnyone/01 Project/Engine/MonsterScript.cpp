@@ -7,6 +7,8 @@
 
 int attackcnt = 0;
 
+
+
 CMonsterScript::CMonsterScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
 {
@@ -69,7 +71,16 @@ CMonsterScript::~CMonsterScript()
 	DeleteObject(m_pUnderUi);
 	DeleteObject(m_pChildDummy);
 }
-
+void CMonsterScript::SetPacketMove(sc_packet_monster_automove* p)
+{
+	if (p == nullptr)return;
+	if (this == nullptr)return;
+	cout << "----------------------------------" << endl;
+	cout << "id :  " << GetID() << "   받은 패킷 방향  : " << (int)p->eDir << endl;
+	m_Packet_autoMove = p;
+	cout << "id :  " << GetID() << "   셋팅 후  패킷 방향  : " << (int)m_Packet_autoMove->eDir << endl;
+	cout << "----------------------------------" << endl;
+}
 
 void CMonsterScript::update()
 {
@@ -165,22 +176,27 @@ void CMonsterScript::DecreaseHp()
 
 void CMonsterScript::Move()
 {
-	CGameObject* monster = GetObj();
+	int id = GetID();
+	if (g_Object.count(GetID() != 0))return;
+	if(g_Object.find(GetID())->second==nullptr)return;
+	
+
+	CGameObject* monster = g_Object.find(GetID())->second;
 	CTransform* monsterTrans = monster->Transform();
 	Vector3 monsterPos = monsterTrans->GetLocalPos();
 	Vector3 worldDir;
 	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
 	CTerrain* pTerrain = monsterScript->GetTerrain();
-	const Vector3& xmf3Scale = GetObj()->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
+	const Vector3& xmf3Scale = monster->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
 	string temp;
 	MONSTER_AUTOMOVE_DIR monsterDir;
 	if (monsterScript->GetPacketMove() != nullptr)
 	{
-		monsterDir = (MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir;
+		monsterDir = (MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir;
+		//cout << GetID() << " " << "번 몬스터 방향 -> " << (int)monsterDir << endl;
 		if ((int)monsterDir >= 0 && (int)monsterDir <= 6)
 		{
-			//cout << "몬스터 방향 -> " << (int)monsterDir << endl;
-			switch ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir)
+			switch (monsterDir)
 			{
 			case MONSTER_AUTOMOVE_DIR::FRONT:
 				if (monster->GetName() == L"GreenMonster") {
