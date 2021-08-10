@@ -55,7 +55,7 @@ void CItemMgr::MakeObject()
 	pItem->FrustumCheck(true);
 	pItem->AddComponent(new CTransform);
 	pItem->AddComponent(new CMeshRender);
-	pItem->AddComponent(new CDummyItemScript);
+	//pItem->AddComponent(new CDummyItemScript);
 	pItem->AddComponent(new CCollider);
 	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
 	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
@@ -64,9 +64,7 @@ void CItemMgr::MakeObject()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
-	//m_pItem1->SetUiRenderCheck(false);
-	CDummyItemScript* pItemScript = pItem->GetScript<CDummyItemScript>();
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 
 	m_vItem.push_back(pItem);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
@@ -77,7 +75,7 @@ void CItemMgr::MakeObject()
 	pItem->FrustumCheck(true);
 	pItem->AddComponent(new CTransform);
 	pItem->AddComponent(new CMeshRender);
-	pItem->AddComponent(new CDummyItemScript);
+	//pItem->AddComponent(new CDummyItemScript);
 	pItem->AddComponent(new CCollider);
 	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
 	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
@@ -86,9 +84,7 @@ void CItemMgr::MakeObject()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
-	//m_pItem2->SetUiRenderCheck(false);
-	pItemScript = pItem->GetScript<CDummyItemScript>();
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 
 	m_vItem.push_back(pItem);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
@@ -99,7 +95,7 @@ void CItemMgr::MakeObject()
 	pItem->FrustumCheck(true);
 	pItem->AddComponent(new CTransform);
 	pItem->AddComponent(new CMeshRender);
-	pItem->AddComponent(new CDummyItemScript);
+	//pItem->AddComponent(new CDummyItemScript);
 	pItem->AddComponent(new CCollider);
 	pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
 	pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
@@ -108,10 +104,8 @@ void CItemMgr::MakeObject()
 	pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 	pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
-	//m_pItem3->SetUiRenderCheck(false);
-	pItemScript = pItem->GetScript<CDummyItemScript>();
-
+	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
+	
 	m_vItem.push_back(pItem);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
 }
@@ -206,6 +200,10 @@ void CItemMgr::MakeItem()
 			m_bMakeItem = false;
 			m_bFirst = true;
 			m_iOldPosNum = m_vItemPos.size();
+
+			m_vItem[0 + (i * 3)]->AddComponent(new CDummyItemScript);
+			m_vItem[1 + (i * 3)]->AddComponent(new CDummyItemScript);
+			m_vItem[2 + (i * 3)]->AddComponent(new CDummyItemScript);
 		}
 
 		m_vItem[0 + (i * 3)]->Transform()->SetLocalPos(vItem1Pos);

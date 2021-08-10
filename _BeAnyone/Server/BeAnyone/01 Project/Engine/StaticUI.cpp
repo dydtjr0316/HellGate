@@ -136,11 +136,6 @@ void CStaticUI::update()
 		}
 		else if (KEY_TAB(KEY_TYPE::KEY_LBTN))	//	키를 눌렸을 때 충돌검사를 하고 충돌 됐으면 BT_ACTIVE 상태값을 충돌된 버튼만 수정한다/
 		{	
-			/*for (int i = 0; i < m_vecButton.size(); ++i)
-			{
-				
-				m_vecButton[i]->GetActive();
-			}*/
 
 		}
 		else if (KEY_AWAY(KEY_TYPE::KEY_LBTN))	//	피킹 후 상태 이상이 없으면 다시 제자리로 돌아간다.
