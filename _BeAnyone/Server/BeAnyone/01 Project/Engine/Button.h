@@ -73,11 +73,12 @@ public:
 	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
+	//void SetChangeCount(bool _ChangeCount) { m_bChangeCount = _ChangeCount; }
 
 	// number 
 	void ChangeButtonTexture(); // texture, pos
 	void ChangeNumTexture();
-	void AddItemCount() { m_iItemCount++; }
+	void AddItemCount() { m_iItemCount++; m_bChangeCount = true; }
 
 	
 
