@@ -9,6 +9,7 @@
 #include "ServerHeader.h"
 
 
+
 #ifdef _DEBUG
 #pragma comment(lib, "Engine/Engine_debug.lib")
 #else
@@ -95,6 +96,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             }
         }
+       
         g_netMgr.Recevie_Data();
         // Game Running
         CCore::GetInst()->progress();

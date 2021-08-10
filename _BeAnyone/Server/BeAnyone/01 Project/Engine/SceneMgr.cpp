@@ -2023,42 +2023,42 @@ void CSceneMgr::init()
 	//=============
 	// monster 2
 	//=============
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@idle.fbx", FBX_TYPE::MONSTER);
-	CGameObject* pMonster = new CGameObject;
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@idle.fbx", FBX_TYPE::MONSTER);
+	//CGameObject* pMonster = new CGameObject;
 
-	pMonster = pMeshData->Instantiate();
-	pMonster->SetName(L"StoneMonster");
-	pMonster->FrustumCheck(false);
-	pMonster->Transform()->SetLocalPos(Vector3(100.f, 50.f, 100.f));
+	//pMonster = pMeshData->Instantiate();
+	//pMonster->SetName(L"StoneMonster");
+	//pMonster->FrustumCheck(false);
+	//pMonster->Transform()->SetLocalPos(Vector3(100.f, 50.f, 100.f));
 
-	pMonster->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
-	pMonster->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-	pMonster->AddComponent(new CCollider);
-	pMonster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_idle");
-	pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(),pMonster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-	
-	// Script 설정
-	pMonster->AddComponent(new CMonsterScript);
-	CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", pMonster, false);
+	//pMonster->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+	//pMonster->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+	//pMonster->AddComponent(new CCollider);
+	//pMonster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"monster3_idle");
+	//pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	//pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(),pMonster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	//
+	//// Script 설정
+	//pMonster->AddComponent(new CMonsterScript);
+	//CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", pMonster, false);
 
-	CMonsterScript* monsterScript = pMonster->GetScript<CMonsterScript>();
-	monsterScript->SetMonsterType(MONSTER_TYPE::MONSTER2);
-	//animation
-	//idle
-	monsterScript->SetAnimationData(pMeshData->GetMesh());
-	//walk
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Walk Forward With Root Motion.fbx", FBX_TYPE::MONSTER);
-	monsterScript->SetAnimationData(pMeshData->GetMesh());
-	//dead
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@die.fbx", FBX_TYPE::MONSTER);
-	monsterScript->SetAnimationData(pMeshData->GetMesh());
-	//attack
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@meleeattack01.fbx", FBX_TYPE::MONSTER);
-	monsterScript->SetAnimationData(pMeshData->GetMesh());
-	//damage
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
-	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//CMonsterScript* monsterScript = pMonster->GetScript<CMonsterScript>();
+	//monsterScript->SetMonsterType(MONSTER_TYPE::MONSTER2);
+	////animation
+	////idle
+	//monsterScript->SetAnimationData(pMeshData->GetMesh());
+	////walk
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Walk Forward With Root Motion.fbx", FBX_TYPE::MONSTER);
+	//monsterScript->SetAnimationData(pMeshData->GetMesh());
+	////dead
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@die.fbx", FBX_TYPE::MONSTER);
+	//monsterScript->SetAnimationData(pMeshData->GetMesh());
+	////attack
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@meleeattack01.fbx", FBX_TYPE::MONSTER);
+	//monsterScript->SetAnimationData(pMeshData->GetMesh());
+	////damage
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
+	//monsterScript->SetAnimationData(pMeshData->GetMesh());
 
 	// ==================
 	//	item 객체 생성

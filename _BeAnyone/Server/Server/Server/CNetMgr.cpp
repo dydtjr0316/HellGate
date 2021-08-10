@@ -799,6 +799,7 @@ void CNetMgr::Processing_Thead()
                 if (m_pMediator->Find(monster) == nullptr)continue;
                 if (m_pMediator->MonsterReckonerCount(monster) == 0)continue;
                 if (!m_pMediator->Find(monster)->GetIsMoving())continue;
+               // if (monster != 1000)continue;
                 MonsterObj = m_pMediator->Find(monster);
                 monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();
                 monsterDir = CAST_MONSTER(m_pMediator->Find(monster))->GetDir();

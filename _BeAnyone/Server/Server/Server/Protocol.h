@@ -206,9 +206,13 @@ struct sc_packet_monster_automove
 {
 	char size;
 	char type;
-	Vector3 pos;
 	uShort id;
+	Vector3 pos;
 	char eDir;
+	~sc_packet_monster_automove()
+	{
+		cout << "»èÁ¦ µÊ" << endl;
+	}
 
 };
 

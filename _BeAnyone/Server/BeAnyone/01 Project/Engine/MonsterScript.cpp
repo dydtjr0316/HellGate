@@ -12,6 +12,7 @@ int attackcnt = 0;
 CMonsterScript::CMonsterScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
 {
+	test = new my();
 	//----------------
 	// monster hp ui
 	//----------------
@@ -75,17 +76,75 @@ void CMonsterScript::SetPacketMove(sc_packet_monster_automove* p)
 {
 	if (p == nullptr)return;
 	if (this == nullptr)return;
-	cout << "----------------------------------" << endl;
-	cout << "id :  " << GetID() << "   받은 패킷 방향  : " << (int)p->eDir << endl;
+	if (GetID() != p->id)return;
+
+	cout << GetID() << "의 Monster Script------  셋팅 전" << endl;
+	for (auto& obj : g_Object)
+	{
+		if ((obj.first == 1000 || obj.first == 1001) &&
+			obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+		{
+			cout << "ID : " << obj.first << "    Dir : " <<
+				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+		}
+	}
+
+	/*cout << "----------------------------------" << endl;
+	cout << "id :  " << GetID() << "   받은 패킷 방향  : " << (int)p->eDir << endl;*/
 	m_Packet_autoMove = p;
-	cout << "id :  " << GetID() << "   셋팅 후  패킷 방향  : " << (int)m_Packet_autoMove->eDir << endl;
-	cout << "----------------------------------" << endl;
+	/*cout << "id :  " << GetID() << "   셋팅 후  패킷 방향  : " << (int)m_Packet_autoMove->eDir << endl;
+	cout << "----------------------------------" << endl;*/
+	cout << GetID() << "의 Monster Script------   셋팅 후 " << endl;
+	for (auto& obj : g_Object)
+	{
+		if ((obj.first == 1000 || obj.first == 1001) &&
+			obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+		{
+			cout << "ID : " << obj.first << "    Dir : " <<
+				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+		}
+	}
+	cout << "****************************" << endl;
+	cout << "****************************" << endl;
+
 }
 
 void CMonsterScript::update()
 {
+	//cout << GetID() << "의 Monster Script------  Move 들어가기 전" << endl;
+	//for (auto& obj : g_Object)
+	//{
+	//	if ((obj.first == 1000 || obj.first == 1001) &&
+	//		obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+	//	{
+	//		cout << "ID : " << obj.first << "    Dir : " <<
+	//			(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+	//	}
+	//}
 	Move();
+	//cout << GetID() << "의 Monster Script------  Move 나온 후 attack 들어가기 전" << endl;
+	//for (auto& obj : g_Object)
+	//{
+	//	if ((obj.first == 1000 || obj.first == 1001) &&
+	//		obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+	//	{
+	//		cout << "ID : " << obj.first << "    Dir : " <<
+	//			(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+	//	}
+	//}
+	
 	Attack();
+
+	//cout << GetID() << "의 Monster Script------  Attack 나온 후 " << endl;
+	//for (auto& obj : g_Object)
+	//{
+	//	if ((obj.first == 1000 || obj.first == 1001) &&
+	//		obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+	//	{
+	//		cout << "ID : " << obj.first << "    Dir : " <<
+	//			(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+	//	}
+	//}
 	
 
 	//------
@@ -123,6 +182,18 @@ void CMonsterScript::update()
 	UiPos.y = 300.f;
 	m_pUi->Transform()->SetLocalPos(UiPos);
 	//m_pUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
+
+	/*cout << GetID() << "의 Monster Script------  Update 끝나기 전 " << endl;
+	for (auto& obj : g_Object)
+	{
+		if ((obj.first == 1000 || obj.first == 1001) &&
+			obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+		{
+			cout << "ID : " << obj.first << "    Dir : " <<
+				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+		}
+	}
+	cout << "-------------" << endl;*/
 
 }
 
@@ -177,7 +248,7 @@ void CMonsterScript::DecreaseHp()
 void CMonsterScript::Move()
 {
 	int id = GetID();
-	if (g_Object.count(GetID() != 0))return;
+	if (g_Object.count(GetID()) == 0)return;
 	if(g_Object.find(GetID())->second==nullptr)return;
 	
 
@@ -190,9 +261,14 @@ void CMonsterScript::Move()
 	const Vector3& xmf3Scale = monster->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
 	string temp;
 	MONSTER_AUTOMOVE_DIR monsterDir;
+
 	if (monsterScript->GetPacketMove() != nullptr)
 	{
 		monsterDir = (MONSTER_AUTOMOVE_DIR)m_Packet_autoMove->eDir;
+		/*cout << "-------------" << endl;
+		cout << "Monster Script ID: " << monsterScript->GetID() << endl;
+		cout << GetID()<<"    " << "Monster Move : " << (int)m_Packet_autoMove->eDir<<endl;
+		cout << "-------------" << endl;*/
 		//cout << GetID() << " " << "번 몬스터 방향 -> " << (int)monsterDir << endl;
 		if ((int)monsterDir >= 0 && (int)monsterDir <= 6)
 		{

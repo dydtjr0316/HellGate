@@ -15,6 +15,7 @@
 #include "MonsterScript.h"
 #include "SwordScript.h"
 int cnt = 0;
+bool tempbool = false;
 OBJECT_TYPE CheckObjType(const uShort& id)
 {
 	if (id >= 0 && id < MAX_USER)return OBJECT_TYPE::CLIENT;
@@ -246,6 +247,7 @@ void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 
 void CNetMgr::Recevie_Data()
 {
+	
 	EXOVER* dataBuf = new EXOVER{};
 	DWORD	 recvByte = 0;
 	DWORD	 flags = 0;
@@ -269,6 +271,7 @@ void CNetMgr::Recevie_Data()
 	{
 		Process_Data(recvbuf, retbytesize);
 	}
+
 }
 
 
@@ -279,6 +282,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 	case SC_PACKET_LOGIN_OK:
 	{
+		cout << "SC_PACKET_LOGIN_OK"<< endl;
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		//cout << "ok id -> " << p->id << endl;
 		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
@@ -292,6 +296,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ENTER:
 	{
+		cout << "SC_PACKET_ENTER" << endl;
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
 		//cout << "enter packet" << endl;
@@ -360,6 +365,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			else if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
 			{
 
+
 				if (0 == g_Object.count(id))
 				{
 					if (id == 1000)
@@ -415,7 +421,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
-						
+
 					}
 					else
 					{
@@ -426,7 +432,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second = pMeshData->Instantiate();
 						g_Object.find(id)->second->SetName(L"GreenMonster");
 						g_Object.find(id)->second->FrustumCheck(false);
-						
+
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						{
 							int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
@@ -479,14 +485,22 @@ void CNetMgr::ProcessPacket(char* ptr)
 					}
 
 					//cout << my_packet->id<<"번 몬스터 -- " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
+					cout << id << "의 Monster Enter------  패킷 들어옴" << endl;
+
+					if (g_Object.find(id)->second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+						cout << "ID : " << id << "    Dir : " <<
+						(int)g_Object.find(id)->second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
 
 				}
+
+
 			}
 		}
 	}
 	break;
 	case SC_PACKET_MOVE:
 	{
+		cout << "SC_PACKET_MOVE" << endl;
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
 
@@ -518,10 +532,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
-					/*CGameObject* MonsterObj = g_Object.find(other_id)->second;
-					MonsterObj->Transform()->SetLocalPos(packet->localVec);
-					MonsterObj->Transform()->SetLocalRot(packet->rotateY);
-					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::WALK);*/
+					cout << other_id << "의 Monster Move<player>------  패킷 들어옴" << endl;
+
+					if (g_Object.find(other_id)->second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+						cout << "ID : " << other_id << "    Dir : " <<
+						(int)g_Object.find(other_id)->second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+
 				}
 			}
 		}
@@ -529,23 +545,33 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_MONSTER_MOVE:
 	{
+		cout << "SC_PACKET_MONSTER_MOVE" << endl;
 		sc_packet_monster_automove* packet = reinterpret_cast<sc_packet_monster_automove*>(ptr);
 		int monster_id = packet->id;
 		if (g_Object.count(packet->id) == 0)break;
 		if (g_Object.find(packet->id)->second == nullptr)break;
-		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
-		{
-			g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 
-			cout << "---------------------------------------------------------" << endl;
-			g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
-		}
+		
+		
+			if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER)
+			{
+				cout << monster_id<<"의 SC_PACKET_MONSTER_MOVE" << endl;
+				g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+
+				//cout << "---------------------------------------------------------" << endl;
+				g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
+
+
+
+			}
+			
 
 
 	}
 	break;
 	case SC_PACKET_STOP:
 	{
+		cout << "SC_PACKET_STOP" << endl;
 		sc_packet_stop* packet = reinterpret_cast<sc_packet_stop*>(ptr);
 		int other_id = packet->id;
 
@@ -567,6 +593,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
+		cout << "SC_PACKET_LEAVE" << endl;
+		break;
 		//cout << "leave packet" << endl;
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
@@ -584,6 +612,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
+					if (g_Object.find(other_id)->second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+					{
+						cout << other_id << "의 Monster Leave------   셋팅 후 " << endl;
+						cout << "ID : " << other_id << "    Dir : " <<
+							(int)g_Object.find(other_id)->second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+					}
 					if (!my_packet->isAttack)
 					{
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetPacketMove(nullptr);
@@ -598,6 +632,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetPacketMove(nullptr);
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetBisAttack(my_packet->isAttack);
 					}
+					
 				}
 
 			}
@@ -611,6 +646,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ATTACK:
 	{
+		cout << "SC_PACKET_ATTACK" << endl;
 		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(ptr);
 		int id = packet->id;
 		if (id == g_myid)
@@ -623,14 +659,19 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
 			{
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
-
-
+				if (g_Object.find(id)->second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+				{
+				cout << id << "의 Monster Attack------   셋팅 후 " << endl;
+					cout << "ID : " << id << "    Dir : " <<
+						(int)g_Object.find(id)->second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+				}
 			}
 		}
 	}
 	break;
 	case SC_PACKET_ID:
 	{
+		cout << "SC_PACKET_ID" << endl;
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
 		g_myid = packet->id;
 
@@ -640,6 +681,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	case SC_PACKET_ATTACKANI:
 	{
+		cout << "SC_PACKET_ATTACKANI" << endl;
 		sc_packet_AttackAni* packet = reinterpret_cast<sc_packet_AttackAni*>(ptr);
 		int id = packet->id;
 		if (id == g_myid) {
@@ -661,6 +703,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_MONSTER_ANIMATION:
 	{
+		cout << "SC_PACKET_MONSTER_ANIMATION" << endl;
 		sc_packet_Monster_Animation* packet = reinterpret_cast<sc_packet_Monster_Animation*>(ptr);
 		int id = packet->id;
 		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
@@ -668,13 +711,18 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (g_Object.find(packet->id)->second != nullptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 
+		cout << id << "의 SC_PACKET_MONSTER_ANIMATION------   셋팅 후 " << endl;
+		if (g_Object.find(id)->second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+			cout << "ID : " << id << "    Dir : " <<
+			(int)g_Object.find(id)->second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+
 		//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 	}
 	break;
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);
 	}
-
+	
 }
 
 
@@ -685,19 +733,64 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 	static size_t saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF_SIZE];
 
-
+	
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];
 		if (io_byte + saved_packet_size >= in_packet_size) {
-			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
-	
-				ProcessPacket(packet_buffer);
-				ptr += in_packet_size - saved_packet_size;
-				io_byte -= in_packet_size - saved_packet_size;
-				in_packet_size = 0;
-				saved_packet_size = 0;
-			
-			
+			if ((int)ptr[1] == 12)
+			{
+				sc_packet_monster_automove* packet = reinterpret_cast<sc_packet_monster_automove*>(ptr);
+				cout << "--------------------전--------------------" << endl;
+				cout << "사이즈 : " << (int)packet->size << endl;
+				cout << "아이디 : " << (int)packet->id << endl;
+				cout << "x좌표 : " << (int)packet->pos.x << endl;
+				cout << "z좌표 : " << (int)packet->pos.z << endl;
+				cout << "방향 : " << (int)packet->eDir << endl;
+				for (auto& obj : g_Object)
+				{
+					if ((obj.first == 1000 || obj.first == 1001) &&
+						obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+					{
+						cout << "ID : " << obj.first << "    Dir : " <<
+							(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir <<"  주소값 : "<<(obj.second->GetScript<CMonsterScript>()->gettest()) << endl;
+					}
+				}
+			}
+			if ((int)ptr[1] == 12)
+			{
+				int i = 0;
+				memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
+			}
+			else
+				memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
+
+			if ((int)(packet_buffer + saved_packet_size)[1] == 12)
+			{
+				sc_packet_monster_automove* packet = reinterpret_cast<sc_packet_monster_automove*>(ptr);
+				cout << "---------------------후-------------------" << endl;
+				cout << "사이즈 : " << (int)packet->size << endl;
+				cout << "아이디 : " << (int)packet->id << endl;
+				cout << "x좌표 : " << (int)packet->pos.x << endl;
+				cout << "z좌표 : " << (int)packet->pos.z << endl;
+				cout << "방향 : " << (int)packet->eDir << endl; 
+				for (auto& obj : g_Object)
+				{
+					if ((obj.first == 1000 || obj.first == 1001) &&
+						obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+					{
+						cout << "ID : " << obj.first << "    Dir : " <<
+							(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << "  주소값 : " << (obj.second->GetScript<CMonsterScript>()->gettest()) << endl;
+					}
+				}
+				cout << "----------------------------------------" << endl;
+			}
+			ProcessPacket(packet_buffer);
+			ptr += in_packet_size - saved_packet_size;
+			io_byte -= in_packet_size - saved_packet_size;
+			in_packet_size = 0;
+			saved_packet_size = 0;
+
+
 		}
 		else {
 			memcpy(packet_buffer + saved_packet_size, ptr, io_byte);
@@ -705,6 +798,7 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 			io_byte = 0;
 		}
 	}
+	
 }
 
 void CNetMgr::Enter_Player(const int& id)
