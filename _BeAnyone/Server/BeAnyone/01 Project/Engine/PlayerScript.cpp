@@ -591,6 +591,8 @@ void CPlayerScript::Attack_Default()
 	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
 
 	pBullet->AddComponent(new CBulletScript);
+	CBulletScript* bulletScript = pBullet->GetScript<CBulletScript>();
+	bulletScript->SetPlayer(GetObj());
 
 	CreateObject(pBullet, L"Bullet");
 }

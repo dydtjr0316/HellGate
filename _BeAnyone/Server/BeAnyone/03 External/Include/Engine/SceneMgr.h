@@ -4,6 +4,8 @@ class CScene;
 class CCamera;
 class CGameObject;
 
+
+
 class CSceneMgr
 {
 	SINGLE(CSceneMgr);

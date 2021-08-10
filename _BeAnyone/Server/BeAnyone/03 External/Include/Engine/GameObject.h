@@ -11,6 +11,7 @@ class CLight;
 class CCamera;
 class CTerrain;
 class CStaticUI;
+class CQuest;
 
 class CGameObject :
 	public CEntity
@@ -65,6 +66,7 @@ public:
 	CAnimator3D* Animator3D() { return (CAnimator3D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR3D]; }
 	CCollider* Collider() { return (CCollider*)m_arrCom[(UINT)COMPONENT_TYPE::COLLIDER]; }
 	CStaticUI* StaticUI() { return (CStaticUI*)m_arrCom[(UINT)COMPONENT_TYPE::UI]; }
+	CQuest* Quest() { return (CQuest*)m_arrCom[(UINT)COMPONENT_TYPE::QUEST]; }
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
 	

@@ -37,6 +37,8 @@ private:
 	vector<REQUEST_STATE>	m_vIsQuest;
 	bool				m_CompleteQuest1;
 	bool				m_COmpleteQuest2;
+	CGameObject*		m_pPlayer;
+	vector<int>		m_vPlayerQuest;
 
 	// Conversation Box
 	CGameObject*		m_pConversationBox;
@@ -66,6 +68,7 @@ public:
 	// quest 
 	void DecideQuestType();
 	void ChangeBoxTexture();
+	void CheckPlayer();
 	
 	// collision
 	void OnCollisionEnter(CCollider* _pOther);

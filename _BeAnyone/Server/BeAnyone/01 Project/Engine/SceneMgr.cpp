@@ -17,6 +17,7 @@
 #include "MeshRender.h"
 #include "Light.h"
 #include "Button.h"
+#include "Quest.h"
 
 #include "TimeMgr.h"
 #include "KeyMgr.h"
@@ -39,7 +40,6 @@
 #include "TreeScript.h"
 
 // UI
-#include "TemperUiScript.h"
 #include "StaticUI.h"
 
 using namespace std;
@@ -1972,6 +1972,7 @@ void CSceneMgr::init()
 	pPlayerObj->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pPlayerObj->AddComponent(new CCollider);
+	pPlayerObj->AddComponent(new CQuest);
 	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));

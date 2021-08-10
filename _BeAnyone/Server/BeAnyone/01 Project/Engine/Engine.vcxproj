@@ -33,7 +33,6 @@
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="Device.h" />
-    <ClInclude Include="EnergeUiScript.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EventMgr.h" />
     <ClInclude Include="extern.h" />
@@ -44,8 +43,6 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="GridScript.h" />
-    <ClInclude Include="HpUiScript.h" />
-    <ClInclude Include="HugUiScript.h" />
     <ClInclude Include="DummyItemScript.h" />
     <ClInclude Include="ItemMgr.h" />
     <ClInclude Include="ItemScript.h" />
@@ -64,6 +61,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerScript.h" />
     <ClInclude Include="Ptr.h" />
+    <ClInclude Include="Quest.h" />
     <ClInclude Include="RenderMgr.h" />
     <ClInclude Include="ResMgr.h" />
     <ClInclude Include="Resource.h" />
@@ -78,7 +76,6 @@
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="SwordScript.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TemperUiScript.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeMgr.h" />
@@ -100,7 +97,6 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="desc.cpp" />
     <ClCompile Include="Device.cpp" />
-    <ClCompile Include="EnergeUiScript.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EventMgr.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
@@ -108,8 +104,6 @@
     <ClCompile Include="func.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GridScript.cpp" />
-    <ClCompile Include="HpUiScript.cpp" />
-    <ClCompile Include="HugUiScript.cpp" />
     <ClCompile Include="DummyItemScript.cpp" />
     <ClCompile Include="ItemMgr.cpp" />
     <ClCompile Include="ItemScript.cpp" />
@@ -131,6 +125,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PlayerScript.cpp" />
+    <ClCompile Include="Quest.cpp" />
     <ClCompile Include="RenderMgr.cpp" />
     <ClCompile Include="RenderMgrInit.cpp" />
     <ClCompile Include="ResMgr.cpp" />
@@ -144,7 +139,6 @@
     <ClCompile Include="StaticUI.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="SwordScript.cpp" />
-    <ClCompile Include="TemperUiScript.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainInit.cpp" />
     <ClCompile Include="Texture.cpp" />
