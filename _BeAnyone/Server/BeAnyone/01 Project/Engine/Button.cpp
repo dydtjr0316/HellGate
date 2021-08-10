@@ -169,6 +169,7 @@ void CButton::ChangeButtonTexture()
 		return;
 	}
 	auto temp = m_pComParent->GetObj()->StaticUI()->GetButton();
+
 	MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pItemImage.GetPointer());
 
 }

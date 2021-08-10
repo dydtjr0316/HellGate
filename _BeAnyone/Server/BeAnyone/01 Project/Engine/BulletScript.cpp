@@ -4,7 +4,7 @@
 
 CBulletScript::CBulletScript()
 	: CScript((UINT)SCRIPT_TYPE::BULLETSCRIPT)
-	, m_BType(BULLET_TYPE::DEFAULT)
+	, m_bType(BULLET_TYPE::DEFAULT)
 	, m_fTime(0.0f)
 	, m_bDead(false)
 {
@@ -24,7 +24,7 @@ void CBulletScript::update()
 
 	m_fTime += DT;
 
-	if (m_fTime > 1.0f)
+	if (m_fTime > 3.0f)
 	{
 		m_bDead = true;
 		DeleteObject(GetObj());
@@ -36,8 +36,19 @@ void CBulletScript::update()
 
 void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 {
-	if (L"Monster Object" == _pOther->GetObj()->GetName())
+	auto a = _pOther->GetObj()->GetName();
+	auto ty = m_bType;
+
+	switch ((UINT)m_bType)
 	{
-		DeleteObject(GetObj());
+	case 0:
+		if (L"FireMonster" == _pOther->GetObj()->GetName())
+		{
+			DeleteObject(GetObj());
+		}
+		break;
+	case 1:
+		//	여기다가 픽업 불릿 분기문 설정
+		break;
 	}
 }

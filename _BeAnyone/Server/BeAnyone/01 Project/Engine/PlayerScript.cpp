@@ -191,6 +191,8 @@ void CPlayerScript::update()
 		player->AnimClipReset();
 		//player->SetAnimation(Ani_TYPE::PICK_UP);
 		m_bIsPick = true;
+		PickUp_Default();
+
 	}
 	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) + DT, PlAYER_ANICNT_TYPE::PICKUP_CNT);
@@ -198,7 +200,6 @@ void CPlayerScript::update()
 	}
 	else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
-		//PickUp_Default();
 
 		m_bIsPick = false;
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
@@ -585,11 +586,9 @@ void CPlayerScript::Attack_Default()
 	vPos += -player->Transform()->GetWorldDir(DIR_TYPE::FRONT) * player->Collider()->GetBoundingSphere().Radius;
 	pBullet->AddComponent(new CTransform());
 	pBullet->Transform()->SetLocalPos(vPos);
-
 	pBullet->AddComponent(new CCollider);
 	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
 	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
-
 	pBullet->AddComponent(new CBulletScript);
 	CBulletScript* bulletScript = pBullet->GetScript<CBulletScript>();
 	bulletScript->SetPlayer(GetObj());
@@ -597,36 +596,39 @@ void CPlayerScript::Attack_Default()
 	CreateObject(pBullet, L"Bullet");
 }
 
-//void CPlayerScript::PickUp_Default()
-//{
-//	Vector3 vPos = GetObj()->Transform()->GetLocalPos();
-//
-//	vector<CGameObject*> vecObj;
-//	CSceneMgr::GetInst()->FindGameObjectByTag(L"PickUP Object", vecObj);
-//
-//	if (!vecObj.empty())
-//	{
-//		cout << "총알 객체 생성 안됌" << endl;
-//		return;
-//	}
-//	else
-//		cout << "생성" << endl << endl;
-//
-//	CGameObject* pBullet = new CGameObject;
-//	pBullet->SetName(L"PickUP Object");
-//
-//	vPos += -GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);// *GetObj()->Collider()->GetBoundingSphere().Radius;
-//	pBullet->AddComponent(new CTransform());
-//	pBullet->Transform()->SetLocalPos(vPos);
-//
-//	pBullet->AddComponent(new CCollider);
-//	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
-//	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
-//
-//	pBullet->AddComponent(new CBulletScript);
-//
-//	CreateObject(pBullet, L"Bullet");
-//}
+void CPlayerScript::PickUp_Default()
+{
+	Vector3 vPos = GetObj()->Transform()->GetLocalPos();
+
+	/*vector<CGameObject*> vecObj;
+	CSceneMgr::GetInst()->FindGameObjectByTag(L"PickUP Object", vecObj);
+
+	if (!vecObj.empty())
+	{
+		cout << "줍기 객체 생성 실패" << endl;
+		return;
+	}
+	else
+		cout << "줍기 객체 생성" << endl << endl;*/
+
+	CGameObject* pBullet = new CGameObject;
+	pBullet->SetName(L"PickUP Object");
+	
+	pBullet->AddComponent(new CTransform());
+	pBullet->AddComponent(new CCollider);
+	pBullet->Transform()->SetLocalPos(vPos);
+	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	//	기존 Sphere 값 받아와서 GetHeight에서 200.f 만큼 더한값을 더해줘서 콜리전 생성.
+	BoundingSphere sphere = Collider()->GetBoundingSphere();
+	sphere.Center.y += 200.f;
+	pBullet->Collider()->SetBoundingSphere(BoundingSphere( sphere.Center, sphere.Radius * 5.f));
+	pBullet->AddComponent(new CBulletScript);
+	pBullet->GetScript<CBulletScript>()->SetBulletType(BULLET_TYPE::PICKUP);
+	pBullet->GetScript<CBulletScript>()->SetUIObj(m_pItemUIObj);
+
+
+	CreateObject(pBullet, L"Player");
+}
 
 void CPlayerScript::ClickUiButton()
 {

@@ -251,6 +251,7 @@ void CNpcScript::ChangeBoxTexture()
 				break;
 			case 2:
 				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(3)").GetPointer());
+				
 				break;
 			}
 		}
@@ -264,6 +265,7 @@ void CNpcScript::ChangeBoxTexture()
 				break;
 			case 2:
 				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(3)").GetPointer());
+				m_vIsQuest[1] = REQUEST_STATE::REQUESTING;
 				break;
 			}
 		}
