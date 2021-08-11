@@ -55,6 +55,9 @@ private:
 	vector<Ptr<CMesh>>   m_pAniData;
 	bool m_bisAniReset = false;
 
+	// camera
+	bool				m_bGetParentCamera = true;
+
 public:
 	virtual void update();
 	void init();

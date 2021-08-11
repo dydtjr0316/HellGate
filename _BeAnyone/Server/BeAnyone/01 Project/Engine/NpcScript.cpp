@@ -131,8 +131,6 @@ void CNpcScript::init()
 		pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, storeUi->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
 		// AddGameObject
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pButtonObj);
-
-		storeUi->StaticUI()->m_vecButton[i]->init();
 	}
 
 	CGameObject* vecTemp = FindCam(L"MousePoint", L"PUI");
@@ -144,6 +142,9 @@ void CNpcScript::init()
 	storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_STAMINA);
 	storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_DASH);
 	storeUi->StaticUI()->SetButton(ITEM_ID::STEAK);
+
+	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
+		storeUi->StaticUI()->m_vecButton[i]->init();
 }
 
 void CNpcScript::update()
@@ -211,6 +212,7 @@ void CNpcScript::update()
 
 			// 카메라 회전
 			SetCameraState(CAMERA_STATE::NPC_CAMERA);
+			m_bGetParentCamera = false;
 			AnimClipReset();
 			SetAnimation(NPC_ANI_TYPE::TALK);
 
@@ -444,8 +446,11 @@ CGameObject* CNpcScript::FindCam(wstring _wstr, wstring _Layerwstr)
 {
 	CGameObject* cam;
 	vector<CGameObject*> objects;
-	objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_Layerwstr)->GetParentObj();
-
+	if (m_bGetParentCamera)
+		objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_Layerwstr)->GetParentObj();
+	else if (!m_bGetParentCamera)
+		objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_Layerwstr)->GetObjects(); m_bGetParentCamera = true;
+	
 	vector<CGameObject*>::iterator iter = objects.begin();
 
 	for (; iter != objects.end();) {

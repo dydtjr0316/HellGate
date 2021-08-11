@@ -21,7 +21,8 @@ enum class BT_ACTIVE
 enum class ITEM_NUM 
 {
 	UNIT,
-	TEN,
+	TENS,
+	HUNDREDS,
 	END,
 };
 
@@ -29,6 +30,7 @@ class CButton
 	: public CScript
 {
 private:
+	UI_TYPE					m_eUiType;
 	bool					m_bActive;		//	렌더링 on / off
 
 	ITEM_ID					m_eItemId;
@@ -75,13 +77,14 @@ public:
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
 	//void SetChangeCount(bool _ChangeCount) { m_bChangeCount = _ChangeCount; }
+	void SetUiType(UI_TYPE _eType) { m_eUiType = _eType; }
 
 	// number 
 	void ChangeButtonTexture(); // texture, pos
 	void ChangeNumTexture();
 	void AddItemCount() { m_iItemCount++; m_bChangeCount = true; }
-
-	
+	void SetChangeCount() { m_bChangeCount = true; } // store ui 위해서 
+	void SetItemPrice();
 
 public:
 	CButton();

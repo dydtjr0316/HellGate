@@ -5,15 +5,6 @@ class CGameObject;
 class CTexture;
 class CButton;
 
-
-enum class UI_TYPE
-{
-	PRIVATE_ITEM_UI,
-
-
-	PUBLIC_SHOP_UI,
-};
-
 class CStaticUI
 	: public CComponent
 {
