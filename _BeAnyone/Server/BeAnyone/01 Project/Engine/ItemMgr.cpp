@@ -168,6 +168,8 @@ void CItemMgr::MakeItem()
 
 				m_vItem[j]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
 				m_vItem[j]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
+				wstring wstr = m_pItemMeshData[randNum]->GetMesh()->GetName();
+				SetItemID(wstr);
 			}
 
 			m_bMakeFirst[i] = false;
@@ -216,4 +218,18 @@ void CItemMgr::MakeItem()
 	}
 	
 
+}
+
+void CItemMgr::SetItemID(wstring wstr) 
+{
+	if (wstr == L"Mesh\\Steak_02.mesh")
+		m_vItemID.push_back((UINT)ITEM_ID::STEAK);
+	else if (wstr == L"Mesh\\Bottle_03.mesh")
+		m_vItemID.push_back((UINT)ITEM_ID::BOTTLE_STAMINA);
+	else if (wstr == L"Mesh\\Bottle_04.mesh")
+		m_vItemID.push_back((UINT)ITEM_ID::BOTTLE_DASH);
+	else if (wstr == L"Mesh\\MoneyBag.mesh")
+		m_vItemID.push_back((UINT)ITEM_ID::MONEYBAG);
+	else if (wstr == L"Mesh\\Carrot.mesh")
+		m_vItemID.push_back((UINT)ITEM_ID::CARROT);
 }
