@@ -14,7 +14,6 @@ int attackcnt = 0;
 CMonsterScript::CMonsterScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
 {
-	test = new my();
 	//----------------
 	// monster hp ui
 	//----------------
@@ -79,36 +78,7 @@ void CMonsterScript::SetPacketMove(sc_packet_monster_automove* p)
 	if (p == nullptr)return;
 	if (this == nullptr)return;
 	if (GetID() != p->id)return;
-
-	cout << GetID() << "의 Monster Script------  셋팅 전" << endl;
-	for (auto& obj : g_Object)
-	{
-		if ((obj.first == 1000 || obj.first == 1001) &&
-			obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
-		{
-			cout << "ID : " << obj.first << "    Dir : " <<
-				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
-		}
-	}
-
-	/*cout << "----------------------------------" << endl;
-	cout << "id :  " << GetID() << "   받은 패킷 방향  : " << (int)p->eDir << endl;*/
 	m_Packet_autoMove = p;
-	/*cout << "id :  " << GetID() << "   셋팅 후  패킷 방향  : " << (int)m_Packet_autoMove->eDir << endl;
-	cout << "----------------------------------" << endl;*/
-	cout << GetID() << "의 Monster Script------   셋팅 후 " << endl;
-	for (auto& obj : g_Object)
-	{
-		if ((obj.first == 1000 || obj.first == 1001) &&
-			obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
-		{
-			cout << "ID : " << obj.first << "    Dir : " <<
-				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
-		}
-	}
-	cout << "****************************" << endl;
-	cout << "****************************" << endl;
-
 }
 
 void CMonsterScript::update()
@@ -226,11 +196,6 @@ void CMonsterScript::Move()
 	if (monsterScript->GetPacketMove() != nullptr)
 	{
 		monsterDir = (MONSTER_AUTOMOVE_DIR)monsterScript->GetDir();
-		/*cout << "-------------" << endl;
-		cout << "Monster Script ID: " << monsterScript->GetID() << endl;
-		cout << GetID()<<"    " << "Monster Move : " << (int)m_Packet_autoMove->eDir<<endl;
-		cout << "-------------" << endl;*/
-		//cout << GetID() << " " << "번 몬스터 방향 -> " << (int)monsterDir << endl;
 		if ((int)monsterDir >= 0 && (int)monsterDir <= 6)
 		{
 			switch (monsterDir)

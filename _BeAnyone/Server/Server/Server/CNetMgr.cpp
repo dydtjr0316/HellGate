@@ -701,15 +701,17 @@ void CNetMgr::Worker_Thread()
                     if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
                     {
                         keep_alive = true;
+                        char temp = (char)(rand() % 4);
+                        CAST_MONSTER(m_pMediator->Find(user_id))->SetDir((MONSTER_AUTOMOVE_DIR)temp);
                         break;
                     }
             }
             
             if (true == keep_alive) {
                 if (user_id < 1001)
-                    Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 4 + 5));
+                    Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 5 + 5));
                 else
-                    Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 2 + 3));
+                    Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 7 + 3));
 
             }
             else {
@@ -844,15 +846,14 @@ void CNetMgr::Processing_Thead()
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
                         //cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ", " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
                         CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);
-                        if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() > 10.f)
+                        //if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() >10.f)
                             for (auto& user : old_viewList) {
                                 if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
                                 {
                                     //cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ",  " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
                                     //cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
-                                    char temp = (char)(rand() % 4);
-                                    CAST_MONSTER(m_pMediator->Find(monster))->SetDir((MONSTER_AUTOMOVE_DIR)temp);
-                                    m_pSendMgr->Send_Monster_Move_Packet(user, monster, temp);
+
+                                    m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
 
                                     CAST_MONSTER(m_pMediator->Find(monster))->SetRefreshPacketCnt_Zero();
                                 }
@@ -953,6 +954,8 @@ void CNetMgr::WakeUp_Monster(const uShort& id)
 {
     int status = OBJSTATUS::ST_SLEEP;
     srand((unsigned int)time(NULL));
+    if(CAST_MONSTER(m_pMediator->Find(id))->GetBisMoving())return;
+
     CAST_MONSTER(m_pMediator->Find(id))->SetBisMoving(false);
     if (CAS((int*)(&(m_pMediator->Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {

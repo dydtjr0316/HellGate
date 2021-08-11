@@ -20,6 +20,7 @@ public:
 	//char* Get_Packet_buf() { return m_packet_buf; }
 	//unordered_set<int>& GetViewList() { return view_list; }
 	const float& GetRefreshPacketCnt() { return m_frpc; }
+	bool& GetBisMoving() { return m_bisMoving; }
 
 	// SET
 
