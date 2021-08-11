@@ -209,10 +209,7 @@ struct sc_packet_monster_automove
 	uShort id;
 	Vector3 pos;
 	char eDir;
-	~sc_packet_monster_automove()
-	{
-		cout << "»èÁ¦ µÊ" << endl;
-	}
+
 
 };
 

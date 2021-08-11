@@ -1,12 +1,6 @@
 #pragma once
 #include "Script.h"
-struct my
-{
-	my() { t = 0; s = 0; e = 0; }
-	int t;
-	int s;
-	int e;
-};
+
 class CMonsterScript :
 	public CScript
 {
@@ -21,10 +15,6 @@ private:
 	bool m_bSetChild = false;
 	
 	CTerrain* m_pTerrainObj;
-
-	// animation
-	my* test = nullptr;
-
 	vector<Ptr<CMesh>>   m_pAniData;
 
 	bool m_bisAttack = false;
@@ -81,12 +71,10 @@ public:
 
 	// void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
 	MONSTER_AUTOMOVE_DIR& GetDir() { return m_eDir; }
-	void SetDir(const MONSTER_AUTOMOVE_DIR& dir) { m_eDir = dir; }
+	void SetDir(const MONSTER_AUTOMOVE_DIR dir) { m_eDir = dir; }
 
 	sc_packet_monster_automove* GetPacketMove() {return  m_Packet_autoMove; }
 	void SetPacketMove(sc_packet_monster_automove* p);
-
-	my* gettest() { return test; }
 	
 public:
 	CLONE(CMonsterScript);

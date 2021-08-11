@@ -3,12 +3,9 @@
 
 #include "stdafx.h"
 #include "main.h"
-
 #include "Engine/global.h"
 #include "Engine/Core.h"
 #include "ServerHeader.h"
-
-
 
 #ifdef _DEBUG
 #pragma comment(lib, "Engine/Engine_debug.lib")
@@ -16,23 +13,16 @@
 #pragma comment(lib, "Engine/Engine.lib")
 #endif
 
-
-
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #else
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 #endif
 
-
+#define MAX_LOADSTRING 100
 SOCKET g_Socket;
 char name[10];
 int frameCnt = 0;
-
-#define MAX_LOADSTRING 100
-enum class Version { Server, Cliet };
-Version v = Version::Server;    // 서버 버전바꾸는거 
-// 이거는 한번 고민해보기
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
