@@ -158,10 +158,10 @@ void CCamera::render_forward()
 			m_vecForward[i]->Collider()->render();
 	}
 
-	/*for (size_t i = 0; i < m_vecParticle.size(); ++i)
+	for (size_t i = 0; i < m_vecParticle.size(); ++i)
 	{
 		m_vecParticle[i]->Particlesystem()->render();
-	}*/
+	}
 
 }
 

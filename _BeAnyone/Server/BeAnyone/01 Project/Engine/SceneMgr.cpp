@@ -2371,8 +2371,8 @@ void CSceneMgr::init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Map");
 	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Item");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Item", L"Player");
-	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"UI", L"PUI");
-	
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"UI", L"PUI");
+
 
 	m_pCurScene->awake();
 	m_pCurScene->start();

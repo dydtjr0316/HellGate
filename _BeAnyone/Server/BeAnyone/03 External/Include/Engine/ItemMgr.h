@@ -8,6 +8,7 @@ class CItemMgr
 	SINGLE(CItemMgr);
 private:
 	vector<CGameObject*>		m_vItem;
+
 	vector<Vector3>				m_vItemPos;
 	CTerrain*					m_Terrain;
 

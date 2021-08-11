@@ -9,7 +9,26 @@ void CResMgr::CreateDefaultMesh()
     vector<UINT> vecIdx;
 
     Ptr<CMesh> pMesh = nullptr;
+    VTX v;
 
+    // ==========
+    // Point Mesh
+    // ==========
+    pMesh = new CMesh;
+
+    v.vPos = Vector3(0.f, 0.f, 0.f);
+    v.vColor = Vector4(1.f, 0.f, 0.f, 1.f);
+    v.vUV = Vector2(0.5f, 0.5f);
+    v.vNormal = Vector3(0.f, 0.f, -1.f);
+    v.vTangent = Vector3(1.f, 0.f, 0.f);
+    v.vBinormal = Vector3(0.f, 1.f, 0.f);
+
+    UINT iIdx = 0;
+
+    pMesh->Create(sizeof(VTX), 1, (BYTE*)&v
+        , DXGI_FORMAT_R32_UINT, 1, (BYTE*)&iIdx);
+
+    AddRes(L"PointMesh", pMesh);
 
     // =============    // 0 --- 1
     // Rect Mesh        // |  \  |
@@ -17,7 +36,6 @@ void CResMgr::CreateDefaultMesh()
     // =============   
     pMesh = new CMesh;
 
-    VTX v;
     // 1. 입력 조립기 단계에 전달할, 정점 3개로 구성된 삼각형 1개
     v.vPos = Vector3(-0.5f, 0.5f, 0.f);
     v.vColor = Vector4(0.8f, 0.7f, 0.6f, 1.f);
