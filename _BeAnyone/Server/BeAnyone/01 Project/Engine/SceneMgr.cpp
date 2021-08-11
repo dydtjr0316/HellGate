@@ -2364,9 +2364,9 @@ void CSceneMgr::init()
 	pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
 
 
-	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
-	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
-	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Map");
 	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Item");
