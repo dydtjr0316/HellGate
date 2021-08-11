@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameObject.h"
 #include "PlayerScript.h"
+#include "MonsterScript.h"
 #include "Component.h"
 #include "MeshRender.h"
 #include "Script.h"
@@ -221,14 +222,53 @@ void CGameObject::update()
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
-		/*if (GetName() == L"PlayerMale") {
+		if (GetName() == L"PlayerMale") {
 			if (GetID() == g_myid && g_Object.size() != 0 && g_Object.find(g_myid)->second != nullptr)
 				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->update();
-		}
-		else
-			m_vecScript[i]->update();*/
 		
-		m_vecScript[i]->update();
+		}
+		else if (GetName() == L"FireMonster" || GetName() == L"GreenMonster")
+		{
+			if (g_Object.count(GetID()) != 0)
+			{
+				if (g_Object.find(GetID())->second != nullptr)
+				{
+					g_Object.find(GetID())->second->GetScript<CMonsterScript>()->update();
+				}
+			}
+		}
+		else/* if(GetLayerIdx())*/
+		{
+			if (GetID() == 1000 || GetID() == 1001)
+			{
+				cout << GetID() << "의 " << i << "스크립트------  else update 들어가기 전" << endl;
+				for (auto& obj : g_Object)
+				{
+					if ((obj.first == 1000 || obj.first == 1001) &&
+						obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+					{
+						cout << "ID : " << obj.first << "    Dir : " <<
+							(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+					}
+				}
+			}
+			m_vecScript[i]->update();
+
+			if (GetID() == 1000 || GetID() == 1001)
+			{
+				cout << GetID() << i << "스크립트------  else update 나온 후 " << endl;
+				for (auto& obj : g_Object)
+				{
+					if ((obj.first == 1000 || obj.first == 1001) &&
+						obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
+					{
+						cout << "ID : " << obj.first << "    Dir : " <<
+							(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
+					}
+				}
+			}
+		}
+
 	}
 	
 }
