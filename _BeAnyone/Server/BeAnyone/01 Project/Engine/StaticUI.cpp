@@ -87,10 +87,16 @@ void CStaticUI::SetButton(ITEM_ID _id)
 {
 	for (int i = 0; i < m_vecButton.size(); ++i)
 	{
-		if (m_vecButton[i]->GetItemID() == ITEM_ID::EMPTY)
+		if (m_vecButton[i]->GetItemID() == _id) {
+			m_vecButton[i]->AddItemCount(); return;
+		//	m_vecButton[i]->SetChangeCount(true);
+		}
+		else if (m_vecButton[i]->GetItemID() == ITEM_ID::EMPTY)
 		{
 			//*(m_vecButton[i]->GetObj()) = *_obj;
 			m_vecButton[i]->SetItemID(_id);
+			m_vecButton[i]->AddItemCount();
+		//	m_vecButton[i]->SetChangeCount(true);
 			return;
 		}
 		else
@@ -132,11 +138,6 @@ void CStaticUI::update()
 		}
 		else if (KEY_TAB(KEY_TYPE::KEY_LBTN))	//	키를 눌렸을 때 충돌검사를 하고 충돌 됐으면 BT_ACTIVE 상태값을 충돌된 버튼만 수정한다/
 		{	
-			/*for (int i = 0; i < m_vecButton.size(); ++i)
-			{
-				
-				m_vecButton[i]->GetActive();
-			}*/
 
 		}
 		else if (KEY_AWAY(KEY_TYPE::KEY_LBTN))	//	피킹 후 상태 이상이 없으면 다시 제자리로 돌아간다.

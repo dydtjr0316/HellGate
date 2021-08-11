@@ -43,6 +43,7 @@ public:
 	void render_lights();
 	void merge_light();
 	void render_shadowmap();
+	void render_snow();
 
 private:
 	void CreateMRT();

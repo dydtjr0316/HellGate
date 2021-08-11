@@ -178,6 +178,10 @@ bool CCollisionMgr::IsCollision(CCollider* _pCollider1, CCollider* _pCollider2)
 	{
 		return CollisionSphere(_pCollider1, _pCollider2);
 	}
+	else if (COLLIDER_TYPE::BOX == _pCollider1->GetColliderType() && COLLIDER_TYPE::MESH == _pCollider2->GetColliderType())
+	{
+		return CollisionSphere(_pCollider1, _pCollider2);
+	}
 	else if (COLLIDER_TYPE::RECT == _pCollider1->GetColliderType() && COLLIDER_TYPE::RECT == _pCollider2->GetColliderType())
 	{
 		return CollisionRect(_pCollider1, _pCollider2);
@@ -194,6 +198,10 @@ bool CCollisionMgr::IsCollision(CCollider* _pCollider1, CCollider* _pCollider2)
 // 3D
 bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollider2)
 {
+	if ((_pCollider1->GetName() == L"Item1" || _pCollider1->GetName() == L"Item2" || _pCollider1->GetName() == L"Item3"))
+	{
+		int a = 0;
+	}
 	BoundingSphere bBX1 = _pCollider1->GetBoundingSphere();
 	BoundingSphere bBX2 = _pCollider2->GetBoundingSphere();
 

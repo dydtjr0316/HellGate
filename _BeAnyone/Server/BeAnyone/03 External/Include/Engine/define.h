@@ -131,6 +131,7 @@ enum class COMPONENT_TYPE
 	TERRAIN,
 	UI,
 	PARTICLESYSTEM,
+	QUEST,
 	END,
 	SCRIPT,
 };
@@ -388,5 +389,15 @@ enum class ITEM_ID
 	STEAK,
 	MONEYBAG,
 	CARROT,
+	END,
+};
+
+// player
+enum class QUEST_TYPE
+{
+	KILL_MONSTER,
+	GET_ITEM,
+	BUY_WEAPON,
+	BUY_POTION,
 	END,
 };

@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "NpcScript.h"
 #include "RenderMgr.h"
+#include "Quest.h"
 #include "ToolCamScript.h"
 
 CNpcScript::CNpcScript()
 	: CScript((UINT)COMPONENT_TYPE::SCRIPT) //CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT),
 	, m_eReqState{ REQUEST_STATE::NOT_RECIEVE }
+	, m_vPlayerQuest{}
 {
 	// 0729효림
 	// Request Box Create
@@ -95,7 +97,7 @@ void CNpcScript::update()
 		if (m_bIsTalk == true) { // 필요없을 것 같은데
 			++m_iClickNum;
 
-			if (m_iClickNum == 3) {	// 3번 누르면 나가는 걸로 가정
+			if ((m_eQuestType != NPC_QUEST::DONE || m_eQuestType != NPC_QUEST::WHY) && m_iClickNum == 3) {	// 3번 누르면 나가는 걸로 가정
 				SetCameraState(CAMERA_STATE::FIXED_CAMERA);
 				SetAnimation(NPC_ANI_TYPE::IDLE);
 				m_bisAniReset = false;
@@ -112,6 +114,16 @@ void CNpcScript::update()
 				//SetReqMarkMesh(m_eReqState); 
 				// m_pRequestMark->Animator3D()->SetAniUse(true);
 				// -----------------
+			}
+			else if ((m_eQuestType == NPC_QUEST::DONE || m_eQuestType == NPC_QUEST::WHY) && m_iClickNum == 1)
+			{
+				SetCameraState(CAMERA_STATE::FIXED_CAMERA);
+				SetAnimation(NPC_ANI_TYPE::IDLE);
+				m_bisAniReset = false;
+				m_pConversationBox->SetUiRenderCheck(false);
+				m_bIsTalk = false;
+				m_bIsCollision = false;
+				m_iClickNum = 0;
 			}
 		}
 
@@ -137,6 +149,21 @@ void CNpcScript::update()
 		if (m_bIsCollision == true)
 			ChangeBoxTexture();
 	}
+}
+
+void CNpcScript::CheckPlayer()
+{
+	m_vPlayerQuest = m_pPlayer->Quest()->GetQuestCheck();
+
+	for (int i = 0; i < (UINT)QUEST_TYPE::END; ++i) {
+		if (m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] == 3 && GetObj()->GetName() == L"Npc_1") {
+			m_vIsQuest[0] = REQUEST_STATE::REQUEST_RESOLUTION;
+			m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] = 0;
+			m_pPlayer->Quest()->ResetQuestCheck(QUEST_TYPE::KILL_MONSTER);
+			m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::KILL_MONSTER, false);
+		}
+	}
+
 }
 
 void CNpcScript::DecideQuestType()
@@ -165,6 +192,7 @@ void CNpcScript::DecideQuestType()
 
 void CNpcScript::ChangeBoxTexture()
 {
+	CheckPlayer();
 	DecideQuestType();
 
 	//NPC_1
@@ -196,6 +224,7 @@ void CNpcScript::ChangeBoxTexture()
 				break;
 			case 2:
 				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_quest2(3)").GetPointer());
+				m_vIsQuest[1] = REQUEST_STATE::REQUESTING;
 				break;
 			}
 		}
@@ -204,6 +233,10 @@ void CNpcScript::ChangeBoxTexture()
 		}
 		else if (m_eQuestType == NPC_QUEST::DONE) {
 			m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc1_done").GetPointer());
+			if(m_vIsQuest[0] == REQUEST_STATE::REQUEST_RESOLUTION)
+				m_vIsQuest[0] = REQUEST_STATE::COMPLETE;
+			else if(m_vIsQuest[0] == REQUEST_STATE::COMPLETE)
+				m_vIsQuest[1] = REQUEST_STATE::COMPLETE;
 		}
 	}
 	// NPC_2
@@ -218,6 +251,7 @@ void CNpcScript::ChangeBoxTexture()
 				break;
 			case 2:
 				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(3)").GetPointer());
+				
 				break;
 			}
 		}
@@ -231,6 +265,7 @@ void CNpcScript::ChangeBoxTexture()
 				break;
 			case 2:
 				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(3)").GetPointer());
+				m_vIsQuest[1] = REQUEST_STATE::REQUESTING;
 				break;
 			}
 		}
@@ -285,6 +320,7 @@ void CNpcScript::OnCollisionEnter(CCollider* _pOther)
 	
 	// 클릭하면 대화 상자 띄우기 (istalk true로 만들기) -> SetUiRenderCheck true로
 	m_bIsCollision = true;
+	m_pPlayer = _pOther->GetObj();
 }
 
 void CNpcScript::OnCollisionExit(CCollider* _pOther)

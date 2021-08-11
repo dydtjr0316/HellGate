@@ -42,6 +42,7 @@ public:
 private:
 	Vector3				m_vecPlayerDir;
 	CGameObject*		m_pItemUIObj;
+	
 
 private:
 	float			m_ftimeCount = 0.f;
@@ -65,9 +66,6 @@ private:
 
 	// pickup
 	bool			m_bIsPick = false;
-
-	// quest 
-	int				m_iMonsterKillNum = 0;
 
 	// ui
 	vector<CGameObject*>		m_vUnderBar;
@@ -105,10 +103,10 @@ public:
 	// pick up item
 	CGameObject* GetUIObj() { return m_pItemUIObj; }
 	void SetUIObj(CGameObject* _obj) { m_pItemUIObj = _obj; }
-	//void PickUp_Default();
+	void PickUp_Default();
 	
 	// quest
-	int GetKillNum() { return m_iMonsterKillNum; }
+	//int GetKillNum() { return m_iMonsterKillNum; }
 
 	// ui
 	void ClickUiButton();

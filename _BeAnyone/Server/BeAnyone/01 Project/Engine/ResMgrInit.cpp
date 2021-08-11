@@ -562,7 +562,7 @@ void CResMgr::CreateDefaultShader()
     pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Test", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Test", "ps_5_0");
     // BlendState ¼³Á¤
-    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+    //pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
     //pShader->SetRasterizerType(RS_TYPE::WIRE_FRAME);
     pShader->Create(SHADER_POV::FORWARD);
     pShader->AddShaderParam(tShaderParam{ L"Test Value", SHADER_PARAM::INT_0 }); 
@@ -741,6 +741,11 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"TestShader"));
     AddRes(L"CoversationMtrl", pMtrl);
+
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"TestShader"));
+    AddRes(L"QuestBoxMtrl", pMtrl);
 
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();

@@ -3,6 +3,8 @@
 #include "RenderMgr.h"
 #include "ItemMgr.h"
 #include "Terrain.h"
+#include "Quest.h"
+#include "BulletScript.h"
 
 
 int attackcnt = 0;
@@ -160,8 +162,14 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 	{
 		// 여기 두번들어감 // 용석
 		g_netMgr.Send_Attack_Packet(m_sId);
+
+		// 죽으면 하는 걸로 바꿔야 함 일단 오류나니까 여기서 처리하기
 		CItemMgr::GetInst()->SetItemPos(GetObj()->Transform()->GetLocalPos());
 		CItemMgr::GetInst()->SetIsMake(true);
+
+		m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
+		if(m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == true)
+			m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
 		
 		m_bisDamaged = true;
 	}

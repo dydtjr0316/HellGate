@@ -44,6 +44,8 @@ private:
 
 	// item number
 	vector<CGameObject*>	m_vItemNum;
+	int						m_iItemCount = 0;
+	bool					m_bChangeCount;
 
 public:
 	void					init();
@@ -71,9 +73,14 @@ public:
 	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
+	//void SetChangeCount(bool _ChangeCount) { m_bChangeCount = _ChangeCount; }
 
-	// number texture, pos 
-	void ChangeTexture();
+	// number 
+	void ChangeButtonTexture(); // texture, pos
+	void ChangeNumTexture();
+	void AddItemCount() { m_iItemCount++; m_bChangeCount = true; }
+
+	
 
 public:
 	CButton();

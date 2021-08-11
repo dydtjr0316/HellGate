@@ -22,6 +22,9 @@ private:
 	bool m_bisDamaged = false;
 	bool m_bisPunch = false;
 
+	// player save for quest
+	CGameObject* m_pPlayer;
+
 	sc_packet_monster_automove* m_Packet_autoMove = nullptr;
 
 	// ¿ë¼®

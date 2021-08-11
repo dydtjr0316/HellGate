@@ -166,6 +166,10 @@ void CRenderMgr::render_shadowmap()
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SHADOWMAP)->TargetToResBarrier();
 }
 
+void CRenderMgr::render_snow()
+{
+}
+
 CCamera* CRenderMgr::GetMainCam()
 {
 	for (int i = 0; i < m_vecCam.size(); ++i) {
