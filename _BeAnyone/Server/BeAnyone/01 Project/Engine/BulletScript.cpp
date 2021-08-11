@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BulletScript.h"
+#include "ParticleSystem.h"
 
 
 CBulletScript::CBulletScript()
@@ -44,6 +45,19 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 	case 0:
 		if (L"FireMonster" == _pOther->GetObj()->GetName())
 		{
+			// ====================
+			// Particle Object »ý¼º
+			// ====================
+			CGameObject* pObject = new CGameObject;
+			pObject->SetName(L"Particle");
+			pObject->AddComponent(new CTransform);
+			pObject->AddComponent(new CParticleSystem);
+
+			pObject->FrustumCheck(false);
+			pObject->Transform()->SetLocalPos(Transform()->GetLocalPos());
+
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
+
 			DeleteObject(GetObj());
 		}
 		break;

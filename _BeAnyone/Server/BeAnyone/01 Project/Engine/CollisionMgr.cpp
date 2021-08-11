@@ -194,7 +194,6 @@ bool CCollisionMgr::IsCollision(CCollider* _pCollider1, CCollider* _pCollider2)
 	return false;
 }
 
-
 // 3D
 bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollider2)
 {

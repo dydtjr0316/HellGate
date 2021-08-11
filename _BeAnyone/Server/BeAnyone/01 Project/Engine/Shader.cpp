@@ -31,8 +31,6 @@ void CShader::SetDepthStencilType(DEPTH_STENCIL_TYPE _eType)
 	m_eDSType = _eType;
 }
 
-
-
 void CShader::CreateVertexShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion)
 {
 	int iFlag = 0;
@@ -117,6 +115,28 @@ void CShader::CreateDomainShader(const wstring& _strPath, const string& _strFunc
 	}
 
 	m_tPipeline.DS = { m_pDSBlob->GetBufferPointer(), m_pDSBlob->GetBufferSize() };
+}
+
+void CShader::CreateGeometryShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion)
+{
+	int iFlag = 0;
+#ifdef _DEBUG
+	iFlag = D3DCOMPILE_DEBUG;
+#endif
+
+	wstring strPath = CPathMgr::GetResPath();
+	strPath += _strPath;
+
+	char* pErr = nullptr;
+
+	if (FAILED(D3DCompileFromFile(strPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, _strFuncName.c_str(), _strhlslVersion.c_str(), iFlag, 0, &m_pGSBlob, &m_pErrBlob)))
+	{
+		pErr = (char*)m_pErrBlob->GetBufferPointer();
+		MessageBoxA(nullptr, pErr, "Shader Create Failed !!!", MB_OK);
+	}
+
+	m_tPipeline.GS = { m_pGSBlob->GetBufferPointer(), m_pGSBlob->GetBufferSize() };
 }
 
 void CShader::CreateComputeShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion)

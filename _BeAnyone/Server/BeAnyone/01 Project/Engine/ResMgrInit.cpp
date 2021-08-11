@@ -726,6 +726,34 @@ void CResMgr::CreateDefaultShader()
     pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS);
     pShader->Create(SHADER_POV::SHADOW);
     AddRes(L"ShadowMapShader", pShader);
+
+    // ===============
+    // Particle Shader
+    // ===============
+    pShader = new CShader;
+    pShader->CreateVertexShader(L"Shader\\particle.fx", "VS_Particle", "vs_5_0");
+    pShader->CreateGeometryShader(L"Shader\\particle.fx", "GS_Particle", "gs_5_0");
+    pShader->CreatePixelShader(L"Shader\\particle.fx", "PS_Particle", "ps_5_0");
+
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND); // 알파 블랜드 사용
+    pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
+
+    pShader->Create(SHADER_POV::PARTICLE, D3D_PRIMITIVE_TOPOLOGY_POINTLIST); // TOPOLOGY 가 점 형태(정점 1개)
+
+    pShader->AddShaderParam(tShaderParam{ L"Start Scale", SHADER_PARAM::FLOAT_0 });
+    pShader->AddShaderParam(tShaderParam{ L"End Scale", SHADER_PARAM::FLOAT_1 });
+    pShader->AddShaderParam(tShaderParam{ L"Start Color", SHADER_PARAM::VEC4_0 });
+    pShader->AddShaderParam(tShaderParam{ L"End Color", SHADER_PARAM::VEC4_1 });
+    pShader->AddShaderParam(tShaderParam{ L"Particle Texture", SHADER_PARAM::TEX_0 });
+
+    AddRes(L"ParticleShader", pShader);
+
+    // ======================
+    // Particle Update Shader
+    // ======================
+    pShader = new CShader;
+    pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate", "cs_5_0");
+    AddRes(L"ParticleUpdateShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -852,4 +880,21 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"ShadowMapShader"));
     AddRes(L"ShadowMapMtrl", pMtrl);
+
+    // Particle Mtrl
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"ParticleShader"));
+    AddRes(L"ParticleMtrl", pMtrl);
+
+    // Particle Update
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader"));
+        
+    Ptr<CTexture> pNoiseTex = Load<CTexture>(L"Texture\\noise.png", L"Texture\\noise.png");
+    pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+    pMtrl->SetData(SHADER_PARAM::VEC2_0, &Vector2(pNoiseTex->Width(), pNoiseTex->Height()));
+
+    AddRes(L"ParticleUpdateMtrl", pMtrl);
 }

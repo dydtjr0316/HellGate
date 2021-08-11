@@ -47,6 +47,7 @@ public:
 	static CMesh* CreateFromContainerAni(CFBXLoader& _loader);
 
 	void render(UINT _iSubset = 0);
+	void render_instancing(UINT _iInstanceCount, UINT _iSubset = 0);
 
 public:
 	UINT GetSubsetCount() { return (UINT)m_vecIdxInfo.size(); }

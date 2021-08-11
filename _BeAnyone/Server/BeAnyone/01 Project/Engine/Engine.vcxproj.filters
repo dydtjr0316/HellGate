@@ -52,31 +52,31 @@
       <Filter>03. Device\00. ConstantBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>04. GameObject\Script\Component\00. Camera</Filter>
+      <Filter>04. GameObject\Component\00. Camera</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
-      <Filter>04. GameObject\Script\Component\00. Camera</Filter>
+      <Filter>04. GameObject\Component\00. Camera</Filter>
     </ClCompile>
     <ClCompile Include="Animator3D.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Collider.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="MeshRender.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Script.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="GridScript.cpp">
       <Filter>04. GameObject\Script</Filter>
@@ -178,7 +178,7 @@
       <Filter>04. GameObject\Script</Filter>
     </ClCompile>
     <ClCompile Include="StaticUI.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>04. GameObject\Script\00.UIScript</Filter>
@@ -196,10 +196,10 @@
       <Filter>06. Manager</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Quest.cpp">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,31 +238,31 @@
       <Filter>03. Device\00. ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>04. GameObject\Script\Component\00. Camera</Filter>
+      <Filter>04. GameObject\Component\00. Camera</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h">
-      <Filter>04. GameObject\Script\Component\00. Camera</Filter>
+      <Filter>04. GameObject\Component\00. Camera</Filter>
     </ClInclude>
     <ClInclude Include="Animator3D.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="MeshRender.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Script.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="GridScript.h">
       <Filter>04. GameObject\Script</Filter>
@@ -367,7 +367,7 @@
       <Filter>04. GameObject\Script</Filter>
     </ClInclude>
     <ClInclude Include="StaticUI.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>04. GameObject\Script\00.UIScript</Filter>
@@ -385,10 +385,10 @@
       <Filter>06. Manager</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Quest.h">
-      <Filter>04. GameObject\Script\Component</Filter>
+      <Filter>04. GameObject\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -464,10 +464,10 @@
     <Filter Include="04. GameObject\Terrain">
       <UniqueIdentifier>{4930b5dd-5f73-4a2f-abe1-15e99dfe491c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. GameObject\Script\Component">
+    <Filter Include="04. GameObject\Component">
       <UniqueIdentifier>{48f08812-6b98-421e-8cec-9b71c8b83e6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. GameObject\Script\Component\00. Camera">
+    <Filter Include="04. GameObject\Component\00. Camera">
       <UniqueIdentifier>{7dabe267-7b01-4845-aef2-e47d0aa21928}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

@@ -33,6 +33,7 @@ private:
 
 	vector<CGameObject*>	m_vecDeferred;
 	vector<CGameObject*>	m_vecForward;
+	vector<CGameObject*>	m_vecParticle;
 
 	vector<CGameObject*>	m_vecShadowObj;
 

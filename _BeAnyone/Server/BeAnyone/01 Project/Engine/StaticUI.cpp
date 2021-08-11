@@ -150,8 +150,6 @@ void CStaticUI::update()
 
 
 				}
-
-
 			}
 		}
 	}
