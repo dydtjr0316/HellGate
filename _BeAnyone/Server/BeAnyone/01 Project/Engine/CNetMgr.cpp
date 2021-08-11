@@ -547,23 +547,32 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		cout << "SC_PACKET_MONSTER_MOVE" << endl;
 		sc_packet_monster_automove* packet = reinterpret_cast<sc_packet_monster_automove*>(ptr);
+		sc_packet_monster_automove* packet1 = reinterpret_cast<sc_packet_monster_automove*>(ptr);
+		sc_packet_monster_automove* packet2 = reinterpret_cast<sc_packet_monster_automove*>(ptr);
+		
+
 		int monster_id = packet->id;
 		if (g_Object.count(packet->id) == 0)break;
 		if (g_Object.find(packet->id)->second == nullptr)break;
 
-		
-		
-			if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER)
-			{
-				cout << monster_id<<"狼 SC_PACKET_MONSTER_MOVE" << endl;
-				g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
-
-				//cout << "---------------------------------------------------------" << endl;
-				g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
-
-
-
+		if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER) {
+			if (packet->id == 1000) {
+				g_Object.find(packet1->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+				g_Object.find(packet1->id)->second->Transform()->SetLocalPos(packet->pos);
 			}
+			else if (packet->id == 1001) {
+
+				g_Object.find(packet2->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+				g_Object.find(packet2->id)->second->Transform()->SetLocalPos(packet->pos);
+			}
+
+				//cout << monster_id << "狼 SC_PACKET_MONSTER_MOVE" << endl;
+				//g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+				//
+				////cout << "---------------------------------------------------------" << endl;
+				//g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
+
+		}
 			
 
 
@@ -752,7 +761,7 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 						obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
 					{
 						cout << "ID : " << obj.first << "    Dir : " <<
-							(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir <<"  林家蔼 : "<<(obj.second->GetScript<CMonsterScript>()->gettest()) << endl;
+							(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir <<"  林家蔼 : "<<(obj.second->GetScript<CMonsterScript>()->GetPacketMove()) << endl;
 					}
 				}
 			}
