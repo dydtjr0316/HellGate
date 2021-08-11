@@ -44,6 +44,8 @@ public:
 	void SetType(UI_TYPE _ui) { m_eType = _ui; }
 	void SetButton(ITEM_ID);
 
+	// quest
+	int GetQuestItemCount();
 
 public:
 	void init(UI_TYPE );

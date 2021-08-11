@@ -2,6 +2,8 @@
 #include "PlayerScript.h"
 #include "BulletScript.h"
 #include "RenderMgr.h"
+#include "StaticUI.h"
+#include "Quest.h"
 #include <iostream>
 
 
@@ -343,6 +345,10 @@ void CPlayerScript::update()
 	{
 		MeshRender()->SetMaterial(m_pOriginMtrl);
 	}
+
+	// quest::find item
+	if (GetObj()->Quest()->GetDoQuest(QUEST_TYPE::GET_ITEM) == true)
+		FindQuestItem();
 }
 
 void CPlayerScript::op_Move()
@@ -660,4 +666,9 @@ void CPlayerScript::ClickUiButton()
 			}
 		}
 	}
+}
+
+void CPlayerScript::FindQuestItem()
+{
+	GetObj()->Quest()->SetQuestcount(QUEST_TYPE::GET_ITEM, m_pItemUIObj->StaticUI()->GetQuestItemCount());
 }

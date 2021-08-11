@@ -382,6 +382,7 @@ enum class ITEM_ID
 	EMPTY,
 	BASIC_SWORD,
 	BASIC_ARROW,
+	AX,
 	BRANCH,
 	APPLE,
 	BOTTLE_STAMINA,
@@ -391,6 +392,13 @@ enum class ITEM_ID
 	CARROT,
 	END,
 };
+
+enum class UI_TYPE
+{
+	PRIVATE_ITEM_UI,
+	PUBLIC_SHOP_UI,
+};
+
 
 // player
 enum class QUEST_TYPE

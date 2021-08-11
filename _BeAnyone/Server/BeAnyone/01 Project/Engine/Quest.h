@@ -29,7 +29,7 @@ public:
 	bool GetDoQuest(QUEST_TYPE _questType) { return m_bDoQuest[(UINT)_questType]; }
 
 	void SetDoQuest(QUEST_TYPE _questType, bool _doQuest) { m_bDoQuest[(UINT)_questType] = _doQuest; }
-	
+	void SetQuestcount(QUEST_TYPE _questType, int _questCount) { m_vQuestCheck[(UINT)_questType] = _questCount; }
 public:
 	CLONE(CQuest);
 

@@ -9,9 +9,18 @@
 void CButton::init()
 {
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	int num{};
+
+	if (m_eUiType == UI_TYPE::PRIVATE_ITEM_UI)
+		num = (UINT)ITEM_NUM::HUNDREDS;
+	else {
+		num = (UINT)ITEM_NUM::END;
+		SetItemPrice();
+	}
+
 
 	// item number create
-	for (int i = 0; i < (UINT)ITEM_NUM::END; ++i) {
+	for (int i = 0; i < num; ++i) {
 		CGameObject* pItemNum = new CGameObject;
 		pItemNum->SetName(L"ItemNum");
 		pItemNum->FrustumCheck(false);
@@ -133,6 +142,10 @@ void CButton::ChangeButtonTexture()
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD");
 		break;
 
+	case ITEM_ID::AX:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"AX");
+		break;
+
 	case ITEM_ID::BASIC_ARROW:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
 		break;
@@ -181,20 +194,75 @@ void CButton::ChangeNumTexture()
 		wstring wstr = wstring(str.begin(), str.end());
 		m_vItemNum[(UINT)ITEM_NUM::UNIT]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
 	}
-	else {
+	else if((m_iItemCount / 10 >= 1) && (m_iItemCount / 100 < 1)){	// 개수가 10의 자리
 		int unit = m_iItemCount % 10;
-		int ten = m_iItemCount / 10;
+		int tens = m_iItemCount / 10;
 		// 1의 자리
 		string str = to_string(unit);
 		wstring wstr = wstring(str.begin(), str.end());
 		m_vItemNum[(UINT)ITEM_NUM::UNIT]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
 		// 10의 자리
-		str = to_string(ten);
+		str = to_string(tens);
 		wstr = wstring(str.begin(), str.end());
-		m_vItemNum[(UINT)ITEM_NUM::TEN]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+		m_vItemNum[(UINT)ITEM_NUM::TENS]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+	}
+	else if (m_iItemCount / 100 >= 1) {
+		int unit = m_iItemCount % 10;
+		int tens = (m_iItemCount / 10) % 10;
+		int hundreds = (m_iItemCount / 10) / 10;
+		// 1의 자리
+		string str = to_string(unit);
+		wstring wstr = wstring(str.begin(), str.end());
+		m_vItemNum[(UINT)ITEM_NUM::UNIT]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+		// 10의 자리
+		str = to_string(tens);
+		wstr = wstring(str.begin(), str.end());
+		m_vItemNum[(UINT)ITEM_NUM::TENS]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+		// 100의 자리
+		str = to_string(hundreds);
+		wstr = wstring(str.begin(), str.end());
+		m_vItemNum[(UINT)ITEM_NUM::HUNDREDS]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
 	}
 
 	m_bChangeCount = false;
+}
+
+void CButton::SetItemPrice()
+{
+	switch (m_eItemId)
+	{
+	case ITEM_ID::EMPTY:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"EMPTY");
+		break;
+
+	case ITEM_ID::BASIC_SWORD:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD");
+		m_iItemCount = 900;
+		break;
+
+	case ITEM_ID::AX:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"AX");
+		m_iItemCount = 550;
+		break;
+
+	case ITEM_ID::BOTTLE_STAMINA:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_STAMINA");
+		m_iItemCount = 25;
+		break;
+
+	case ITEM_ID::BOTTLE_DASH:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_DASH");
+		m_iItemCount = 15;
+		break;
+
+	case ITEM_ID::STEAK:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"STEAK");
+		m_iItemCount = 15;
+		break;
+
+	case ITEM_ID::END:
+		return;
+	}
 }
 
 CButton::CButton()

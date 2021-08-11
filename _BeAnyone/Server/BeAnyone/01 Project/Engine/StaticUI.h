@@ -5,15 +5,6 @@ class CGameObject;
 class CTexture;
 class CButton;
 
-
-enum class UI_TYPE
-{
-	PRIVATE_ITEM_UI,
-
-
-	PUBLIC_SHOP_UI,
-};
-
 class CStaticUI
 	: public CComponent
 {
@@ -43,6 +34,9 @@ public:
 	void SetCameraProj(CCamera* _cam) { m_pCameraProj = _cam; }
 	void SetType(UI_TYPE _ui) { m_eType = _ui; }
 	void SetButton(ITEM_ID);
+
+	// quest
+	int GetQuestItemCount();
 
 public:
 	void init(UI_TYPE );

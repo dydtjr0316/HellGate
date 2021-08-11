@@ -2,12 +2,15 @@
 #include "NpcScript.h"
 #include "RenderMgr.h"
 #include "Quest.h"
+#include "StaticUI.h"
+#include "Button.h"
 #include "ToolCamScript.h"
 
 CNpcScript::CNpcScript()
 	: CScript((UINT)COMPONENT_TYPE::SCRIPT) //CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT),
 	, m_eReqState{ REQUEST_STATE::NOT_RECIEVE }
 	, m_vPlayerQuest{}
+	, m_pStoreUi{ NULL }
 {
 	// 0729효림
 	// Request Box Create
@@ -52,24 +55,95 @@ CNpcScript::CNpcScript()
 	m_pConversationBox->SetUiRenderCheck(false);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pConversationBox);
 
-	//vector<REQUEST_STATE> vTemp;
-	//// Quest bool값 초기화
-	//for (int i = 0; i < 2; ++i) {
-	//	for (int j = 0; j < 2; ++j) {
-	//		vTemp.push_back(REQUEST_STATE::NOT_RECIEVE);
-	//	}
-	//	m_vIsQuest.push_back(vTemp);
-	//	vTemp.clear();
-	//}
-
 	// Quest bool값 초기화
 	for (int i = 0; i < 2; ++i) {
 		m_vIsQuest.push_back(REQUEST_STATE::NOT_RECIEVE);
 	}
+
 }
 
 CNpcScript::~CNpcScript()
 {
+}
+
+void CNpcScript::init()
+{
+	// ui 만들기
+	CGameObject* storeUi = new CGameObject;
+	storeUi->SetName(L"Store UI Object");
+	storeUi->FrustumCheck(false);
+	storeUi->AddComponent(new CTransform);
+	storeUi->AddComponent(new CMeshRender);
+	storeUi->AddComponent(new CStaticUI);
+	storeUi->StaticUI()->init(UI_TYPE::PUBLIC_SHOP_UI);
+	//storeUi->StaticUI()->CreatePickingObj();
+	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
+	m_pCam = FindCam(L"UiCam", L"Default");
+	storeUi->StaticUI()->SetCameraProj(m_pCam->Camera());
+	//	플레이어 스크립트(오브젝트)에 StaticUI 귀속
+	// pPlayerObj->GetScript<CPlayerScript>()->SetUIObj(pObject);
+	// Transform 설정
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	storeUi->Transform()->SetLocalPos(Vector3(-400.f, 80.f, 1.f));
+	storeUi->Transform()->SetLocalScale(Vector3(600.f, 800.f, 1.f));
+	// MeshRender 설정	
+	storeUi->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"UITexMtrl");
+	storeUi->MeshRender()->SetMaterial(pMtrl->Clone());
+	Ptr<CTexture> itemUI = storeUi->StaticUI()->m_pFrame;
+	float fUI = 0.5f;
+	storeUi->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
+	storeUi->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
+	// AddGameObject
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(storeUi);
+
+	//	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
+	Vector3 vScale = Vector3(80.f, 120.f, 1.f);
+	Vector3 vObjectPos = storeUi->Transform()->GetLocalPos();
+	Vector3 vObjectScale = storeUi->Transform()->GetLocalScale();
+	float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;
+	float	fEmptyX = (vObjectScale.x - (vScale.x * 4.f)) / 5.f;
+	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
+	{
+		Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
+		CGameObject* pButtonObj = new CGameObject;
+		pButtonObj->SetName(L"Button Object");
+		pButtonObj->FrustumCheck(false);// 절두체 컬링 사용하지 않음
+		pButtonObj->AddComponent(new CTransform);
+		pButtonObj->AddComponent(new CMeshRender);
+		pButtonObj->AddComponent(new CCollider);
+		pButtonObj->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
+		//	버튼 Script 설정
+		pButtonObj->AddComponent(storeUi->StaticUI()->m_vecButton[i]);
+		storeUi->StaticUI()->m_vecButton[i]->SetParent(storeUi->StaticUI());
+		storeUi->StaticUI()->m_vecButton[i]->SetUiType(UI_TYPE::PUBLIC_SHOP_UI);
+		// Transform 설정
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+		Vector3 result = Vector3(vObjectPos.x - (vObjectScale.x / 2.f) + (vScale.x / 2.f + fEmptyX) + ((vScale.x + fEmptyX) * (i % 4))
+			, vObjectPos.y + (vObjectScale.y / 2.f) - (vScale.y / 2.f + fEmptyY) - ((vScale.y + fEmptyY) * (i / 4))
+			, 1.f);
+		pButtonObj->Transform()->SetLocalPos(result);
+		pButtonObj->Transform()->SetLocalScale(vScale);
+		// MeshRender 설정
+		pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl");
+		pButtonObj->MeshRender()->SetMaterial(pMtrl->Clone());
+		pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, storeUi->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
+		// AddGameObject
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pButtonObj);
+
+		storeUi->StaticUI()->m_vecButton[i]->init();
+	}
+
+	CGameObject* vecTemp = FindCam(L"MousePoint", L"PUI");
+	storeUi->StaticUI()->m_pMousePoint = vecTemp;
+
+	// 팔 item 설정
+	storeUi->StaticUI()->SetButton(ITEM_ID::BASIC_SWORD);
+	storeUi->StaticUI()->SetButton(ITEM_ID::AX);
+	storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_STAMINA);
+	storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_DASH);
+	storeUi->StaticUI()->SetButton(ITEM_ID::STEAK);
 }
 
 void CNpcScript::update()
@@ -155,14 +229,17 @@ void CNpcScript::CheckPlayer()
 {
 	m_vPlayerQuest = m_pPlayer->Quest()->GetQuestCheck();
 
-	for (int i = 0; i < (UINT)QUEST_TYPE::END; ++i) {
-		if (m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] == 3 && GetObj()->GetName() == L"Npc_1") {
-			m_vIsQuest[0] = REQUEST_STATE::REQUEST_RESOLUTION;
-			m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] = 0;
-			m_pPlayer->Quest()->ResetQuestCheck(QUEST_TYPE::KILL_MONSTER);
-			m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::KILL_MONSTER, false);
-		}
+	if (m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] == 3 && GetObj()->GetName() == L"Npc_1") {
+		m_vIsQuest[0] = REQUEST_STATE::REQUEST_RESOLUTION;
+		m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] = 0;
+		m_pPlayer->Quest()->ResetQuestCheck(QUEST_TYPE::KILL_MONSTER);
+		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::KILL_MONSTER, false);
 	}
+	else if (m_vIsQuest[1] == REQUEST_STATE::REQUESTING && m_vPlayerQuest[(UINT)QUEST_TYPE::GET_ITEM] == 3 && GetObj()->GetName() == L"Npc_1") {
+		m_vIsQuest[1] = REQUEST_STATE::REQUEST_RESOLUTION;
+		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::GET_ITEM, false);
+	}
+	
 
 }
 
@@ -172,7 +249,7 @@ void CNpcScript::DecideQuestType()
 		if (GetObj()->GetName() == L"Npc_1")
 			m_eQuestType = NPC_QUEST::KILL_MONSTER;
 		else if(GetObj()->GetName() == L"Npc_2")
-			m_eQuestType = NPC_QUEST::BUY_WEAPON;
+			m_eQuestType = NPC_QUEST::BUY_POTION;
 	}
 	else if(m_vIsQuest[0] == REQUEST_STATE::REQUESTING && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE
 		|| m_vIsQuest[0] == REQUEST_STATE::COMPLETE && m_vIsQuest[1] == REQUEST_STATE::REQUESTING){
@@ -186,7 +263,7 @@ void CNpcScript::DecideQuestType()
 		if (GetObj()->GetName() == L"Npc_1")
 			m_eQuestType = NPC_QUEST::GET_ITEM;
 		else if (GetObj()->GetName() == L"Npc_2")
-			m_eQuestType = NPC_QUEST::BUY_POTION;
+			m_eQuestType = NPC_QUEST::BUY_WEAPON;
 	}
 }
 
@@ -251,20 +328,20 @@ void CNpcScript::ChangeBoxTexture()
 				break;
 			case 2:
 				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(3)").GetPointer());
-				
+				m_vIsQuest[0] = REQUEST_STATE::REQUESTING;
 				break;
 			}
 		}
 		else if (m_eQuestType == NPC_QUEST::BUY_WEAPON) {
 			switch (m_iClickNum) {
 			case 0:
-				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(1)").GetPointer());
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest2(1)").GetPointer());
 				break;
 			case 1:
-				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(2)").GetPointer());
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest2(2)").GetPointer());
 				break;
 			case 2:
-				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest1(3)").GetPointer());
+				m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_quest2(3)").GetPointer());
 				m_vIsQuest[1] = REQUEST_STATE::REQUESTING;
 				break;
 			}
@@ -280,6 +357,7 @@ void CNpcScript::ChangeBoxTexture()
 	//NPC_3
 	else if (GetObj()->GetName() == L"Npc_3") {
 		m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc3_start").GetPointer());
+		m_eQuestType = NPC_QUEST::STORE;
 	}
 }
 
@@ -331,7 +409,7 @@ void CNpcScript::OnCollisionExit(CCollider* _pOther)
 void CNpcScript::SetCameraState(CAMERA_STATE _eCamState)
 {
 
-	CGameObject* cam;
+	/*CGameObject* cam;
 	vector<CGameObject*> objects;
 	objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetObjects();
 
@@ -341,15 +419,17 @@ void CNpcScript::SetCameraState(CAMERA_STATE _eCamState)
 		if ((*iter)->GetName() == L"MainCam")
  			cam = *iter;
 		++iter;
-	}
+	}*/
+
+	m_pCam = FindCam(L"MainCam", L"Default");
 
 	Vector3 npcPos = GetObj()->Transform()->GetLocalPos();
 
-	CToolCamScript* camScript = cam->GetScript<CToolCamScript>();
+	CToolCamScript* camScript = m_pCam->GetScript<CToolCamScript>();
 
 	if (_eCamState == CAMERA_STATE::FIXED_CAMERA) {
 		//camScript->DeleteCamParent(true);
-		cam->ClearParent();
+		m_pCam->ClearParent();
 		camScript->GetTestObj()->ClearParent();
 		camScript->SetIsChild(false);
 		camScript->ResetNpcCamAngle();
@@ -358,4 +438,21 @@ void CNpcScript::SetCameraState(CAMERA_STATE _eCamState)
 	camScript->SetNpcPos(npcPos);
 	camScript->SetCamState(_eCamState);
 	
+}
+
+CGameObject* CNpcScript::FindCam(wstring _wstr, wstring _Layerwstr)
+{
+	CGameObject* cam;
+	vector<CGameObject*> objects;
+	objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_Layerwstr)->GetParentObj();
+
+	vector<CGameObject*>::iterator iter = objects.begin();
+
+	for (; iter != objects.end();) {
+		if ((*iter)->GetName() == _wstr)
+			cam = *iter;
+		++iter;
+	}
+
+	return cam;
 }

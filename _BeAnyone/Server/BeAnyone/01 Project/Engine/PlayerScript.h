@@ -104,12 +104,10 @@ public:
 	CGameObject* GetUIObj() { return m_pItemUIObj; }
 	void SetUIObj(CGameObject* _obj) { m_pItemUIObj = _obj; }
 	void PickUp_Default();
-	
-	// quest
-	//int GetKillNum() { return m_iMonsterKillNum; }
 
 	// ui
 	void ClickUiButton();
+	void FindQuestItem();
 public: 
 	//¿ë¼®
 	//animation

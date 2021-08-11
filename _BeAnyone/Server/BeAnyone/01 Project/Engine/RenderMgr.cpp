@@ -72,10 +72,12 @@ void CRenderMgr::render()
 	//m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
 	m_vecCam[m_MainCamNum]->render_forward();
 
-	for (size_t i = 1; i < m_vecCam.size(); ++i)
+	for (size_t i = 0; i < m_vecCam.size(); ++i)
 	{
-		m_vecCam[i]->SortGameObject();
-		m_vecCam[i]->render_forward();
+		if (m_vecCam[i]->GetObj()->GetName() != L"MainCam") {
+			m_vecCam[i]->SortGameObject();
+			m_vecCam[i]->render_forward();
+		}
 	}
 
 	// Ãâ·Â

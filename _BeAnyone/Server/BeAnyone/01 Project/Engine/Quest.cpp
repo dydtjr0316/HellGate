@@ -46,6 +46,10 @@ void CQuest::update()
 		m_pQuestBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"2").GetPointer());
 		
 	}
+	// Get item
+	if (m_vQuestCheck[(UINT)QUEST_TYPE::GET_ITEM] >= 3) {
+		m_pQuestBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"3").GetPointer());
+	}
 }
 
 void CQuest::lateupdate()

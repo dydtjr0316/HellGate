@@ -605,7 +605,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
 
-			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			//m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 			// 나무 충돌 스크립트
 			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
 			//-------item load---------
@@ -652,7 +652,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
 
-			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			//m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
 			//-------item load---------
 			// 나뭇가지
@@ -1788,7 +1788,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
 	//pNpcObject->MeshRender()->SetDynamicShadow(true);
-	pNpcObject->AddComponent(new CNpcScript);
+ 	pNpcObject->AddComponent(new CNpcScript);
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
 
 	// Idle
@@ -1851,7 +1851,8 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcScript3->SetAnimationData(pMeshData->GetMesh());
 
 	// Talk
-	pNpcScript2->SetAnimationData(pMeshDataKey->GetMesh());
+	pNpcScript3->SetAnimationData(pMeshDataKey->GetMesh());
+	pNpcScript3->init();
 }
 
 void CSceneMgr::init()
@@ -1925,6 +1926,7 @@ void CSceneMgr::init()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"CARROT", L"Texture\\ItemButton\\CarrotTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EMPTY", L"Texture\\ItemButton\\EmptyTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"SWORD", L"Texture\\ItemButton\\SwordTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
 
 	//==========================
 	// UAV 용 Texture 생성
@@ -2175,6 +2177,7 @@ void CSceneMgr::init()
 		//	버튼 Script 설정
 		pButtonObj->AddComponent(pObject->StaticUI()->m_vecButton[i]);
 		pObject->StaticUI()->m_vecButton[i]->SetParent(pObject->StaticUI());
+		pObject->StaticUI()->m_vecButton[i]->SetUiType(UI_TYPE::PRIVATE_ITEM_UI);
 		// Transform 설정
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
 		Vector3 result = Vector3(vObjectPos.x - (vObjectScale.x / 2.f) + (vScale.x / 2.f + fEmptyX) + ((vScale.x + fEmptyX) * (i % 4))
@@ -2364,14 +2367,14 @@ void CSceneMgr::init()
 	pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
 
 
-	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
-	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Npc");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Map");
 	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Item");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Item", L"Player");
-	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"UI", L"PUI");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"UI", L"PUI");
 	
 
 	m_pCurScene->awake();

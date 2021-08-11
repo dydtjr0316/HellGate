@@ -68,17 +68,18 @@ public:
 	Ptr<CTexture> GetImage() { return m_pItemImage; }
 	BT_STATE GetState() { return m_bState; }
 	BT_ACTIVE GetActive() { return m_bCheckActive; }
+	int GetItemCount() { return m_iItemCount; }
 	
 	void SetItemID(ITEM_ID _id) { m_eItemId = _id; }
 	void SetCameraObj(CGameObject* _cam) { m_pCamera = _cam; }
 	void SetParent(CComponent* _com) { m_pComParent = _com; }
 	void SetActive(bool _b) { m_bActive = _b; }
-	void SetChangeCount(bool _ChangeCount) { m_bChangeCount = _ChangeCount; }
+	//void SetChangeCount(bool _ChangeCount) { m_bChangeCount = _ChangeCount; }
 
 	// number 
 	void ChangeButtonTexture(); // texture, pos
 	void ChangeNumTexture();
-	void AddItemCount() { m_iItemCount++; }
+	void AddItemCount() { m_iItemCount++; m_bChangeCount = true; }
 
 	
 

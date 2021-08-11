@@ -17,6 +17,7 @@ enum class NPC_QUEST {
 	BUY_POTION,
 	WHY,
 	DONE,
+	STORE,
 	END,
 };
 
@@ -38,7 +39,7 @@ private:
 	bool				m_CompleteQuest1;
 	bool				m_COmpleteQuest2;
 	CGameObject*		m_pPlayer;
-	vector<int>		m_vPlayerQuest;
+	vector<int>			m_vPlayerQuest;
 
 	// Conversation Box
 	CGameObject*		m_pConversationBox;
@@ -46,12 +47,17 @@ private:
 	bool				m_bIsCollision = false;
 	int					m_iClickNum{};
 
+	// store
+	CGameObject*		m_pStoreUi;
+	CGameObject*		m_pCam;
+
 	// animation
 	vector<Ptr<CMesh>>   m_pAniData;
 	bool m_bisAniReset = false;
 
 public:
 	virtual void update();
+	void init();
 
 	void Move();
 
@@ -76,6 +82,7 @@ public:
 
 	// camera
 	void SetCameraState(CAMERA_STATE _eCamState);
+	CGameObject* FindCam(wstring _wstr);
 
 public:
 	CLONE(CNpcScript);

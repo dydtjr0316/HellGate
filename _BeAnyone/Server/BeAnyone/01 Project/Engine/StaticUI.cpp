@@ -120,7 +120,7 @@ void CStaticUI::update()
 {
 	GetObj()->SetUiRenderCheck(m_bActive);
 
-	if (KEY_TAB(KEY_TYPE::KEY_I))
+	if (KEY_TAB(KEY_TYPE::KEY_I))// && (m_eType == UI_TYPE::PRIVATE_ITEM_UI))
 	{
 		m_bActive = !m_bActive;
 		for (int i = 0; i < m_vecButton.size(); ++i)
@@ -148,13 +148,24 @@ void CStaticUI::update()
 				{
 					m_vecButton[i]->OnCollisionExit(m_pMousePoint->Collider());
 
-
 				}
-
-
 			}
 		}
 	}
+
+
+}
+
+int CStaticUI::GetQuestItemCount()
+{
+	for (int i = 0; i < m_vecButton.size(); ++i)
+	{
+		if (m_vecButton[i]->GetItemID() == ITEM_ID::STEAK) {
+			return m_vecButton[i]->GetItemCount();
+		}
+	}
+
+	return 0;
 }
 
 void CStaticUI::finalupdate()
@@ -164,6 +175,7 @@ void CStaticUI::finalupdate()
 
 CStaticUI::CStaticUI()
 	: CComponent(COMPONENT_TYPE::UI)
+	, m_pMousePoint{nullptr}
 {
 }
 
