@@ -9,6 +9,8 @@
 
 int attackcnt = 0;
 
+
+
 CMonsterScript::CMonsterScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
 {
@@ -71,18 +73,21 @@ CMonsterScript::~CMonsterScript()
 	DeleteObject(m_pUnderUi);
 	DeleteObject(m_pChildDummy);
 }
-
+void CMonsterScript::SetPacketMove(sc_packet_monster_automove* p)
+{
+	if (p == nullptr)return;
+	if (this == nullptr)return;
+	if (GetID() != p->id)return;
+	m_Packet_autoMove = p;
+}
 
 void CMonsterScript::update()
 {
 	Move();
 	Attack();
-	
-
 	//------
 	// ui
 	//------
-
 	if (m_bSetChild == false) {
 		//GetObj()->AddChild(m_pChildDummy);
 		m_pChildDummy->AddChild(m_pUi);
@@ -113,7 +118,7 @@ void CMonsterScript::update()
 	UiPos.x -= decresedHp / 2;
 	UiPos.y = 300.f;
 	m_pUi->Transform()->SetLocalPos(UiPos);
-	//m_pUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
+
 
 }
 
@@ -173,100 +178,109 @@ void CMonsterScript::DecreaseHp()
 
 void CMonsterScript::Move()
 {
-	CGameObject* monster = GetObj();
+	int id = GetID();
+	if (g_Object.count(GetID()) == 0)return;
+	if(g_Object.find(GetID())->second==nullptr)return;
+	
+
+	CGameObject* monster = g_Object.find(GetID())->second;
 	CTransform* monsterTrans = monster->Transform();
 	Vector3 monsterPos = monsterTrans->GetLocalPos();
 	Vector3 worldDir;
 	CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
 	CTerrain* pTerrain = monsterScript->GetTerrain();
-	const Vector3& xmf3Scale = GetObj()->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
+	const Vector3& xmf3Scale = monster->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
 	string temp;
+	MONSTER_AUTOMOVE_DIR monsterDir;
 
 	if (monsterScript->GetPacketMove() != nullptr)
 	{
-		switch ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir)
+		monsterDir = (MONSTER_AUTOMOVE_DIR)monsterScript->GetDir();
+		if ((int)monsterDir >= 0 && (int)monsterDir <= 6)
 		{
-		case MONSTER_AUTOMOVE_DIR::FRONT:
-			if (monster->GetName() == L"GreenMonster") {
-				monsterTrans->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
-			}
-			else {
-				monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			}
-			monsterPos += worldDir * 100.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-			break;
-			
-		case MONSTER_AUTOMOVE_DIR::BACK:
-			//worlddir 변경
-			// 밑에꺼 처럼 좌표 변경하는 코드
-			if (monster->GetName() == L"GreenMonster")
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
-			else
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			monsterPos += worldDir * 100.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-			break;
-		case MONSTER_AUTOMOVE_DIR::LEFT:
-			if (monster->GetName() == L"GreenMonster") {
-				monsterTrans->SetLocalRot(Vector3(0.f, XM_PI / 2, 0.f));
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
-			}
-			else {
-				monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			}
-			monsterPos += worldDir * 100.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-			break;
-		case MONSTER_AUTOMOVE_DIR::RIGHT:
-			if (monster->GetName() == L"GreenMonster") {
-				monsterTrans->SetLocalRot(Vector3(0.f, -XM_PI / 2, 0.f));
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
-			}
-			else {
-				monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
-				worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-			}
-			monsterPos += worldDir * 100.f * DT;
-			monsterTrans->SetLocalPos(monsterPos);
-			break;
-			
-		case MONSTER_AUTOMOVE_DIR::AUTO:
-			// a* 사용할곳
-			break;
-		case MONSTER_AUTOMOVE_DIR::IDLE:
-			//monsterScript->SetPacketMove(nullptr);
-			break;
-		default:
-			break;
-		}
-		if (GetObj()->GetID() == 1000)
-		{
-			/*cout << "dir -> " << (int)(MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir << endl;
-	
-			cout << ctnt << "     ID : " << GetObj()->GetID() << "   pos : " << GetObj()->Transform()->GetLocalPos().x << ",  " << GetObj()->Transform()->GetLocalPos().z << endl<<endl;
-			cout << "-----------------------------" << endl;*/
-		}
-		if (monsterScript->GetPacketMove() != nullptr)
-			if ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+			switch (monsterDir)
 			{
-				int z = (int)(monsterPos.z / xmf3Scale.z);
-
-				float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f + 100.f;
-
-				if (monsterPos.y != fHeight)
-					monsterPos.y = fHeight;
+			case MONSTER_AUTOMOVE_DIR::FRONT:
+				if (monster->GetName() == L"GreenMonster") {
+					monsterTrans->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+				}
+				else {
+					monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI, 0.f));
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+				}
+				monsterPos += worldDir * 100.f * DT;
 				monsterTrans->SetLocalPos(monsterPos);
+				break;
+
+			case MONSTER_AUTOMOVE_DIR::BACK:
+				//worlddir 변경
+				// 밑에꺼 처럼 좌표 변경하는 코드
+				if (monster->GetName() == L"GreenMonster") {
+					monsterTrans->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+				}
+				else {
+					monsterTrans->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+				}
+				monsterPos += worldDir * 100.f * DT;
+				monsterTrans->SetLocalPos(monsterPos);
+				break;
+			case MONSTER_AUTOMOVE_DIR::LEFT:
+				if (monster->GetName() == L"GreenMonster") {
+					monsterTrans->SetLocalRot(Vector3(0.f, XM_PI / 2, 0.f));
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+				}
+				else {
+					monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2, 0.f));
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+				}
+				monsterPos += worldDir * 100.f * DT;
+				monsterTrans->SetLocalPos(monsterPos);
+				break;
+			case MONSTER_AUTOMOVE_DIR::RIGHT:
+				if (monster->GetName() == L"GreenMonster") {
+					monsterTrans->SetLocalRot(Vector3(0.f, -XM_PI / 2, 0.f));
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+				}
+				else {
+					monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2, 0.f));
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
+				}
+				monsterPos += worldDir * 100.f * DT;
+				monsterTrans->SetLocalPos(monsterPos);
+				break;
+
+			case MONSTER_AUTOMOVE_DIR::AUTO:
+				// a* 사용할곳
+				break;
+			case MONSTER_AUTOMOVE_DIR::IDLE:
+				//monsterScript->SetPacketMove(nullptr);
+				break;
+			default:
+				break;
 			}
+
+			if (monsterScript->GetPacketMove() != nullptr)
+				if ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
+				{
+					int z = (int)(monsterPos.z / xmf3Scale.z);
+
+					float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f + 100.f;
+
+					if (monsterPos.y != fHeight)
+						monsterPos.y = fHeight;
+					monsterTrans->SetLocalPos(monsterPos);
+				}
+		}
 	}
 }
 
 void CMonsterScript::Attack()
 {
 	CGameObject* monster = GetObj();
+	uShort monsterid = GetObj()->GetID();
 	CTransform* monsterTrans = monster->Transform();
 	Vector3 monsterPos = monsterTrans->GetLocalPos();
 	Vector3 worldDir;
@@ -284,13 +298,13 @@ void CMonsterScript::Attack()
 		monsterScript->SetBisAttack(false);
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
 		monsterScript->SetAniReset(false); // m_bisAniReset = false;
-		g_netMgr.Send_MonsterDead_Packet(m_sId);
-		m_Packet_autoMove->eDir = (char)MONSTER_AUTOMOVE_DIR::AUTO;
+		g_netMgr.Send_MonsterDead_Packet(monsterid);
+		//m_Packet_autoMove->eDir = (char)MONSTER_AUTOMOVE_DIR::AUTO;
 
 		// 여기가 죽는 부분
 		DeleteObject(GetObj());
 		CEventMgr::GetInst()->update();
-		g_Object.erase(m_sId);
+		g_Object.erase(monsterid);
 
 	}
 
@@ -308,7 +322,7 @@ void CMonsterScript::Attack()
 		monsterScript->SetAniReset(false); //m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
-		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
+		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
 		// 서버에 패킷 보내야 함
 	}
 	GetObj()->GetID();
@@ -317,7 +331,7 @@ void CMonsterScript::Attack()
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::ATTACK);
-		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK);
+		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
 
 		// packet
 	}
@@ -326,7 +340,7 @@ void CMonsterScript::Attack()
 		monsterScript->SetAniReset(false); // m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
-		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::IDLE);
+		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
 		// packet
 	}
 }

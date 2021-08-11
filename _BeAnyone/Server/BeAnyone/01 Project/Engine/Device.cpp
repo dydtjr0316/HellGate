@@ -609,7 +609,6 @@ void CDevice::UpdateTable()
 	ClearDummyDescriptorHeap(m_iCurDummyIdx);
 }
 
-
 void CDevice::UpdateTable_CS()
 {
 	ID3D12DescriptorHeap* pDescriptor = m_pDummyDescriptorCompute.Get();
@@ -618,7 +617,6 @@ void CDevice::UpdateTable_CS()
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuhandle = pDescriptor->GetGPUDescriptorHandleForHeapStart();
 	m_pCommandListCompute->SetComputeRootDescriptorTable(0, gpuhandle);
 }
-
 
 void CDevice::ClearDummyDescriptorHeap(UINT _iDummyIndex)
 {

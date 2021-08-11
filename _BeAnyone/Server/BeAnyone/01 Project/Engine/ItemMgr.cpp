@@ -86,6 +86,7 @@ void CItemMgr::MakeObject()
 	pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 
+
 	m_vItem.push_back(pItem);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
 
@@ -107,6 +108,8 @@ void CItemMgr::MakeObject()
 	pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 	
 	m_vItem.push_back(pItem);
+
+	// 아이템 화면에 띄우는 부분  //  용석 // 시야처리 없이 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
 }
 

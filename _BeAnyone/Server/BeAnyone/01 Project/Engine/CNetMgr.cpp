@@ -15,6 +15,7 @@
 #include "MonsterScript.h"
 #include "SwordScript.h"
 int cnt = 0;
+bool tempbool = false;
 OBJECT_TYPE CheckObjType(const uShort& id)
 {
 	if (id >= 0 && id < MAX_USER)return OBJECT_TYPE::CLIENT;
@@ -27,6 +28,7 @@ const char ip[] = "192.168.0.7";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
+
 
 CNetMgr g_netMgr;
 
@@ -246,6 +248,7 @@ void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 
 void CNetMgr::Recevie_Data()
 {
+	
 	EXOVER* dataBuf = new EXOVER{};
 	DWORD	 recvByte = 0;
 	DWORD	 flags = 0;
@@ -269,6 +272,7 @@ void CNetMgr::Recevie_Data()
 	{
 		Process_Data(recvbuf, retbytesize);
 	}
+
 }
 
 
@@ -279,12 +283,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 	case SC_PACKET_LOGIN_OK:
 	{
+		//cout << "SC_PACKET_LOGIN_OK"<< endl;
 		sc_packet_login_ok* p = reinterpret_cast<sc_packet_login_ok*>(ptr);
-		cout << "ok id -> " << p->id << endl;
-		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
-		cout << "SC_PACKET_LOGIN_OK :  " << g_myid << endl;
 
-		// 여기 패킷아이디로 바꾸자
+		m_pObj->Transform()->SetLocalPos(Vector3(p->localVec));
+
 		g_Object.emplace(g_myid, m_pObj);
 		g_Object.find(g_myid)->second->SetID(g_myid);
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->initDeadReckoner();
@@ -292,12 +295,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ENTER:
 	{
+		//cout << "SC_PACKET_ENTER" << endl;
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
-		cout << "enter packet" << endl;
+		//cout << "enter packet" << endl;
 
 		if (id == g_myid)
 		{
+
 		}
 		else
 		{
@@ -305,6 +310,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id)/*&& (g_Object.find(id)!= g_Object.end())*/)
 				{
+
 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 
 					CGameObject* pObject = new CGameObject;
@@ -348,12 +354,17 @@ void CNetMgr::ProcessPacket(char* ptr)
 					CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
 					SwordScript->SetBoneFinalMat(g_Object.find(id)->second->Animator3D()->GetSwordFinalBoneMat());
 
+
+
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pSword, false);
 					g_Object.find(id)->second->AddChild(pSword);
+
 				}
 			}
 			else if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
 			{
+
+
 				if (0 == g_Object.count(id))
 				{
 					if (id == 1000)
@@ -409,7 +420,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
-						
+
 					}
 					else
 					{
@@ -420,7 +431,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second = pMeshData->Instantiate();
 						g_Object.find(id)->second->SetName(L"GreenMonster");
 						g_Object.find(id)->second->FrustumCheck(false);
-						
+
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						{
 							int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
@@ -471,9 +482,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 					}
-
-					cout << my_packet->id<<"번 몬스터 -- " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
-
 				}
 			}
 		}
@@ -481,12 +489,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_MOVE:
 	{
+		//cout << "SC_PACKET_MOVE" << endl;
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
 
 		if (other_id == g_myid)
 		{
 		//	cout << "SC_PACKET_MOVE  자신에게 보내는 패킷 횟수"<<cnt++ << endl;
+			cout << "여기니?" << endl;
 			g_Object.find(other_id)->second->Transform()->SetLocalPos(packet->localVec);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
@@ -511,10 +521,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
-					/*CGameObject* MonsterObj = g_Object.find(other_id)->second;
-					MonsterObj->Transform()->SetLocalPos(packet->localVec);
-					MonsterObj->Transform()->SetLocalRot(packet->rotateY);
-					MonsterObj->GetScript<CMonsterScript>()->SetAnimation(MONSTER_ANI_TYPE::WALK);*/
 				}
 			}
 		}
@@ -522,31 +528,28 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_MONSTER_MOVE:
 	{
+		cout << "SC_PACKET_MONSTER_MOVE" << endl;
 		sc_packet_monster_automove* packet = reinterpret_cast<sc_packet_monster_automove*>(ptr);
+		
+
 		int monster_id = packet->id;
 		if (g_Object.count(packet->id) == 0)break;
 		if (g_Object.find(packet->id)->second == nullptr)break;
-		if (CheckObjType(monster_id) != OBJECT_TYPE::MONSTER)break;
 
-		if(monster_id == 1000)
-			ctnt++;
-		g_Object.find(monster_id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
-		if ((MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::AUTO && (MONSTER_AUTOMOVE_DIR)packet->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
-		{
-			if (monster_id == 1000)
-			{
-				cout << "packet localpos     ->       " << packet->pos.x << ", " << packet->pos.z << endl;
-				cout << "real   localpos     ->       " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << ", " <<
-					g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;
-				cout << "---------------------------------------------------------" << endl;
-			}
-			g_Object.find(monster_id)->second->Transform()->SetLocalPos(packet->pos);
+		if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER) {
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
+			g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);
+
 		}
-		// 여기서부터 
+			
+
+
 	}
 	break;
 	case SC_PACKET_STOP:
 	{
+		//cout << "SC_PACKET_STOP" << endl;
 		sc_packet_stop* packet = reinterpret_cast<sc_packet_stop*>(ptr);
 		int other_id = packet->id;
 
@@ -568,7 +571,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_LEAVE:
 	{
-		cout << "leave packet" << endl;
+		//cout << "SC_PACKET_LEAVE" << endl;
+		break;
+		//cout << "leave packet" << endl;
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == g_myid) {
@@ -580,7 +585,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 				{
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 					CEventMgr::GetInst()->update();
-					//CEventMgr::GetInst()->update();
 					g_Object.erase(other_id);
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
@@ -590,7 +594,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetPacketMove(nullptr);
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->DeleteObject(g_Object.find(other_id)->second);
 						CEventMgr::GetInst()->update();
-						//CEventMgr::GetInst()->update();
 						g_Object.erase(other_id);
 
 					}
@@ -599,6 +602,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetPacketMove(nullptr);
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetBisAttack(my_packet->isAttack);
 					}
+					
 				}
 
 			}
@@ -612,6 +616,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ATTACK:
 	{
+		cout << "SC_PACKET_ATTACK" << endl;
 		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(ptr);
 		int id = packet->id;
 		if (id == g_myid)
@@ -624,23 +629,22 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
 			{
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
-
-
 			}
 		}
 	}
 	break;
 	case SC_PACKET_ID:
 	{
+		cout << "SC_PACKET_ID" << endl;
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
 		g_myid = packet->id;
 
-		cout << "Send_ID_Packet My ID : " << g_myid << endl;
 	}
 	break;
 
 	case SC_PACKET_ATTACKANI:
 	{
+		cout << "SC_PACKET_ATTACKANI" << endl;
 		sc_packet_AttackAni* packet = reinterpret_cast<sc_packet_AttackAni*>(ptr);
 		int id = packet->id;
 		if (id == g_myid) {
@@ -662,20 +666,19 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_MONSTER_ANIMATION:
 	{
+		cout << "SC_PACKET_MONSTER_ANIMATION" << endl;
 		sc_packet_Monster_Animation* packet = reinterpret_cast<sc_packet_Monster_Animation*>(ptr);
 		int id = packet->id;
 		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
 
 		if (g_Object.find(packet->id)->second != nullptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
-
-		//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 	}
 	break;
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);
 	}
-
+	
 }
 
 
@@ -686,19 +689,18 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 	static size_t saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF_SIZE];
 
-
+	
 	while (0 != io_byte) {
 		if (0 == in_packet_size) in_packet_size = ptr[0];
 		if (io_byte + saved_packet_size >= in_packet_size) {
 			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
-	
-				ProcessPacket(packet_buffer);
-				ptr += in_packet_size - saved_packet_size;
-				io_byte -= in_packet_size - saved_packet_size;
-				in_packet_size = 0;
-				saved_packet_size = 0;
-			
-			
+			ProcessPacket(packet_buffer);
+			ptr += in_packet_size - saved_packet_size;
+			io_byte -= in_packet_size - saved_packet_size;
+			in_packet_size = 0;
+			saved_packet_size = 0;
+
+
 		}
 		else {
 			memcpy(packet_buffer + saved_packet_size, ptr, io_byte);

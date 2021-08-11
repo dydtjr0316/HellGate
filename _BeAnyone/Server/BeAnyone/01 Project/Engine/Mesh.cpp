@@ -450,10 +450,19 @@ CMesh* CMesh::CreateFromContainerAni(CFBXLoader& _loader)
 void CMesh::render(UINT _iSubset)
 {
 	CDevice::GetInst()->UpdateTable();
-
+	
 	CMDLIST->IASetVertexBuffers(0, 1, &m_tVtxView);
 	CMDLIST->IASetIndexBuffer(&m_vecIdxInfo[_iSubset].tIdxView);
 	CMDLIST->DrawIndexedInstanced(m_vecIdxInfo[_iSubset].iIdxCount, 1, 0, 0, 0);
+}
+
+void CMesh::render_instancing(UINT _iInstanceCount, UINT _iSubset)
+{
+	CDevice::GetInst()->UpdateTable();
+
+	CMDLIST->IASetVertexBuffers(0, 1, &m_tVtxView);
+	CMDLIST->IASetIndexBuffer(&m_vecIdxInfo[_iSubset].tIdxView);
+	CMDLIST->DrawIndexedInstanced(m_vecIdxInfo[_iSubset].iIdxCount, _iInstanceCount, 0, 0, 0);
 }
 
 void CMesh::Load(const wstring& _strFilePath)

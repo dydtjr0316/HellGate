@@ -13,6 +13,7 @@
 
 #include "MeshRender.h"
 #include "Collider.h"
+#include "ParticleSystem.h"
 
 #define COLLIDER_RENDERER 0
 
@@ -72,19 +73,15 @@ void CCamera::finalupdate()
 
 	if(!m_bModule)
 		CRenderMgr::GetInst()->RegisterCamera(this);
-
-	//	충돌 테스트용 분기문
-	if (KEY_HOLD(KEY_TYPE::KEY_NUM0))
-		COLLIDER_RENDERER != COLLIDER_RENDERER; 
 }
 
 void CCamera::SortGameObject()
 {
 	//	 여기 들어오기 전에 이미 터져있음
 	//	vecDeferred 벡터안에 Terrain 게임 오브젝트 안에 MeshRender 컴포넌트의 vertexData값이 쓰레기값이 됌.
-	auto ab = m_vecDeferred;
 	m_vecDeferred.clear();
 	m_vecForward.clear();
+	m_vecParticle.clear();
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
@@ -109,12 +106,17 @@ void CCamera::SortGameObject()
 						else if (SHADER_POV::FORWARD == vecObj[i]->MeshRender()->GetSharedMaterial()->GetShader()->GetShaderPOV())
 							m_vecForward.push_back(vecObj[i]);
 					}
+					else if (vecObj[i]->Particlesystem())
+					{
+						m_vecParticle.push_back(vecObj[i]);
+					}
 				}
 			}
 		}
 	}
 	auto a = m_vecDeferred;
 	auto b = m_vecForward;
+	auto c = m_vecParticle;
 }
 
 void CCamera::render_deferred()
@@ -154,6 +156,11 @@ void CCamera::render_forward()
 
 		if (m_vecForward[i]->Collider() && COLLIDER_RENDERER)
 			m_vecForward[i]->Collider()->render();
+	}
+
+	for (size_t i = 0; i < m_vecParticle.size(); ++i)
+	{
+		m_vecParticle[i]->Particlesystem()->render();
 	}
 
 }

@@ -12,6 +12,7 @@ class CCamera;
 class CTerrain;
 class CStaticUI;
 class CQuest;
+class CParticleSystem;
 
 class CGameObject :
 	public CEntity
@@ -67,6 +68,8 @@ public:
 	CCollider* Collider() { return (CCollider*)m_arrCom[(UINT)COMPONENT_TYPE::COLLIDER]; }
 	CStaticUI* StaticUI() { return (CStaticUI*)m_arrCom[(UINT)COMPONENT_TYPE::UI]; }
 	CQuest* Quest() { return (CQuest*)m_arrCom[(UINT)COMPONENT_TYPE::QUEST]; }
+	CParticleSystem* Particlesystem() { return (CParticleSystem*)m_arrCom[(UINT)COMPONENT_TYPE::PARTICLESYSTEM]; }
+
 
 	const vector<CScript*>& GetScripts() const { return m_vecScript; }
 	

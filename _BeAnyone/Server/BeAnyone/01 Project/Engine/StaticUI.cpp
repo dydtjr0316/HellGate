@@ -152,8 +152,6 @@ void CStaticUI::update()
 			}
 		}
 	}
-
-
 }
 
 int CStaticUI::GetQuestItemCount()

@@ -79,7 +79,7 @@ public:
 	void SetDir(const MONSTER_AUTOMOVE_DIR& dir) { m_eDir = dir; }
 
 	sc_packet_monster_automove* GetPacketMove() {return  m_Packet_autoMove; }
-	void SetPacketMove(sc_packet_monster_automove* p) { m_Packet_autoMove = p; }
+	void SetPacketMove(sc_packet_monster_automove* p);
 	
 public:
 	CLONE(CMonsterScript);

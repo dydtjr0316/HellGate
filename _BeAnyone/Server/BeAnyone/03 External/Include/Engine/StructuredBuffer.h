@@ -16,8 +16,8 @@ private:
 public:
 	void Create(UINT _iElementSize, UINT _iElementCount, void* _pSysMem);
 
-	void UpdateData(TEXTURE_REGISTER _iRegister);		// rendering 단계에서
-	void UpdateData_CS(TEXTURE_REGISTER _iRegister);	// computeshader 단계에서
+	void UpdateData(TEXTURE_REGISTER _iRegister);				// rendering 단계에서
+	void UpdateData_CS(TEXTURE_REGISTER _iRegister);			// computeshader 단계에서
 	void UpdateRWData(UAV_REGISTER _iRegister);					// uav 는 computeshader 단계에서밖에
 
 

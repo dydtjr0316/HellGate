@@ -192,6 +192,7 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_E)) {
 		player->AnimClipReset();
 		//player->SetAnimation(Ani_TYPE::PICK_UP);
+
 		m_bIsPick = true;
 		PickUp_Default();
 
