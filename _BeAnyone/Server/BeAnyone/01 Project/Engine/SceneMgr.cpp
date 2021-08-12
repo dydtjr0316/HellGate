@@ -1698,6 +1698,8 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	pObject->AddComponent(new CStaticUI);
+	pObject->AddComponent(new CCollider);
+	pObject->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
 	pObject->StaticUI()->init(UI_TYPE::PRIVATE_ITEM_UI);
 	pObject->StaticUI()->CreatePickingObj();
 	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
@@ -1706,7 +1708,7 @@ void CSceneMgr::init()
 	pPlayerObj->GetScript<CPlayerScript>()->SetUIObj(pObject);
 	// Transform 설정
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	pObject->Transform()->SetLocalPos(Vector3(100.f, 80.f, 1.f));
+	pObject->Transform()->SetLocalPos(Vector3(300.f, 80.f, 1.f));
 	pObject->Transform()->SetLocalScale(vScale);
 	// MeshRender 설정	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));

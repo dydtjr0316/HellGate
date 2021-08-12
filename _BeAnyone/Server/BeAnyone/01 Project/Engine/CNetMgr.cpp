@@ -22,14 +22,10 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 	else if (id >= START_MONSTER && id < END_MONSTER)return OBJECT_TYPE::MONSTER;
 }
 
-//const char ip[] = "192.168.0.11";
-<<<<<<< HEAD
-const char ip[] = "192.168.0.13";
-=======
-const char ip[] = "192.168.0.7";
->>>>>>> 6b1ebd630308923fc0b8e07d0baa14a6fb31a15c
+//const char ip[] = "192.168.0.11";;
+//const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.0.13";
-//const char ip[] = "221.151.160.142";
+const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
 

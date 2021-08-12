@@ -68,6 +68,9 @@ void CButton::finalupdate()
 
 void CButton::OnCollisionEnter(CCollider* _pOther)
 {
+	if (m_bState == BT_STATE::SELL)
+		return;
+
 	vector<CButton*> vecButton = m_pComParent->GetObj()->StaticUI()->GetButton();
 	for (int i = 0; i < vecButton.size(); ++i)
 	{
@@ -84,6 +87,7 @@ void CButton::OnCollision(CCollider* _pOther)
 {
 	if (m_bCheckActive == BT_ACTIVE::PASSIVE)
 		return;
+
 
 	m_bState = BT_STATE::CLICKED;
 
@@ -281,7 +285,6 @@ void CButton::CreateItemNum(int num)
 		m_vItemNum.push_back(pItemNum);
 	}
 }
-
 
 CButton::CButton()
 	: CScript((UINT)SCRIPT_TYPE::TESTSCRIPT)

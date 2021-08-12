@@ -2,13 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8b1dff42-0f5a-49c3-8fea-9abf17ad3d81" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Client/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Client/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/ResMgrInit.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/ResMgrInit.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/SceneMgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/SceneMgr.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/std.fx" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/std.fx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Client/x64/Debug/Client.exe.recipe" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Client/x64/Debug/Client.exe.recipe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/BulletScript.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/BulletScript.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/Button.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/Button.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/Button.h" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/Button.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/CNetMgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/CNetMgr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/StaticUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/StaticUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/x64/Debug/Engine_debug.lib.recipe" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/01 Project/Engine/x64/Debug/Engine_debug.lib.recipe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/02 File/bin/content/Material/PlayerMale01.mtrl" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/02 File/bin/content/Material/PlayerMale01.mtrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/02 File/bin/content/Mesh/PlayerMale@nIdle1.mesh" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/02 File/bin/content/Mesh/PlayerMale@nIdle1.mesh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/02 File/bin/content/Shader/std.fx" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/02 File/bin/content/Shader/std.fx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/03 External/Include/Engine/Button.h" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/03 External/Include/Engine/Button.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/03 External/Include/Engine/StaticUI.h" beforeDir="false" afterPath="$PROJECT_DIR$/_BeAnyone/Server/BeAnyone/03 External/Include/Engine/StaticUI.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +30,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="8b1dff42-0f5a-49c3-8fea-9abf17ad3d81" name="Default Changelist" comment="" />
