@@ -113,448 +113,6 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 #endif
 }
 
-void CSceneMgr::CreateMap(CTerrain* _terrain)
-{
-	// 집1 left
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\House1.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	CGameObject* pMapObject = nullptr;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"House1");
-	pMapObject->FrustumCheck(false);
-
-	int z = (int)(3000.f / 60.f);
-	bool bReverseQuad = ((z % 2) != 0);
-	float mapY = _terrain->GetHeight(1000.f, 3000, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 , 3000.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(60.f,60.f, 60.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House1");
-	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents( pMapObject->Transform()->GetLocalScale() )));
-	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f ));
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-	// 집1 통나무
-
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Barrel.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	pMapObject = new CGameObject;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"House1");
-	pMapObject->FrustumCheck(false);
-
-	z = (int)(2750.f / 60.f);
-	bReverseQuad = ((z % 2) != 0);
-	mapY = _terrain->GetHeight(1100.f, 2750.f, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(1100.f, mapY * 2 + 50.f, 2750.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 60.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Barrel");
-
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-	// 집2 left
-
-	// 집 2
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\WoodenHouse3.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	pMapObject = new CGameObject;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"House1");
-	pMapObject->FrustumCheck(false);
-
-	z = (int)(3700.f / 60.f);
-	bReverseQuad = ((z % 2) != 0);
-	mapY = _terrain->GetHeight(1000.f, 3700.f, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 + 0.f, 3700.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 60.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"WoodenHouse3");
-
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-	// 집3 left
-
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\House2.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	pMapObject = new CGameObject;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"House2");
-	pMapObject->FrustumCheck(false);
-
-	z = (int)(5500.f / 60.f);
-	bReverseQuad = ((z % 2) != 0);
-	mapY = _terrain->GetHeight(1000.f, 5500.f, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(1000.f, mapY * 2 , 5500.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 50.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House2");
-
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-	// 집4 right
-
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\WoodenHouse3.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	pMapObject = new CGameObject;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"House2");
-	pMapObject->FrustumCheck(false);
-
-	z = (int)(5300.f / 60.f);
-	bReverseQuad = ((z % 2) != 0);
-	mapY = _terrain->GetHeight(2500.f, 5300.f, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(2500.f, mapY * 2 + 0.f, 5300.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 60.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"WoodenHouse3");
-	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-	// 집5 right
-
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\House2.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	pMapObject = new CGameObject;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"House2");
-	pMapObject->FrustumCheck(false);
-
-	z = (int)(4500.f / 60.f);
-	bReverseQuad = ((z % 2) != 0);
-	mapY = _terrain->GetHeight(2500.f, 4500.f, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(2500.f, mapY * 2 + 50.f, 4500.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 60.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House2");
-
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-	// 화덕
-
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\CookingFireplace.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	pMapObject = new CGameObject;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"House1");
-	pMapObject->FrustumCheck(false);
-
-	z = (int)(3500.f / 60.f);
-	bReverseQuad = ((z % 2) != 0);
-	mapY = _terrain->GetHeight(2400.f, 3500.f, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(2400.f, mapY * 2 + 50.f, 3500.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(80.f, 100.f, 80.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"CookingFireplace");
-	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
-
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-	// 텐트
-
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Tent1.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	pMapObject = new CGameObject;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"House1");
-	pMapObject->FrustumCheck(false);
-
-	z = (int)(3000.f / 60.f);
-	bReverseQuad = ((z % 2) != 0);
-	mapY = _terrain->GetHeight(2700.f, 3000.f, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(2700.f, mapY * 2 + 70.f, 3000.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, -XM_PI/25));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tent1");
-	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
-
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-
-	// 돌 
-
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\RockGrey2_high.fbx", FBX_TYPE::DESERT_MAP);
-	//pMeshData->Save(pMeshData->GetPath());
-
-	pMapObject = new CGameObject;
-
-	pMapObject = pMeshData->Instantiate();
-	pMapObject->SetName(L"RockHigh");
-	pMapObject->FrustumCheck(false);
-
-	z = (int)(3000.f / 60.f);
-	bReverseQuad = ((z % 2) != 0);
-	mapY = _terrain->GetHeight(500, 3000, bReverseQuad);
-
-	pMapObject->Transform()->SetLocalPos(Vector3(500.f, mapY * 2 + 100.f, 3000.f));
-	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 100.f, 60.f));//(1.0f, 1.0f, 1.0f));
-	pMapObject->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-	pMapObject->AddComponent(new CCollider);
-	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"RockGrey2_high");
-	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()* pMapObject->Transform()->GetLocalScale()));
-	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 70.f));
-
-	m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-
-	// 나무 
-
-	for (int i = 0; i < 20; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\JoshuaTree1.fbx", FBX_TYPE::DESERT_MAP);
-	//	pMeshData->Save(pMeshData->GetPath());
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Tree" + i);
-		pMapObject->FrustumCheck(false);
-
-		float randomX = uid(dre);
-		float randomZ = uid(dre);
-
-		z = (int)(randomZ / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
-
-		pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
-		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 180.f, 100.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-		pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	for (int i = 0; i < 5; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead1.fbx", FBX_TYPE::DESERT_MAP);
-
-
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Tree" + i);
-		pMapObject->FrustumCheck(false);
-
-		float randomX = uid(dre);
-		float randomZ = uid(dre);
-
-		z = (int)(randomZ / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
-
-		pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
-		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 180.f, 100.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-		pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"TreeDead1");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	for (int i = 0; i < 3; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\TreeDead2.fbx", FBX_TYPE::DESERT_MAP);
-
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Tree" + i);
-		pMapObject->FrustumCheck(false);
-
-		float randomX = uid(dre);
-		float randomZ = uid(dre);
-
-		z = (int)(randomZ / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
-
-		pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
-		pMapObject->Transform()->SetLocalScale(Vector3(100.f, 180.f, 100.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-		pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"TreeDead2");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 120.f));
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	// 선인장 
-
-	for (int i = 0; i < 6; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\CactusSmall.fbx", FBX_TYPE::DESERT_MAP);
-	//	pMeshData->Save(pMeshData->GetPath());
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"cactus" + i);
-		pMapObject->FrustumCheck(false);
-
-		float randomX = uid(dre);
-		float randomZ = uid(dre);
-
-		z = (int)(randomZ / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(randomX, randomZ, bReverseQuad);
-
-		pMapObject->Transform()->SetLocalPos(Vector3(randomX, mapY * 2 + 50.f, randomZ));
-		pMapObject->Transform()->SetLocalScale(Vector3(30.f, 80.f, 80.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-		pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"CactusSmall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()* pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	// Wall
-	//왼쪽
-	float wallX = 1400.f;
-	for (int i = 0; i < 55; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Wall");
-		pMapObject->FrustumCheck(false);
-
-
-		z = (int)(30.f / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
-
-		pMapObject->Transform()->SetLocalPos(Vector3(250.f, mapY * 2, (wallX* i) + wallX / 2));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
-		/*pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	//오른쪽
-	for (int i = 0; i < 55; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Wall");
-		pMapObject->FrustumCheck(false);
-
-
-		z = (int)(30.f / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
-
-		pMapObject->Transform()->SetLocalPos(Vector3(76500.f, mapY * 2, (wallX * i) + wallX / 2));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
-		/*pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	// 위
-	for (int i = 0; i < 55; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Wall");
-		pMapObject->FrustumCheck(false);
-
-
-		z = (int)(30.f / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 76300.f, true);
-
-		pMapObject->Transform()->SetLocalPos(Vector3((wallX* i) + wallX / 2, mapY * 2, 76300.f));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
-		/*pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-
-	// 아래
-	for (int i = 0; i < 55; ++i) {
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
-
-		pMapObject = new CGameObject;
-
-		pMapObject = pMeshData->Instantiate();
-		pMapObject->SetName(L"Wall");
-		pMapObject->FrustumCheck(false);
-
-
-		z = (int)(30.f / 60.f);
-		bReverseQuad = ((z % 2) != 0);
-		mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 300.f, true);
-
-		pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2, 300.f));
-		pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-		pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
-		/*pMapObject->AddComponent(new CCollider);
-		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
-		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-	}
-}
-
 void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 {
 	// Tree
@@ -1768,6 +1326,57 @@ void CSceneMgr::LoadRes()
 	Ptr<CTexture> piBow = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"Texture\\UI\\Items\\Weapons\\01_BOW.png");
 	Ptr<CTexture> piSword = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"Texture\\UI\\Items\\Weapons\\02_Sword.png");
 	Ptr<CTexture> piHealPotion = CResMgr::GetInst()->Load<CTexture>(L"HP_POTION_IMG", L"Texture\\UI\\Items\\Resources\\15_Heal_potion.png");
+
+	//==========================
+	// Conversation Box
+	//==========================
+	Ptr<CTexture> pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"UiBoard", L"Texture\\UIboard.png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(1)", L"Texture\\Quest\\npc1_quest1(1).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(2)", L"Texture\\Quest\\npc1_quest1(2).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(3)", L"Texture\\Quest\\npc1_quest1(3).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest2(1)", L"Texture\\Quest\\npc1_quest2(1).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest2(2)", L"Texture\\Quest\\npc1_quest2(2).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest2(3)", L"Texture\\Quest\\npc1_quest2(3).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_done", L"Texture\\Quest\\npc1_done.png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_why", L"Texture\\Quest\\npc1_why.png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(1)", L"Texture\\Quest\\npc2_quest1(1).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(2)", L"Texture\\Quest\\npc2_quest1(2).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(3)", L"Texture\\Quest\\npc2_quest1(3).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest2(1)", L"Texture\\Quest\\npc2_quest2(1).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest2(2)", L"Texture\\Quest\\npc2_quest2(2).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest2(3)", L"Texture\\Quest\\npc2_quest2(3).png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_done", L"Texture\\Quest\\npc2_done.png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_why", L"Texture\\Quest\\npc2_why.png");
+	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc3_start", L"Texture\\Quest\\npc3_start.png");
+
+	//===========================
+	// number texture
+	//==========================
+	Ptr<CTexture> pNumber = CResMgr::GetInst()->Load<CTexture>(L"0", L"Texture\\Number\\0.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"1", L"Texture\\Number\\1.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"2", L"Texture\\Number\\2.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"3", L"Texture\\Number\\3.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"4", L"Texture\\Number\\4.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"5", L"Texture\\Number\\5.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"6", L"Texture\\Number\\6.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"7", L"Texture\\Number\\7.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"8", L"Texture\\Number\\8.png");
+	pNumber = CResMgr::GetInst()->Load<CTexture>(L"9", L"Texture\\Number\\9.png");
+
+	//===========================
+	// Button texture
+	//==========================
+	Ptr<CTexture> pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BRANCH", L"Texture\\ItemButton\\BranchTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"APPLE", L"Texture\\ItemButton\\AppleTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_STAMINA", L"Texture\\ItemButton\\BottleStaminaTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_DASH", L"Texture\\ItemButton\\BottleDashTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"STEAK", L"Texture\\ItemButton\\MeatTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"MONEYBAG", L"Texture\\ItemButton\\MoneyTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"CARROT", L"Texture\\ItemButton\\CarrotTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EMPTY", L"Texture\\ItemButton\\EmptyTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"SWORD", L"Texture\\ItemButton\\SwordTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"WALLET", L"Texture\\ItemButton\\WalletTex.png");
 }
 
 void CSceneMgr::CreateNpc(CTerrain* _terrain)
@@ -1878,55 +1487,7 @@ void CSceneMgr::init()
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
 
-	//==========================
-	// Conversation Box
-	//==========================
-	Ptr<CTexture> pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"UiBoard", L"Texture\\UIboard.png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(1)", L"Texture\\Quest\\npc1_quest1(1).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(2)", L"Texture\\Quest\\npc1_quest1(2).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest1(3)", L"Texture\\Quest\\npc1_quest1(3).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest2(1)", L"Texture\\Quest\\npc1_quest2(1).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest2(2)", L"Texture\\Quest\\npc1_quest2(2).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_quest2(3)", L"Texture\\Quest\\npc1_quest2(3).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_done", L"Texture\\Quest\\npc1_done.png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc1_why", L"Texture\\Quest\\npc1_why.png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(1)", L"Texture\\Quest\\npc2_quest1(1).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(2)", L"Texture\\Quest\\npc2_quest1(2).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest1(3)", L"Texture\\Quest\\npc2_quest1(3).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest2(1)", L"Texture\\Quest\\npc2_quest2(1).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest2(2)", L"Texture\\Quest\\npc2_quest2(2).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_quest2(3)", L"Texture\\Quest\\npc2_quest2(3).png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_done", L"Texture\\Quest\\npc2_done.png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc2_why", L"Texture\\Quest\\npc2_why.png");
-	pUiBoard = CResMgr::GetInst()->Load<CTexture>(L"npc3_start", L"Texture\\Quest\\npc3_start.png");
-	
-	//===========================
-	// number texture
-	//==========================
-	Ptr<CTexture> pNumber = CResMgr::GetInst()->Load<CTexture>(L"0", L"Texture\\Number\\0.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"1", L"Texture\\Number\\1.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"2", L"Texture\\Number\\2.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"3", L"Texture\\Number\\3.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"4", L"Texture\\Number\\4.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"5", L"Texture\\Number\\5.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"6", L"Texture\\Number\\6.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"7", L"Texture\\Number\\7.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"8", L"Texture\\Number\\8.png");
-	pNumber = CResMgr::GetInst()->Load<CTexture>(L"9", L"Texture\\Number\\9.png");
 
-	//===========================
-	// number texture
-	//==========================
-	Ptr<CTexture> pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BRANCH", L"Texture\\ItemButton\\BranchTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"APPLE", L"Texture\\ItemButton\\AppleTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_STAMINA", L"Texture\\ItemButton\\BottleStaminaTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_DASH", L"Texture\\ItemButton\\BottleDashTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"STEAK", L"Texture\\ItemButton\\MeatTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"MONEYBAG", L"Texture\\ItemButton\\MoneyTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"CARROT", L"Texture\\ItemButton\\CarrotTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EMPTY", L"Texture\\ItemButton\\EmptyTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"SWORD", L"Texture\\ItemButton\\SwordTex.png");
-	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
 
 	//==========================
 	// UAV 용 Texture 생성
@@ -2196,6 +1757,38 @@ void CSceneMgr::init()
 		pObject->StaticUI()->m_vecButton[i]->init();
 	}
 
+	// wallet create
+	CGameObject* pWallet = new CGameObject;
+	pWallet->SetName(L"Wallet");
+	pWallet->FrustumCheck(false);
+	pWallet->AddComponent(new CTransform);
+	pWallet->AddComponent(new CMeshRender);
+	pWallet->Transform()->SetLocalPos(Vector3(vObjectPos.x, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
+	pWallet->Transform()->SetLocalScale(Vector3(120.f, 50.f, 1.f));
+	//MeshRender 설정
+	pWallet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pWallet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
+	pWallet->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"WALLET").GetPointer());
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pWallet);
+	pObject->StaticUI()->m_pWallet = pWallet;
+
+	CGameObject* pMoney;
+	for (int i = 0; i < 5; ++i) {
+		pMoney = new CGameObject;
+		pWallet->SetName(L"Money");
+		pMoney->FrustumCheck(false);
+		pMoney->AddComponent(new CTransform);
+		pMoney->AddComponent(new CMeshRender);
+		pMoney->Transform()->SetLocalPos(Vector3(vObjectPos.x + (pWallet->Transform()->GetLocalScale().x / 2.f) + 30.f + (i * 30.f), vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
+		pMoney->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
+		//MeshRender 설정
+		pMoney->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pMoney->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+		pMoney->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pMoney);
+		pObject->StaticUI()->m_pMoneyUi.push_back(pMoney);
+	}
+
 	////	상점 UI
 	//pObject = new CGameObject;
 	//vScale = Vector3(400.f, 600.f, 1.f);
@@ -2350,7 +1943,6 @@ void CSceneMgr::init()
 	pPlayerObj->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
 	g_netMgr.SetObj(pPlayerObj);
 	
-	//CreateMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CreateNpc(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CreateNewMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CItemMgr::GetInst()->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());

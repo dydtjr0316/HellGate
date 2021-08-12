@@ -47,6 +47,7 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 		{
 			// ====================
 			// Particle Object 생성
+			// 떄린놈 이름이 FireMonster 일 때 이 파티클을 생성한다.
 			// ====================
 			CGameObject* pObject = new CGameObject;
 			pObject->SetName(L"Particle");
@@ -57,6 +58,10 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 			pObject->Transform()->SetLocalPos(Transform()->GetLocalPos());
 
 			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
+
+			
+			/// 여기까지 파티클 생성하는거
+			/// ////////////////////////////////////////////////////////////////////////////////
 
 			DeleteObject(GetObj());
 		}

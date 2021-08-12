@@ -119,12 +119,19 @@ void CStaticUI::init(UI_TYPE _eType)
 void CStaticUI::update()
 {
 	GetObj()->SetUiRenderCheck(m_bActive);
+	if (m_eType == UI_TYPE::PRIVATE_ITEM_UI) {
+		m_pWallet->SetUiRenderCheck(m_bActive);
+		for (int i = 0; i < m_pMoneyUi.size(); ++i)
+			m_pMoneyUi[i]->SetUiRenderCheck(m_bActive);
+	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_I))// && (m_eType == UI_TYPE::PRIVATE_ITEM_UI))
 	{
 		m_bActive = !m_bActive;
 		for (int i = 0; i < m_vecButton.size(); ++i)
 			m_vecButton[i]->SetActive(m_bActive);
+		if (m_eType == UI_TYPE::PRIVATE_ITEM_UI)
+			SetWalletMoney();
 	}
 
 	if (!m_bActive)
@@ -151,6 +158,11 @@ void CStaticUI::update()
 				}
 			}
 		}
+
+		if (KEY_TAB(KEY_TYPE::KEY_RBTN))
+		{
+
+		}
 	}
 }
 
@@ -166,6 +178,35 @@ int CStaticUI::GetQuestItemCount()
 	return 0;
 }
 
+void CStaticUI::SetWalletMoney()
+{
+	int unit = m_iMoney % 10;
+	int tens = (m_iMoney / 10) % 10;
+	int hundreds = (m_iMoney / 100) % 10;
+	int thousands = (m_iMoney / 1000) % 10;
+	int tenThousands = m_iMoney / 10000;
+	// 1의 자리
+	string str = to_string(unit);
+	wstring wstr = wstring(str.begin(), str.end());
+	m_pMoneyUi[4]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+	// 10의 자리
+	str = to_string(tens);
+	wstr = wstring(str.begin(), str.end());
+	m_pMoneyUi[3]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+	// 100의 자리
+	str = to_string(hundreds);
+	wstr = wstring(str.begin(), str.end());
+	m_pMoneyUi[2]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+	// 1000의 자리
+	str = to_string(thousands);
+	wstr = wstring(str.begin(), str.end());
+	m_pMoneyUi[1]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+	// 10000의 자리
+	str = to_string(tenThousands);
+	wstr = wstring(str.begin(), str.end());
+	m_pMoneyUi[0]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+}
+
 void CStaticUI::finalupdate()
 {
 	GetObj()->SetUiRenderCheck(m_bActive);
@@ -173,7 +214,8 @@ void CStaticUI::finalupdate()
 
 CStaticUI::CStaticUI()
 	: CComponent(COMPONENT_TYPE::UI)
-	, m_pMousePoint{nullptr}
+	, m_pMousePoint{ nullptr }
+	, m_pWallet{ nullptr }
 {
 }
 
