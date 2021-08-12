@@ -23,7 +23,11 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
+<<<<<<< HEAD
+const char ip[] = "192.168.0.13";
+=======
 const char ip[] = "192.168.0.7";
+>>>>>>> 6b1ebd630308923fc0b8e07d0baa14a6fb31a15c
 //const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
@@ -541,7 +545,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_MONSTER_MOVE:
 	{
-		cout << "SC_PACKET_MONSTER_MOVE" << endl;
+		//cout << "SC_PACKET_MONSTER_MOVE" << endl;
 		sc_packet_monster_automove* packet = reinterpret_cast<sc_packet_monster_automove*>(ptr);
 		
 
@@ -550,8 +554,21 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (g_Object.find(packet->id)->second == nullptr)break;
 
 		if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER) {
+			if (monster_id == 1000)
+			{
+				/*cout << "패킷의 데이터----------------------------" << endl;
+				cout << "packet dir : " << (int)packet->eDir << endl;
+				cout << packet->pos.x << ", " << packet->pos.z << endl;
+				cout << packet->id << endl;
+				cout << "클라이언트의 데이터***********************" << endl;
+				cout << "packet dir : " << (int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() << endl;
+				cout << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << ", " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl<<endl;*/
+				cout << "-----------------------------------------------------------" << endl;
+				cout << "-----------------------------------------------------------" << endl;
+			}
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
+			
 			g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);
 
 		}
@@ -585,7 +602,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_LEAVE:
 	{
 		//cout << "SC_PACKET_LEAVE" << endl;
-		break;
 		//cout << "leave packet" << endl;
 		sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
 		int other_id = my_packet->id;

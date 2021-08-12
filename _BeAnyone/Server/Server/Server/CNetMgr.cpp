@@ -143,11 +143,12 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
             monster->SetHP(0);
             for (auto& clientID : vSectors)
             {
+
                 if (m_pMediator->IsType(clientID, OBJECT_TYPE::CLIENT))
                 {
                     m_pSendMgr->Send_Attacked_Packet_Monster(clientID, victim);
-                    cout << "Do_Attack" << endl;
-                    m_pSendMgr->Send_Leave_Packet(clientID, victim, true);
+                    cout << "Do_Attack : "<<clientID << endl;
+                    m_pSendMgr->Send_Leave_Packet(clientID, victim, false);
                 }
             }
     }
@@ -707,6 +708,7 @@ void CNetMgr::Worker_Thread()
                     {
                         keep_alive = true;
                         char temp = (char)(rand() % 4);
+                        CAST_MONSTER(m_pMediator->Find(user_id))->SetIsMoving(true);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetDir((MONSTER_AUTOMOVE_DIR)temp);
                         break;
                     }
@@ -812,28 +814,29 @@ void CNetMgr::Processing_Thead()
                 monsterDir = CAST_MONSTER(m_pMediator->Find(monster))->GetDir();
                 ismoving = m_pMediator->Find(monster)->GetIsMoving();
 
-                CAST_MONSTER(MonsterObj)->CountRefreshPacketCnt(DeltaTime);
+                //CAST_MONSTER(MonsterObj)->CountRefreshPacketCnt(DeltaTime);
                 for (auto& old_ids : g_QuadTree.search(CBoundary(m_pMediator->Find(monster))))
                 {
                     old_viewList.insert(old_ids);
                 }
 
-
+                float speed = 100.f;
                 if (ismoving)
                 {
+                    tempLock.lock();
                     switch (monsterDir)
                     {
                     case MONSTER_AUTOMOVE_DIR::FRONT:
-                        monsterPos.z += 100.f * DT;
+                        monsterPos.z += speed * DT;
                         break;
                     case MONSTER_AUTOMOVE_DIR::BACK:
-                        monsterPos.z -= 100.f * DT;
+                        monsterPos.z -= speed * DT;
                         break;
                     case MONSTER_AUTOMOVE_DIR::LEFT:
-                        monsterPos.x -= 100.f * DT;
+                        monsterPos.x -= speed * DT;
                         break;
                     case MONSTER_AUTOMOVE_DIR::RIGHT:
-                        monsterPos.x += 100.f * DT;
+                        monsterPos.x += speed * DT;
                         break;
                     case MONSTER_AUTOMOVE_DIR::AUTO:
                         break;
@@ -842,16 +845,19 @@ void CNetMgr::Processing_Thead()
                     default:
                         break;
                     }
+                    tempLock.unlock();
 
-                    if (m_pMediator->Find(monster) != nullptr)
+                    //if (m_pMediator->Find(monster) != nullptr)
                     {
                        // tempLock.lock();
 
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
+                        if(monster == 1000)
+                        //cout << m_pMediator->Find(monster)->GetLocalPosVector().x << " , " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
                         //cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ", " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
                         CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);
-                        //if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() >10.f)
+                        if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() >2.f)
                             for (auto& user : old_viewList) {
                                 if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
                                 {
@@ -961,7 +967,7 @@ void CNetMgr::WakeUp_Monster(const uShort& id)
     srand((unsigned int)time(NULL));
     if(CAST_MONSTER(m_pMediator->Find(id))->GetBisMoving())return;
 
-    CAST_MONSTER(m_pMediator->Find(id))->SetBisMoving(false);
+    //CAST_MONSTER(m_pMediator->Find(id))->SetBisMoving(false);
     if (CAS((int*)(&(m_pMediator->Find(id)->GetStatus())), status, (int)ST_ACTIVE))
     {
         //CAS(¸Þ¸ð¸®, expected, update)
