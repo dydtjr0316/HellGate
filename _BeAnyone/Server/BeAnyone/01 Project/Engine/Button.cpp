@@ -122,7 +122,9 @@ void CButton::OnCollisionExit(CCollider* _pOther)
 
 	case BT_STATE::SELL:
 		Transform()->SetLocalPos(m_vecOldPos);
-		m_eItemId == ITEM_ID::EMPTY;
+
+
+		//m_eItemId == ITEM_ID::EMPTY;
 		break;
 	}
 

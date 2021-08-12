@@ -151,6 +151,11 @@ void CStaticUI::update()
 				}
 			}
 		}
+
+		if (KEY_TAB(KEY_TYPE::KEY_RBTN))
+		{
+
+		}
 	}
 }
 

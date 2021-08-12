@@ -38,6 +38,9 @@ public:
 	// quest
 	int GetQuestItemCount();
 
+	// UI
+	void Sell();
+
 public:
 	void init(UI_TYPE );
 
