@@ -179,10 +179,14 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
     p.id = mover_id;
     p.eDir = dir;
     p.pos = Netmgr.GetMediatorMgr()->Find(p.id)->GetLocalPosVector();
-    cout << "id : "<< mover_id <<"  Dir :  " << (int)p.eDir << endl;
-    cout << p.pos.x << ", " << p.pos.z << endl;
-    cout << "-------------------" << endl;
-
+   /* cout << "--------------------------------" << endl;
+    cout << "--------------------------------" << endl;*/
+    //     if (p.id == 1000)
+    //{
+    //    cout << "id : " << mover_id << "  Dir :  " << (int)p.eDir << endl;
+    //    cout << p.pos.x << ", " << p.pos.z << endl;
+    //    cout << "-------------------" << endl;
+    //}
     Send_Packet(user_id, &p);
 }
 
