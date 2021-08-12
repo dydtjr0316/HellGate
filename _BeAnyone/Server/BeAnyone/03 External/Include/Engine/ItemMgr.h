@@ -8,6 +8,7 @@ class CItemMgr
 	SINGLE(CItemMgr);
 private:
 	vector<CGameObject*>		m_vItem;
+	vector<int>					m_vItemID;
 
 	vector<Vector3>				m_vItemPos;
 	CTerrain*					m_Terrain;
@@ -35,6 +36,8 @@ public:
 	// item meshData
 	void SetItemData(Ptr<CMeshData> _pMeshData) { m_pItemMeshData.push_back(_pMeshData); };
 
+
+	void SetItemID(wstring wstr);
 
 public:
 	void MakeObject();

@@ -22,6 +22,11 @@ public:
 	CGameObject*			m_pMousePoint;
 	CCamera*				m_pCameraProj;
 
+	// wallet, money etc ... (only player)
+	CGameObject*			m_pWallet;
+	vector<CGameObject*>	m_pMoneyUi;
+	int						m_iMoney = 13859;
+
 public:
 	void CreatePickingObj();
 	void CreateButton(CCamera*);
@@ -37,6 +42,9 @@ public:
 
 	// quest
 	int GetQuestItemCount();
+
+	// money
+	void SetWalletMoney();
 
 public:
 	void init(UI_TYPE );

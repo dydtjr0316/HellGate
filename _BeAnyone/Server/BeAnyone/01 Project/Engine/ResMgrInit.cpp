@@ -800,6 +800,11 @@ void CResMgr::CreateDefaultMaterial()
 
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"TexShader"));
+    AddRes(L"WalletMtrl", pMtrl);
+
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"UITexShader"));
     AddRes(L"UITexMtrl", pMtrl);
 
