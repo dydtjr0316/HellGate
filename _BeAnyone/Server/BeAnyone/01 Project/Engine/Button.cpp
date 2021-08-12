@@ -6,36 +6,25 @@
 #include "KeyMgr.h"
 #include "CollisionMgr.h"
 
+#include <random>
+
+default_random_engine dreMoney;
+uniform_int_distribution<int> uidMoney(15, 50);
+
 void CButton::init()
 {
-	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	int num{};
-
-	if (m_eUiType == UI_TYPE::PRIVATE_ITEM_UI)
+	if (m_eUiType == UI_TYPE::PRIVATE_ITEM_UI) {
 		num = (UINT)ITEM_NUM::HUNDREDS;
-	else {
+		CreateItemNum(num);
+	}
+	else if (m_eUiType == UI_TYPE::PUBLIC_SHOP_UI) {
 		num = (UINT)ITEM_NUM::END;
 		SetItemPrice();
+		if (m_eItemId != ITEM_ID::EMPTY)
+			CreateItemNum(num);
 	}
 
-
-	// item number create
-	for (int i = 0; i < num; ++i) {
-		CGameObject* pItemNum = new CGameObject;
-		pItemNum->SetName(L"ItemNum");
-		pItemNum->FrustumCheck(false);
-		pItemNum->AddComponent(new CTransform);
-		pItemNum->AddComponent(new CMeshRender);
-		pItemNum->Transform()->SetLocalPos(Vector3(-res.fWidth / 2, -res.fHeight / 2, 1.f));
-		pItemNum->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
-		//MeshRender 설정
-		pItemNum->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		pItemNum->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
-		pItemNum->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pItemNum);
-
-		m_vItemNum.push_back(pItemNum);
-	}
 }
 
 void CButton::update()
@@ -47,7 +36,7 @@ void CButton::update()
 
 	ChangeButtonTexture();
 	
-	if(m_bChangeCount)
+	if (m_bChangeCount && (m_vItemNum.size() != 0))
 		ChangeNumTexture();
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
@@ -226,6 +215,10 @@ void CButton::ChangeNumTexture()
 		m_vItemNum[(UINT)ITEM_NUM::HUNDREDS]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
 	}
 
+	// moneybag이라면 돈을 넣어 주기
+	if (m_eItemId == ITEM_ID::MONEYBAG)
+		m_pComParent->GetObj()->StaticUI()->m_iMoney += uidMoney(dreMoney);
+
 	m_bChangeCount = false;
 }
 
@@ -266,6 +259,29 @@ void CButton::SetItemPrice()
 		return;
 	}
 }
+
+void CButton::CreateItemNum(int num)
+{
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+	for (int i = 0; i < num; ++i) {
+		CGameObject* pItemNum = new CGameObject;
+		pItemNum->SetName(L"ItemNum");
+		pItemNum->FrustumCheck(false);
+		pItemNum->AddComponent(new CTransform);
+		pItemNum->AddComponent(new CMeshRender);
+		pItemNum->Transform()->SetLocalPos(Vector3(-res.fWidth / 2, -res.fHeight / 2, 1.f));
+		pItemNum->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
+		//MeshRender 설정
+		pItemNum->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pItemNum->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
+		pItemNum->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pItemNum);
+
+		m_vItemNum.push_back(pItemNum);
+	}
+}
+
 
 CButton::CButton()
 	: CScript((UINT)SCRIPT_TYPE::TESTSCRIPT)
