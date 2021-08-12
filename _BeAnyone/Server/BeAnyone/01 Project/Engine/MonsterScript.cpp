@@ -138,7 +138,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 		CItemMgr::GetInst()->SetIsMake(true);
 
 		m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
-		if(m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == true)
+		if(m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)
 			m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
 		
 		m_bisDamaged = true;

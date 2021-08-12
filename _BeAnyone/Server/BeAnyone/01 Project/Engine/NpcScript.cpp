@@ -180,6 +180,7 @@ void CNpcScript::update()
 				m_bIsTalk = false;
 				m_bIsCollision = false;
 				m_iClickNum = 0;
+				m_bQuestBox = true;
 
 				// -------로직 생각해야 함
 				// 3번 누르면 req mark 사라지게 해야 함
@@ -199,6 +200,7 @@ void CNpcScript::update()
 				m_bIsTalk = false;
 				m_bIsCollision = false;
 				m_iClickNum = 0;
+				m_bQuestBox = true;
 			}
 		}
 
@@ -224,6 +226,10 @@ void CNpcScript::update()
 		// 대화 상자 텍스트 바꾸기
 		if (m_bIsCollision == true)
 			ChangeBoxTexture();
+
+		/*if ((m_vIsQuest[0] == REQUEST_STATE::COMPLETE || m_vIsQuest[1] == REQUEST_STATE::COMPLETE)
+			&& m_iClickNum == 1)
+			m_pPlayer->StaticUI()->m_iMoney += 300;*/
 	}
 }
 
@@ -235,23 +241,41 @@ void CNpcScript::CheckPlayer()
 		m_vIsQuest[0] = REQUEST_STATE::REQUEST_RESOLUTION;
 		m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] = 0;
 		m_pPlayer->Quest()->ResetQuestCheck(QUEST_TYPE::KILL_MONSTER);
-		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::KILL_MONSTER, false);
+		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::KILL_MONSTER, true);
 	}
 	else if (m_vIsQuest[1] == REQUEST_STATE::REQUESTING && m_vPlayerQuest[(UINT)QUEST_TYPE::GET_ITEM] == 3 && GetObj()->GetName() == L"Npc_1") {
 		m_vIsQuest[1] = REQUEST_STATE::REQUEST_RESOLUTION;
-		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::GET_ITEM, false);
+		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::GET_ITEM, true);
 	}
 	
 
 }
 
+
+void CNpcScript::SetQuestBox(wstring wstr, QUESTBOX_TYPE _eType)
+{
+	if (m_bQuestBox) {
+		for (int i = 0; i < 2; ++i) {
+			if (m_pPlayer->Quest()->m_vExistQuestBox[i] == QUESTBOX_TYPE::EMPTY || m_pPlayer->Quest()->m_vExistQuestBox[i] == _eType) {
+				m_pPlayer->Quest()->m_pQuestBox[i]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+				m_pPlayer->Quest()->m_vExistQuestBox[i] = _eType;
+				m_bQuestBox = false;
+				return;
+			}
+		}
+	}
+}
+
+
 void CNpcScript::DecideQuestType()
 {
 	if (m_vIsQuest[0] == REQUEST_STATE::NOT_RECIEVE && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE) {
-		if (GetObj()->GetName() == L"Npc_1")
-			m_eQuestType = NPC_QUEST::KILL_MONSTER;
-		else if(GetObj()->GetName() == L"Npc_2")
-			m_eQuestType = NPC_QUEST::BUY_POTION;
+		if (GetObj()->GetName() == L"Npc_1") {
+			m_eQuestType = NPC_QUEST::KILL_MONSTER; SetQuestBox(L"MonsterKill", QUESTBOX_TYPE::NPC_1);
+		}
+		else if (GetObj()->GetName() == L"Npc_2") {
+			m_eQuestType = NPC_QUEST::BUY_POTION; SetQuestBox(L"BuyPotion", QUESTBOX_TYPE::NPC_2);
+		}
 	}
 	else if(m_vIsQuest[0] == REQUEST_STATE::REQUESTING && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE
 		|| m_vIsQuest[0] == REQUEST_STATE::COMPLETE && m_vIsQuest[1] == REQUEST_STATE::REQUESTING){
@@ -260,12 +284,18 @@ void CNpcScript::DecideQuestType()
 	else if (m_vIsQuest[0] == REQUEST_STATE::REQUEST_RESOLUTION && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE
 		|| m_vIsQuest[0] == REQUEST_STATE::COMPLETE && m_vIsQuest[1] == REQUEST_STATE::REQUEST_RESOLUTION) {
 		m_eQuestType = NPC_QUEST::DONE;
+		if (GetObj()->GetName() == L"Npc_1") 
+			SetQuestBox(L"QuestBase", QUESTBOX_TYPE::NPC_1);
+		else if (GetObj()->GetName() == L"Npc_2") 
+			SetQuestBox(L"BuyPotion", QUESTBOX_TYPE::NPC_2);
 	}
 	else if (m_vIsQuest[0] == REQUEST_STATE::COMPLETE && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE) {
-		if (GetObj()->GetName() == L"Npc_1")
-			m_eQuestType = NPC_QUEST::GET_ITEM;
-		else if (GetObj()->GetName() == L"Npc_2")
-			m_eQuestType = NPC_QUEST::BUY_WEAPON;
+		if (GetObj()->GetName() == L"Npc_1") {
+			m_eQuestType = NPC_QUEST::GET_ITEM; SetQuestBox(L"GetItem", QUESTBOX_TYPE::NPC_1);
+		}
+		else if (GetObj()->GetName() == L"Npc_2") {
+			m_eQuestType = NPC_QUEST::BUY_WEAPON; SetQuestBox(L"BuyWeapone", QUESTBOX_TYPE::NPC_2);
+		}
 	}
 }
 

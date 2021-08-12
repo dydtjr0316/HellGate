@@ -25,7 +25,7 @@ public:
 	// wallet, money etc ... (only player)
 	CGameObject*			m_pWallet;
 	vector<CGameObject*>	m_pMoneyUi;
-	int						m_iMoney = 13859;
+	int						m_iMoney = 0;
 
 public:
 	void CreatePickingObj();
@@ -43,6 +43,8 @@ public:
 	// quest
 	int GetQuestItemCount();
 
+	// UI
+	void Sell();
 	// money
 	void SetWalletMoney();
 
