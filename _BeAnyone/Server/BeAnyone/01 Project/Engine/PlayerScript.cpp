@@ -348,7 +348,7 @@ void CPlayerScript::update()
 	}
 
 	// quest::find item
-	if (GetObj()->Quest()->GetDoQuest(QUEST_TYPE::GET_ITEM) == true)
+	if (GetObj()->Quest()->GetDoQuest(QUEST_TYPE::GET_ITEM) == false)
 		FindQuestItem();
 }
 

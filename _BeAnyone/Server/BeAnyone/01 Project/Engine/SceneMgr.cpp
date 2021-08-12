@@ -1377,6 +1377,19 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"SWORD", L"Texture\\ItemButton\\SwordTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"WALLET", L"Texture\\ItemButton\\WalletTex.png");
+
+	//===========================
+	// QuestBox texture
+	//==========================
+	Ptr<CTexture> pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"QuestBase", L"Texture\\Quest\\QuestBase.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"MonsterKill", L"Texture\\Quest\\MonsterKill.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"MonsterKill_Complete", L"Texture\\Quest\\MonsterKill_Complete.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"GetItem", L"Texture\\Quest\\GetItem.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"GetItem_Complete", L"Texture\\Quest\\GetItem_Complete.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyPotion", L"Texture\\Quest\\BuyPotion.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyPotion_Complete", L"Texture\\Quest\\BuyPotion_Complete.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone", L"Texture\\Quest\\BuyWeapone.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone_Complete", L"Texture\\Quest\\BuyWeapone_Complete.png");
 }
 
 void CSceneMgr::CreateNpc(CTerrain* _terrain)

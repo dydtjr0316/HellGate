@@ -410,3 +410,11 @@ enum class QUEST_TYPE
 	BUY_POTION,
 	END,
 };
+
+enum class QUESTBOX_TYPE
+{
+	EMPTY,
+	NPC_1,
+	NPC_2,
+	END,
+};

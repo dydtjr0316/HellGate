@@ -58,6 +58,9 @@ private:
 	// camera
 	bool				m_bGetParentCamera = true;
 
+	// questbox
+	bool				m_bQuestBox = true;
+
 public:
 	virtual void update();
 	void init();
@@ -87,6 +90,8 @@ public:
 	void SetCameraState(CAMERA_STATE _eCamState);
 	CGameObject* FindCam(wstring _wstr, wstring _Layerwstr);
 
+	// questbox
+	void SetQuestBox(wstring wstr, QUESTBOX_TYPE _eType);
 public:
 	CLONE(CNpcScript);
 
