@@ -493,6 +493,11 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         }
     }
     break;
+    case CS_ITEMCREATE:
+    {
+
+    }
+        break;
     default:
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();

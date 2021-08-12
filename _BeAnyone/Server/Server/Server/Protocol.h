@@ -93,6 +93,7 @@ constexpr char CS_STOP = 6;
 constexpr char CS_MONSTER_DEAD = 7;
 constexpr char CS_ATTACK_ANIMATION = 8; 
 constexpr char CS_MONSTER_ANIMATION = 9;
+constexpr char CS_ITEMCREATE = 10;
 
 
 constexpr unsigned char O_PLAYER = 0;
@@ -306,6 +307,13 @@ struct cs_packet_MonsterDead {
 	char	size;
 	char	type;
 	uShort  id;
+};
+
+struct cs_packet_ItemCreate_Packet {
+	char	size;
+	char	type;
+	Vector3 vPos;
+	vector<char>	vid;
 };
 
 struct cs_packet_AttackAni {

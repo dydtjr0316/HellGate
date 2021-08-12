@@ -216,6 +216,19 @@ void CNetMgr::Send_MonsterDead_Packet(const uShort& monster_id)
 	Send_Packet(&p);
 }
 
+void CNetMgr::Send_ItemCreate_Paket(const Vector3& itemPos, const vector<int>& itemid)
+{
+	cs_packet_ItemCreate_Packet p;
+	p.type = CS_ITEMCREATE;
+	p.size = sizeof(p);
+	for (auto& id : itemid)
+	{
+		p.vid.push_back(id);
+	}
+	p.vPos = itemPos;
+	Send_Packet(&p);
+}
+
 void CNetMgr::Send_Player_Animation_Packet(const uShort& user_id, const bool& isAttack)
 {
 	cs_packet_AttackAni p;
