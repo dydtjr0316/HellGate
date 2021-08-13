@@ -4,7 +4,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Material.h"
-// #include "Sound.h"
+#include "Sound.h"
 
 //#include "RenderMgr.h"
 
@@ -35,7 +35,7 @@ void CResMgr::init()
 	CreateDefaultMaterial();
 
 	// FMOD 초기화
-	//InitSound();
+	InitSound();
 }
 
 Ptr<CTexture> CResMgr::CreateTexture(const wstring& _strName, UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
@@ -81,19 +81,19 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath, FBX_TYPE _fbxType)
 
 
 
-//FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype
-//	, FMOD_CHANNELCONTROL_CALLBACK_TYPE callbacktype
-//	, void* commanddata1, void* commanddata2);
-//
-//void CResMgr::InitSound()
-//{
-//	FMOD::System_Create(&CSound::g_pFMOD);
-//
-//	if (nullptr == CSound::g_pFMOD)
-//	{
-//		assert(nullptr);
-//	}
-//
-//	// 32개 채널 생성
-//	CSound::g_pFMOD->init(32, FMOD_DEFAULT, nullptr);
-//}
+FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype
+	, FMOD_CHANNELCONTROL_CALLBACK_TYPE callbacktype
+	, void* commanddata1, void* commanddata2);
+
+void CResMgr::InitSound()
+{
+	FMOD::System_Create(&CSound::g_pFMOD);
+
+	if (nullptr == CSound::g_pFMOD)
+	{
+		assert(nullptr);
+	}
+
+	// 32개 채널 생성
+	CSound::g_pFMOD->init(32, FMOD_DEFAULT, nullptr);
+}
