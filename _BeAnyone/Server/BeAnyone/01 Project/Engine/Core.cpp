@@ -59,7 +59,7 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 
 	CItemMgr::GetInst()->init();
 	// TestInit();
-
+	//CSound::GetInst()->Play(Sound_Type::BGM, true, false);
 	return S_OK;
 }
 
@@ -73,7 +73,7 @@ void CCore::ChangeWindowSize(HWND _hWnd, const tResolution& _resolution)
 
 void CCore::progress()
 {
-	//CSound::GetInst()->Play(Sound_Type::BGM, true, true);
+	
 	CKeyMgr::GetInst()->update();
 	/*cout << "코어의 CKeyMgr::GetInst()->update() 끝난 후 " << endl;
 	for (auto& obj : g_Object)

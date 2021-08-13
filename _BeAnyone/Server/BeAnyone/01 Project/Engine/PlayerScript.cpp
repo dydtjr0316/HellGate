@@ -168,7 +168,7 @@ void CPlayerScript::update()
 	// 공격 애니메이션
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
-		CSound::GetInst()->Play(Sound_Type::HIT);
+		//CSound::GetInst()->Play(Sound_Type::HIT);
 		player->AnimClipReset();
 		player->SetAttack(true);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
@@ -194,7 +194,7 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_E)) {
 		player->AnimClipReset();
 		//player->SetAnimation(Ani_TYPE::PICK_UP);
-		CSound::GetInst()->Play(Sound_Type::GET_COIN);
+		//CSound::GetInst()->Play(Sound_Type::GET_COIN);
 		m_bIsPick = true;
 		PickUp_Default();
 		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);

@@ -1,39 +1,22 @@
 #pragma once
+#include <iostream>
+#include <Windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 
-#include <FMOD/fmod.h>
-#include <FMOD/fmod.hpp>
-#include <FMOD/fmod_codec.h>
-
-#ifdef _DEBUG
-#pragma comment(lib, "FMOD/x64/fmodL64_vc.lib")
-#else
-#pragma comment(lib, "FMOD/x64/fmod64_vc.lib")
-#endif
-
-#include "Resource.h"
-
-class CSound :
-	public CResource
+class CSound
 {
-public:
-	static FMOD::System* g_pFMOD;
-
 private:
-	FMOD::Sound*			m_pSound;
-	list<FMOD::Channel*>	m_listChannel;
-
+	CSound() {};
+	~CSound() {};
 public:
-	// 0 (무한 반복)
-	void Play(int _iRoopCount, bool _bOverlap = false);
-	void Stop();
-
-	void RemoveChannel(FMOD::Channel* _pTargetChannel);
-
+	static CSound* GetInst()
+	{
+		static CSound mgr;
+		return &mgr;
+	}
 public:
-	virtual void Load(const wstring& _strFilePath);
+	void Play(Sound_Type type, const bool& isasync = true, const bool& isloop = false);
 
-public:
-	CSound();
-	virtual ~CSound();
 };
 
