@@ -47,6 +47,11 @@ void CTimeMgr::update()
 		m_fFPS = 1 / m_fDeltaTime;
 	}
 
+	// 전역 상수버퍼에 전달 될 값
+	g_global.fDT = m_fDeltaTime;
+	g_global.fAccTime += m_fDeltaTime;
+
+	//	FPS 출력
 	wchar_t szFPS[50] = L"";
 	wsprintf(szFPS, L"FPS : %d", (int)m_fFPS);
 

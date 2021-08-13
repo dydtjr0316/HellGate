@@ -265,7 +265,7 @@ void CDevice::CreateRootSignature()
 
 	// 상수 레지스터
 	range.BaseShaderRegister = 0;		// b0에서
-	range.NumDescriptors = 5;			// b4까지 5개 상수 레지스터 사용 여부
+	range.NumDescriptors = (UINT)CONST_REGISTER::END;			// b5까지 6개 상수 레지스터 사용 여부
 	range.OffsetInDescriptorsFromTableStart = -1;
 	range.RegisterSpace = 0;
 	range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV; // b
