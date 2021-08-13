@@ -1377,6 +1377,19 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"SWORD", L"Texture\\ItemButton\\SwordTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"WALLET", L"Texture\\ItemButton\\WalletTex.png");
+
+	//===========================
+	// QuestBox texture
+	//==========================
+	Ptr<CTexture> pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"QuestBase", L"Texture\\Quest\\QuestBase.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"MonsterKill", L"Texture\\Quest\\MonsterKill.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"MonsterKill_Complete", L"Texture\\Quest\\MonsterKill_Complete.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"GetItem", L"Texture\\Quest\\GetItem.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"GetItem_Complete", L"Texture\\Quest\\GetItem_Complete.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyPotion", L"Texture\\Quest\\BuyPotion.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyPotion_Complete", L"Texture\\Quest\\BuyPotion_Complete.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone", L"Texture\\Quest\\BuyWeapone.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone_Complete", L"Texture\\Quest\\BuyWeapone_Complete.png");
 }
 
 void CSceneMgr::CreateNpc(CTerrain* _terrain)
@@ -1698,6 +1711,8 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	pObject->AddComponent(new CStaticUI);
+	pObject->AddComponent(new CCollider);
+	pObject->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
 	pObject->StaticUI()->init(UI_TYPE::PRIVATE_ITEM_UI);
 	pObject->StaticUI()->CreatePickingObj();
 	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
@@ -1706,7 +1721,7 @@ void CSceneMgr::init()
 	pPlayerObj->GetScript<CPlayerScript>()->SetUIObj(pObject);
 	// Transform 설정
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	pObject->Transform()->SetLocalPos(Vector3(100.f, 80.f, 1.f));
+	pObject->Transform()->SetLocalPos(Vector3(300.f, 80.f, 1.f));
 	pObject->Transform()->SetLocalScale(vScale);
 	// MeshRender 설정	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));

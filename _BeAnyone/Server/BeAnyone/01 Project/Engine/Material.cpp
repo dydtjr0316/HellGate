@@ -80,6 +80,9 @@ void CMaterial::SetData(SHADER_PARAM _eParam, void* _pData)
 
 void CMaterial::UpdateData()
 {
+	// Material 이 참조하는 쉐이더가 없는 경우
+	assert(m_pShader.GetPointer());
+
 	// Texture Register Update
 	UINT iOffsetPos = (UINT)TEXTURE_REGISTER::t0;
 
