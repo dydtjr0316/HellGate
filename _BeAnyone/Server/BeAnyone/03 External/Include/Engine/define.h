@@ -87,7 +87,7 @@ enum class RES_TYPE
 	MESHDATA,
 	MESH,
 	TEXTURE,
-	//SOUND,
+	SOUND,
 	SHADER,
 	END,
 };

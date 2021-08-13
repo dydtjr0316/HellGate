@@ -201,6 +201,9 @@
     <ClCompile Include="Quest.cpp">
       <Filter>04. GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>09. Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h" />
@@ -389,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="Quest.h">
       <Filter>04. GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>09. Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
