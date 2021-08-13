@@ -34,17 +34,18 @@ void CItemMgr::update()
 {
     if (m_bMakeItem == true) {
         if (m_bFirst == true) {
-            for (int i = 0; i < m_vItemPos.size() - m_iOldPosNum; ++i) {
-                m_bMakeFirst.push_back(true);
-                m_bisUp.push_back(false);
-                m_bisDown.push_back(false);
+            
+            if (m_bIsReserved == true) {
+                for (int i = 0; i < m_vItemPos.size() - m_iOldPosNum; ++i) {
+                    m_bMakeFirst.push_back(true);
+                    m_bisUp.push_back(false);
+                    m_bisDown.push_back(false);
+                }
             }
             m_bFirst = false;
-            //SetItemID();
-            g_netMgr.Send_ItemCreate_Paket(m_vMonsterPos, m_vItemID);
-           // MakeObject();
         }
-        if(m_bIsReserved == true)
+
+        if (m_bIsReserved == true)
             MakeItem();
     }
 }

@@ -137,6 +137,8 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 		// 죽으면 하는 걸로 바꿔야 함 일단 오류나니까 여기서 처리하기
 		CItemMgr::GetInst()->SetMonsterPos(GetObj()->Transform()->GetLocalPos());
 		CItemMgr::GetInst()->SetIsMake(true);
+		vector<int> a;
+		g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos(), a);
 
 		m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
 		if(m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)
