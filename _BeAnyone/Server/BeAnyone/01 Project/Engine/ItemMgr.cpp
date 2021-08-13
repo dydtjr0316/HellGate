@@ -41,7 +41,7 @@ void CItemMgr::update()
             }
             m_bFirst = false;
             //SetItemID();
-            g_netMgr.Send_ItemCreate_Paket(m_vItemPos[m_iOldPosNum], m_vItemID);
+            g_netMgr.Send_ItemCreate_Paket(m_vMonsterPos, m_vItemID);
            // MakeObject();
         }
         if(m_bIsReserved == true)
