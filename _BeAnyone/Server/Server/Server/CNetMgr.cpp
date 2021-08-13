@@ -497,9 +497,23 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     break;
     case CS_ITEMCREATE:
     {
-
+        cs_packet_ItemCreate_Packet* packet = reinterpret_cast<cs_packet_ItemCreate_Packet*>(buf);
+        for (auto& obj : m_pMediator->GetObjList())
+        {
+            m_pSendMgr->Send_ItemCreate_Packet(obj.first, packet->vPos, packet->vid);
+        }
     }
         break;
+    case CS_ITEMDELETE:
+    {
+        cs_packet_ItemDelete_Packet* packet = reinterpret_cast<cs_packet_ItemDelete_Packet*>(buf);
+        for (auto& obj : m_pMediator->GetObjList())
+        {
+            m_pSendMgr->Send_ItemDelete_Packet(obj.first, packet->vPos);
+        }
+    }
+    break;
+
     default:
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();

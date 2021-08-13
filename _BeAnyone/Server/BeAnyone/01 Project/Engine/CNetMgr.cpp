@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CNetMgr.h"
+#include "ItemMgr.h"
 #include "GameObject.h"
 #include "Scene.h"
 
@@ -26,7 +27,7 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.0.13";
-const char ip[] = "221.151.160.142";
+//const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
 
@@ -227,6 +228,14 @@ void CNetMgr::Send_ItemCreate_Paket(const Vector3& itemPos, const vector<int>& i
 		p.vid.push_back(id);
 	}
 	p.vPos = itemPos;
+	Send_Packet(&p);
+}
+
+void CNetMgr::Send_ItemDelete_Paket(const Vector3& itemPos)
+{
+	cs_packet_ItemDelete_Packet p;
+	p.type = CS_ITEMDELETE;
+	p.size = sizeof(p);
 	Send_Packet(&p);
 }
 
@@ -705,6 +714,45 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (g_Object.find(packet->id)->second != nullptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
+	}
+	break;
+	case SC_ITEMCREATE:
+	{
+		
+		// 아이탬 생성부 - 효림
+		sc_packet_ItemCreate_Packet* packet = reinterpret_cast<sc_packet_ItemCreate_Packet*>(ptr);
+		packet->vid;// vector<char> monster id
+		packet->vPos;//vecotr3 몬스터 position
+
+		CGameObject* pItem;
+		for (int i = 0; i < 3; ++i) {
+			pItem = new CGameObject;
+			pItem->SetName(L"Item1");
+			pItem->FrustumCheck(true);
+			pItem->AddComponent(new CTransform);
+			pItem->AddComponent(new CMeshRender);
+			//pItem->AddComponent(new CDummyItemScript);
+			pItem->AddComponent(new CCollider);
+			pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+			pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
+			pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+			pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+			pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+			pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
+			pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+			pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
+
+			CItemMgr::GetInst()->SetItemObj(pItem);
+			CItemMgr::GetInst()->SetReservePaket(true);
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
+		}
+	}
+	break;
+	case SC_ITEMDELETE:
+	{
+		// 아이템 삭제부 - 효림
+		sc_packet_ItemDelete_Packet* packet = reinterpret_cast<sc_packet_ItemDelete_Packet*>(ptr);
+		packet->vPos;// vector3 item position
 	}
 	break;
 	default:

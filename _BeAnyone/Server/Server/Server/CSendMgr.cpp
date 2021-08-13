@@ -2,6 +2,7 @@
 #include "CSendMgr.h"
 int sendentercnt = 1;
 
+
 void CSendMgr::Send_Packet(const uShort& id, void* packet)
 {
     unsigned char* buf = reinterpret_cast<unsigned char*>(packet);
@@ -34,6 +35,25 @@ void CSendMgr::Send_LevelUP_Packet(const uShort& id)
     p.exp = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(id))->GetEXP();
     p.max_exp = CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(id))->GetMaxEXP();;
     Send_Packet(id, &p);
+}
+
+void CSendMgr::Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos, const vector<char> itemId)
+{
+    sc_packet_ItemCreate_Packet p;
+    p.size = sizeof(sc_packet_ItemCreate_Packet);
+    p.type = SC_ITEMCREATE;
+    p.vid = itemId;
+    p.vPos = pos;
+    Send_Packet(user_id, &p);
+}
+
+void CSendMgr::Send_ItemDelete_Packet(const uShort& user_id, const Vector3& pos)
+{
+    sc_packet_ItemDelete_Packet p;
+    p.size = sizeof(sc_packet_ItemDelete_Packet);
+    p.type = SC_ITEMDELETE;
+    p.vPos = pos;
+    Send_Packet(user_id, &p);
 }
 
 void CSendMgr::Send_Attacked_Packet_Monster(const uShort& attacker, const uShort& monster_id)

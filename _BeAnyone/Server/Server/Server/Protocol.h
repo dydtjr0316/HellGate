@@ -78,6 +78,8 @@ constexpr char SC_PACKET_ID = 9;
 constexpr char SC_PACKET_MOUSE = 10;
 constexpr char SC_PACKET_STOP = 11;
 constexpr char SC_PACKET_MONSTER_MOVE = 12;
+constexpr char SC_ITEMCREATE = 15;
+constexpr char SC_ITEMDELETE = 16;
 
 //°¡¶ó
 constexpr char SC_PACKET_ATTACKANI = 13;
@@ -94,6 +96,7 @@ constexpr char CS_MONSTER_DEAD = 7;
 constexpr char CS_ATTACK_ANIMATION = 8; 
 constexpr char CS_MONSTER_ANIMATION = 9;
 constexpr char CS_ITEMCREATE = 10;
+constexpr char CS_ITEMDELETE = 11;
 
 
 constexpr unsigned char O_PLAYER = 0;
@@ -222,6 +225,19 @@ struct sc_packet_npc_automove
 	char eDir;
 };
 
+struct sc_packet_ItemCreate_Packet {
+	char	size;
+	char	type;
+	Vector3 vPos;
+	vector<char>	vid;
+};
+
+struct sc_packet_ItemDelete_Packet {
+	char	size;
+	char	type;
+	Vector3 vPos;
+};
+
 
 struct sc_packet_level_up {
 	char size;
@@ -315,6 +331,13 @@ struct cs_packet_ItemCreate_Packet {
 	Vector3 vPos;
 	vector<char>	vid;
 };
+
+struct cs_packet_ItemDelete_Packet {
+	char	size;
+	char	type;
+	Vector3 vPos;
+};
+
 
 struct cs_packet_AttackAni {
 	char	size;

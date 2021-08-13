@@ -18,6 +18,11 @@ public:		//player
 public:		// monster
 	void Send_Monster_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
 
+
+public:
+	void Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos, const vector<char> itemId);
+	void Send_ItemDelete_Packet(const uShort& user_id, const Vector3& pos);
+
 public:
 	void Send_Packet(const uShort& id, void* packet);
 };
