@@ -170,12 +170,13 @@ void CSendMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, c
     Send_Packet(user_id, &p);
 }
 
-void CSendMgr::Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attckerid, const bool& isAttack)
+void CSendMgr::Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attckerid, const bool& isAttack, const Ani_TYPE& type)
 {
     sc_packet_AttackAni p;
     p.id = attckerid;
     p.size = sizeof(p);
     p.isAttack = isAttack;
+    p.anitype = (char)type;
     p.type = SC_PACKET_ATTACKANI;
     Send_Packet(user_id, &p);
 }

@@ -464,14 +464,14 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     break;
     case CS_ATTACK_ANIMATION:
     {
-        cs_packet_AttackAni* packet = reinterpret_cast<cs_packet_AttackAni*>(buf);
+        cs_packet_Animation* packet = reinterpret_cast<cs_packet_Animation*>(buf);
         if (m_pMediator->Count(packet->id) == 0)break;
         CClient* monster = CAST_CLIENT(m_pMediator->Find(packet->id));
         unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(user_id));
         for (auto& user : new_viewList)
         {
             if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
-                m_pSendMgr->Send_Attack_Animation_Packet(user, packet->id, packet->isAttack);
+                m_pSendMgr->Send_Attack_Animation_Packet(user, packet->id, packet->isact, (Ani_TYPE)packet->anitype);
         }
     }
     break;
