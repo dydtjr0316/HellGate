@@ -159,10 +159,25 @@ void CStaticUI::update()
 			}
 		}
 
-		if (KEY_TAB(KEY_TYPE::KEY_RBTN))
+		/*if (KEY_TAB(KEY_TYPE::KEY_RBTN))	
 		{
 
 		}
+		else if (KEY_HOLD(KEY_TYPE::KEY_RBTN))		
+		{
+
+		}
+		else if (KEY_AWAY(KEY_TYPE::KEY_RBTN))	
+		{
+			for (int i = 0; i < m_vecButton.size(); ++i)
+			{
+				if (m_vecButton[i]->GetState() == BT_STATE::CLICKED)
+				{
+					m_vecButton[i]->OnCollisionExit(m_pMousePoint->Collider());
+
+				}
+			}
+		}*/
 	}
 }
 

@@ -63,7 +63,8 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 			/// 여기까지 파티클 생성하는거
 			/// ////////////////////////////////////////////////////////////////////////////////
 
-			DeleteObject(GetObj());
+			m_fTime = 4.0f;
+			//DeleteObject(GetObj());
 		}
 		break;
 	case 1:

@@ -1,11 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
+<<<<<<< HEAD
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\Server\x64\Release\Server.exe</FullPath>
+=======
+      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\Server\x64\Release\Server.exe</FullPath>
+>>>>>>> da0d76ed6a87e59d9bf6199725b36993280a4fba
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
   <SatelliteDlls />
   <NonRecipeFileRefs />
+=======
+  <ProjectOutputs>C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\Server\x64\Release\Server.exe</ProjectOutputs>
+  <ContentFiles></ContentFiles>
+  <SatelliteDlls></SatelliteDlls>
+  <NonRecipeFileRefs></NonRecipeFileRefs>
+>>>>>>> 1ecf4dece4bc0003498d4eb961cddb8ca26f4f7d
 </Project>

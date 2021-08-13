@@ -83,6 +83,7 @@ public:
 	void ChangeButtonTexture(); // texture, pos
 	void ChangeNumTexture();
 	void AddItemCount() { m_iItemCount++; m_bChangeCount = true; }
+	void SubItemCount() { m_iItemCount--; m_bChangeCount = true; }
 	void SetChangeCount() { m_bChangeCount = true; } // store ui 위해서 
 	void SetItemPrice();
 	void CreateItemNum(int num);	// item num or item price 만들기
