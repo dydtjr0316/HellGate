@@ -170,3 +170,6 @@ D3D12_DEPTH_STENCIL_DESC g_arrDepthStencilDesc[(UINT)DEPTH_STENCIL_TYPE::END] =
 	}
 
 };
+
+// 전역 상수버퍼 구조체
+tGlobalValue g_global = {};

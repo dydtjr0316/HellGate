@@ -43,10 +43,15 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 	CDevice::GetInst()->CreateConstBuffer(L"TRANSFORM_MATRIX", sizeof(tTransform), 512, CONST_REGISTER::b0);
 	CDevice::GetInst()->CreateConstBuffer(L"MATERIAL_PARAM", sizeof(tMtrlParam), 512, CONST_REGISTER::b1);
 	CDevice::GetInst()->CreateConstBuffer(L"ANIM2D", sizeof(tMtrlParam), 512, CONST_REGISTER::b2);
-
 	// 전역 상수버퍼 변수(1프레임 동안 레지스터에서 지속되야함)
 	//CDevice::GetInst()->CreateConstBuffer(L"LIGHT2D", sizeof(tLightInfo), 1, CONST_REGISTER::b3, true);
 	CDevice::GetInst()->CreateConstBuffer(L"LIGHT3D", sizeof(tLightInfo), 1, CONST_REGISTER::b3, true);
+	CDevice::GetInst()->CreateConstBuffer(L"GLOBAL VALUE", sizeof(tGlobalValue), 1, CONST_REGISTER::b4);
+
+	CDevice::GetInst()->SetGlobalConstBufferToRegister(CDevice::GetInst()->GetCB(CONST_REGISTER::b3), 0);
+	CDevice::GetInst()->SetGlobalConstBufferToRegister(CDevice::GetInst()->GetCB(CONST_REGISTER::b4), 0);
+	//CDevice::GetInst()->SetGlobalConstBufferToRegister(CDevice::GetInst()->GetCB(CONST_REGISTER::b5), 0);
+
 
 	// 매니저 초기화
 	CPathMgr::init();
