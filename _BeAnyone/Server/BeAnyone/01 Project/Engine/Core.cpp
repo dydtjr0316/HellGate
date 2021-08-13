@@ -95,7 +95,6 @@ void CCore::progress()
 				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
 		}
 	}*/
-	CSound::g_pFMOD->update();
 
 	CEventMgr::GetInst()->clear();
 	{

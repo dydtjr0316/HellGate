@@ -418,3 +418,10 @@ enum class QUESTBOX_TYPE
 	NPC_2,
 	END,
 };
+enum Sound_Type
+{
+	BGM, 
+	HIT,
+	GET_COIN,	// 동전 주울때
+	SET_COIN	// 동전 떨어질때
+};

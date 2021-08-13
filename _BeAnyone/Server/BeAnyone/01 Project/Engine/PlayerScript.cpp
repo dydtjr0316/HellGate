@@ -4,6 +4,7 @@
 #include "RenderMgr.h"
 #include "StaticUI.h"
 #include "Quest.h"
+#include "Sound.h"
 #include <iostream>
 
 
@@ -167,6 +168,7 @@ void CPlayerScript::update()
 	// 공격 애니메이션
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
+		CSound::GetInst()->Play(Sound_Type::HIT);
 		player->AnimClipReset();
 		player->SetAttack(true);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack());
@@ -192,9 +194,10 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_E)) {
 		player->AnimClipReset();
 		//player->SetAnimation(Ani_TYPE::PICK_UP);
-
+		CSound::GetInst()->Play(Sound_Type::GET_COIN);
 		m_bIsPick = true;
 		PickUp_Default();
+		
 
 	}
 	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
