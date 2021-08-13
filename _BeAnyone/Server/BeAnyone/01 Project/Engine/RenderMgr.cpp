@@ -36,6 +36,10 @@ void CRenderMgr::render()
 	float arrColor[4] = { 0.6f, 0.6f, 0.6f, 1.f };
 	CDevice::GetInst()->render_start(arrColor);
 
+	// 전역버퍼 데이터 업데이트
+	static CConstantBuffer* pGlobalBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b4);
+	CDevice::GetInst()->SetConstBufferToRegister(pGlobalBuffer, pGlobalBuffer->AddData(&g_global));
+
 	// 광원 정보 업데이트
 	UpdateLight();
 
