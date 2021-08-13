@@ -489,6 +489,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
                 cout << "monster animation user id -> " << user << endl;
                 cout << "monster animation monster id -> " << packet->id << endl;
                 cout << "monster animation ani type -> " << (int)packet->aniType << endl;*/
+                m_pMediator->Find(packet->id)->SetIsMoving(packet->isMoving);
                 m_pSendMgr->Send_Monster_Animation_Packet(packet->id, user, packet->aniType);
             }
         }
@@ -823,7 +824,7 @@ void CNetMgr::Processing_Thead()
                 float speed = 100.f;
                 if (ismoving)
                 {
-                    tempLock.lock();
+                   // tempLock.lock();
                     switch (monsterDir)
                     {
                     case MONSTER_AUTOMOVE_DIR::FRONT:
@@ -845,7 +846,9 @@ void CNetMgr::Processing_Thead()
                     default:
                         break;
                     }
-                    tempLock.unlock();
+                   // tempLock.unlock();
+                    if(monster==1000)
+                    cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ",  " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
 
                     //if (m_pMediator->Find(monster) != nullptr)
                     {
@@ -861,7 +864,6 @@ void CNetMgr::Processing_Thead()
                             for (auto& user : old_viewList) {
                                 if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
                                 {
-                                    //cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ",  " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
                                     //cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
 
                                     m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());

@@ -23,11 +23,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-<<<<<<< HEAD
 const char ip[] = "192.168.0.13";
-=======
-const char ip[] = "192.168.0.7";
->>>>>>> 6b1ebd630308923fc0b8e07d0baa14a6fb31a15c
+//const char ip[] = "192.168.0.7";
 //const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
@@ -250,6 +247,14 @@ void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONS
 	p.size = sizeof(p);
 	p.id = monster_id;
 	p.aniType = aniType;
+	if (aniType == MONSTER_ANI_TYPE::IDLE)
+	{
+		p.isMoving = true;
+	}
+	else
+	{
+		p.isMoving = false;
+	}
 	Send_Packet(&p);
 
 }
@@ -556,17 +561,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER) {
 			if (monster_id == 1000)
 			{
-				/*cout << "패킷의 데이터----------------------------" << endl;
-				cout << "packet dir : " << (int)packet->eDir << endl;
-				cout << packet->pos.x << ", " << packet->pos.z << endl;
-				cout << packet->id << endl;
-				cout << "클라이언트의 데이터***********************" << endl;
-				cout << "packet dir : " << (int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() << endl;
-				cout << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << ", " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl<<endl;*/
+				cout << "-----------------------------------------------------------" << endl;
+				cout << "-----------------------------------------------------------" << endl;
+				cout << (int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() << endl;
+				cout << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << " , " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;
 				cout << "-----------------------------------------------------------" << endl;
 				cout << "-----------------------------------------------------------" << endl;
 			}
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
 			
 			g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);

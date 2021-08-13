@@ -132,6 +132,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 	{
 		// 여기 두번들어감 // 용석
 		g_netMgr.Send_Attack_Packet(m_sId);
+		m_bisMoving = false;
 
 		// 죽으면 하는 걸로 바꿔야 함 일단 오류나니까 여기서 처리하기
 		CItemMgr::GetInst()->SetItemPos(GetObj()->Transform()->GetLocalPos());
@@ -194,7 +195,7 @@ void CMonsterScript::Move()
 	MONSTER_AUTOMOVE_DIR monsterDir;
 	GetObj()->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
 	Vector3 tempWorldPos(0.f, 0.f, 0.f);
-	if (monsterScript->GetPacketMove() != nullptr)
+	if (monsterScript->GetPacketMove() != nullptr&& m_bisMoving)
 	{
 		/*if (GetID() == 1000)
 		{
@@ -265,19 +266,14 @@ void CMonsterScript::Move()
 				break;
 			}
 			monsterPos += tempWorldPos * 100.f * DT;
+			int z = (int)(monsterPos.z / xmf3Scale.z);
+
+			float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f + 100.f;
+
+			if (monsterPos.y != fHeight)
+				monsterPos.y = fHeight;
 			monsterTrans->SetLocalPos(monsterPos);
 
-			if (monsterScript->GetPacketMove() != nullptr)
-				if ((MONSTER_AUTOMOVE_DIR)monsterScript->GetPacketMove()->eDir != MONSTER_AUTOMOVE_DIR::IDLE)
-				{
-					int z = (int)(monsterPos.z / xmf3Scale.z);
-
-					float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f + 100.f;
-
-					if (monsterPos.y != fHeight)
-						monsterPos.y = fHeight;
-					monsterTrans->SetLocalPos(monsterPos);
-				}
 		}
 	}
 }
@@ -319,6 +315,7 @@ void CMonsterScript::Attack()
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DAMAGE_CNT) + DT, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::DAMAGE);
 		
+		m_bisMoving = false;
 
 		g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
 	}
@@ -327,6 +324,7 @@ void CMonsterScript::Attack()
 		monsterScript->SetAniReset(false); //m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
+		m_bisMoving = true;
 		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
 		// 서버에 패킷 보내야 함
 	}
@@ -336,6 +334,7 @@ void CMonsterScript::Attack()
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::ATTACK);
+		m_bisMoving = false;
 		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
 
 		// packet
@@ -345,6 +344,7 @@ void CMonsterScript::Attack()
 		monsterScript->SetAniReset(false); // m_bisAniReset = false;
 		monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::IDLE);
+		m_bisMoving = true;
 		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
 		// packet
 	}

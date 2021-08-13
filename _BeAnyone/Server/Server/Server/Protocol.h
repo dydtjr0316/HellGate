@@ -330,6 +330,7 @@ struct cs_pcaket_Monster_Animation {
 	uShort  id;
 
 	MONSTER_ANI_TYPE aniType;
+	bool isMoving;
 };
 
 
