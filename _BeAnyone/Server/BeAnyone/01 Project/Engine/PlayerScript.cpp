@@ -171,7 +171,7 @@ void CPlayerScript::update()
 		CSound::GetInst()->Play(Sound_Type::HIT);
 		player->AnimClipReset();
 		player->SetAttack(true);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack());
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
 		anicnt++;
 	}
 
@@ -186,7 +186,7 @@ void CPlayerScript::update()
 
 		player->SetAttack(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::ATTACK_CNT);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack());
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
 
 	}
 
@@ -197,7 +197,8 @@ void CPlayerScript::update()
 		CSound::GetInst()->Play(Sound_Type::GET_COIN);
 		m_bIsPick = true;
 		PickUp_Default();
-		
+		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
+
 
 	}
 	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
@@ -209,6 +210,8 @@ void CPlayerScript::update()
 
 		m_bIsPick = false;
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
+		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
+
 
 	}
 
@@ -216,7 +219,7 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_Q)) {
 		player->AnimClipReset();
 		player->SetDamage(true);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage());
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
 	}
 	if (player->GetDamage() && player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) + DT, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
@@ -229,7 +232,7 @@ void CPlayerScript::update()
 
 		player->SetDamage(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage());
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
 
 	}
 

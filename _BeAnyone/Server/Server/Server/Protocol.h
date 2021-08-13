@@ -156,6 +156,7 @@ struct sc_packet_AttackAni {
 	char size;
 	char type;
 	uShort id;
+	char anitype;
 	bool isAttack;
 };
 
@@ -339,12 +340,12 @@ struct cs_packet_ItemDelete_Packet {
 };
 
 
-struct cs_packet_AttackAni {
+struct cs_packet_Animation {
 	char	size;
 	char	type;
 	uShort  id;
-
-	bool isAttack;
+	char anitype;
+	bool isact;
 };
 
 struct cs_pcaket_Monster_Animation {

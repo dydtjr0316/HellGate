@@ -238,13 +238,14 @@ void CNetMgr::Send_ItemDelete_Paket(const Vector3& itemPos)
 	Send_Packet(&p);
 }
 
-void CNetMgr::Send_Player_Animation_Packet(const uShort& user_id, const bool& isAttack)
+void CNetMgr::Send_Player_Animation_Packet(const uShort& user_id, const bool& isact, const Ani_TYPE& ani)
 {
-	cs_packet_AttackAni p;
+	cs_packet_Animation p;
 	p.type = CS_ATTACK_ANIMATION;
 	p.size = sizeof(p);
 	p.id = user_id;
-	p.isAttack = isAttack;
+	p.anitype = (char)ani;
+	p.isact = isact;
 	Send_Packet(&p);
 }
 
@@ -694,7 +695,21 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (packet->isAttack)
 				{
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::ATTACK);
+					
+					switch ((Ani_TYPE)packet->anitype)
+					{
+					case Ani_TYPE::ATTACK:
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::ATTACK);
+						break;
+					case Ani_TYPE::DAMAGE:
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::DAMAGE);
+						break;
+					case Ani_TYPE::PICK_UP:
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::PICK_UP);
+						break;
+					default:
+						break;
+					}
 				}
 				else
 				{
@@ -741,8 +756,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 			pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 
-			CItemMgr::GetInst()->SetItemObj(pItem);
-			
+			CItemMgr::GetInst()->SetItemObj(pItem);		
 			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
 		}
 		CItemMgr::GetInst()->SetItemPos(packet->vPos);

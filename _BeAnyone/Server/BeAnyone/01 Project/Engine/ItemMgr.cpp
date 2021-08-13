@@ -34,13 +34,10 @@ void CItemMgr::update()
 {
     if (m_bMakeItem == true) {
         if (m_bFirst == true) {
-            
-            if (m_bIsReserved == true) {
-                for (int i = 0; i < m_vItemPos.size() - m_iOldPosNum; ++i) {
-                    m_bMakeFirst.push_back(true);
-                    m_bisUp.push_back(false);
-                    m_bisDown.push_back(false);
-                }
+            for (int i = 0; i < m_vItemPos.size() - m_iOldPosNum; ++i) {
+                m_bMakeFirst.push_back(true);
+                m_bisUp.push_back(false);
+                m_bisDown.push_back(false);
             }
             m_bFirst = false;
         }
@@ -48,6 +45,7 @@ void CItemMgr::update()
         if (m_bIsReserved == true)
             MakeItem();
     }
+
 }
 
 void CItemMgr::MakeObject()
