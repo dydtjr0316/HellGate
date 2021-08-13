@@ -24,8 +24,13 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
+<<<<<<< HEAD
 const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.0.13";
+=======
+//const char ip[] = "192.168.0.7";
+const char ip[] = "192.168.0.13";
+>>>>>>> 3a718e39f369bb584cdb453cf45869feca56e35f
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -742,6 +747,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
 
 			CItemMgr::GetInst()->SetItemObj(pItem);
+			CItemMgr::GetInst()->SetItemPos(packet->vPos);
 			CItemMgr::GetInst()->SetReservePaket(true);
 			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
 		}

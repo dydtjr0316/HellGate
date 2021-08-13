@@ -1989,7 +1989,6 @@ void CSceneMgr::init()
 	m_pCurScene->start();
 
 
-	CSound::GetInst()->Play(Sound_Type::BGM, true, true);
 }
 
 void CSceneMgr::update() 
