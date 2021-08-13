@@ -15,14 +15,13 @@ private:
 	bool m_bSetChild = false;
 	
 	CTerrain* m_pTerrainObj;
-
-	// animation
 	vector<Ptr<CMesh>>   m_pAniData;
 
 	bool m_bisAttack = false;
 	bool m_bisAniReset = false;
 	bool m_bisDamaged = false;
 	bool m_bisPunch = false;
+	bool m_bisMoving = false;
 
 	// player save for quest
 	CGameObject* m_pPlayer;
@@ -76,11 +75,14 @@ public:
 
 	// void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
 	MONSTER_AUTOMOVE_DIR& GetDir() { return m_eDir; }
-	void SetDir(const MONSTER_AUTOMOVE_DIR& dir) { m_eDir = dir; }
+	void SetDir(const MONSTER_AUTOMOVE_DIR dir) { m_eDir = dir; }
 
 	sc_packet_monster_automove* GetPacketMove() {return  m_Packet_autoMove; }
 	void SetPacketMove(sc_packet_monster_automove* p);
 	
+
+	void SetisMoving(const bool moving) { m_bisMoving = moving; }
+	bool GetisMoving() { return m_bisMoving; }
 public:
 	CLONE(CMonsterScript);
 

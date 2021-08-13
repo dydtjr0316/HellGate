@@ -464,14 +464,14 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     break;
     case CS_ATTACK_ANIMATION:
     {
-        cs_packet_AttackAni* packet = reinterpret_cast<cs_packet_AttackAni*>(buf);
+        cs_packet_Animation* packet = reinterpret_cast<cs_packet_Animation*>(buf);
         if (m_pMediator->Count(packet->id) == 0)break;
         CClient* monster = CAST_CLIENT(m_pMediator->Find(packet->id));
         unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(user_id));
         for (auto& user : new_viewList)
         {
             if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
-                m_pSendMgr->Send_Attack_Animation_Packet(user, packet->id, packet->isAttack);
+                m_pSendMgr->Send_Attack_Animation_Packet(user, packet->id, packet->isact, (Ani_TYPE)packet->anitype);
         }
     }
     break;
@@ -489,6 +489,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
                 cout << "monster animation user id -> " << user << endl;
                 cout << "monster animation monster id -> " << packet->id << endl;
                 cout << "monster animation ani type -> " << (int)packet->aniType << endl;*/
+                m_pMediator->Find(packet->id)->SetIsMoving(packet->isMoving);
                 m_pSendMgr->Send_Monster_Animation_Packet(packet->id, user, packet->aniType);
             }
         }
@@ -496,9 +497,23 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     break;
     case CS_ITEMCREATE:
     {
-
+        cs_packet_ItemCreate_Packet* packet = reinterpret_cast<cs_packet_ItemCreate_Packet*>(buf);
+        for (auto& obj : m_pMediator->GetObjList())
+        {
+            m_pSendMgr->Send_ItemCreate_Packet(obj.first, packet->vPos, packet->vid);
+        }
     }
         break;
+    case CS_ITEMDELETE:
+    {
+        cs_packet_ItemDelete_Packet* packet = reinterpret_cast<cs_packet_ItemDelete_Packet*>(buf);
+        for (auto& obj : m_pMediator->GetObjList())
+        {
+            m_pSendMgr->Send_ItemDelete_Packet(obj.first, packet->vPos);
+        }
+    }
+    break;
+
     default:
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();
@@ -823,7 +838,7 @@ void CNetMgr::Processing_Thead()
                 float speed = 100.f;
                 if (ismoving)
                 {
-                    tempLock.lock();
+                   // tempLock.lock();
                     switch (monsterDir)
                     {
                     case MONSTER_AUTOMOVE_DIR::FRONT:
@@ -845,7 +860,9 @@ void CNetMgr::Processing_Thead()
                     default:
                         break;
                     }
-                    tempLock.unlock();
+                   // tempLock.unlock();
+                    if(monster==1000)
+                    cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ",  " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
 
                     //if (m_pMediator->Find(monster) != nullptr)
                     {
@@ -861,7 +878,6 @@ void CNetMgr::Processing_Thead()
                             for (auto& user : old_viewList) {
                                 if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
                                 {
-                                    //cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ",  " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
                                     //cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
 
                                     m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());

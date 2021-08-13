@@ -4,7 +4,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Material.h"
-// #include "Sound.h"
+#include "Sound.h"
 #include "MeshData.h"
 #include "Ptr.h"
 
@@ -21,7 +21,6 @@ private:
 	void CreateDefaultMesh();
 	void CreateDefaultShader();
 	void CreateDefaultMaterial();
-	//void InitSound();
 
 public:
 	void init();
@@ -67,8 +66,8 @@ RES_TYPE GetType()
 		return RES_TYPE::SHADER;
 	if (typeid(T).hash_code() == typeid(CTexture).hash_code())
 		return RES_TYPE::TEXTURE;
-	//if (typeid(T).hash_code() == typeid(CSound).hash_code())
-	//	return RES_TYPE::SOUND;
+	if (typeid(T).hash_code() == typeid(CSound).hash_code())
+		return RES_TYPE::SOUND;
 	return RES_TYPE::END;
 }
 

@@ -78,7 +78,8 @@ void CCore::ChangeWindowSize(HWND _hWnd, const tResolution& _resolution)
 
 void CCore::progress()
 {
-    CKeyMgr::GetInst()->update();
+	//CSound::GetInst()->Play(Sound_Type::BGM, true, true);
+	CKeyMgr::GetInst()->update();
 	/*cout << "코어의 CKeyMgr::GetInst()->update() 끝난 후 " << endl;
 	for (auto& obj : g_Object)
 	{

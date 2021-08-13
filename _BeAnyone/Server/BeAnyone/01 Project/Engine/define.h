@@ -88,7 +88,7 @@ enum class RES_TYPE
 	MESHDATA,
 	MESH,
 	TEXTURE,
-	//SOUND,
+	SOUND,
 	SHADER,
 	END,
 };
@@ -418,4 +418,11 @@ enum class QUESTBOX_TYPE
 	NPC_1,
 	NPC_2,
 	END,
+};
+enum Sound_Type
+{
+	BGM, 
+	HIT,
+	GET_COIN,	// 동전 주울때
+	SET_COIN	// 동전 떨어질때
 };

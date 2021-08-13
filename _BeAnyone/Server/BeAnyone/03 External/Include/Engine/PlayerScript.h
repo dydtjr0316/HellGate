@@ -3,7 +3,8 @@
 #include "Terrain.h"
 #include "CDeadReckoner.h"
 #include "Mesh.h"
-
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 enum class UI_BAR {
 	STAMINA,
 	DASH,

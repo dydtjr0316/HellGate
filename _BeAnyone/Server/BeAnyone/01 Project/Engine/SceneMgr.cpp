@@ -3,6 +3,8 @@
 #include <iostream>
 #include <random>
 
+#include "Sound.h"
+
 #include "SceneMgr.h"
 
 #include "Scene.h"
@@ -1985,6 +1987,8 @@ void CSceneMgr::init()
 
 	m_pCurScene->awake();
 	m_pCurScene->start();
+
+
 }
 
 void CSceneMgr::update() 

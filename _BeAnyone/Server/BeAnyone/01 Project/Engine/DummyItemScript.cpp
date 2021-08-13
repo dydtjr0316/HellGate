@@ -37,6 +37,8 @@ void CDummyItemScript::OnCollisionEnter(CCollider* _pOther)
 		CheckItemMesh(strName, obj);
 			
 		// 용석 아이템 없어지는 부분 
+		g_netMgr.Send_ItemDelete_Paket(_pOther->Transform()->GetLocalPos());
+
 		DeleteObject(GetObj());
 	}
 

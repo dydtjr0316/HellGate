@@ -78,6 +78,8 @@ constexpr char SC_PACKET_ID = 9;
 constexpr char SC_PACKET_MOUSE = 10;
 constexpr char SC_PACKET_STOP = 11;
 constexpr char SC_PACKET_MONSTER_MOVE = 12;
+constexpr char SC_ITEMCREATE = 15;
+constexpr char SC_ITEMDELETE = 16;
 
 //°¡¶ó
 constexpr char SC_PACKET_ATTACKANI = 13;
@@ -94,6 +96,7 @@ constexpr char CS_MONSTER_DEAD = 7;
 constexpr char CS_ATTACK_ANIMATION = 8; 
 constexpr char CS_MONSTER_ANIMATION = 9;
 constexpr char CS_ITEMCREATE = 10;
+constexpr char CS_ITEMDELETE = 11;
 
 
 constexpr unsigned char O_PLAYER = 0;
@@ -153,6 +156,7 @@ struct sc_packet_AttackAni {
 	char size;
 	char type;
 	uShort id;
+	char anitype;
 	bool isAttack;
 };
 
@@ -220,6 +224,19 @@ struct sc_packet_npc_automove
 	char type;
 	uShort id;
 	char eDir;
+};
+
+struct sc_packet_ItemCreate_Packet {
+	char	size;
+	char	type;
+	Vector3 vPos;
+	vector<char>	vid;
+};
+
+struct sc_packet_ItemDelete_Packet {
+	char	size;
+	char	type;
+	Vector3 vPos;
 };
 
 
@@ -316,12 +333,19 @@ struct cs_packet_ItemCreate_Packet {
 	vector<char>	vid;
 };
 
-struct cs_packet_AttackAni {
+struct cs_packet_ItemDelete_Packet {
+	char	size;
+	char	type;
+	Vector3 vPos;
+};
+
+
+struct cs_packet_Animation {
 	char	size;
 	char	type;
 	uShort  id;
-
-	bool isAttack;
+	char anitype;
+	bool isact;
 };
 
 struct cs_pcaket_Monster_Animation {
@@ -330,6 +354,7 @@ struct cs_pcaket_Monster_Animation {
 	uShort  id;
 
 	MONSTER_ANI_TYPE aniType;
+	bool isMoving;
 };
 
 

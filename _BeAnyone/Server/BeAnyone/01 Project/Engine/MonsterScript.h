@@ -21,6 +21,7 @@ private:
 	bool m_bisAniReset = false;
 	bool m_bisDamaged = false;
 	bool m_bisPunch = false;
+	bool m_bisMoving = false;
 
 	// player save for quest
 	CGameObject* m_pPlayer;
@@ -79,6 +80,9 @@ public:
 	sc_packet_monster_automove* GetPacketMove() {return  m_Packet_autoMove; }
 	void SetPacketMove(sc_packet_monster_automove* p);
 	
+
+	void SetisMoving(const bool moving) { m_bisMoving = moving; }
+	bool GetisMoving() { return m_bisMoving; }
 public:
 	CLONE(CMonsterScript);
 

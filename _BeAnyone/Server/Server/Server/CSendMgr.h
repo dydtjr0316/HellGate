@@ -13,10 +13,15 @@ public:		//player
 	void Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool& isMoving);
 
 	//°¡¶ó
-	void Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attackerid, const bool& isAttack);
+	void Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attackerid, const bool& isAttack, const Ani_TYPE& type);
 	void Send_Monster_Animation_Packet(const uShort& monster_id, const uShort& user_id, const MONSTER_ANI_TYPE& aniType);
 public:		// monster
 	void Send_Monster_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
+
+
+public:
+	void Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos, const vector<char> itemId);
+	void Send_ItemDelete_Packet(const uShort& user_id, const Vector3& pos);
 
 public:
 	void Send_Packet(const uShort& id, void* packet);

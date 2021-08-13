@@ -40,10 +40,12 @@ void CItemMgr::update()
                 m_bisDown.push_back(false);
             }
             m_bFirst = false;
-            MakeObject();
         }
-        MakeItem();
+
+        if (m_bIsReserved == true)
+            MakeItem();
     }
+
 }
 
 void CItemMgr::MakeObject()
@@ -164,15 +166,14 @@ void CItemMgr::MakeItem()
             m_vItem[2 + (i * 3)]->Transform()->SetLocalRot(vItem3Rot);
 
             for (int j = m_iOldPosNum * 3; j < m_vItem.size(); ++j) {
-                randNum = uidMonsterItem(dreMonsterItem);
-
+                int randNum = uidMonsterItem(dreMonsterItem);
                 m_vItem[j]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
                 m_vItem[j]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
                 wstring wstr = m_pItemMeshData[randNum]->GetMesh()->GetName();
-                SetItemID(wstr);
+                // SetItemID();
             }
 
-            g_netMgr.Send_ItemCreate_Paket(m_vItemPos[i], m_vItemID);
+           
             m_bMakeFirst[i] = false;
             m_bisUp[i] = true;
         }
@@ -206,11 +207,12 @@ void CItemMgr::MakeItem()
             m_bMakeItem = false;
             m_bFirst = true;
             m_iOldPosNum = m_vItemPos.size();
+            m_bIsReserved = false;
 
             m_vItem[0 + (i * 3)]->AddComponent(new CDummyItemScript);
             m_vItem[1 + (i * 3)]->AddComponent(new CDummyItemScript);
             m_vItem[2 + (i * 3)]->AddComponent(new CDummyItemScript);
-            m_vItemID.clear();
+           // m_vItemID.clear();
         }
 
         m_vItem[0 + (i * 3)]->Transform()->SetLocalPos(vItem1Pos);
@@ -222,9 +224,9 @@ void CItemMgr::MakeItem()
 
 }
 
-void CItemMgr::SetItemID(wstring wstr)
+void CItemMgr::SetItemID()
 {
-    if (wstr == L"Mesh\\Steak_02.mesh")
+    /*if (wstr == L"Mesh\\Steak_02.mesh")
         m_vItemID.push_back((UINT)ITEM_ID::STEAK);
     else if (wstr == L"Mesh\\Bottle_03.mesh")
         m_vItemID.push_back((UINT)ITEM_ID::BOTTLE_STAMINA);
@@ -233,5 +235,10 @@ void CItemMgr::SetItemID(wstring wstr)
     else if (wstr == L"Mesh\\MoneyBag.mesh")
         m_vItemID.push_back((UINT)ITEM_ID::MONEYBAG);
     else if (wstr == L"Mesh\\Carrot.mesh")
-        m_vItemID.push_back((UINT)ITEM_ID::CARROT);
+        m_vItemID.push_back((UINT)ITEM_ID::CARROT);*/
+    m_vItemID.clear();
+    int randNum = uidMonsterItem(dreMonsterItem);
+    for (int i = 0; i < 3; ++i) {
+        m_vItemID.push_back(randNum);
+    }
 }
