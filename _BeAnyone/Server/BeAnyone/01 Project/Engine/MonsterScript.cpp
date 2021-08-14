@@ -373,7 +373,7 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
 		monsterDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);
 
 	Vector3 angle = XMVector3AngleBetweenVectors(playerDir, monsterDir);
-	
+
 	if (_eType == MOB_TYPE::YELLOW)
 		GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
 

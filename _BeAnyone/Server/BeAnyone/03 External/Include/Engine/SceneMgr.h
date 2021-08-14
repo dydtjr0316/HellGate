@@ -30,5 +30,6 @@ public:
 	void CreateNpc(CTerrain*);
 	void CreateNewMap(CTerrain*);
 	void LoadRes();
+	void LoadSound();
 };
 

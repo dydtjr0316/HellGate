@@ -242,7 +242,7 @@ void CNpcScript::update()
 			m_pPlayer->StaticUI()->m_iMoney += 300;*/
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_RBTN)) {
+	if (KEY_TAB(KEY_TYPE::KEY_RBTN) && GetObj()->GetName() == L"Npc_3") {
 		SellAndBuy();
 	}
 }
@@ -262,9 +262,35 @@ void CNpcScript::SetStaticUiRender(bool _bool)
 void CNpcScript::SellAndBuy()
 {
 	int playerMoney = m_pPlayerUi->StaticUI()->m_iMoney;
+	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
 
+	CStaticUI* storeUi = m_pStoreUi->StaticUI();
+	CStaticUI* playerUi = m_pPlayerUi->StaticUI();
 	// store
+	for (int i = 0; i < storeUi->m_vecButton.size(); ++i) {
+		if (storeUi->m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
+			Vector3 ButtonPos = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
+			Vector3 ButtonScale = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
+			
+			if (pMousePos.x >= ButtonPos.x - (ButtonScale.x / 2) && pMousePos.x <= ButtonPos.x + (ButtonScale.x / 2)
+				&& pMousePos.y <= -ButtonPos.y + (ButtonScale.x / 2) && pMousePos.y >= -ButtonPos.y - (ButtonScale.x / 2)) {
+				if (playerMoney - storeUi->m_vecButton[i]->GetItemCount() >= 0) {
+					playerUi->SetButton(storeUi->m_vecButton[i]->GetItemID());
+					playerUi->m_iMoney -= storeUi->m_vecButton[i]->GetItemCount();
+				}
+			}
+		
+		}
+	}
 }
+//
+//void CNpcScript::ComputeMousePos(Vector3& _pos, Vector3& _scale, POINT& _mousePos)
+//{
+//	if (_mousePos.x >= _pos.x - (_scale.x / 2) && _mousePos.x <= _pos.x + (_scale.x / 2)
+//		&& _mousePos.y <= -_pos.y + (_scale.x / 2) && _mousePos.y >= -_pos.y - (_scale.x / 2)) {
+//
+//	}
+//}
 
 
 void CNpcScript::CheckPlayer()
