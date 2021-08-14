@@ -39,6 +39,7 @@ public:
 	CCollider* Collider() { return m_pObject->Collider(); }
 	CLight* Light() { return m_pObject->Light(); }
 	CCamera* Camera() { return m_pObject->Camera(); }
+	CParticleSystem* ParticleSystem() { return m_pObject->Particlesystem(); }
 
 private:
 	void SetGameObject(CGameObject* _pObject) { m_pObject = _pObject; }

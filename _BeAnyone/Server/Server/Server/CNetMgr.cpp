@@ -515,6 +515,17 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     }
     break;
 
+    case CS_MONSTERDIR:
+    {
+        cs_pcaket_MonsterDir* packet = reinterpret_cast<cs_pcaket_MonsterDir*>(buf);
+        m_pMediator->Find(packet->id)->SetDirV(packet->dir);
+        if (!CAST_MONSTER(m_pMediator->Find(packet->id))->GetIsDir())
+        {
+            CAST_MONSTER(m_pMediator->Find(packet->id))->SetIsDir(true);
+        }
+    }
+    break;
+
     default:
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();
@@ -837,22 +848,22 @@ void CNetMgr::Processing_Thead()
                 }
 
                 float speed = 100.f;
-                if (ismoving)
+                if (ismoving&& CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
                 {
                    // tempLock.lock();
                     switch (monsterDir)
                     {
                     case MONSTER_AUTOMOVE_DIR::FRONT:
-                        monsterPos.z += speed * DT;
+                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         break;
                     case MONSTER_AUTOMOVE_DIR::BACK:
-                        monsterPos.z -= speed * DT;
+                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         break;
                     case MONSTER_AUTOMOVE_DIR::LEFT:
-                        monsterPos.x -= speed * DT;
+                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         break;
                     case MONSTER_AUTOMOVE_DIR::RIGHT:
-                        monsterPos.x += speed * DT;
+                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         break;
                     case MONSTER_AUTOMOVE_DIR::AUTO:
                         break;

@@ -1910,7 +1910,7 @@ void CSceneMgr::init()
 	pObject->Light()->SetAmbient(Vector3(0.1f, 0.1f, 0.1f));
 	pObject->Light()->SetLightDir(Vector3(1.f, -1.f, 1.f));
 	pObject->Light()->SetLightRange(1000.f);
-	pObject->Transform()->SetLocalPos(Vector3(-1000.f, 1000.f, -1000.f));
+	pObject->Transform()->SetLocalPos(Vector3(-1000.f, 1700.f, -1000.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 

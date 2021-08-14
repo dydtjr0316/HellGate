@@ -5,6 +5,7 @@
 #include "ResMgr.h"
 #include "KeyMgr.h"
 #include "TimeMgr.h"
+#include "EventMgr.h"
 
 #include "Transform.h"
 
@@ -21,8 +22,9 @@ CParticleSystem::CParticleSystem()
 	, m_fMaxSpeed(50.f)
 	, m_fStartScale(30.f)
 	, m_fEndScale(10.f)
-	, m_vStartColor(Vector4(0.2f, 0.2f, 0.8f, 1.4f))
-	, m_vEndColor(Vector4(0.6f, 0.6f, 0.8f, 1.0f))
+	, m_vStartColor(Vector4(1.0f, 1.0f, 0.0f, 1.4f))
+	, m_vEndColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f))
+	, m_bType(true)
 {
 	// 구조화 버퍼 생성
 	m_pParticleBuffer = new CStructuredBuffer;
@@ -36,7 +38,7 @@ CParticleSystem::CParticleSystem()
 
 	// Material
 	m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleMtrl");
-	Ptr<CTexture> pParticle = CResMgr::GetInst()->Load<CTexture>(L"Texture\\Particle\\CartoonSmoke.png", L"Texture\\Particle\\Bubbles50px.png");
+	Ptr<CTexture> pParticle = CResMgr::GetInst()->Load<CTexture>(L"Texture\\Particle\\CartoonSmoke.png", L"Texture\\Particle\\Sparks.png");
 	m_pMtrl->SetData(SHADER_PARAM::TEX_0, pParticle.GetPointer());
 
 	// ParticleUpdate
@@ -55,11 +57,12 @@ void CParticleSystem::finalupdate()
 	m_fAccTime += DT;
 
 	int iAdd = 0;
-	if (m_fFrequency < m_fAccTime)
-	{
-		m_fAccTime = m_fAccTime - m_fFrequency;
-		iAdd = 1;
-	}
+
+	if (m_bType)
+		iAdd = InfiniteParticle();
+	else
+		iAdd = finiteParticle();
+
 
 	m_pParticleBuffer->UpdateRWData(UAV_REGISTER::u0);
 	m_pSharedBuffer->UpdateRWData(UAV_REGISTER::u1);
@@ -88,6 +91,54 @@ void CParticleSystem::render()
 
 	m_pMtrl->UpdateData();
 	m_pMesh->render_instancing(m_iMaxParticle);
+}
+
+void CParticleSystem::Init(float frequency, float acctime, float minLife, float maxLife, float minSpeed, float maxSpeed, float StartScale, float EndScale, Vector4 StartColor, Vector4 EndColor)
+{
+	m_fFrequency = frequency;
+	m_fAccTime = acctime;
+
+	m_fMinLifeTime = minLife;
+	m_fMaxLifeTime = maxLife;
+
+	m_fMinSpeed = minSpeed;
+	m_fMaxSpeed = maxSpeed;
+
+	m_fStartScale = StartScale;
+	m_fEndScale = EndScale;
+
+	m_vStartColor = StartColor;
+	m_vEndColor = EndColor;
+}
+
+int CParticleSystem::InfiniteParticle()
+{
+	int iAdd = 0;
+	if (m_fFrequency < m_fAccTime)
+	{
+		m_fAccTime = m_fAccTime - m_fFrequency;
+		iAdd = 1;
+	}
+	return iAdd;
+}
+
+int CParticleSystem::finiteParticle()
+{
+	int iAdd = 3;
+	if (m_fAccTime > m_fMaxLifeTime)
+	{
+		m_fFrequency = 0.0f;
+		//m_fAccTime = m_fAccTime - m_fFrequency;
+
+		iAdd = 0;
+	}
+	else
+	{
+		//m_fAccTime = m_fMaxLifeTime;
+		int a = 0;
+	}
+	cout << m_fAccTime << endl;
+	return iAdd;
 }
 
 void CParticleSystem::SaveToScene(FILE* _pFile)

@@ -24,8 +24,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -266,6 +266,16 @@ void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONS
 
 }
 
+void CNetMgr::Send_MonsterDir_Packet(const uShort& monser_id, const Vector3& dir)
+{
+	cs_pcaket_MonsterDir p;
+	p.type = CS_MONSTERDIR;
+	p.size = sizeof(p);
+	p.id = monser_id;
+	p.dir = dir;
+	Send_Packet(&p);
+}
+
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 {
 	//cout << "------Setani -> " << (int)type << endl;
@@ -449,6 +459,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
+						g_netMgr.Send_MonsterDir_Packet(id, g_Object.find(id)->second->Transform()->GetWorldDir(DIR_TYPE::UP));
+
 
 					}
 					else
@@ -568,6 +580,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER) {
 			if (monster_id == 1000)
 			{
+				if ((int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() != (int)packet->eDir)
+				{
+					g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
+				}
+				else
+					g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(false);
+
 				cout << "-----------------------------------------------------------" << endl;
 				cout << "-----------------------------------------------------------" << endl;
 				cout << (int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() << endl;

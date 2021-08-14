@@ -37,7 +37,7 @@ void CLight::SetLightType(LIGHT_TYPE _eType)
 		m_pLightMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
 
 		m_pCamObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		m_pCamObj->Camera()->SetScale(1.f);
+		m_pCamObj->Camera()->SetScale(10.f);
 		m_pCamObj->Camera()->SetFar(100000.f);
 		m_pCamObj->Camera()->SetWidth(512.f);
 		m_pCamObj->Camera()->SetHeight(512.f);

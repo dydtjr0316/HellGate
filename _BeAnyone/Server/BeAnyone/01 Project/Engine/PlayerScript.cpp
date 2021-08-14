@@ -263,6 +263,7 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
 	{
 		player->SetChangeSpeed();
+		//
 		//cout << localPos.x << "\t" << localPos.z << endl;
 	}
 
@@ -602,7 +603,7 @@ void CPlayerScript::Attack_Default()
 
 	if (!vecObj.empty())
 	{
-		cout << "醚舅 按眉 积己 救壩" << endl;
+		//cout << "醚舅 按眉 积己 救壩" << endl;
 		return;
 	}
 	else

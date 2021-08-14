@@ -25,6 +25,7 @@ void CSound::Play(Sound_Type type, const bool& isasync, const bool& isloop)
 		break;
 	}
 
+
 	if (isasync && isloop)	PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	else if (isloop)		PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	else if (isasync)		PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_ASYNC);
