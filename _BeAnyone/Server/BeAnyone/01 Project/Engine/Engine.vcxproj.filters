@@ -204,6 +204,9 @@
     <ClCompile Include="Sound.cpp">
       <Filter>09. Resource</Filter>
     </ClCompile>
+    <ClCompile Include="SoundMgr.cpp">
+      <Filter>06. Manager\SceneMgr\NewFilter1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h" />
@@ -396,6 +399,9 @@
     <ClInclude Include="Sound.h">
       <Filter>09. Resource</Filter>
     </ClInclude>
+    <ClInclude Include="SoundMgr.h">
+      <Filter>06. Manager\SceneMgr\NewFilter1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
@@ -475,6 +481,9 @@
     </Filter>
     <Filter Include="04. GameObject\Component\00. Camera">
       <UniqueIdentifier>{7dabe267-7b01-4845-aef2-e47d0aa21928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Manager\SceneMgr\NewFilter1">
+      <UniqueIdentifier>{1fc7dbd3-224e-43a5-8cda-9b0302c2be74}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

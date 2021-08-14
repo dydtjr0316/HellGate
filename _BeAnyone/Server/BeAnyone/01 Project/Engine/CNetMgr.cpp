@@ -700,12 +700,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 					{
 					case Ani_TYPE::ATTACK:
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::ATTACK);
+						g_SoundList.find(Sound_Type::HIT);
 						break;
 					case Ani_TYPE::DAMAGE:
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::DAMAGE);
 						break;
 					case Ani_TYPE::PICK_UP:
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::PICK_UP);
+						g_SoundList.find(Sound_Type::GET_COIN);
 						break;
 					default:
 						break;

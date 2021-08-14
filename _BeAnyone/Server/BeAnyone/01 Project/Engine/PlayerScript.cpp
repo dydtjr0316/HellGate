@@ -9,7 +9,6 @@
 
 
 int anicnt = 0;
-
 using namespace std;
 
 bool checkOnce = true;
@@ -163,12 +162,27 @@ void CPlayerScript::update()
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
 	op_Move();
+	
+	if (KEY_TAB(KEY_TYPE::KEY_N))
+	{
+		for (auto& obj : g_SoundList)
+		{
+			obj.second->VolumControl(false);
+		}
+	}
+	if (KEY_TAB(KEY_TYPE::KEY_M))
+	{
+		for (auto& obj : g_SoundList)
+		{
+			obj.second->VolumControl(true);
+		}
+	}
 
 
 	// 공격 애니메이션
 	if (KEY_TAB(KEY_TYPE::KEY_R))
 	{
-		CSound::GetInst()->Play(Sound_Type::HIT);
+		PlaySound_(Sound_Type::HIT);
 		player->AnimClipReset();
 		player->SetAttack(true);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
@@ -192,9 +206,10 @@ void CPlayerScript::update()
 
 	// 아이템 줍기 애니메이션 효림 0807(서버 붙일 거)
 	if (KEY_TAB(KEY_TYPE::KEY_E)) {
+		PlaySound_(Sound_Type::GET_COIN);
 		player->AnimClipReset();
 		//player->SetAnimation(Ani_TYPE::PICK_UP);
-		CSound::GetInst()->Play(Sound_Type::GET_COIN);
+		//CSound::GetInst()->Play(Sound_Type::GET_COIN);
 		m_bIsPick = true;
 		PickUp_Default();
 		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
@@ -678,4 +693,9 @@ void CPlayerScript::ClickUiButton()
 void CPlayerScript::FindQuestItem()
 {
 	GetObj()->Quest()->SetQuestcount(QUEST_TYPE::GET_ITEM, m_pItemUIObj->StaticUI()->GetQuestItemCount());
+}
+
+void CPlayerScript::PlaySound_(const Sound_Type& sound)
+{
+	g_SoundList.find(sound)->second->Play(1);
 }

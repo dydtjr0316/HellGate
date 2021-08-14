@@ -83,6 +83,7 @@
     <ClInclude Include="ToolCamScript.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TreeScript.h" />
+    <ClInclude Include="SoundMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator3D.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="ToolCamScript.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TreeScript.cpp" />
+    <ClCompile Include="SoundMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
