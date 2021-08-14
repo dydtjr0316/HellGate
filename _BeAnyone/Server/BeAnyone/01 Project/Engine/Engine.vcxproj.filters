@@ -204,6 +204,9 @@
     <ClCompile Include="Sound.cpp">
       <Filter>09. Resource</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
     <ClCompile Include="SoundMgr.cpp">
       <Filter>06. Manager\SceneMgr\SoundMgr</Filter>
     </ClCompile>
@@ -398,6 +401,9 @@
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleScript.h">
+      <Filter>04. GameObject\Script</Filter>
     </ClInclude>
     <ClInclude Include="SoundMgr.h">
       <Filter>06. Manager\SceneMgr\SoundMgr</Filter>

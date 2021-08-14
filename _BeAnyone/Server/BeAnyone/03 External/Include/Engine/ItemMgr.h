@@ -12,6 +12,7 @@ private:
 	bool						m_bIsReserved = false;
 
 	vector<Vector3>				m_vItemPos;	// server
+
 	CTerrain*					m_Terrain;
 
 	bool						m_bMakeItem = false;
