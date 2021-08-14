@@ -5,6 +5,7 @@
 #include "StaticUI.h"
 #include "Button.h"
 #include "ToolCamScript.h"
+#include "PlayerScript.h"
 
 CNpcScript::CNpcScript()
 	: CScript((UINT)COMPONENT_TYPE::SCRIPT) //CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT),
@@ -96,6 +97,7 @@ void CNpcScript::init()
 	storeUi->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
 	// AddGameObject
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(storeUi);
+	m_pStoreUi = storeUi;
 
 	//	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
 	Vector3 vScale = Vector3(80.f, 120.f, 1.f);
@@ -172,7 +174,7 @@ void CNpcScript::update()
 		if (m_bIsTalk == true) { // 필요없을 것 같은데
 			++m_iClickNum;
 
-			if ((m_eQuestType != NPC_QUEST::DONE || m_eQuestType != NPC_QUEST::WHY) && m_iClickNum == 3) {	// 3번 누르면 나가는 걸로 가정
+			if ((m_eQuestType != NPC_QUEST::DONE || m_eQuestType != NPC_QUEST::WHY) && m_iClickNum == 3 && (GetObj()->GetName() != L"Npc_3")) {	// 3번 누르면 나가는 걸로 가정
 				SetCameraState(CAMERA_STATE::FIXED_CAMERA);
 				SetAnimation(NPC_ANI_TYPE::IDLE);
 				m_bisAniReset = false;
@@ -191,7 +193,7 @@ void CNpcScript::update()
 				// m_pRequestMark->Animator3D()->SetAniUse(true);
 				// -----------------
 			}
-			else if ((m_eQuestType == NPC_QUEST::DONE || m_eQuestType == NPC_QUEST::WHY) && m_iClickNum == 1)
+			else if ((m_eQuestType == NPC_QUEST::DONE || m_eQuestType == NPC_QUEST::WHY) && m_iClickNum == 1 && (GetObj()->GetName() != L"Npc_3"))
 			{
 				SetCameraState(CAMERA_STATE::FIXED_CAMERA);
 				SetAnimation(NPC_ANI_TYPE::IDLE);
@@ -201,6 +203,14 @@ void CNpcScript::update()
 				m_bIsCollision = false;
 				m_iClickNum = 0;
 				m_bQuestBox = true;
+			}
+			else if (m_eQuestType == NPC_QUEST::STORE) {
+				if (m_iClickNum == 1) {
+					SetStaticUiRender(true);
+					m_pConversationBox->SetUiRenderCheck(false);
+				}
+				// 사고 팔기
+				
 			}
 		}
 
@@ -231,7 +241,31 @@ void CNpcScript::update()
 			&& m_iClickNum == 1)
 			m_pPlayer->StaticUI()->m_iMoney += 300;*/
 	}
+
+	if (KEY_TAB(KEY_TYPE::KEY_RBTN)) {
+		SellAndBuy();
+	}
 }
+
+void CNpcScript::SetStaticUiRender(bool _bool)
+{
+	m_pStoreUi->StaticUI()->m_bActive = _bool;
+	m_pPlayerUi = m_pPlayer->GetScript<CPlayerScript>()->GetUIObj();
+	m_pPlayerUi->StaticUI()->m_bActive = _bool;
+
+	for (int i = 0; i < 16; ++i) {
+		m_pStoreUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
+		m_pPlayerUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
+	}
+}
+
+void CNpcScript::SellAndBuy()
+{
+	int playerMoney = m_pPlayerUi->StaticUI()->m_iMoney;
+
+	// store
+}
+
 
 void CNpcScript::CheckPlayer()
 {
@@ -265,6 +299,7 @@ void CNpcScript::SetQuestBox(wstring wstr, QUESTBOX_TYPE _eType)
 		}
 	}
 }
+
 
 
 void CNpcScript::DecideQuestType()

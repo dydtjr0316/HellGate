@@ -37,12 +37,11 @@ void CSendMgr::Send_LevelUP_Packet(const uShort& id)
     Send_Packet(id, &p);
 }
 
-void CSendMgr::Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos, const vector<char> itemId)
+void CSendMgr::Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos)
 {
     sc_packet_ItemCreate_Packet p;
     p.size = sizeof(sc_packet_ItemCreate_Packet);
     p.type = SC_ITEMCREATE;
-    p.vid = itemId;
     p.vPos = pos;
     Send_Packet(user_id, &p);
 }

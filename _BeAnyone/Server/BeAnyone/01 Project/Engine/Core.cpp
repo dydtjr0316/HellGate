@@ -64,7 +64,7 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 
 	CItemMgr::GetInst()->init();
 	// TestInit();
-
+	//CSound::GetInst()->Play(Sound_Type::BGM, true, false);
 	return S_OK;
 }
 

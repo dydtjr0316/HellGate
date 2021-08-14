@@ -24,8 +24,15 @@ void CSound::Play(Sound_Type type, const bool& isasync, const bool& isloop)
 	default:
 		break;
 	}
+<<<<<<< HEAD
 	if (isasync && isloop)	PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	else if (isloop)		PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	else if (isasync)		PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_ASYNC);
 	else					PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_ASYNC);
+=======
+	if (isasync && isloop)	PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_SYNC | SND_LOOP);
+	else if (isloop)		PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_SYNC | SND_LOOP);
+	else if (isasync)		PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_SYNC);
+	else					PlaySound(strFullPath.data(), 0, SND_FILENAME | SND_SYNC);
+>>>>>>> 79b66a01aacbd4da9fe5bba2efb21a556fb944f3
 }

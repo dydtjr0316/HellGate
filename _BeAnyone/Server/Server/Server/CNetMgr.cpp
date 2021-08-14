@@ -441,7 +441,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     break;
     case CS_LOGIN: {
         cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf) ;
-        cout << "send loginok packet" << endl;
+        //cout << "send loginok packet" << endl;
         m_pSendMgr->Send_LoginOK_Packet(user_id);
 
         Enter_Game(user_id, packet->name);
@@ -498,18 +498,19 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_ITEMCREATE:
     {
         cs_packet_ItemCreate_Packet* packet = reinterpret_cast<cs_packet_ItemCreate_Packet*>(buf);
-        for (auto& obj : m_pMediator->GetObjList())
+        for (auto& obj : m_pMediator->GetReckonerList())
         {
-            m_pSendMgr->Send_ItemCreate_Packet(obj.first, packet->vPos, packet->vid);
+            m_pSendMgr->Send_ItemCreate_Packet(obj, packet->vPos);
         }
     }
         break;
     case CS_ITEMDELETE:
     {
         cs_packet_ItemDelete_Packet* packet = reinterpret_cast<cs_packet_ItemDelete_Packet*>(buf);
-        for (auto& obj : m_pMediator->GetObjList())
+        for (auto& obj : m_pMediator->GetReckonerList())
         {
-            m_pSendMgr->Send_ItemDelete_Packet(obj.first, packet->vPos);
+            cout << packet->vPos.x << " - " << packet->vPos.y << " - " << packet->vPos.z << " - " << endl;
+            m_pSendMgr->Send_ItemDelete_Packet(obj, packet->vPos);
         }
     }
     break;

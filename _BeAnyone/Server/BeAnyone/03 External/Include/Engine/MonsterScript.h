@@ -1,6 +1,13 @@
 #pragma once
 #include "Script.h"
 
+enum class MOB_TYPE
+{
+	YELLOW,
+	GREEN,
+	END,
+};
+
 class CMonsterScript :
 	public CScript
 {
@@ -34,6 +41,9 @@ private:
 	uShort m_sHp;
 	uShort m_sMaxHP = 100;
 	MONSTER_AUTOMOVE_DIR m_eDir = MONSTER_AUTOMOVE_DIR::IDLE;
+
+	// monster move dir
+	float		m_fAngleY = 0.f;
 public:
 	virtual void update();
 	virtual void OnCollisionEnter(CCollider* _pOther);
@@ -72,6 +82,7 @@ public:
 	void DecreaseHp();
 	void Move();
 	void Attack();
+	void AttackToPlayer(MOB_TYPE _eType);
 
 	// void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
 	MONSTER_AUTOMOVE_DIR& GetDir() { return m_eDir; }

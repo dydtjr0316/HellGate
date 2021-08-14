@@ -24,8 +24,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-//const char ip[] = "192.168.0.07";
-const char ip[] = "192.168.0.13";
+const char ip[] = "192.168.0.07";
+//const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -217,15 +217,12 @@ void CNetMgr::Send_MonsterDead_Packet(const uShort& monster_id)
 	Send_Packet(&p);
 }
 
-void CNetMgr::Send_ItemCreate_Paket(const Vector3& itemPos, const vector<int>& itemid)
+void CNetMgr::Send_ItemCreate_Paket(const Vector3& itemPos)
 {
 	cs_packet_ItemCreate_Packet p;
 	p.type = CS_ITEMCREATE;
 	p.size = sizeof(p);
-	for (auto& id : itemid)
-	{
-		p.vid.push_back(id);
-	}
+	
 	p.vPos = itemPos;
 	Send_Packet(&p);
 }
@@ -235,6 +232,7 @@ void CNetMgr::Send_ItemDelete_Paket(const Vector3& itemPos)
 	cs_packet_ItemDelete_Packet p;
 	p.type = CS_ITEMDELETE;
 	p.size = sizeof(p);
+	p.vPos = itemPos;
 	Send_Packet(&p);
 }
 
@@ -657,7 +655,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ATTACK:
 	{
-		cout << "SC_PACKET_ATTACK" << endl;
+		//cout << "SC_PACKET_ATTACK" << endl;
 		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(ptr);
 		int id = packet->id;
 		if (id == g_myid)
@@ -676,7 +674,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_ID:
 	{
-		cout << "SC_PACKET_ID" << endl;
+		//cout << "SC_PACKET_ID" << endl;
 		sc_packet_id* packet = reinterpret_cast<sc_packet_id*>(ptr);
 		g_myid = packet->id;
 
@@ -685,7 +683,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	case SC_PACKET_ATTACKANI:
 	{
-		cout << "SC_PACKET_ATTACKANI" << endl;
+		//cout << "SC_PACKET_ATTACKANI" << endl;
 		sc_packet_AttackAni* packet = reinterpret_cast<sc_packet_AttackAni*>(ptr);
 		int id = packet->id;
 		if (id == g_myid) {
@@ -723,7 +721,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	break;
 	case SC_PACKET_MONSTER_ANIMATION:
 	{
-		cout << "SC_PACKET_MONSTER_ANIMATION" << endl;
+		//cout << "SC_PACKET_MONSTER_ANIMATION" << endl;
 		sc_packet_Monster_Animation* packet = reinterpret_cast<sc_packet_Monster_Animation*>(ptr);
 		int id = packet->id;
 		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
@@ -771,6 +769,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 		// 아이템 삭제부 - 효림
 		sc_packet_ItemDelete_Packet* packet = reinterpret_cast<sc_packet_ItemDelete_Packet*>(ptr);
 		packet->vPos;// vector3 item position
+		cout << "다시 받을 때 item pos: " << packet->vPos.x << "\t" << packet->vPos.y << "\t" << packet->vPos.z << endl;
+		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
+		
 	}
 	break;
 	default:
