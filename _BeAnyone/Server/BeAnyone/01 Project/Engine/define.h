@@ -35,6 +35,8 @@ static type* GetInst()\
 //#define PLAYER_SPEED_DASH 600.f
 #define PLAYER_SPEED_DASH 6000.f
 
+#define SOUND_TYPE_SIZE 4;
+
 //typedef DirectX::SimpleMath::Vector2 Vec2;
 //typedef DirectX::SimpleMath::Vector3 Vec3;
 //typedef DirectX::SimpleMath::Vector4 Vec4;
@@ -379,6 +381,7 @@ enum class CAMERA_STATE {
 	END,
 };
 
+
 enum class ITEM_ID
 {
 	STEAK,
@@ -409,7 +412,7 @@ enum class QUEST_TYPE
 	GET_ITEM,
 	BUY_WEAPON,
 	BUY_POTION,
-	END,
+	END
 };
 
 enum class QUESTBOX_TYPE

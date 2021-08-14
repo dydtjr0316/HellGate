@@ -44,6 +44,7 @@
 // UI
 #include "StaticUI.h"
 
+unordered_map<Sound_Type, SoundMgr*> g_SoundList;
 using namespace std;
 
 default_random_engine dre;
@@ -1325,6 +1326,8 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 
 void CSceneMgr::LoadRes()
 {
+	LoadSound();
+
 	Ptr<CTexture> piBow = CResMgr::GetInst()->Load<CTexture>(L"BOW_IMG", L"Texture\\UI\\Items\\Weapons\\01_BOW.png");
 	Ptr<CTexture> piSword = CResMgr::GetInst()->Load<CTexture>(L"SWORD_IMG", L"Texture\\UI\\Items\\Weapons\\02_Sword.png");
 	Ptr<CTexture> piHealPotion = CResMgr::GetInst()->Load<CTexture>(L"HP_POTION_IMG", L"Texture\\UI\\Items\\Resources\\15_Heal_potion.png");
@@ -1393,6 +1396,8 @@ void CSceneMgr::LoadRes()
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone", L"Texture\\Quest\\BuyWeapone.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone_Complete", L"Texture\\Quest\\BuyWeapone_Complete.png");
 }
+
+
 
 void CSceneMgr::CreateNpc(CTerrain* _terrain)
 {
@@ -1479,12 +1484,42 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcScript3->init();
 }
 
+void CSceneMgr::LoadSound()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		SoundMgr* temp = new SoundMgr;
+		wstring strFullPath = CPathMgr::GetResPath();
+		switch ((Sound_Type)i)
+		{
+		case Sound_Type::BGM:
+			strFullPath += L"Sound\\background.wav";
+			break;
+		case Sound_Type::HIT:
+			strFullPath += L"Sound\\hit.wav";
+			break;
+		case Sound_Type::GET_COIN:
+			strFullPath += L"Sound\\getcoin.wav";
+			break;
+		case Sound_Type::SET_COIN:
+			strFullPath += L"Sound\\spendcoin.wav";
+			break;
+		default:
+			break;
+		}
+		temp->Load(strFullPath, (Sound_Type)i);
+		g_SoundList.emplace((Sound_Type)i, temp);
+	}
+}
+
 void CSceneMgr::init()
 {
 	// =================
 	// 필요한 리소스 로딩
 	// =================
 	// Texture 로드
+	
+
 
 	LoadRes();
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
@@ -1907,6 +1942,19 @@ void CSceneMgr::init()
 	//damage
 	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@damage.fbx", FBX_TYPE::MONSTER);
 
+	//idle
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@idle.fbx", FBX_TYPE::MONSTER);
+	//walk
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Walk Forward With Root Motion.fbx", FBX_TYPE::MONSTER);
+	//dead
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@die.fbx", FBX_TYPE::MONSTER);
+	//attack
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@meleeattack01.fbx", FBX_TYPE::MONSTER);
+	//damage
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
+	
+	
+
 	// ====================
 	// Skybox 오브젝트 생성
 	// ====================
@@ -1993,7 +2041,9 @@ void CSceneMgr::init()
 
 void CSceneMgr::update() 
 {
+
 	m_pCurScene->update();
+	g_SoundList.find(Sound_Type::BGM)->second->Play(0);
 	m_pCurScene->lateupdate();
 
 	// rendermgr 카메라 초기화

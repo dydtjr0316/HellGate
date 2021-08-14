@@ -20,7 +20,7 @@ public:		// monster
 
 
 public:
-	void Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos, const vector<char> itemId);
+	void Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos);
 	void Send_ItemDelete_Packet(const uShort& user_id, const Vector3& pos);
 
 public:

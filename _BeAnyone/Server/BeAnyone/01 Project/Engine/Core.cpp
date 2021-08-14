@@ -64,7 +64,7 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 
 	CItemMgr::GetInst()->init();
 	// TestInit();
-
+	//CSound::GetInst()->Play(Sound_Type::BGM, true, false);
 	return S_OK;
 }
 
@@ -78,59 +78,19 @@ void CCore::ChangeWindowSize(HWND _hWnd, const tResolution& _resolution)
 
 void CCore::progress()
 {
-	//CSound::GetInst()->Play(Sound_Type::BGM, true, true);
+	
 	CKeyMgr::GetInst()->update();
-	/*cout << "코어의 CKeyMgr::GetInst()->update() 끝난 후 " << endl;
-	for (auto& obj : g_Object)
-	{
-		if ((obj.first == 1000 || obj.first == 1001) &&
-			obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
-		{
-			cout << "ID : " << obj.first << "    Dir : " <<
-				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
-		}
-	}*/
+	SoundMgr::g_pFMOD->update();
+
 	CTimeMgr::GetInst()->update();
-	/*cout << "코어의 CTimeMgr::GetInst()->update() 끝난 후 " << endl;
-	for (auto& obj : g_Object)
-	{
-		if ((obj.first == 1000 || obj.first == 1001) &&
-			obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
-		{
-			cout << "ID : " << obj.first << "    Dir : " <<
-				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
-		}
-	}*/
+
 
 	CEventMgr::GetInst()->clear();
 	{
 		CSceneMgr::GetInst()->update();
 		CRenderMgr::GetInst()->render();
-		/*cout << "코어의 CRenderMgr::GetInst()->render() 끝난 후 " << endl;
-		for (auto& obj : g_Object)
-		{
-			if ((obj.first == 1000 || obj.first == 1001) &&
-				obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
-			{
-				cout << "ID : " << obj.first << "    Dir : " <<
-					(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
-			}
-		}*/
 	}
 	CEventMgr::GetInst()->update();
 
-	/*cout << "코어의 CEventMgr::GetInst()->update() 끝난 후 " << endl;
-	for (auto& obj : g_Object)
-	{
-		if ((obj.first == 1000 || obj.first == 1001) &&
-			obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
-		{
-			cout << "ID : " << obj.first << "    Dir : " <<
-				(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
-		}
-	}
-	cout << "-------------" << endl;*/
-
-	int i = 0;
 }
 

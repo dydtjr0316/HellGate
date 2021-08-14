@@ -48,72 +48,72 @@ void CItemMgr::update()
 
 }
 
-void CItemMgr::MakeObject()
-{
-    // -------------------
-    // item1
-    CGameObject* pItem = new CGameObject;
-    pItem->SetName(L"Item1");
-    pItem->FrustumCheck(true);
-    pItem->AddComponent(new CTransform);
-    pItem->AddComponent(new CMeshRender);
-    //pItem->AddComponent(new CDummyItemScript);
-    pItem->AddComponent(new CCollider);
-    pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
-    pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
-    pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-    pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-    pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
-    pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
-    pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-    pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
-
-    m_vItem.push_back(pItem);
-    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
-
-    // item2
-    pItem = new CGameObject;
-    pItem->SetName(L"Item2");
-    pItem->FrustumCheck(true);
-    pItem->AddComponent(new CTransform);
-    pItem->AddComponent(new CMeshRender);
-    //pItem->AddComponent(new CDummyItemScript);
-    pItem->AddComponent(new CCollider);
-    pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
-    pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
-    pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-    pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-    pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
-    pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
-    pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-    pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
-
-
-    m_vItem.push_back(pItem);
-    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
-
-    // item3
-    pItem = new CGameObject;
-    pItem->SetName(L"Item3");
-    pItem->FrustumCheck(true);
-    pItem->AddComponent(new CTransform);
-    pItem->AddComponent(new CMeshRender);
-    //pItem->AddComponent(new CDummyItemScript);
-    pItem->AddComponent(new CCollider);
-    pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
-    pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
-    pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-    pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-    pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
-    pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
-    pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-    pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
-
-    m_vItem.push_back(pItem);
-
-    // 아이템 화면에 띄우는 부분  //  용석 // 시야처리 없이 
-    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
-}
+//void CItemMgr::MakeObject()
+//{
+//    // -------------------
+//    // item1
+//    CGameObject* pItem = new CGameObject;
+//    pItem->SetName(L"Item1");
+//    pItem->FrustumCheck(true);
+//    pItem->AddComponent(new CTransform);
+//    pItem->AddComponent(new CMeshRender);
+//    //pItem->AddComponent(new CDummyItemScript);
+//    pItem->AddComponent(new CCollider);
+//    pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+//    pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
+//    pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+//    pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+//    pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+//    pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
+//    pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+//    pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
+//
+//    m_vItem.push_back(pItem);
+//    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
+//
+//    // item2
+//    pItem = new CGameObject;
+//    pItem->SetName(L"Item2");
+//    pItem->FrustumCheck(true);
+//    pItem->AddComponent(new CTransform);
+//    pItem->AddComponent(new CMeshRender);
+//    //pItem->AddComponent(new CDummyItemScript);
+//    pItem->AddComponent(new CCollider);
+//    pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+//    pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
+//    pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+//    pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+//    pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+//    pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
+//    pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+//    pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
+//
+//
+//    m_vItem.push_back(pItem);
+//    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
+//
+//    // item3
+//    pItem = new CGameObject;
+//    pItem->SetName(L"Item3");
+//    pItem->FrustumCheck(true);
+//    pItem->AddComponent(new CTransform);
+//    pItem->AddComponent(new CMeshRender);
+//    //pItem->AddComponent(new CDummyItemScript);
+//    pItem->AddComponent(new CCollider);
+//    pItem->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
+//    pItem->Transform()->SetLocalScale(Vector3(200.f, 200.f, 200.f));
+//    pItem->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+//    pItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+//    pItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
+//    pItem->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Branch");
+//    pItem->Collider()->SetBoundingBox(BoundingBox(pItem->Transform()->GetLocalPos(), pItem->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+//    pItem->Collider()->SetBoundingSphere(BoundingSphere(pItem->Transform()->GetLocalPos(), 30.f));
+//
+//    m_vItem.push_back(pItem);
+//
+//    // 아이템 화면에 띄우는 부분  //  용석 // 시야처리 없이 
+//    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Item")->AddGameObject(pItem);
+//}
 
 void CItemMgr::MakeItem()
 {
@@ -224,21 +224,35 @@ void CItemMgr::MakeItem()
 
 }
 
-void CItemMgr::SetItemID()
+//void CItemMgr::SetItemID()
+//{
+//    /*if (wstr == L"Mesh\\Steak_02.mesh")
+//        m_vItemID.push_back((UINT)ITEM_ID::STEAK);
+//    else if (wstr == L"Mesh\\Bottle_03.mesh")
+//        m_vItemID.push_back((UINT)ITEM_ID::BOTTLE_STAMINA);
+//    else if (wstr == L"Mesh\\Bottle_04.mesh")
+//        m_vItemID.push_back((UINT)ITEM_ID::BOTTLE_DASH);
+//    else if (wstr == L"Mesh\\MoneyBag.mesh")
+//        m_vItemID.push_back((UINT)ITEM_ID::MONEYBAG);
+//    else if (wstr == L"Mesh\\Carrot.mesh")
+//        m_vItemID.push_back((UINT)ITEM_ID::CARROT);*/
+//    m_vItemID.clear();
+//    int randNum = uidMonsterItem(dreMonsterItem);
+//    for (int i = 0; i < 3; ++i) {
+//        m_vItemID.push_back(randNum);
+//    }
+//}
+
+void CItemMgr::DeleteItemObj(Vector3 _itemPos)
 {
-    /*if (wstr == L"Mesh\\Steak_02.mesh")
-        m_vItemID.push_back((UINT)ITEM_ID::STEAK);
-    else if (wstr == L"Mesh\\Bottle_03.mesh")
-        m_vItemID.push_back((UINT)ITEM_ID::BOTTLE_STAMINA);
-    else if (wstr == L"Mesh\\Bottle_04.mesh")
-        m_vItemID.push_back((UINT)ITEM_ID::BOTTLE_DASH);
-    else if (wstr == L"Mesh\\MoneyBag.mesh")
-        m_vItemID.push_back((UINT)ITEM_ID::MONEYBAG);
-    else if (wstr == L"Mesh\\Carrot.mesh")
-        m_vItemID.push_back((UINT)ITEM_ID::CARROT);*/
-    m_vItemID.clear();
-    int randNum = uidMonsterItem(dreMonsterItem);
-    for (int i = 0; i < 3; ++i) {
-        m_vItemID.push_back(randNum);
+    for (int i = 0; i < m_vItem.size(); ++i) {
+        if (m_vItem[i] != nullptr) {
+            if (m_vItem[i]->Transform()->GetLocalPos() == _itemPos) {
+                //DeleteObject(m_vItem[i]);
+                m_vItem[i]->GetScript<CDummyItemScript>()->DeleteObject(m_vItem[i]);
+                m_vItem[i] = nullptr;
+                // CEventMgr::GetInst()->update();
+            }
+        }
     }
 }

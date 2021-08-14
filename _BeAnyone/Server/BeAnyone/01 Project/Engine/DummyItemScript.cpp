@@ -35,9 +35,11 @@ void CDummyItemScript::OnCollisionEnter(CCollider* _pOther)
 		wstring strName = GetObj()->MeshRender()->GetMesh()->GetName();
 
 		CheckItemMesh(strName, obj);
-			
+		Vector3 a = GetObj()->Transform()->GetLocalPos();
+		cout << "보낼때 item pos: " << a.x << "\t" << a.y << "\t" << a.z << endl;
+
 		// 용석 아이템 없어지는 부분 
-		g_netMgr.Send_ItemDelete_Paket(_pOther->Transform()->GetLocalPos());
+		g_netMgr.Send_ItemDelete_Paket(GetObj()->Transform( )->GetLocalPos());
 
 		DeleteObject(GetObj());
 	}

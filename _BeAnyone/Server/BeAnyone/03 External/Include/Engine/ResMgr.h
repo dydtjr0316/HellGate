@@ -21,7 +21,6 @@ private:
 	void CreateDefaultMesh();
 	void CreateDefaultShader();
 	void CreateDefaultMaterial();
-	void InitSound();
 
 public:
 	void init();

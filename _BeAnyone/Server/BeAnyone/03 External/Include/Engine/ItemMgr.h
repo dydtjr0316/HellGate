@@ -12,7 +12,7 @@ private:
 	bool						m_bIsReserved = false;
 
 	vector<Vector3>				m_vItemPos;	// server
-	Vector3						m_vMonsterPos;
+
 	CTerrain*					m_Terrain;
 
 	bool						m_bMakeItem = false;
@@ -32,7 +32,6 @@ public:
 	void update();
 
 public:
-	void SetMonsterPos(Vector3 _monsterPos) { m_vMonsterPos = _monsterPos; }
 	void SetTerrain(CTerrain* _Terrain) { m_Terrain = _Terrain; }
 	void SetIsMake(bool _isMake) { m_bMakeItem = _isMake; }
 	// item meshData
@@ -40,12 +39,13 @@ public:
 
 
 	// Server
-	void SetItemID();
+	//void SetItemID();
 	void SetItemObj(CGameObject* _pObject) { m_vItem.push_back(_pObject); }
 	void SetReservePaket(bool _bool) { m_bIsReserved = _bool; }
 	void SetItemPos(Vector3 _itemPos) { m_vItemPos.push_back(_itemPos); }	// server
+	void DeleteItemObj(Vector3 _itemPos);
 public:
-	void MakeObject();
+	//void MakeObject();
 	void MakeItem();
 };
 
