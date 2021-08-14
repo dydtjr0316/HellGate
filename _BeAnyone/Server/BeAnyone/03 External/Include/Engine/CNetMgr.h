@@ -35,10 +35,12 @@ public:		// 패킷 전송부
 	void Send_Stop_Packet( const bool& isMoving);
 	void Send_Attack_Packet(const uShort& victim_id);
 	void Send_MonsterDead_Packet(const uShort& monster_id);
+	// item
 	void Send_ItemCreate_Paket(const Vector3& itemPos, const vector<int>& itemid);
+	void Send_ItemDelete_Paket(const Vector3& itemPos);
 
 	// 가라
-	void Send_Player_Animation_Packet(const uShort& user_id, const bool& isAttack);
+	void Send_Player_Animation_Packet(const uShort& user_id, const bool& isact, const Ani_TYPE& ani);
 	void Send_Monster_Animation_Packet(const uShort& monster_id, const MONSTER_ANI_TYPE& aniType);
 public:		// animation
 	void SetAnimation(int id, const Ani_TYPE& type);

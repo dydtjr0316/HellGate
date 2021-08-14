@@ -9,8 +9,10 @@ class CItemMgr
 private:
 	vector<CGameObject*>		m_vItem;
 	vector<int>					m_vItemID;
+	bool						m_bIsReserved = false;
 
-	vector<Vector3>				m_vItemPos;
+	vector<Vector3>				m_vItemPos;	// server
+	Vector3						m_vMonsterPos;
 	CTerrain*					m_Terrain;
 
 	bool						m_bMakeItem = false;
@@ -30,15 +32,18 @@ public:
 	void update();
 
 public:
-	void SetItemPos(Vector3 _itemPos) { m_vItemPos.push_back(_itemPos); }
+	void SetMonsterPos(Vector3 _monsterPos) { m_vMonsterPos = _monsterPos; }
 	void SetTerrain(CTerrain* _Terrain) { m_Terrain = _Terrain; }
 	void SetIsMake(bool _isMake) { m_bMakeItem = _isMake; }
 	// item meshData
 	void SetItemData(Ptr<CMeshData> _pMeshData) { m_pItemMeshData.push_back(_pMeshData); };
 
 
-	void SetItemID(wstring wstr);
-
+	// Server
+	void SetItemID();
+	void SetItemObj(CGameObject* _pObject) { m_vItem.push_back(_pObject); }
+	void SetReservePaket(bool _bool) { m_bIsReserved = _bool; }
+	void SetItemPos(Vector3 _itemPos) { m_vItemPos.push_back(_itemPos); }	// server
 public:
 	void MakeObject();
 	void MakeItem();

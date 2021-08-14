@@ -204,6 +204,9 @@
     <ClCompile Include="Sound.cpp">
       <Filter>09. Resource</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h" />
@@ -395,6 +398,9 @@
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>09. Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleScript.h">
+      <Filter>04. GameObject\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

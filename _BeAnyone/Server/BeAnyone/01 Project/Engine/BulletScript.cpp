@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "BulletScript.h"
 #include "ParticleSystem.h"
+#include "ParticleScript.h"
 
 
 CBulletScript::CBulletScript()
@@ -22,7 +23,6 @@ void CBulletScript::update()
 	Transform()->SetLocalPos(vPos);
 	//cout << "총알 위치\t" << "x : " << Transform()->GetLocalPos().x << "\t" << Transform()->GetLocalPos().y << "\t" << Transform()->GetLocalPos().z << endl;
 
-
 	m_fTime += DT;
 
 	if (m_fTime > 3.0f)
@@ -30,15 +30,13 @@ void CBulletScript::update()
 		m_bDead = true;
 		DeleteObject(GetObj());
 	}
-	
-
-
 }
 
 void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 {
-	auto a = _pOther->GetObj()->GetName();
-	auto ty = m_bType;
+	Vector3 vecYPos = Transform()->GetLocalPos();
+	vecYPos.y += 200.f;
+	vecYPos.z += 30.f;
 
 	switch ((UINT)m_bType)
 	{
@@ -53,18 +51,22 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 			pObject->SetName(L"Particle");
 			pObject->AddComponent(new CTransform);
 			pObject->AddComponent(new CParticleSystem);
-
+			pObject->Particlesystem()->SetFrequency(2.f);
+			pObject->Particlesystem()->SetType(false);
+			pObject->Particlesystem()->SetMaxParticle(3);
+			pObject->AddComponent(new CParticleScript);
+			pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
 			pObject->FrustumCheck(false);
-			pObject->Transform()->SetLocalPos(Transform()->GetLocalPos());
+			pObject->Transform()->SetLocalPos(vecYPos);
 
 			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
 
-			
+
 			/// 여기까지 파티클 생성하는거
 			/// ////////////////////////////////////////////////////////////////////////////////
 
+			//	총알 객체 삭제 (자신)
 			m_fTime = 4.0f;
-			//DeleteObject(GetObj());
 		}
 		break;
 	case 1:

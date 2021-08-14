@@ -87,7 +87,6 @@ struct GS_OUT
     uint iInstID : SV_InstanceID;
 };
 
-
 [maxvertexcount(6)]
 void GS_Particle(point VTX_OUT _in[1], inout TriangleStream<GS_OUT> OutputStream)
 {
@@ -143,7 +142,6 @@ float4 PS_Particle(GS_OUT _in) : SV_Target
     float4 vCurColor = (g_vec4_1 - g_vec4_0) * fRatio + g_vec4_0;
     return vCurColor * g_tex_0.Sample(g_sam_0, _in.vUV);
 }
-
 
 // ===============
 // Particle Update
