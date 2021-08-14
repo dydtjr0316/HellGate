@@ -97,6 +97,7 @@ constexpr char CS_ATTACK_ANIMATION = 8;
 constexpr char CS_MONSTER_ANIMATION = 9;
 constexpr char CS_ITEMCREATE = 10;
 constexpr char CS_ITEMDELETE = 11;
+constexpr char CS_MONSTERDIR = 12;
 
 
 constexpr unsigned char O_PLAYER = 0;
@@ -355,6 +356,13 @@ struct cs_pcaket_Monster_Animation {
 
 	MONSTER_ANI_TYPE aniType;
 	bool isMoving;
+};
+
+struct cs_pcaket_MonsterDir{
+	char	size;
+	char	type;
+	uShort  id;
+	Vector3 dir;
 };
 
 

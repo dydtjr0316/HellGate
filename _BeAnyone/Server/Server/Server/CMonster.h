@@ -37,6 +37,9 @@ public:
 	void CountRefreshPacketCnt(const float& dt) { m_frpc += dt; }
 
 	MONSTER_AUTOMOVE_DIR		m_dir = (MONSTER_AUTOMOVE_DIR)(rand()%4);
+
+	void SetIsDir(const bool& isdir) { m_bisDir = isdir; }
+	bool GetIsDir() { return m_bisDir; }
 	//view list
 	//void InsertViewList(const int& id) { view_list.emplace(id); }
 private:
@@ -50,6 +53,7 @@ private:
 	int		m_iFirstY = 0;
 	//int   m_prev_size = 0;
 	bool	m_bisMoving = false;
+	bool	m_bisDir = false;
 
 	//unordered_set<int> view_list;
 

@@ -2,12 +2,15 @@
 #include <unordered_map>
 #include "GameObject.h"
 #include "CNetMgr.h"
+#include "SoundMgr.h"
 
 typedef unordered_map<int, CGameObject*> OBJLIST;
 typedef OBJLIST::iterator OBJITER;
 
 typedef unordered_map<int, CGameObject*> CAMOBJLIST;
 typedef OBJLIST::iterator CAMOBJITER;
+
+extern unordered_map<Sound_Type, SoundMgr*> g_SoundList;
 
 extern CNetMgr g_netMgr;
 extern OBJLIST g_Object;

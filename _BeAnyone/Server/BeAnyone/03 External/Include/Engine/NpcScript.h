@@ -51,6 +51,9 @@ private:
 	CGameObject*		m_pStoreUi;
 	CGameObject*		m_pCam;
 
+	// playerStuaticUi
+	CGameObject*		m_pPlayerUi;
+
 	// animation
 	vector<Ptr<CMesh>>   m_pAniData;
 	bool m_bisAniReset = false;
@@ -92,6 +95,10 @@ public:
 
 	// questbox
 	void SetQuestBox(wstring wstr, QUESTBOX_TYPE _eType);
+
+	// static ui
+	void SetStaticUiRender(bool _bool);
+	void SellAndBuy();
 public:
 	CLONE(CNpcScript);
 
