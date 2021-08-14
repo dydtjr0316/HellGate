@@ -1907,6 +1907,19 @@ void CSceneMgr::init()
 	//damage
 	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@damage.fbx", FBX_TYPE::MONSTER);
 
+	//idle
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@idle.fbx", FBX_TYPE::MONSTER);
+	//walk
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Walk Forward With Root Motion.fbx", FBX_TYPE::MONSTER);
+	//dead
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@die.fbx", FBX_TYPE::MONSTER);
+	//attack
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@meleeattack01.fbx", FBX_TYPE::MONSTER);
+	//damage
+	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
+	
+	
+
 	// ====================
 	// Skybox 오브젝트 생성
 	// ====================

@@ -2,6 +2,7 @@
 #include "Quest.h"
 #include "Transform.h"
 #include "MeshRender.h"
+#include "KeyMgr.h"
 #include "ResMgr.h"
 #include "RenderMgr.h"
 // ¤µ¤² ¹¹Áö ¾ê³× ¿Ö ³Ö¾î¾ß ÇÔ?
@@ -28,6 +29,7 @@ CQuest::CQuest()
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"QuestBase").GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+	pObject->SetUiRenderCheck(m_bBoxRender);
 	m_pQuestBoxBase = pObject;
 	for (int i = 0; i < (UINT)QUEST_TYPE::END; ++i) {
 		m_vQuestCheck.push_back(0);
@@ -49,6 +51,7 @@ CQuest::CQuest()
 		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"QuestBoxMtrl"));
 		pObject->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"QuestBase").GetPointer());
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+		pObject->SetUiRenderCheck(m_bBoxRender);
 		m_pQuestBox.push_back(pObject);
 		m_vExistQuestBox.push_back(QUESTBOX_TYPE::EMPTY);
 	}
@@ -76,6 +79,13 @@ void CQuest::update()
 			if (m_vExistQuestBox[i] == QUESTBOX_TYPE::NPC_1)
 				m_pQuestBox[i]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"GetItem_Complete").GetPointer());
 		}
+	}
+
+	if (KEY_TAB(KEY_TYPE::KEY_P)) {
+		m_bBoxRender = !m_bBoxRender;
+		m_pQuestBoxBase->SetUiRenderCheck(m_bBoxRender);
+		for (int i = 0; i < m_pQuestBox.size(); ++i)
+			m_pQuestBox[i]->SetUiRenderCheck(m_bBoxRender);
 	}
 }
 

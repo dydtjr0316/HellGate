@@ -125,7 +125,7 @@ void CStaticUI::update()
 			m_pMoneyUi[i]->SetUiRenderCheck(m_bActive);
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_I))// && (m_eType == UI_TYPE::PRIVATE_ITEM_UI))
+	if (KEY_TAB(KEY_TYPE::KEY_I) && (m_eType == UI_TYPE::PRIVATE_ITEM_UI))
 	{
 		m_bActive = !m_bActive;
 		for (int i = 0; i < m_vecButton.size(); ++i)
