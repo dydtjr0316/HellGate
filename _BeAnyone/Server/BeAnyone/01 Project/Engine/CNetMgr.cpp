@@ -787,6 +787,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (g_Object.find(packet->id)->second != nullptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
+		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
+
 	}
 	break;
 	case SC_ITEMCREATE:
