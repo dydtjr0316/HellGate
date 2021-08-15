@@ -7,8 +7,8 @@ class CButton;
 
 enum class STORE_BUTTON
 {
-	EXIT,
 	LACK_MONEY,
+	EXIT,
 	END,
 };
 
