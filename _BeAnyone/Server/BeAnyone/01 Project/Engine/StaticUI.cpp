@@ -87,21 +87,21 @@ void CStaticUI::CreateStoreButton()
 {
 	CGameObject* storeButton;
 
-	//for (int i = 0; i < (UINT)STORE_BUTTON::END; ++i) {
-	//	storeButton = new CGameObject;
-	//	storeButton->SetName(L"Button Object");
-	//	storeButton->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-	//	storeButton->AddComponent(new CTransform);
-	//	storeButton->AddComponent(new CMeshRender);
-	//	storeButton->Transform()->SetLocalPos(Vector3(vObjectPos.x, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
-	//	storeButton->Transform()->SetLocalScale(Vector3(120.f, 50.f, 1.f));
-	//	//MeshRender 설정
-	//	storeButton->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//	storeButton->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
-	//	storeButton->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"WALLET").GetPointer());
-	//	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(storeButton);
-	//	
-	//}
+	for (int i = 0; i < (UINT)STORE_BUTTON::END; ++i) {
+		storeButton = new CGameObject;
+		storeButton->SetName(L"Button Object");
+		storeButton->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		storeButton->AddComponent(new CTransform);
+		storeButton->AddComponent(new CMeshRender);
+		storeButton->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 0.0f));
+		storeButton->Transform()->SetLocalScale(Vector3(200.f, 50.f, 1.f));
+		//MeshRender 설정
+		storeButton->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		storeButton->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
+		storeButton->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"LACK_MONEY").GetPointer());
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(storeButton);
+		m_StoreButton.push_back(storeButton);
+	}
 }
 
 void CStaticUI::SetButton(ITEM_ID _id)

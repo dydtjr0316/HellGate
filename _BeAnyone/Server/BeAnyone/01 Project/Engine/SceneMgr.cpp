@@ -1382,6 +1382,8 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"SWORD", L"Texture\\ItemButton\\SwordTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"WALLET", L"Texture\\ItemButton\\WalletTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EXIT", L"Texture\\ItemButton\\ExitStoreTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"LACK_MONEY", L"Texture\\ItemButton\\LackMoneyTex.png");
 
 	//===========================
 	// QuestBox texture
