@@ -25,7 +25,7 @@ void CBulletScript::update()
 
 	m_fTime += DT;
 
-	if (m_fTime > 3.0f)
+	if (m_fTime > 1.0f)
 	{
 		m_bDead = true;
 		DeleteObject(GetObj());
@@ -50,11 +50,16 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 			/// ////////////////////////////////////////////////////////////////////////////////
 
 			//	총알 객체 삭제 (자신)
-			m_fTime = 4.0f;
+			m_fTime = 2.0f;
 		}
 		break;
 	case 1:
 		//	여기다가 픽업 불릿 분기문 설정
 		break;
+	case 2:	
+		//	몬스터의 공격
+
+		break;
+
 	}
 }
