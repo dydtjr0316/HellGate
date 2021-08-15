@@ -10,7 +10,6 @@
 int attackcnt = 0;
 
 
-
 CMonsterScript::CMonsterScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
 {
@@ -360,6 +359,8 @@ void CMonsterScript::Attack()
 		m_bisMoving = false;
 		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
 
+		Attack_Default();
+
 		// packet
 	}
 	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
@@ -403,6 +404,38 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
 	SetIsPunch(true);
 }
 
+void CMonsterScript::Attack_Default()
+{
+	CMonsterScript* monster = GetObj()->GetScript<CMonsterScript>();
+	Vector3 vPos = monster->Transform()->GetLocalPos();
 
+	vector<CGameObject*> vecObj;
+	CSceneMgr::GetInst()->FindGameObjectByTag(L"M_Attack Object", vecObj);
+
+	if (!vecObj.empty())
+	{
+		//cout << "총알 객체 생성 안됌" << endl;
+		return;
+	}
+	else
+		cout << "몬스터 공격 객체 생성" << endl << endl;
+
+	CGameObject* pBullet = new CGameObject;
+	pBullet->SetName(L"M_Attack Object");
+
+	vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::FRONT) * monster->Collider()->GetBoundingSphere().Radius;
+	pBullet->AddComponent(new CTransform());
+	pBullet->Transform()->SetLocalPos(vPos);
+	pBullet->AddComponent(new CCollider);
+	pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
+	pBullet->AddComponent(new CBulletScript);
+	CBulletScript* bulletScript = pBullet->GetScript<CBulletScript>();
+	bulletScript->SetPlayer(GetObj());
+	bulletScript->SetBulletType(BULLET_TYPE::MONSTER_ATTACK);
+
+	//	MOnster Layer에 집어넣음으로서 플레이어와 충돌 체크 확인
+	CreateObject(pBullet, L"Monster");
+}
 
 
