@@ -192,7 +192,7 @@ void CSendMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const uSh
     p.size = sizeof(p);
     p.type = SC_PACKET_MONSTER_ANIMATION;
     p.aniType = aniType;
-    p.otherid - user_id;
+    p.otherid = user_id;
     Send_Packet(user_id, &p);
 
 }
