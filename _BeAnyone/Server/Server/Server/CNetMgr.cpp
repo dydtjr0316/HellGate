@@ -756,7 +756,7 @@ void CNetMgr::Worker_Thread()
                     if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
                     {
                         keep_alive = true;
-                        char temp = 0; // (char)(rand() % 4);
+                        char temp = (char)(rand() % 4);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetIsMoving(true);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetDir((MONSTER_AUTOMOVE_DIR)temp);
                         break;

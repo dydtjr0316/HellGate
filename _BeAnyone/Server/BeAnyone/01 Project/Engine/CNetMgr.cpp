@@ -493,6 +493,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 
 						g_netMgr.Send_MonsterDir_Packet(id, Vector3(0.f,0.f,1.f)/*g_Object.find(id)->second->Transform()->GetWorldDir(DIR_TYPE::UP)*/);
+						//g_Object.find(id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
 
 
 					}
