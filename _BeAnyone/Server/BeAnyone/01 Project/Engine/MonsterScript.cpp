@@ -274,7 +274,8 @@ void CMonsterScript::Move()
 
 			if (m_bisDirChange)
 			{
-				g_netMgr.Send_MonsterDir_Packet(m_sId, worldDir);
+				GetObj()->Transform()->finalupdate();
+				g_netMgr.Send_MonsterDir_Packet(m_sId, -monsterTrans->GetWorldDir(DIR_TYPE::UP));
 				m_bisDirChange = false;
 			}
 
@@ -396,10 +397,9 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
 	if (_eType == MOB_TYPE::YELLOW)
 	{
 		GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
-
 	}
 	m_bisDirChange = true;
-	m_fAngleY = angle.x;
+	m_fAngleY += angle.x;
 	SetIsPunch(true);
 }
 
