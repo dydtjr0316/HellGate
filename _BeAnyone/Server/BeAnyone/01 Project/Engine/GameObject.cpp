@@ -242,7 +242,7 @@ void CGameObject::update()
 			m_vecScript[i]->update();
 	//	}
 
-	}
+	//}
 	
 }
 
