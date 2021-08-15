@@ -329,6 +329,7 @@ void CPlayerScript::update()
 		if (localPos.y != fHeight)
 			localPos.y = fHeight;
 		playerTrans->SetLocalPos(localPos);
+		cout << "\t\t" << localPos.x << " , " << localPos.z << endl;
 	}
 	else
 	{

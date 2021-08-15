@@ -421,7 +421,12 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 
-        //cout <<"\t\tMovePacket 온 후 " << packet->localVec.z << endl;
+        cout << "Packet 받았을때" << endl;
+        cout << "-------------------------------" << endl;
+        cout << "-------------------------------" << endl;
+        cout << m_pMediator->Find(user_id)->GetLocalPosVector().x << " , " << m_pMediator->Find(user_id)->GetLocalPosVector().z << endl;
+        cout << "-------------------------------" << endl;
+        cout << "-------------------------------" << endl;
         m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
@@ -846,6 +851,8 @@ void CNetMgr::Processing_Thead()
                     obj->GetLock().lock();
                     g_QuadTree.Delete(obj);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
+                    cout << "\t\t" << obj->GetLocalPosVector().x << " , " << obj->GetLocalPosVector().z << endl;
+
                     g_QuadTree.Insert(obj);
                     obj->GetLock().unlock();
 
