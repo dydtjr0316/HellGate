@@ -26,8 +26,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -787,6 +787,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (g_Object.find(packet->id)->second != nullptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
+		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
+
 	}
 	break;
 	case SC_ITEMCREATE:
