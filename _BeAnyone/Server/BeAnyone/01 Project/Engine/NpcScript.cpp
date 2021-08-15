@@ -212,7 +212,19 @@ void CNpcScript::update()
 					SetStaticUiRender(true);
 					m_pConversationBox->SetUiRenderCheck(false);
 				}
-				// »ç°í ÆÈ±â
+				
+				Vector3 pos = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalPos();
+				Vector3 scale = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalScale();
+				if (ComputeMousePos(pos, scale)) {
+					SetCameraState(CAMERA_STATE::FIXED_CAMERA);
+					SetAnimation(NPC_ANI_TYPE::IDLE);
+					m_bisAniReset = false;
+					m_pConversationBox->SetUiRenderCheck(false);
+					m_bIsTalk = false;
+					m_bIsCollision = false;
+					m_iClickNum = 0;
+					m_bQuestBox = true;
+				}
 				
 			}
 		}
@@ -267,11 +279,6 @@ void CNpcScript::SetStaticUiRender(bool _bool)
 void CNpcScript::SellAndBuy()
 {
 	int playerMoney = m_pPlayerUi->StaticUI()->m_iMoney;
-	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
-	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	pMousePos.x -= res.fWidth / 2.f;
-	pMousePos.y -= res.fHeight / 2.f;
-	pMousePos.y = -pMousePos.y;
 
 	CStaticUI* storeUi = m_pStoreUi->StaticUI();
 	CStaticUI* playerUi = m_pPlayerUi->StaticUI();
@@ -281,8 +288,7 @@ void CNpcScript::SellAndBuy()
 			Vector3 ButtonPos = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
 			Vector3 ButtonScale = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
 			
-			if (pMousePos.x >= ButtonPos.x - (ButtonScale.x / 2) && pMousePos.x <= ButtonPos.x + (ButtonScale.x / 2)
-				&& pMousePos.y <= ButtonPos.y + (ButtonScale.y / 2) && pMousePos.y >= ButtonPos.y - (ButtonScale.y / 2)) {
+			if (ComputeMousePos(ButtonPos, ButtonScale)) {
 				if (playerMoney - storeUi->m_vecButton[i]->GetItemCount() >= 0) {
 					playerUi->SetButton(storeUi->m_vecButton[i]->GetItemID());
 					playerUi->m_iMoney -= storeUi->m_vecButton[i]->GetItemCount();
@@ -294,13 +300,19 @@ void CNpcScript::SellAndBuy()
 	}
 }
 
-//bool CNpcScript::ComputeMousePos(Vector3& _pos, Vector3& _scale, POINT& _mousePos)
-//{
-//	if (_mousePos.x >= _pos.x - (_scale.x / 2) && _mousePos.x <= _pos.x + (_scale.x / 2)
-//		&& _mousePos.y <= -_pos.y + (_scale.x / 2) && _mousePos.y >= -_pos.y - (_scale.x / 2)) {
-//
-//	}
-//}
+bool CNpcScript::ComputeMousePos(Vector3& _pos, Vector3& _scale)
+{
+	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	pMousePos.x -= res.fWidth / 2.f;
+	pMousePos.y -= res.fHeight / 2.f;
+	pMousePos.y = -pMousePos.y;
+
+	if (pMousePos.x >= _pos.x - (_scale.x / 2) && pMousePos.x <= _pos.x + (_scale.x / 2)
+		&& pMousePos.y <= _pos.y + (_scale.y / 2) && pMousePos.y >= _pos.y - (_scale.y / 2))
+		return true;
+	return false;
+}
 
 
 void CNpcScript::CheckPlayer()
