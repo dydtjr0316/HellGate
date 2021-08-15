@@ -31,7 +31,7 @@ private:
 	bool m_bisMoving = false;
 	bool m_bisDirChange = false;
 	// player save for quest
-	CGameObject* m_pPlayer;
+	CGameObject* m_pPlayer = nullptr;
 
 	sc_packet_monster_automove* m_Packet_autoMove = nullptr;
 
@@ -41,6 +41,7 @@ private:
 	uShort m_sHp;
 	uShort m_sMaxHP = 100;
 	MONSTER_AUTOMOVE_DIR m_eDir = MONSTER_AUTOMOVE_DIR::IDLE;
+	bool m_isfirst = true;
 
 	// monster move dir
 	float		m_fAngleY = 0.f;

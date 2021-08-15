@@ -790,12 +790,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(false);
+		else
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
+
 		// 플레이어에게 공격
 
 		if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
 		{
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
-
+			cout << "\t\t\t 강제로 넣은 userid == " << packet->otherid << endl;
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPlayer(g_Object.find(packet->otherid)->second);
 
 			if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")

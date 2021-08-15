@@ -138,6 +138,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
         CItemMgr::GetInst()->SetIsMake(true);
         g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
 
+
         m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
         if (m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)
             m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
@@ -294,7 +295,6 @@ void CMonsterScript::Move()
 
 void CMonsterScript::Attack()
 {
-<<<<<<< HEAD
     CGameObject* monster = GetObj();
     uShort monsterid = GetObj()->GetID();
     CTransform* monsterTrans = monster->Transform();
@@ -340,7 +340,7 @@ void CMonsterScript::Attack()
         monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DAMAGE_CNT);
         SetAnimation(MONSTER_ANI_TYPE::IDLE);
         m_bisMoving = true;
-        g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
+        g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
         // 서버에 패킷 보내야 함
         SetIsPunch(true);
         //// 플레이어에게 공격
@@ -358,12 +358,17 @@ void CMonsterScript::Attack()
         monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
         SetAnimation(MONSTER_ANI_TYPE::ATTACK);
         m_bisMoving = false;
-        g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
+
+        if (m_isfirst)
+        {
+            g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
+            m_isfirst = false;
+        }
         // 플레이어에게 공격
-        if (GetObj()->GetName() == L"GreenMonster")
-            AttackToPlayer(MOB_TYPE::GREEN);
-        else
-            AttackToPlayer(MOB_TYPE::YELLOW);
+        //if (GetObj()->GetName() == L"GreenMonster")
+        //    AttackToPlayer(MOB_TYPE::GREEN);
+        //else
+        //    AttackToPlayer(MOB_TYPE::YELLOW);
 
         Attack_Default();
 
@@ -376,6 +381,7 @@ void CMonsterScript::Attack()
         SetAnimation(MONSTER_ANI_TYPE::IDLE);
         m_bisMoving = true;
         g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        m_isfirst = true;
         // packet
     }
 

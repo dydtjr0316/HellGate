@@ -117,7 +117,7 @@ void CItemMgr::update()
 
 void CItemMgr::MakeItem()
 {
-
+    if (m_bMakeFirst.size() == 0)return;
     float mapY;
     int randNum;
 

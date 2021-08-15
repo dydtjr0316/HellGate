@@ -490,7 +490,14 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
                 cout << "monster animation monster id -> " << packet->id << endl;
                 cout << "monster animation ani type -> " << (int)packet->aniType << endl;*/
                 m_pMediator->Find(packet->id)->SetIsMoving(packet->isMoving);
-                m_pSendMgr->Send_Monster_Animation_Packet(packet->id, user, packet->aniType);
+                
+                if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
+                {
+                    cout << "\t\t\t\t " << user_id << endl;
+                    m_pSendMgr->Send_Monster_Animation_Packet(packet->id, user, packet->aniType, user_id);
+                }
+                else
+                    m_pSendMgr->Send_Monster_Animation_Packet(packet->id, user, packet->aniType);
             }
         }
     }
