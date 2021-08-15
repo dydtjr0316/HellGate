@@ -38,10 +38,16 @@ public:		// 패킷 전송부
 	// item
 	void Send_ItemCreate_Paket(const Vector3& itemPos);
 	void Send_ItemDelete_Paket(const Vector3& itemPos);
+	// effect
+	void Send_Attack_Effect(const uShort& monster_id, const Vector3& pos, const bool isStart);
+	void Send_Attack_Effect(const uShort& monster_id,const bool isStart);
 
 	// 가라
 	void Send_Player_Animation_Packet(const uShort& user_id, const bool& isact, const Ani_TYPE& ani);
 	void Send_Monster_Animation_Packet(const uShort& monster_id, const MONSTER_ANI_TYPE& aniType);
+
+	void Send_MonsterDir_Packet(const uShort& monser_id, const Vector3& dir);
+	//void Send_MonsterAttack_Packet(const uShort& monser_id, const Vector3& dir);
 public:		// animation
 	void SetAnimation(int id, const Ani_TYPE& type);
 

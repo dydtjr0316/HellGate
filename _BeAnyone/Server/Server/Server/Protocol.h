@@ -80,6 +80,7 @@ constexpr char SC_PACKET_STOP = 11;
 constexpr char SC_PACKET_MONSTER_MOVE = 12;
 constexpr char SC_ITEMCREATE = 15;
 constexpr char SC_ITEMDELETE = 16;
+constexpr char SC_ATTACKEFFECT = 17;
 
 //°¡¶ó
 constexpr char SC_PACKET_ATTACKANI = 13;
@@ -97,6 +98,9 @@ constexpr char CS_ATTACK_ANIMATION = 8;
 constexpr char CS_MONSTER_ANIMATION = 9;
 constexpr char CS_ITEMCREATE = 10;
 constexpr char CS_ITEMDELETE = 11;
+constexpr char CS_MONSTERDIR = 12;
+constexpr char CS_ATTACKEFFECT = 13;
+
 
 
 constexpr unsigned char O_PLAYER = 0;
@@ -239,6 +243,12 @@ struct sc_packet_ItemDelete_Packet {
 	Vector3 vPos;
 };
 
+struct sc_packet_AttackEfefct_Packet {
+	char	size;
+	char	type;
+	uShort id;
+	Vector3 vPos;
+};
 
 struct sc_packet_level_up {
 	char size;
@@ -348,6 +358,16 @@ struct cs_packet_Animation {
 	bool isact;
 };
 
+
+struct cs_packet_Attack_Effect {
+	char	size;
+	char	type;
+	Vector3 pos;
+	uShort  id;
+	bool isStart;
+};
+
+
 struct cs_pcaket_Monster_Animation {
 	char	size;
 	char	type;
@@ -355,6 +375,13 @@ struct cs_pcaket_Monster_Animation {
 
 	MONSTER_ANI_TYPE aniType;
 	bool isMoving;
+};
+
+struct cs_pcaket_MonsterDir{
+	char	size;
+	char	type;
+	uShort  id;
+	Vector3 dir;
 };
 
 

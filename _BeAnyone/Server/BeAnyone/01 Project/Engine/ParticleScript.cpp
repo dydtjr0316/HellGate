@@ -23,6 +23,7 @@ void CParticleScript::update()
 	if (m_fTime < ParticleSystem()->GetAcctime())
 	{
 		m_bDead = true;
+		//g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, false);
 		DeleteObject(GetObj());
 	}
 }

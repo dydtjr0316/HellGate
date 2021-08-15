@@ -108,6 +108,9 @@ public:
 	// ui
 	void ClickUiButton();
 	void FindQuestItem();
+public:
+	// sound
+	void PlaySound_(const Sound_Type& sound);
 public: 
 	//¿ë¼®
 	//animation

@@ -55,6 +55,15 @@ void CSendMgr::Send_ItemDelete_Packet(const uShort& user_id, const Vector3& pos)
     Send_Packet(user_id, &p);
 }
 
+void CSendMgr::Send_Attack_Effect(const uShort& user_id, const Vector3& effectPos)
+{
+    sc_packet_AttackEfefct_Packet p;
+    p.size = sizeof(sc_packet_AttackEfefct_Packet);
+    p.type = SC_ATTACKEFFECT;
+    p.vPos = effectPos;
+    Send_Packet(user_id, &p);
+}
+
 void CSendMgr::Send_Attacked_Packet_Monster(const uShort& attacker, const uShort& monster_id)
 {
     sc_packet_attack p;

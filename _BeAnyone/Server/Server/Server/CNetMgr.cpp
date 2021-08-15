@@ -515,8 +515,41 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     }
     break;
 
+    case CS_MONSTERDIR:
+    {
+        cs_pcaket_MonsterDir* packet = reinterpret_cast<cs_pcaket_MonsterDir*>(buf);
+        Vector3 temp = packet->dir;
+        m_pMediator->Find(packet->id)->SetDirV(temp);
+        cout << "///////////////////" << endl;
+
+        cout << packet->dir.z << endl;
+        cout << "///////////////////" << endl;
+        if (!CAST_MONSTER(m_pMediator->Find(packet->id))->GetIsDir())
+        {
+            CAST_MONSTER(m_pMediator->Find(packet->id))->SetIsDir(true);
+        }
+    }
+    break;
+
+    case CS_ATTACKEFFECT:
+    {
+        cs_packet_Attack_Effect* packet = reinterpret_cast<cs_packet_Attack_Effect*>(buf);
+        unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(packet->id));
+
+        for (auto& obj : new_viewList)
+        {
+            if (m_pMediator->IsType(obj, OBJECT_TYPE::CLIENT))
+            {
+                m_pSendMgr->Send_Attack_Effect(obj, packet->pos);
+            }
+        }
+
+
+    }
+    break;
     default:
         cout << "Unknown Packet Type Error!\n";
+        cout << (int)buf[1] << endl;
         DebugBreak();
         exit(-1);
     }                       
@@ -723,7 +756,7 @@ void CNetMgr::Worker_Thread()
                     if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
                     {
                         keep_alive = true;
-                        char temp = (char)(rand() % 4);
+                        char temp = 0; // (char)(rand() % 4);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetIsMoving(true);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetDir((MONSTER_AUTOMOVE_DIR)temp);
                         break;
@@ -837,22 +870,23 @@ void CNetMgr::Processing_Thead()
                 }
 
                 float speed = 100.f;
-                if (ismoving)
+                if (ismoving&& CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
                 {
                    // tempLock.lock();
                     switch (monsterDir)
                     {
                     case MONSTER_AUTOMOVE_DIR::FRONT:
-                        monsterPos.z += speed * DT;
+                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
+                        cout << m_pMediator->Find(monster)->GetDirVector().z << endl;
                         break;
                     case MONSTER_AUTOMOVE_DIR::BACK:
-                        monsterPos.z -= speed * DT;
+                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         break;
                     case MONSTER_AUTOMOVE_DIR::LEFT:
-                        monsterPos.x -= speed * DT;
+                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         break;
                     case MONSTER_AUTOMOVE_DIR::RIGHT:
-                        monsterPos.x += speed * DT;
+                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         break;
                     case MONSTER_AUTOMOVE_DIR::AUTO:
                         break;
@@ -863,7 +897,7 @@ void CNetMgr::Processing_Thead()
                     }
                    // tempLock.unlock();
                     if(monster==1000)
-                    cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ",  " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
+                        cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ",  " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
 
                     //if (m_pMediator->Find(monster) != nullptr)
                     {

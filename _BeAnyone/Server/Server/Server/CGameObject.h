@@ -42,7 +42,9 @@ public: // 상속 ,, 함수
 	void SetDirX(const float& x) {		m_v3DirVector.x = x; }
 	void SetDirY(const float& y) {		m_v3DirVector.y = y; }
 	void SetDirZ(const float& z) {		m_v3DirVector.z = z; }
-	void SetDirV(const Vector3& dir) {	m_v3DirVector = dir; }
+	void SetDirV(const Vector3& dir) {
+		m_v3DirVector = dir; 
+	}
 	void SetDirV(const float& x, const float& y, const float& z);
 
 	void SetRotateX(const float& x) { m_v3RotateVector.x = x; }

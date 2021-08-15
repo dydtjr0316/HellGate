@@ -29,7 +29,7 @@ private:
 	bool m_bisDamaged = false;
 	bool m_bisPunch = false;
 	bool m_bisMoving = false;
-
+	bool m_bisDirChange = false;
 	// player save for quest
 	CGameObject* m_pPlayer;
 
@@ -94,6 +94,9 @@ public:
 
 	void SetisMoving(const bool moving) { m_bisMoving = moving; }
 	bool GetisMoving() { return m_bisMoving; }
+
+	void SetisDirChange(const bool moving) { m_bisDirChange = moving; }
+	bool GetisDirChange() { return m_bisDirChange; }
 public:
 	CLONE(CMonsterScript);
 

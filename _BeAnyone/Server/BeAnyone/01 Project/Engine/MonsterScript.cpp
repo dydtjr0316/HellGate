@@ -198,11 +198,11 @@ void CMonsterScript::Move()
 	Vector3 tempWorldPos(0.f, 0.f, 0.f);
 	if (monsterScript->GetPacketMove() != nullptr&& m_bisMoving)
 	{
-		/*if (GetID() == 1000)
+		if (GetID() == 1000)
 		{
 			cout << "dir : " << (int)m_eDir << endl;
 			cout << monsterTrans->GetLocalPos().x << " , " << monsterTrans->GetLocalPos().z << endl;
-		}*/
+		}
 		monsterDir = (MONSTER_AUTOMOVE_DIR)monsterScript->GetDir();
 		if ((int)monsterDir >= 0 && (int)monsterDir <= 6)
 		{
@@ -211,14 +211,15 @@ void CMonsterScript::Move()
 			case MONSTER_AUTOMOVE_DIR::FRONT:
 				if (monster->GetName() == L"GreenMonster") {
 					monsterTrans->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
-					tempWorldPos.z = 1.f;
-					//worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+					//tempWorldPos.z = 1.f;
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
 				}
 				else {
 					monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI + m_fAngleY, 0.f));
 					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
 					//tempWorldPos.z = 1.f;
 					monsterPos += worldDir * 20.f * DT;
+					
 				}
 				break;
 			case MONSTER_AUTOMOVE_DIR::BACK:
@@ -226,39 +227,36 @@ void CMonsterScript::Move()
 				// 밑에꺼 처럼 좌표 변경하는 코드
 				if (monster->GetName() == L"GreenMonster") {
 					monsterTrans->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-					//worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
 				}
 				else {
 					monsterTrans->SetLocalRot(Vector3(XM_PI / 2, 0.f + m_fAngleY, 0.f));
 					//tempWorldPos.z = -1.f;
 					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-					monsterPos += worldDir * 20.f * DT;
 					
 				}
 				break;
 			case MONSTER_AUTOMOVE_DIR::LEFT:
 				if (monster->GetName() == L"GreenMonster") {
 					monsterTrans->SetLocalRot(Vector3(0.f, XM_PI / 2, 0.f));
-					//worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
 				}
 				else {
 					monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI / 2 + m_fAngleY, 0.f));
 					//tempWorldPos.x = -1.f;
 					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-					monsterPos += worldDir * 20.f * DT;
 					
 				}
 				break;
 			case MONSTER_AUTOMOVE_DIR::RIGHT:
 				if (monster->GetName() == L"GreenMonster") {
 					monsterTrans->SetLocalRot(Vector3(0.f, -XM_PI / 2, 0.f));
-					//worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
 				}
 				else {
 					monsterTrans->SetLocalRot(Vector3(XM_PI / 2, -XM_PI / 2 + m_fAngleY, 0.f));
 					//tempWorldPos.x = 1.f;
 					worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
-					monsterPos += worldDir * 20.f * DT;
 					
 				}
 
@@ -273,7 +271,15 @@ void CMonsterScript::Move()
 			default:
 				break;
 			}
-			// monsterPos += tempWorldPos * 100.f * DT;
+
+			if (m_bisDirChange)
+			{
+				g_netMgr.Send_MonsterDir_Packet(m_sId, worldDir);
+				m_bisDirChange = false;
+			}
+
+
+			 monsterPos += worldDir * 100.f * DT;
 			int z = (int)(monsterPos.z / xmf3Scale.z);
 
 			float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
@@ -345,6 +351,8 @@ void CMonsterScript::Attack()
 	GetObj()->GetID();
 	// attack
 	if (monsterScript->GetIsPunch()) {// (m_bisPunch) {
+		// 몬스터 공격하는곳
+
 		monsterScript->AnimClipReset();
 		monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) + DT, MONSTER_ANICNT_TYPE::ATTACK_CNT);
 		SetAnimation(MONSTER_ANI_TYPE::ATTACK);
@@ -370,16 +378,31 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
 	Vector3 monsterDir{};
 	Vector3 monsterRot = GetObj()->Transform()->GetLocalRot();
 
+
 	if (_eType == MOB_TYPE::YELLOW)
 		monsterDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);
 
+	Vector3 a = m_pPlayer->Transform()->GetLocalPos() - GetObj()->Transform()->GetLocalPos();
+	Vector3 b = XMVector3Cross(a, -monsterDir);
+	Vector3 c = XMVector3Dot(b, Vector3(0.0f, 1.f, 0.0f));
+
 	Vector3 angle = XMVector3AngleBetweenVectors(playerDir, monsterDir);
-	
+
+	if (c.x >= 0)
+		angle.x = angle.x + XM_PI;
+	else
+		angle.x = XM_PI - angle.x;// +XM_PI;
+
 	if (_eType == MOB_TYPE::YELLOW)
+	{
 		GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
 
+	}
+	m_bisDirChange = true;
 	m_fAngleY = angle.x;
 	SetIsPunch(true);
 }
+
+
 
 
