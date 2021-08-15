@@ -6,6 +6,8 @@ enum class BULLET_TYPE
 {
 	DEFAULT,
 	PICKUP,
+	MONSTER_ATTACK,
+
 };
 
 

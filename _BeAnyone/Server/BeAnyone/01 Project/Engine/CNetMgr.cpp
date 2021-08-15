@@ -26,8 +26,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -790,12 +790,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(false);
+		else
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
+
 		// 플레이어에게 공격
 
 		if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
 		{
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
-
+			cout << "\t\t\t\t " << packet->otherid << endl;
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPlayer(g_Object.find(packet->otherid)->second);
 
 			if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
