@@ -40,6 +40,7 @@ public:		// 패킷 전송부
 	void Send_ItemDelete_Paket(const Vector3& itemPos);
 	// effect
 	void Send_Attack_Effect(const uShort& monster_id, const Vector3& pos, const bool isStart);
+	void Send_Attack_Effect(const uShort& monster_id,const bool isStart);
 
 	// 가라
 	void Send_Player_Animation_Packet(const uShort& user_id, const bool& isact, const Ani_TYPE& ani);

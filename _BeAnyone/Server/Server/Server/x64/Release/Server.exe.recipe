@@ -1,11 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
-<<<<<<< HEAD
-  <ProjectOutputs>C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\Server\x64\Release\Server.exe</ProjectOutputs>
-  <ContentFiles></ContentFiles>
-  <SatelliteDlls></SatelliteDlls>
-  <NonRecipeFileRefs></NonRecipeFileRefs>
-=======
   <ProjectOutputs>
     <ProjectOutput>
       <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\Server\x64\Release\Server.exe</FullPath>
@@ -14,5 +8,4 @@
   <ContentFiles />
   <SatelliteDlls />
   <NonRecipeFileRefs />
->>>>>>> 3743c02985acb992888795e72de370f7211b19ec
 </Project>

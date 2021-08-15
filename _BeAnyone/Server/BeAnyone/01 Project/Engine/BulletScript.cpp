@@ -37,31 +37,14 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 	Vector3 vecYPos = Transform()->GetLocalPos();
 	vecYPos.y += 200.f;
 	vecYPos.z += 30.f;
+	g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, true);
 
 	switch ((UINT)m_bType)
 	{
 	case 0:
 		if (L"FireMonster" == _pOther->GetObj()->GetName())
 		{
-			// ====================
-			// Particle Object 생성
-			// 떄린놈 이름이 FireMonster 일 때 이 파티클을 생성한다.
-			// ====================
-			CGameObject* pObject = new CGameObject;
-			pObject->SetName(L"Particle");
-			pObject->AddComponent(new CTransform);
-			pObject->AddComponent(new CParticleSystem);
-			pObject->Particlesystem()->SetFrequency(2.f);
-			pObject->Particlesystem()->SetType(false);
-			pObject->Particlesystem()->SetMaxParticle(3);
-			pObject->AddComponent(new CParticleScript);
-			pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
-			pObject->FrustumCheck(false);
-			pObject->Transform()->SetLocalPos(vecYPos);
-			g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, true);
-
-			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
-
+			
 
 			/// 여기까지 파티클 생성하는거
 			/// ////////////////////////////////////////////////////////////////////////////////
