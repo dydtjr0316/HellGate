@@ -72,6 +72,7 @@
     <ClInclude Include="Script.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="SnowScript.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="StaticUI.h" />
     <ClInclude Include="struct.h" />
@@ -140,6 +141,7 @@
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="SnowScript.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StaticUI.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
@@ -199,6 +201,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
     </FxCompile>
+    <FxCompile Include="Snow.fx" />
     <FxCompile Include="std.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

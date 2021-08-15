@@ -25,6 +25,9 @@
     <FxCompile Include="particle.fx">
       <Filter>10. ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="Snow.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="desc.cpp">
@@ -204,11 +207,14 @@
     <ClCompile Include="Sound.cpp">
       <Filter>09. Resource</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleScript.cpp">
-      <Filter>04. GameObject\Script</Filter>
-    </ClCompile>
     <ClCompile Include="SoundMgr.cpp">
       <Filter>06. Manager\SceneMgr\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleScript.cpp">
+      <Filter>04. GameObject\Script\01.Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="SnowScript.cpp">
+      <Filter>04. GameObject\Script\01.Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -402,11 +408,14 @@
     <ClInclude Include="Sound.h">
       <Filter>09. Resource</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleScript.h">
-      <Filter>04. GameObject\Script</Filter>
-    </ClInclude>
     <ClInclude Include="SoundMgr.h">
       <Filter>06. Manager\SceneMgr\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleScript.h">
+      <Filter>04. GameObject\Script\01.Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="SnowScript.h">
+      <Filter>04. GameObject\Script\01.Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -490,6 +499,9 @@
     </Filter>
     <Filter Include="06. Manager\SceneMgr\NewFilter1">
       <UniqueIdentifier>{1fc7dbd3-224e-43a5-8cda-9b0302c2be74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. GameObject\Script\01.Particle">
+      <UniqueIdentifier>{623d2784-afd5-496a-8bf3-c00b090816c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
