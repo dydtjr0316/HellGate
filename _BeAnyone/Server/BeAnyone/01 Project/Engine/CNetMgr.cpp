@@ -236,6 +236,18 @@ void CNetMgr::Send_ItemDelete_Paket(const Vector3& itemPos)
 	Send_Packet(&p);
 }
 
+void CNetMgr::Send_Attack_Effect(const uShort& monster_id, const Vector3& pos, const bool isStart)
+{
+	cs_packet_Attack_Effect p;
+	p.type = CS_ATTACKEFFECT;
+	p.size = sizeof(p);
+	p.id = monster_id;
+	p.pos = pos;
+	p.isStart = isStart;
+	Send_Packet(&p);
+}
+
+
 void CNetMgr::Send_Player_Animation_Packet(const uShort& user_id, const bool& isact, const Ani_TYPE& ani)
 {
 	cs_packet_Animation p;
@@ -793,6 +805,18 @@ void CNetMgr::ProcessPacket(char* ptr)
 		
 	}
 	break;
+
+	case SC_ATTACKEFFECT:
+	{
+		sc_packet_AttackEfefct_Packet* packet = reinterpret_cast<sc_packet_AttackEfefct_Packet*>(ptr);
+		packet->vPos; //effect  생성 위치 
+		//여기에 생성코드 넣으면 됨
+	}
+	break;
+
+
+
+
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);
 	}

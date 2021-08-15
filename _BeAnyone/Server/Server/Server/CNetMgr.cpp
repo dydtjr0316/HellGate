@@ -526,6 +526,22 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     }
     break;
 
+    case CS_ATTACKEFFECT:
+    {
+        cs_packet_Attack_Effect* packet = reinterpret_cast<cs_packet_Attack_Effect*>(buf);
+        unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(packet->id));
+
+        for (auto& obj : new_viewList)
+        {
+            if (m_pMediator->IsType(obj, OBJECT_TYPE::CLIENT))
+            {
+                //m_pSendMgr.Send_Attack_Effect(obj, packet->pos)
+            }
+        }
+
+
+    }
+
     default:
         cout << "Unknown Packet Type Error!\n";
         DebugBreak();

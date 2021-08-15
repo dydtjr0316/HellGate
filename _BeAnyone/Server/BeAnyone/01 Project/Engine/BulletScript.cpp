@@ -58,6 +58,7 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 			pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
 			pObject->FrustumCheck(false);
 			pObject->Transform()->SetLocalPos(vecYPos);
+			g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, true);
 
 			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
 
