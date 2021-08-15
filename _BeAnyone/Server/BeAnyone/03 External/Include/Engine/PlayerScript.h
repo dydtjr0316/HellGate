@@ -42,7 +42,8 @@ public:
 private:
 	Vector3				m_vecPlayerDir;
 	CGameObject*		m_pItemUIObj;
-	
+	Drag_Type			m_eDrag;
+	float				m_fBeforeDragX = 0.f;
 
 private:
 	float			m_ftimeCount = 0.f;
@@ -72,6 +73,8 @@ private:
 	vector<CGameObject*>		m_vUiBar;
 	vector<CGameObject*>		m_vUiButton;
 	bool						m_bUiCheck = true;
+
+	float						m_fTime = 0.0f;
 
 public:
 	bool GetAniReset() { return m_bisAniReset; }
@@ -108,6 +111,7 @@ public:
 	// ui
 	void ClickUiButton();
 	void FindQuestItem();
+	void ReduceUiBar();
 public:
 	// sound
 	void PlaySound_(const Sound_Type& sound);

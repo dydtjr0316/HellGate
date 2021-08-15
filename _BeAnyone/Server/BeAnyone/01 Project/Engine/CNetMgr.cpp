@@ -665,7 +665,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_ROTATE:
 	{
 		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
-		if(packet->id!=g_myid&&g_Object.count(packet->id)!=0)
+		if (packet->id != g_myid && g_Object.count(packet->id) != 0)
 			g_Object.find(packet->id)->second->Transform()->SetLocalRot(packet->rotate);
 	}
 	break;

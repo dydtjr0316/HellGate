@@ -251,9 +251,7 @@ void CPlayerScript::update()
 
 	}
 
-	// stamina ui
-	ClickUiButton();
-
+	
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		vRot.y += vDrag.x * DT * ROTATE_SPEED;
@@ -383,6 +381,11 @@ void CPlayerScript::update()
 	// quest::find item
 	if (GetObj()->Quest()->GetDoQuest(QUEST_TYPE::GET_ITEM) == false)
 		FindQuestItem();
+
+	// stamina ui
+	ClickUiButton();
+	ReduceUiBar();
+
 }
 
 void CPlayerScript::op_Move()
@@ -699,6 +702,27 @@ void CPlayerScript::ClickUiButton()
 				}
 			}
 		}
+	}
+}
+
+void CPlayerScript::ReduceUiBar()
+{
+	float speed{};
+	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
+		if (i == (UINT)UI_BAR::HUG)
+			speed = 0.08f;
+		else
+			speed = 0.05f;
+
+		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
+		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
+		
+		//float a = (0.05 * DT);
+		scale.x -= (speed * DT);
+		pos.x -= (speed * DT) / 2.f;
+
+		m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
+		m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x, pos.y, pos.z));
 	}
 }
 
