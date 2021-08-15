@@ -138,7 +138,6 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
         CItemMgr::GetInst()->SetIsMake(true);
         g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
 
-
         m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
         if (m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)
             m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
@@ -359,11 +358,19 @@ void CMonsterScript::Attack()
         SetAnimation(MONSTER_ANI_TYPE::ATTACK);
         m_bisMoving = false;
 
+<<<<<<< HEAD
+        /*if (m_isfirst)
+        {
+            g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
+            m_isfirst = false;
+        }*/
+=======
         if (m_isfirst)
         {
             g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
             m_isfirst = false;
         }
+>>>>>>> ae70d72fcaddafa6efe023d0c9ba105af3f9012c
         // 플레이어에게 공격
         //if (GetObj()->GetName() == L"GreenMonster")
         //    AttackToPlayer(MOB_TYPE::GREEN);
@@ -453,4 +460,3 @@ void CMonsterScript::Attack_Default()
     //   MOnster Layer에 집어넣음으로서 플레이어와 충돌 체크 확인
     CreateObject(pBullet, L"Monster");
 }
-
