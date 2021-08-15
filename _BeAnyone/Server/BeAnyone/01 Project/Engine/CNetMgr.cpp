@@ -796,10 +796,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 		{
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
 
-			/*if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPlayer(g_Object.find(packet->otherid)->second);
+
+			if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::GREEN);
 			else
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);*/
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);
 		}
 	}
 	break;

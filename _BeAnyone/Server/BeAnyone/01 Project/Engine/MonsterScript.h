@@ -98,6 +98,10 @@ public:
 	void SetisDirChange(const bool moving) { m_bisDirChange = moving; }
 	bool GetisDirChange() { return m_bisDirChange; }
 
+	void  SetPlayer(CGameObject* p) {
+		m_pPlayer = p;
+	};
+
 public:
 	void Attack_Default();
 
