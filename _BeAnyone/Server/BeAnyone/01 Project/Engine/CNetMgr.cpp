@@ -190,6 +190,16 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local,
 	Send_Packet(&p);
 }
 
+void CNetMgr::Send_Rotate_Packet(const uShort& id, const Vector3& rotate)
+{
+	cs_packet_rotate p;
+	p.type = CS_ROTATE;
+	p.size = sizeof(p);
+	p.id = id;
+	p.rotate = rotate;
+	Send_Packet(&p);
+}
+
 void CNetMgr::Send_Stop_Packet(const bool& isMoving)
 {
 	cs_packet_stop p;
@@ -646,6 +656,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	}
 	break;
+	case SC_ROTATE:
+	{
+		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
+		if(packet->id!=g_myid)
+			g_Object.find(packet->id)->second->Transform()->SetLocalRot(packet->rotate);
+	}
+	break;
+
 	case SC_PACKET_STOP:
 	{
 		//cout << "SC_PACKET_STOP" << endl;
@@ -798,13 +816,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
 		{
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
-			cout << "\t\t\t\t " << packet->otherid << endl;
-			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPlayer(g_Object.find(packet->otherid)->second);
+			//cout << "\t\t\t 강제로 넣은 userid == " << packet->otherid << endl;
+			//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPlayer(g_Object.find(packet->otherid)->second);
 
-			if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::GREEN);
-			else
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);
+			//if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
+			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::GREEN);
+			//else
+			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);
 		}
 	}
 	break;

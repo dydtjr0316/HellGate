@@ -158,6 +158,7 @@ void CNpcScript::init()
 
 void CNpcScript::update()
 {
+	//if (g_myid < 0)return;
 	CTransform* NpcTrans = GetObj()->Transform();
 	Vector3 NpcPos = NpcTrans->GetLocalPos();
 	Vector3 RequestPos{};

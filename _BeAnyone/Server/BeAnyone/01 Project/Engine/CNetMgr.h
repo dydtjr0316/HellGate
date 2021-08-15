@@ -32,6 +32,7 @@ public:		// 패킷 전송부
 	void Send_Move_Packet(unsigned const char& dir, const Vector3& local, const float& rotateY);
 	void Send_Move_Packet(unsigned const char& dir, const Vector3& local, const Vector3& dirVec,const float& rotateY,
 		const system_clock::time_point& startTime, const float& delta, const bool& isMoving);
+	void Send_Rotate_Packet(const uShort& id, const Vector3& rotate);
 	void Send_Stop_Packet( const bool& isMoving);
 	void Send_Attack_Packet(const uShort& victim_id);
 	void Send_MonsterDead_Packet(const uShort& monster_id);

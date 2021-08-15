@@ -455,6 +455,20 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         Do_Attack(user_id, packet->id);
     }
     break;
+    case CS_ROTATE:
+    {
+        cs_packet_rotate* packet = reinterpret_cast<cs_packet_rotate*>(buf);
+        unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
+        for (auto& obj : vSectors)
+        {
+            if (m_pMediator->IsType(obj, OBJECT_TYPE::CLIENT))
+            {
+                m_pSendMgr->Send_Rotate_Packet(user_id, obj, packet->rotate);
+            }
+        }
+
+    }
+        break;
     case CS_MONSTER_DEAD:
     {
         cs_packet_MonsterDead* packet = reinterpret_cast<cs_packet_MonsterDead*>(buf);
@@ -834,10 +848,10 @@ void CNetMgr::Processing_Thead()
 
 
                     CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 5.f)
+                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 1.f)
                     {
                         //cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
-                        m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
+                       // m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
                     }
                 }
