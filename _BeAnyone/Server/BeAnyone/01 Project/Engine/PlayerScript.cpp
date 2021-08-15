@@ -384,6 +384,7 @@ void CPlayerScript::update()
 	// stamina ui
 	ClickUiButton();
 	ReduceUiBar();
+	UseItem();
 
 }
 
@@ -722,6 +723,55 @@ void CPlayerScript::ReduceUiBar()
 
 		m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
 		m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x, pos.y, pos.z));
+	}
+}
+
+void CPlayerScript::UseItem()
+{
+	if(m_pItemUIObj->StaticUI()->m_bActive == true){
+		for (int i = 0; i < (UINT)ITEM_ID::END; ++i) {
+			if (m_pItemUIObj->StaticUI()->GetUseItemID(i) == true) {
+				FindItemBeUsed(i);
+			}
+		}
+	}
+}
+
+void CPlayerScript::FindItemBeUsed(int _itemId)
+{
+	switch (_itemId) {
+	case (UINT)ITEM_ID::STEAK:	// steak
+		cout << "steak 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::STEAK, false);
+		break;
+	case (UINT)ITEM_ID::BOTTLE_STAMINA:
+		cout << "stamina 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_STAMINA, false);
+		break;
+	case (UINT)ITEM_ID::BOTTLE_DASH:
+		cout << "dash 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_DASH, false);
+		break;
+	case (UINT)ITEM_ID::MONEYBAG:
+		break;
+	case (UINT)ITEM_ID::CARROT:
+		cout << "carrot 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::CARROT, false);
+		break;
+	case (UINT)ITEM_ID::BRANCH:
+		break;
+	case (UINT)ITEM_ID::BASIC_SWORD:
+		cout << "BASIC_SWORD 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BASIC_SWORD, false);
+		break;
+	case (UINT)ITEM_ID::BASIC_ARROW:
+		break;
+	case (UINT)ITEM_ID::AX:
+		cout << "AX 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::AX, false);
+		break;
+	default:
+		break;
 	}
 }
 
