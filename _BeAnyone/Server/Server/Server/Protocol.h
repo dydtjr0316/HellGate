@@ -169,6 +169,7 @@ struct sc_packet_Monster_Animation {
 	char type;
 	uShort id;
 	MONSTER_ANI_TYPE aniType;
+	uShort otherid;
 };
 
 
