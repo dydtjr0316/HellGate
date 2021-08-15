@@ -263,6 +263,10 @@ void CNpcScript::SellAndBuy()
 {
 	int playerMoney = m_pPlayerUi->StaticUI()->m_iMoney;
 	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	pMousePos.x -= res.fWidth / 2.f;
+	pMousePos.y -= res.fHeight / 2.f;
+	pMousePos.y = -pMousePos.y;
 
 	CStaticUI* storeUi = m_pStoreUi->StaticUI();
 	CStaticUI* playerUi = m_pPlayerUi->StaticUI();
@@ -273,10 +277,11 @@ void CNpcScript::SellAndBuy()
 			Vector3 ButtonScale = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
 			
 			if (pMousePos.x >= ButtonPos.x - (ButtonScale.x / 2) && pMousePos.x <= ButtonPos.x + (ButtonScale.x / 2)
-				&& pMousePos.y <= -ButtonPos.y + (ButtonScale.x / 2) && pMousePos.y >= -ButtonPos.y - (ButtonScale.x / 2)) {
+				&& pMousePos.y <= ButtonPos.y + (ButtonScale.y / 2) && pMousePos.y >= ButtonPos.y - (ButtonScale.y / 2)) {
 				if (playerMoney - storeUi->m_vecButton[i]->GetItemCount() >= 0) {
 					playerUi->SetButton(storeUi->m_vecButton[i]->GetItemID());
 					playerUi->m_iMoney -= storeUi->m_vecButton[i]->GetItemCount();
+					playerUi->SetWalletMoney();
 				}
 			}
 		

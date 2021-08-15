@@ -5,6 +5,13 @@ class CGameObject;
 class CTexture;
 class CButton;
 
+enum class STORE_BUTTON
+{
+	EXIT,
+	LACK_MONEY,
+	END,
+};
+
 class CStaticUI
 	: public CComponent
 {
@@ -25,11 +32,15 @@ public:
 	// wallet, money etc ... (only player)
 	CGameObject*			m_pWallet;
 	vector<CGameObject*>	m_pMoneyUi;
-	int						m_iMoney = 0;
+	int						m_iMoney = 9999;
+
+	// store button
+	vector<CGameObject*>	m_StoreButton;
 
 public:
 	void CreatePickingObj();
 	void CreateButton(CCamera*);
+	void CreateStoreButton();
 
 
 	CCamera* GetCameraProj() { return m_pCameraProj; }
