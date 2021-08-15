@@ -17,6 +17,7 @@ void CButton::init()
 	if (m_eUiType == UI_TYPE::PRIVATE_ITEM_UI) {
 		num = (UINT)ITEM_NUM::HUNDREDS;
 		CreateItemNum(num);
+		//CreateExplainBox();
 	}
 	else if (m_eUiType == UI_TYPE::PUBLIC_SHOP_UI) {
 		num = (UINT)ITEM_NUM::END;
@@ -33,8 +34,6 @@ void CButton::update()
 	GetObj()->SetUiRenderCheck(m_bActive);
 	for (int i = 0; i < m_vItemNum.size(); ++i)
 		m_vItemNum[i]->SetUiRenderCheck(m_bActive);
-
-	ChangeButtonTexture();
 	
 	if (m_bChangeCount && (m_vItemNum.size() != 0))
 		ChangeNumTexture();
@@ -48,16 +47,22 @@ void CButton::update()
 		}
 	}
 
-	for (int i = 0; i < m_vItemNum.size(); ++i) {
-		Vector3 vButtonPos = GetObj()->Transform()->GetLocalPos();
-		Vector3 vButtonScale = GetObj()->Transform()->GetLocalScale();
-		Vector3 vNumPos = m_vItemNum[i]->Transform()->GetLocalPos();
-		Vector3 vNumScale = m_vItemNum[i]->Transform()->GetLocalScale();
+	if (!m_bActive)
+		return;
+	else {
+		ChangeButtonTexture();
 
-		vNumPos = vButtonPos;
-		vNumPos += Vector3((vButtonScale.x / 2 - vNumScale.x / 2) - (i * vNumScale.x), -(vButtonScale.y / 2 - vNumScale.y / 2), 0.f);
+		for (int i = 0; i < m_vItemNum.size(); ++i) {
+			Vector3 vButtonPos = GetObj()->Transform()->GetLocalPos();
+			Vector3 vButtonScale = GetObj()->Transform()->GetLocalScale();
+			Vector3 vNumPos = m_vItemNum[i]->Transform()->GetLocalPos();
+			Vector3 vNumScale = m_vItemNum[i]->Transform()->GetLocalScale();
 
-		m_vItemNum[i]->Transform()->SetLocalPos(vNumPos);
+			vNumPos = vButtonPos;
+			vNumPos += Vector3((vButtonScale.x / 2 - vNumScale.x / 2) - (i * vNumScale.x), -(vButtonScale.y / 2 - vNumScale.y / 2), 0.f);
+
+			m_vItemNum[i]->Transform()->SetLocalPos(vNumPos);
+		}
 	}
 }
 
@@ -131,46 +136,58 @@ void CButton::ChangeButtonTexture()
 	{
 	case ITEM_ID::EMPTY:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"EMPTY");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"QuestBase").GetPointer());
+		m_pExplainBox->SetUiRenderCheck(false);
 		break;
 
 	case ITEM_ID::BASIC_SWORD:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainSword").GetPointer());
 		break;
 
 	case ITEM_ID::AX:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"AX");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainAx").GetPointer());
 		break;
 
 	case ITEM_ID::BASIC_ARROW:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOW_IMG");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainSword").GetPointer());
 		break;
 
 	case ITEM_ID::BRANCH:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BRANCH");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainBranch").GetPointer());
 		break;
 
 	case ITEM_ID::APPLE:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"APPLE");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainApple").GetPointer());
 		break;
 
 	case ITEM_ID::BOTTLE_STAMINA:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_STAMINA");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainBStamina").GetPointer());
 		break;
 
 	case ITEM_ID::BOTTLE_DASH:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_DASH");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainBDash").GetPointer());
 		break;
 
 	case ITEM_ID::STEAK:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"STEAK");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainMeat").GetPointer());
 		break;
 
 	case ITEM_ID::MONEYBAG:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"MONEYBAG");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainMoneyBag").GetPointer());
 		break;
 
 	case ITEM_ID::CARROT:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"CARROT");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainCarrot").GetPointer());
 		break;
 
 	case ITEM_ID::END:
@@ -262,6 +279,26 @@ void CButton::SetItemPrice()
 	case ITEM_ID::END:
 		return;
 	}
+}
+
+void CButton::CreateExplainBox()
+{
+	Vector3 pos = GetObj()->Transform()->GetLocalPos();
+	Vector3 Scale = Vector3(600.f, 150.f, 1.f);
+	CGameObject* pExplainBox = new CGameObject;
+	pExplainBox->SetName(L"Explain Box");
+	pExplainBox->AddComponent(new CTransform);
+	pExplainBox->AddComponent(new CMeshRender);
+	pExplainBox->Transform()->SetLocalPos(Vector3(pos.x + (Scale.x / 2.f), pos.y - (Scale.y / 2.f), 1.f));
+	pExplainBox->Transform()->SetLocalScale(Scale);
+	//MeshRender ¼³Á¤
+	pExplainBox->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pExplainBox->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
+	pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"QuestBase").GetPointer());
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pExplainBox);
+	pExplainBox->SetUiRenderCheck(false);
+	m_pExplainBox = pExplainBox;
+
 }
 
 void CButton::CreateItemNum(int num)

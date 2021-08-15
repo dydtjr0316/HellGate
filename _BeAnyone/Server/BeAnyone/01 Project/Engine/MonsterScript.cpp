@@ -358,19 +358,20 @@ void CMonsterScript::Attack()
         SetAnimation(MONSTER_ANI_TYPE::ATTACK);
         m_bisMoving = false;
 
-<<<<<<< HEAD
+// 여기 지워야 하나? 컴플릿 남
+
         /*if (m_isfirst)
         {
             g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
             m_isfirst = false;
         }*/
-=======
+
         if (m_isfirst)
         {
             g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
             m_isfirst = false;
         }
->>>>>>> ae70d72fcaddafa6efe023d0c9ba105af3f9012c
+
         // 플레이어에게 공격
         //if (GetObj()->GetName() == L"GreenMonster")
         //    AttackToPlayer(MOB_TYPE::GREEN);

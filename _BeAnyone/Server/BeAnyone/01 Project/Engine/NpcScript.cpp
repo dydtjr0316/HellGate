@@ -150,6 +150,10 @@ void CNpcScript::init()
 
 	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
 		storeUi->StaticUI()->m_vecButton[i]->init();
+
+	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
+		storeUi->StaticUI()->m_vecButton[i]->CreateExplainBox();
+
 }
 
 void CNpcScript::update()
@@ -211,6 +215,7 @@ void CNpcScript::update()
 				if (m_iClickNum == 1) {
 					SetStaticUiRender(true);
 					m_pConversationBox->SetUiRenderCheck(false);
+					m_pPlayerUi->StaticUI()->SetWalletMoney();
 				}
 				
 				Vector3 pos = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalPos();
@@ -327,11 +332,14 @@ void CNpcScript::SellAndBuy()
 				if (ComputeMousePos(ButtonPos, ButtonScale)) {
 					if (playerUi->m_vecButton[i]->GetItemCount() > 1) {
 						playerUi->m_vecButton[i]->SubItemCount();
+						playerUi->SetWalletMoney();
 						playerUi->m_iMoney += 10;		// ÆÈ°í µ· ¿Ã¸®±â
 					}
 					else if (playerUi->m_vecButton[i]->GetItemCount() == 1) {
 						playerUi->m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
 						playerUi->m_vecButton[i]->SubItemCount();
+						playerUi->SetWalletMoney();
+						playerUi->m_iMoney += 10;
 					}
 				}
 			}
@@ -574,19 +582,6 @@ void CNpcScript::OnCollisionExit(CCollider* _pOther)
 
 void CNpcScript::SetCameraState(CAMERA_STATE _eCamState)
 {
-
-	/*CGameObject* cam;
-	vector<CGameObject*> objects;
-	objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetObjects();
-
-	vector<CGameObject*>::iterator iter = objects.begin();
-
-	for (; iter != objects.end();) {
-		if ((*iter)->GetName() == L"MainCam")
- 			cam = *iter;
-		++iter;
-	}*/
-
 	m_pCam = FindCam(L"MainCam", L"Default");
 
 	Vector3 npcPos = GetObj()->Transform()->GetLocalPos();

@@ -200,7 +200,37 @@ void CStaticUI::update()
 				}
 			}
 		}*/
+
+
+		for (int i = 0; i < m_vecButton.size(); ++i) {
+			Vector3 Pos = m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
+			Vector3 Scale = m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
+
+			if (m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
+				if (ComputeMousePos(Pos, Scale))
+					m_vecButton[i]->GetExplainBox()->SetUiRenderCheck(true);
+				else
+					m_vecButton[i]->GetExplainBox()->SetUiRenderCheck(false);
+			}
+			/*else
+				m_vecButton[i]->GetExplainBox()->SetUiRenderCheck(false);*/
+		}
 	}
+}
+
+
+bool CStaticUI::ComputeMousePos(Vector3& _pos, Vector3& _scale)
+{
+	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	pMousePos.x -= res.fWidth / 2.f;
+	pMousePos.y -= res.fHeight / 2.f;
+	pMousePos.y = -pMousePos.y;
+
+	if (pMousePos.x >= _pos.x - (_scale.x / 2) && pMousePos.x <= _pos.x + (_scale.x / 2)
+		&& pMousePos.y <= _pos.y + (_scale.y / 2) && pMousePos.y >= _pos.y - (_scale.y / 2))
+		return true;
+	return false;
 }
 
 int CStaticUI::GetQuestItemCount()

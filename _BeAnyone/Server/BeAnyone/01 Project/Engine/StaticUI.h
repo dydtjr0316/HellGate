@@ -59,6 +59,9 @@ public:
 	// money
 	void SetWalletMoney();
 
+	// 이걸로 통일하기
+	bool ComputeMousePos(Vector3& _pos, Vector3& _scale);
+
 public:
 	void init(UI_TYPE );
 

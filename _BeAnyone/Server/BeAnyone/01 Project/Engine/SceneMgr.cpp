@@ -1397,6 +1397,20 @@ void CSceneMgr::LoadRes()
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyPotion_Complete", L"Texture\\Quest\\BuyPotion_Complete.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone", L"Texture\\Quest\\BuyWeapone.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone_Complete", L"Texture\\Quest\\BuyWeapone_Complete.png");
+	
+	//===========================
+	// ExplainBox texture
+	//==========================
+	Ptr<CTexture> pExplain = CResMgr::GetInst()->Load<CTexture>(L"ExplainSword", L"Texture\\ItemButton\\ExplainSwordTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainAx", L"Texture\\ItemButton\\ExplainAxTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainApple", L"Texture\\ItemButton\\ExplainAppleTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainBDash", L"Texture\\ItemButton\\ExplainBDashTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainBStamina", L"Texture\\ItemButton\\ExplainBStaminaTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainCarrot", L"Texture\\ItemButton\\ExplainCarrotTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainBranch", L"Texture\\ItemButton\\ExplainBranchTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainMeat", L"Texture\\ItemButton\\ExplainMeatTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainMoneyBag", L"Texture\\ItemButton\\ExplainMoneyBagTex.png");
+
 }
 
 
@@ -1810,6 +1824,9 @@ void CSceneMgr::init()
 
 		pObject->StaticUI()->m_vecButton[i]->init();
 	}
+
+	for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
+		pObject->StaticUI()->m_vecButton[i]->CreateExplainBox();
 
 	// wallet create
 	CGameObject* pWallet = new CGameObject;
