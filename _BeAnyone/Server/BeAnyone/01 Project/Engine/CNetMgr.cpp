@@ -787,15 +787,19 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (g_Object.find(packet->id)->second != nullptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
+
 		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(false);
 		// 플레이어에게 공격
+
 		if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
 		{
-			if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
+
+			/*if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::GREEN);
 			else
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);*/
 		}
 	}
 	break;
