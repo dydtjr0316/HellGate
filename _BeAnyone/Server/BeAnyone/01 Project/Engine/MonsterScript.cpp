@@ -343,11 +343,8 @@ void CMonsterScript::Attack()
 		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
 		// 서버에 패킷 보내야 함
 
-		// 플레이어에게 공격
-		if (GetObj()->GetName() == L"GreenMonster")
-			AttackToPlayer(MOB_TYPE::GREEN);
-		else
-			AttackToPlayer(MOB_TYPE::YELLOW);
+		SetIsPunch(true);
+
 	}
 	GetObj()->GetID();
 	// attack
@@ -360,6 +357,12 @@ void CMonsterScript::Attack()
 		m_bisMoving = false;
 		g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
 
+
+		// 플레이어에게 공격
+		if (GetObj()->GetName() == L"GreenMonster")
+			AttackToPlayer(MOB_TYPE::GREEN);
+		else
+			AttackToPlayer(MOB_TYPE::YELLOW);
 		// packet
 	}
 	if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
@@ -375,6 +378,8 @@ void CMonsterScript::Attack()
 
 void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
 {
+	//g_netMgr.Send_Monster_Animation_Packet(GetID(), MONSTER_ANI_TYPE::ATTACK);
+	if(m_pPlayer== nullptr)return;
 	Vector3 playerDir = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 	Vector3 monsterDir{};
 	Vector3 monsterRot = GetObj()->Transform()->GetLocalRot();
@@ -400,7 +405,6 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
 	}
 	m_bisDirChange = true;
 	m_fAngleY += angle.x;
-	SetIsPunch(true);
 }
 
 

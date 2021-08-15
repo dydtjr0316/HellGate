@@ -142,20 +142,16 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
 {
     if (Netmgr.GetMediatorMgr()->Count(other_id) == 0)return;
     //g_QuadTree.Delete(Netmgr.GetMediatorMgr()->Find(other_id));
+
     sc_packet_leave p;
     p.id = other_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
     p.isAttack = isAttack;
-    if (p.id >= START_MONSTER && p.id < END_MONSTER)
+   // if (p.id >= START_MONSTER && p.id < END_MONSTER)
     {
-        /*cout << "********************" << endl;
+        cout << "********************" << endl;
         cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
-        cout << "player POS ->   <" << Netmgr.GetMediatorMgr()->Find(user_id)->GetLocalPosVector().x << ", "
-            << Netmgr.GetMediatorMgr()->Find(user_id)->GetLocalPosVector().z << ">" << endl;
-        cout << "Monster POS ->   <" << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().x << ", "
-            << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().z << ">" << endl;
-         cout << "********************" << endl<<endl;*/
     }
     Send_Packet(user_id, &p);
 }
