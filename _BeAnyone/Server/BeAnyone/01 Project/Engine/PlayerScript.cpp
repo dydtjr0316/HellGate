@@ -257,6 +257,16 @@ void CPlayerScript::update()
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		vRot.y += vDrag.x * DT * ROTATE_SPEED;
+		
+		if (vDrag.x > 0)m_eDrag = Drag_Type::PLUS;
+		else if (vDrag.x < 0)m_eDrag = Drag_Type::MINUS;
+		else m_eDrag = Drag_Type::IDLE;
+
+		//drag.x만 보내주면되남
+		if(vDrag.x !=0)g_netMgr.Send_Rotate_Packet(GetObj()->GetID(), vRot);
+
+
+		//cout << "\t\t\t" << vDrag.x << endl;
 		GetObj()->Transform()->SetLocalRot(vRot);
 	}
 

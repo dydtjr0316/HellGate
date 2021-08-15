@@ -81,6 +81,7 @@ constexpr char SC_PACKET_MONSTER_MOVE = 12;
 constexpr char SC_ITEMCREATE = 15;
 constexpr char SC_ITEMDELETE = 16;
 constexpr char SC_ATTACKEFFECT = 17;
+constexpr char SC_ROTATE = 18;
 
 //°¡¶ó
 constexpr char SC_PACKET_ATTACKANI = 13;
@@ -100,6 +101,8 @@ constexpr char CS_ITEMCREATE = 10;
 constexpr char CS_ITEMDELETE = 11;
 constexpr char CS_MONSTERDIR = 12;
 constexpr char CS_ATTACKEFFECT = 13;
+constexpr char CS_ROTATE = 14;
+
 
 
 
@@ -178,6 +181,13 @@ struct sc_packet_stop {
 	char type;
 	uShort id;
 	bool isMoving;
+};
+
+struct sc_packet_rotate {
+	char size;
+	char type;
+	uShort id;
+	Vector3 rotate;
 };
 
 
@@ -322,6 +332,13 @@ struct cs_packet_stop {
 	char type;
 	uShort id;
 	bool isMoving;
+};
+
+struct cs_packet_rotate {
+	char size;
+	char type;
+	uShort id;
+	Vector3 rotate;
 };
 
 struct cs_packet_attack {

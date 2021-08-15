@@ -42,7 +42,8 @@ public:
 private:
 	Vector3				m_vecPlayerDir;
 	CGameObject*		m_pItemUIObj;
-	
+	Drag_Type			m_eDrag;
+	float				m_fBeforeDragX = 0.f;
 
 private:
 	float			m_ftimeCount = 0.f;

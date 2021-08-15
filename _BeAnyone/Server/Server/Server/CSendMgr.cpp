@@ -228,3 +228,13 @@ void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, c
     p.isMoving = isMoving;
     Send_Packet(user_id, &p);
 }
+
+void CSendMgr::Send_Rotate_Packet(const uShort& moverid, const uShort& userid, const Vector3& rotate)
+{
+    sc_packet_rotate p;
+    p.size = sizeof(p);
+    p.type = SC_ROTATE;
+    p.id = moverid;
+    p.rotate = rotate;
+    Send_Packet(userid, &p);
+}
