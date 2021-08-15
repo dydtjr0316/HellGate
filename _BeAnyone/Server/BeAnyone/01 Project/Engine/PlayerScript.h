@@ -74,6 +74,8 @@ private:
 	vector<CGameObject*>		m_vUiButton;
 	bool						m_bUiCheck = true;
 
+	float						m_fTime = 0.0f;
+
 public:
 	bool GetAniReset() { return m_bisAniReset; }
 	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
@@ -109,6 +111,7 @@ public:
 	// ui
 	void ClickUiButton();
 	void FindQuestItem();
+	void ReduceUiBar();
 public:
 	// sound
 	void PlaySound_(const Sound_Type& sound);
