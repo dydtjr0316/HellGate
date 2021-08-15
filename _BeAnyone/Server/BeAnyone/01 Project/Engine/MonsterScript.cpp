@@ -73,6 +73,7 @@ CMonsterScript::~CMonsterScript()
 	DeleteObject(m_pUnderUi);
 	DeleteObject(m_pChildDummy);
 }
+
 void CMonsterScript::SetPacketMove(sc_packet_monster_automove* p)
 {
 	if (p == nullptr)return;
