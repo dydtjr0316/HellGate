@@ -81,8 +81,7 @@ void CNpcScript::init()
 	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
 	m_pCam = FindCam(L"UiCam", L"Default");
 	storeUi->StaticUI()->SetCameraProj(m_pCam->Camera());
-	//	플레이어 스크립트(오브젝트)에 StaticUI 귀속
-	// pPlayerObj->GetScript<CPlayerScript>()->SetUIObj(pObject);
+	
 	// Transform 설정
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	storeUi->Transform()->SetLocalPos(Vector3(-400.f, 80.f, 1.f));
@@ -95,6 +94,7 @@ void CNpcScript::init()
 	float fUI = 0.5f;
 	storeUi->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
 	storeUi->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
+	
 	// AddGameObject
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(storeUi);
 	m_pStoreUi = storeUi;
@@ -105,6 +105,9 @@ void CNpcScript::init()
 	Vector3 vObjectScale = storeUi->Transform()->GetLocalScale();
 	float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;
 	float	fEmptyX = (vObjectScale.x - (vScale.x * 4.f)) / 5.f;
+	storeUi->StaticUI()->CreateStoreButton();
+	storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->SetLocalPos(Vector3(vObjectPos.x, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
+	storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"EXIT").GetPointer());
 	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
 	{
 		Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
@@ -242,7 +245,7 @@ void CNpcScript::update()
 			m_pPlayer->StaticUI()->m_iMoney += 300;*/
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_RBTN) && GetObj()->GetName() == L"Npc_3") {
+	if (KEY_TAB(KEY_TYPE::KEY_RBTN) && GetObj()->GetName() == L"Npc_3" && (m_bIsTalk == true)) {
 		SellAndBuy();
 	}
 }
@@ -257,6 +260,8 @@ void CNpcScript::SetStaticUiRender(bool _bool)
 		m_pStoreUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
 		m_pPlayerUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
 	}
+
+	m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->SetUiRenderCheck(true);
 }
 
 void CNpcScript::SellAndBuy()
@@ -288,8 +293,8 @@ void CNpcScript::SellAndBuy()
 		}
 	}
 }
-//
-//void CNpcScript::ComputeMousePos(Vector3& _pos, Vector3& _scale, POINT& _mousePos)
+
+//bool CNpcScript::ComputeMousePos(Vector3& _pos, Vector3& _scale, POINT& _mousePos)
 //{
 //	if (_mousePos.x >= _pos.x - (_scale.x / 2) && _mousePos.x <= _pos.x + (_scale.x / 2)
 //		&& _mousePos.y <= -_pos.y + (_scale.x / 2) && _mousePos.y >= -_pos.y - (_scale.x / 2)) {

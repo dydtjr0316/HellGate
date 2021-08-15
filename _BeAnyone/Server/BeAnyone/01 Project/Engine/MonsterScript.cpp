@@ -294,6 +294,7 @@ void CMonsterScript::Move()
 
 void CMonsterScript::Attack()
 {
+<<<<<<< HEAD
     CGameObject* monster = GetObj();
     uShort monsterid = GetObj()->GetID();
     CTransform* monsterTrans = monster->Transform();
@@ -377,6 +378,7 @@ void CMonsterScript::Attack()
         g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
         // packet
     }
+
 }
 
 void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
@@ -386,6 +388,7 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
     Vector3 playerDir = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
     Vector3 monsterDir{};
     Vector3 monsterRot = GetObj()->Transform()->GetLocalRot();
+
 
 
     if (_eType == MOB_TYPE::YELLOW)

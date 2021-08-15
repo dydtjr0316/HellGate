@@ -93,12 +93,13 @@ void CStaticUI::CreateStoreButton()
 		storeButton->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 		storeButton->AddComponent(new CTransform);
 		storeButton->AddComponent(new CMeshRender);
-		storeButton->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 0.0f));
+		storeButton->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 1.0f));
 		storeButton->Transform()->SetLocalScale(Vector3(200.f, 50.f, 1.f));
 		//MeshRender 설정
 		storeButton->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		storeButton->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
 		storeButton->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"LACK_MONEY").GetPointer());
+		storeButton->SetUiRenderCheck(false);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(storeButton);
 		m_StoreButton.push_back(storeButton);
 	}
