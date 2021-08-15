@@ -15,6 +15,8 @@
 #include "ToolCamScript.h"
 #include "MonsterScript.h"
 #include "SwordScript.h"
+#include "ParticleScript.h"
+#include "ParticleSystem.h"
 int cnt = 0;
 bool tempbool = false;
 OBJECT_TYPE CheckObjType(const uShort& id)
@@ -236,6 +238,18 @@ void CNetMgr::Send_ItemDelete_Paket(const Vector3& itemPos)
 	Send_Packet(&p);
 }
 
+void CNetMgr::Send_Attack_Effect(const uShort& monster_id, const Vector3& pos, const bool isStart)
+{
+	cs_packet_Attack_Effect p;
+	p.type = CS_ATTACKEFFECT; 
+	p.size = sizeof(p);
+	p.id = monster_id;
+	p.pos = pos;
+	p.isStart = isStart;
+	Send_Packet(&p);
+}
+
+
 void CNetMgr::Send_Player_Animation_Packet(const uShort& user_id, const bool& isact, const Ani_TYPE& ani)
 {
 	cs_packet_Animation p;
@@ -268,11 +282,29 @@ void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONS
 
 void CNetMgr::Send_MonsterDir_Packet(const uShort& monser_id, const Vector3& dir)
 {
-	cs_pcaket_MonsterDir p;
+    cs_pcaket_MonsterDir p;
 	p.type = CS_MONSTERDIR;
 	p.size = sizeof(p);
 	p.id = monser_id;
 	p.dir = dir;
+
+	{
+ 		cout << "**********" << endl;
+		cout << "**********" << endl;
+		cout << "**********" << endl;
+		cout << p.dir.z << endl;
+		cout << "**********" << endl;
+		cout << "**********" << endl;
+		cout << "**********" << endl;
+	}
+	if (p.dir.z == -1)
+	{
+		cs_pcaket_MonsterDir p;
+		p.type = CS_MONSTERDIR;
+		p.size = sizeof(p);
+		p.id = monser_id;
+		p.dir = dir;
+	}
 	Send_Packet(&p);
 }
 
@@ -459,7 +491,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
-						g_netMgr.Send_MonsterDir_Packet(id, g_Object.find(id)->second->Transform()->GetWorldDir(DIR_TYPE::UP));
+
+						g_netMgr.Send_MonsterDir_Packet(id, Vector3(0.f,0.f,1.f)/*g_Object.find(id)->second->Transform()->GetWorldDir(DIR_TYPE::UP)*/);
 
 
 					}
@@ -595,8 +628,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 				cout << "-----------------------------------------------------------" << endl;
 			}
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+			if (g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() != (MONSTER_AUTOMOVE_DIR)packet->eDir)
+			{
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
+			}
+			
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
+			
 			
 			g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);
 
@@ -793,6 +832,34 @@ void CNetMgr::ProcessPacket(char* ptr)
 		
 	}
 	break;
+
+	case SC_ATTACKEFFECT:
+	{
+		sc_packet_AttackEfefct_Packet* packet = reinterpret_cast<sc_packet_AttackEfefct_Packet*>(ptr);//effect  생성 위치 
+		// ====================
+			// Particle Object 생성
+			// 떄린놈 이름이 FireMonster 일 때 이 파티클을 생성한다.
+			// ====================
+		CGameObject* pObject = new CGameObject;
+		pObject->SetName(L"Particle");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CParticleSystem);
+		pObject->Particlesystem()->SetFrequency(2.f);
+		pObject->Particlesystem()->SetType(false);
+		pObject->Particlesystem()->SetMaxParticle(3);
+		pObject->AddComponent(new CParticleScript);
+		pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
+		pObject->FrustumCheck(false);
+		pObject->Transform()->SetLocalPos(packet->vPos);
+
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
+
+	}
+	break;
+
+
+
+
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);
 	}

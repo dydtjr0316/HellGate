@@ -197,11 +197,11 @@ void CMonsterScript::Move()
 	Vector3 tempWorldPos(0.f, 0.f, 0.f);
 	if (monsterScript->GetPacketMove() != nullptr&& m_bisMoving)
 	{
-		/*if (GetID() == 1000)
+		if (GetID() == 1000)
 		{
 			cout << "dir : " << (int)m_eDir << endl;
 			cout << monsterTrans->GetLocalPos().x << " , " << monsterTrans->GetLocalPos().z << endl;
-		}*/
+		}
 		monsterDir = (MONSTER_AUTOMOVE_DIR)monsterScript->GetDir();
 		if ((int)monsterDir >= 0 && (int)monsterDir <= 6)
 		{
@@ -270,8 +270,12 @@ void CMonsterScript::Move()
 			default:
 				break;
 			}
-			if(m_bisDirChange)
+
+			if (m_bisDirChange)
+			{
 				g_netMgr.Send_MonsterDir_Packet(m_sId, worldDir);
+				m_bisDirChange = false;
+			}
 
 
 			 monsterPos += worldDir * 100.f * DT;
@@ -391,9 +395,9 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
 	if (_eType == MOB_TYPE::YELLOW)
 	{
 		GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
-		g_netMgr.Send_MonsterDir_Packet(m_sId, -GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP));
 
 	}
+	m_bisDirChange = true;
 	m_fAngleY = angle.x;
 	SetIsPunch(true);
 }

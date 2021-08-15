@@ -17,11 +17,13 @@ public:		//player
 	void Send_Monster_Animation_Packet(const uShort& monster_id, const uShort& user_id, const MONSTER_ANI_TYPE& aniType);
 public:		// monster
 	void Send_Monster_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
-
+	
 
 public:
 	void Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos);
 	void Send_ItemDelete_Packet(const uShort& user_id, const Vector3& pos);
+
+	void Send_Attack_Effect(const uShort& user_id, const Vector3& effectPos);
 
 public:
 	void Send_Packet(const uShort& id, void* packet);
