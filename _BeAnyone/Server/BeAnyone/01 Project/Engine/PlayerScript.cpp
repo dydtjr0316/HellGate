@@ -252,21 +252,7 @@ void CPlayerScript::update()
 	}
 
 	
-	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
-	{
-		vRot.y += vDrag.x * DT * ROTATE_SPEED;
-		
-		if (vDrag.x > 0)m_eDrag = Drag_Type::PLUS;
-		else if (vDrag.x < 0)m_eDrag = Drag_Type::MINUS;
-		else m_eDrag = Drag_Type::IDLE;
 
-		//drag.x만 보내주면되남
-		if(vDrag.x !=0)g_netMgr.Send_Rotate_Packet(GetObj()->GetID(), vRot);
-
-
-		//cout << "\t\t\t" << vDrag.x << endl;
-		GetObj()->Transform()->SetLocalRot(vRot);
-	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
 	{
@@ -317,6 +303,22 @@ void CPlayerScript::update()
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
 	}
+	if (KEY_HOLD(KEY_TYPE::KEY_LBTN) )
+	{
+		vRot.y += vDrag.x * DT * ROTATE_SPEED;
+
+		if (vDrag.x > 0)m_eDrag = Drag_Type::PLUS;
+		else if (vDrag.x < 0)m_eDrag = Drag_Type::MINUS;
+		else m_eDrag = Drag_Type::IDLE;
+
+		//drag.x만 보내주면되남
+		if (vDrag.x != 0&& !moveKeyInput)
+			g_netMgr.Send_Rotate_Packet(GetObj()->GetID(), vRot);
+
+
+		//cout << "\t\t\t" << vDrag.x << endl;
+		GetObj()->Transform()->SetLocalRot(vRot);
+	}
 	if (moveKeyInput)
 	{
 		int z = (int)(localPos.z / xmf3Scale.z);
@@ -327,7 +329,7 @@ void CPlayerScript::update()
 		if (localPos.y != fHeight)
 			localPos.y = fHeight;
 		playerTrans->SetLocalPos(localPos);
-		cout << "\t\t" << localPos.x << " , " << localPos.z << endl;
+		//cout << "\t\t" << localPos.x << " , " << localPos.z << endl;
 	}
 	else
 	{
@@ -405,62 +407,69 @@ void CPlayerScript::op_Move()
 	const Vector3& xmf3Scale = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
 	Vector3 temp;
 
-	
-	if (player->GetBisFrist())
+	if (p->isMoving)
 	{
-		temp = p->localVec + p->dirVec * p->speed * DT;
-		player->SetBisFrist(false);
-	}
-	else
-		temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
-
-
-	playerTrans->SetLocalRot(p->rotateY);
-
-	int z = (int)(temp.z / xmf3Scale.z);
-	float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f /*+ 100.f*/;
-
-	if (temp.y != fHeight)
-		temp.y = fHeight;
-
-	playerTrans->SetLocalPos(temp);
-
-	{
-		CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
-		CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
-
-
-		pScript->Search_Origin_Points(p->id, pScript->GetRTT());
-
-
-		pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
-
-		CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
-		ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
-
-
-
-		if (player->GetInterpolationCnt() != 4)
+		if (player->GetBisFrist())
 		{
-			ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
-				p->localVec.y,
-				player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
-			cout << ObjTrans->GetLocalPos().x << endl;
-			cout << ObjTrans->GetLocalPos().z << endl<<endl;
-			player->InterpolationCnt_PP();
+			temp = p->localVec + p->dirVec * p->speed * DT;
+			player->SetBisFrist(false);
 		}
 		else
-		{
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-		}
+			temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
+
+
+		playerTrans->SetLocalRot(p->rotateY);
+
+		int z = (int)(temp.z / xmf3Scale.z);
+		float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f /*+ 100.f*/;
+
+		if (temp.y != fHeight)
+			temp.y = fHeight;
+
+		playerTrans->SetLocalPos(temp);
+
+		if (p->id == 0)
+			cout << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 	}
+
+	//{
+	//	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	//	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+
+
+	//	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+
+
+	//	pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
+
+	//	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+	//	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+
+
+
+	//	if (player->GetInterpolationCnt() != 4)
+	//	{
+	//		ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
+	//			p->localVec.y,
+	//			player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
+	//		cout << ObjTrans->GetLocalPos().x << endl;
+	//		cout << ObjTrans->GetLocalPos().z << endl<<endl;
+	//		player->InterpolationCnt_PP();
+	//	}
+	//	else
+	//	{
+	//		//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+	//	}
+	//}
 }
 
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 {
 	m_movePacketTemp = new sc_packet_move;
+	
 	m_movePacketTemp = p;
 	m_fRTT = rtt;
+	
 }
 
 void CPlayerScript::SetOrigin_Point(const int& index, const float& x, const float& y)
@@ -509,9 +518,10 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	case MV_BACK:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
 		break;
-	case MV_IDLE:
+	case MV_IDLE:case 0:
 		break;
 	default:
+		cout << m_movePacketTemp->dir << endl;
 		cout << "Unknown Direction from Client move packet!\n";
 		DebugBreak();
 		exit(-1);

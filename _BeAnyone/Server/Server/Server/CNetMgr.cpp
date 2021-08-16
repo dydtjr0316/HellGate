@@ -437,7 +437,9 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
             cout << "-------------------------------" << endl;
             cout << "-------------------------------" << endl;
         }
-        m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
+        tempLock.lock();
+        m_pMediator->Find(user_id)->SetIsMoving(true);
+        tempLock.unlock();
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
@@ -454,7 +456,9 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_STOP:
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
-        m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
+        tempLock.lock();
+        m_pMediator->Find(user_id)->SetIsMoving(false);
+        tempLock.unlock();
 
         Do_Stop(user_id, packet->isMoving);
     }
