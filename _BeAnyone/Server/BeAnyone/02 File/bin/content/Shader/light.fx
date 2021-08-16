@@ -83,7 +83,7 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _in)
             // 그림자인 경우 빛을 약화시킨다.
             if (fShadowDepth != 0.f && (fDepth > fShadowDepth + 0.00001f))
             {
-                tCurCol.vDiff *= 0.1f;
+                tCurCol.vDiff *= 0.3f;
                 tCurCol.vSpec = (float4) 0.f;
             }
         }
@@ -94,7 +94,6 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _in)
     {
         //tCurCol.vDiff *= (float4)0.09f;
         //tCurCol.vSpec = (float4) 1.f;
-
     }
 
     output.vDiffuse = tCurCol.vDiff + tCurCol.vAmb;

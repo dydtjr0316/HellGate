@@ -6,6 +6,8 @@
 #include "Quest.h"
 #include "BulletScript.h"
 
+#include "MeshRender.h"
+
 
 int attackcnt = 0;
 
@@ -441,7 +443,7 @@ void CMonsterScript::Attack_Default()
 
     if (!vecObj.empty())
     {
-        //cout << "총알 객체 생성 안됌" << endl;
+        cout << "몬스터 총알 객체 생성 안됌" << endl;
         return;
     }
     else
@@ -450,16 +452,29 @@ void CMonsterScript::Attack_Default()
     CGameObject* pBullet = new CGameObject;
     pBullet->SetName(L"M_Attack Object");
 
-    vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::FRONT) * monster->Collider()->GetBoundingSphere().Radius;
+    if(GetObj()->GetName() == L"FireMonster")
+        vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::UP) * monster->Collider()->GetBoundingSphere().Radius;
+    else if (GetObj()->GetName() == L"GreenMonster")
+        vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::FRONT) * monster->Collider()->GetBoundingSphere().Radius;
+
+
     pBullet->AddComponent(new CTransform());
     pBullet->Transform()->SetLocalPos(vPos);
+    pBullet->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));
     pBullet->AddComponent(new CCollider);
     pBullet->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
-    pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 100.f));
+    pBullet->Collider()->SetBoundingSphere(BoundingSphere(vPos, 200.f));
     pBullet->AddComponent(new CBulletScript);
     CBulletScript* bulletScript = pBullet->GetScript<CBulletScript>();
     bulletScript->SetPlayer(GetObj());
     bulletScript->SetBulletType(BULLET_TYPE::MONSTER_ATTACK);
+
+    // 불릿 보이게
+    //Ptr<CTexture> pColor = CResMgr::GetInst()->FindRes<CTexture>(L"Tile");
+    //pBullet->AddComponent(new CMeshRender);
+    //pBullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+    //pBullet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+    //pBullet->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
 
     //   MOnster Layer에 집어넣음으로서 플레이어와 충돌 체크 확인
     CreateObject(pBullet, L"Monster");

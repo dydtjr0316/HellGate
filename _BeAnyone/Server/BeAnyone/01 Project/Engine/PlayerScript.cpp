@@ -445,42 +445,27 @@ void CPlayerScript::op_Move()
 	//	{
 	//		cout << "보간한다 시발~~!!!" << endl;
 
-
-	//		CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
-	//		CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
-
-
-	//		pScript->Search_Origin_Points(p->id, pScript->GetRTT());
-
-
-	//		pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
-
-	//		CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
-
-
-	//		for (int i = 0; i < 4; i++)
-	//		{
-	//			/*			if (player->GetInterpolationCnt() != 4)
-	//						{*/
-	//			ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
-	//				p->localVec.y,
-	//				player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
-	//			player->InterpolationCnt_PP();
-	//			if (p->id == 1)
-	//			{
-	//				cout << p->speed << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
-
-	//			}
-	//			/*}
-	//			else
-	//			{*/
-	//			//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-	//		}
-	//		Set_InterpolationCnt_Zero();
-
-	//		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(false);
+	//{
+	//	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	//	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+	//	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+	//	pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
+	//	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+	//	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+	//	if (player->GetInterpolationCnt() != 4)
+	//	{
+	//		ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
+	//			p->localVec.y,
+	//			player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
+	//		cout << ObjTrans->GetLocalPos().x << endl;
+	//		cout << ObjTrans->GetLocalPos().z << endl<<endl;
+	//		player->InterpolationCnt_PP();
 	//	}
-	//}
+	//	else
+	//	{
+	//		//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+
+
 }
 
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
@@ -643,6 +628,13 @@ bool CPlayerScript::isInMap(const Vector3& localPos)
 
 void CPlayerScript::OnCollisionEnter(CCollider* _pOther)
 {
+
+	auto a = _pOther->GetObj()->GetName();
+	if (L"M_Attack Object" == a)
+	{
+	
+		
+	}
 }
 
 void CPlayerScript::OnCollision(CCollider* _pOther)
