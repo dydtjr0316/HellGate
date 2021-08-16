@@ -35,9 +35,10 @@ void CLight::SetLightType(LIGHT_TYPE _eType)
 	{
 		m_pVolumeMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		m_pLightMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
+		m_pDepthMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
 
 		m_pCamObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		m_pCamObj->Camera()->SetScale(10.f);
+		m_pCamObj->Camera()->SetScale(5.f);
 		m_pCamObj->Camera()->SetFar(100000.f);
 		m_pCamObj->Camera()->SetWidth(512.f);
 		m_pCamObj->Camera()->SetHeight(512.f);
@@ -109,6 +110,9 @@ void CLight::render()
 		Ptr<CTexture> pShadowMapTex = CResMgr::GetInst()->FindRes<CTexture>(L"ShadowMapTargetTex");
 		m_pLightMtrl->SetData(SHADER_PARAM::TEX_3, pShadowMapTex.GetPointer());
 
+		//Ptr<CTexture> pShadowMapDepthTex = CResMgr::GetInst()->FindRes<CTexture>(L"ShadowMapDepthTex");
+		//m_pDepthMtrl->SetData(SHADER_PARAM::TEX_4, pShadowMapDepthTex.GetPointer());
+
 		// 광원으로 투영시키기 위한 광원 View, Proj 행렬
 		Matrix matVP = m_pCamObj->Camera()->GetViewMat() * m_pCamObj->Camera()->GetProjMat();
 		m_pLightMtrl->SetData(SHADER_PARAM::MATRIX_0, &matVP);
@@ -117,6 +121,8 @@ void CLight::render()
 	Transform()->UpdateData();
 	m_pLightMtrl->SetData(SHADER_PARAM::INT_0, &m_iArrIdx); // 광원 배열 인덱스정보 업데이트
 	m_pLightMtrl->UpdateData(); // int_0, 광원 인덱스 , tex_0 : normaltarget, tex_1 : positiontarget 
+	//m_pDepthMtrl->UpdateData();
+
 	m_pVolumeMesh->render();
 }
 

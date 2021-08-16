@@ -103,7 +103,7 @@ public:
     void  SetPlayer(CGameObject* p) {
         m_pPlayer = p;
     };
-
+    void SetPacketDead(const bool& dead) { m_packetDead = dead; }
 public:
     void Attack_Default();
 

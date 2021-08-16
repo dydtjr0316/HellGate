@@ -66,6 +66,7 @@ void CMaterial::SetData(SHADER_PARAM _eParam, void* _pData)
 	case SHADER_PARAM::TEX_1:
 	case SHADER_PARAM::TEX_2:
 	case SHADER_PARAM::TEX_3:
+	case SHADER_PARAM::TEX_4:
 		m_arrTex[(UINT)_eParam - (UINT)SHADER_PARAM::TEX_0] = (CTexture*)_pData;
 		break;
 	default:

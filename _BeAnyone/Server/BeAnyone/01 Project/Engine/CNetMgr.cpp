@@ -834,6 +834,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//else
 			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);
 		}
+
+		if (MONSTER_ANI_TYPE::DEAD == packet->aniType)
+		{
+			monsterScr->SetPacketDead(true);
+		}
 	}
 	break;
 	case SC_ITEMCREATE:

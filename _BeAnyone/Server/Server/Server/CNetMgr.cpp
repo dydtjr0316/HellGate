@@ -147,8 +147,9 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
                 if (m_pMediator->IsType(clientID, OBJECT_TYPE::CLIENT))
                 {
                     m_pSendMgr->Send_Attacked_Packet_Monster(clientID, victim);
-                    cout << "Do_Attack : "<<clientID << endl;
-                    m_pSendMgr->Send_Leave_Packet(clientID, victim, false);
+                    m_pSendMgr->Send_Monster_Animation_Packet(victim, clientID, MONSTER_ANI_TYPE::DEAD);
+                    /*cout << "Do_Attack : "<<clientID << endl;
+                    m_pSendMgr->Send_Leave_Packet(clientID, victim, false);*/
                 }
             }
     }
@@ -162,8 +163,11 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
     {
         unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
 
-       // g_QuadTree.Delete(m_pMediator->Find(monster_id));
+        // g_QuadTree.Delete(m_pMediator->Find(monster_id));
         tempLock.lock();
+        cout << "Do_Attack : " << monster_id << endl;
+        for(auto& clientID: m_pMediator->GetReckonerList())
+            m_pSendMgr->Send_Leave_Packet(clientID, monster_id, false);
         m_pMediator->Delete_Obj(monster_id);
         m_pMediator->Delete_MonsterReckoner(monster_id);
         tempLock.unlock();

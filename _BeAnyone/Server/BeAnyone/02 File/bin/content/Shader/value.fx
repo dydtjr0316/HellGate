@@ -114,5 +114,7 @@ Texture2DArray g_arrtex_3 : register(t11);
 // Sampler
 SamplerState g_sam_0 : register(s0);    // anisotrophic
 SamplerState g_sam_1 : register(s1);    // point
+SamplerComparisonState g_sam_2 : register(s2);    // PCF
+SamplerComparisonState g_sam_3 : register(s3);    // PCF
 
 #endif
