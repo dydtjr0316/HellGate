@@ -221,6 +221,7 @@ void CPlayerScript::update()
 	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) + DT, PlAYER_ANICNT_TYPE::PICKUP_CNT);
 		player->SetAnimation(Ani_TYPE::PICK_UP);
+		moveKeyInput = true;
 	}
 	else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
@@ -356,7 +357,7 @@ void CPlayerScript::update()
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
 	{
 		ReckonerMove = false;
-		g_netMgr.Send_Stop_Packet(false);
+		g_netMgr.Send_Stop_Packet(false, g_myid);
 		SetTime_Zero();
 	}
 
@@ -408,7 +409,7 @@ void CPlayerScript::op_Move()
 	CTerrain* pTerrain = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->GetTerrain();
 	const Vector3& xmf3Scale = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
 	Vector3 temp;
-
+	
 	if (p->isMoving)
 	{
 		if (player->GetBisFrist())
@@ -418,8 +419,6 @@ void CPlayerScript::op_Move()
 		}
 		else
 			temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
-
-
 		playerTrans->SetLocalRot(p->rotateY);
 
 		int z = (int)(temp.z / xmf3Scale.z);
@@ -430,39 +429,38 @@ void CPlayerScript::op_Move()
 
 		playerTrans->SetLocalPos(temp);
 
-		if (p->id == 0)
-			cout << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 	}
 
-	//{
-	//	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
-	//	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+	{
+		CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+		CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 
 
-	//	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+		pScript->Search_Origin_Points(p->id, pScript->GetRTT());
 
 
-	//	pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
+		pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
 
-	//	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
-	//	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+		CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+		ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
 
 
 
-	//	if (player->GetInterpolationCnt() != 4)
-	//	{
-	//		ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
-	//			p->localVec.y,
-	//			player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
-	//		cout << ObjTrans->GetLocalPos().x << endl;
-	//		cout << ObjTrans->GetLocalPos().z << endl<<endl;
-	//		player->InterpolationCnt_PP();
-	//	}
-	//	else
-	//	{
-	//		//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-	//	}
-	//}
+		if (player->GetInterpolationCnt() != 4)
+		{
+			ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
+				p->localVec.y,
+				player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
+			player->InterpolationCnt_PP();
+		}
+		else
+		{
+			//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+		}
+
+		if (p->id == 1)
+			cout << p->speed << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
+	}
 }
 
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
@@ -489,7 +487,9 @@ void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, con
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
 	sc_packet_move* recvPacket = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
+	if (recvPacket == nullptr)return;
 	Vector3 tempLocalPos = recvPacket->localVec;
+	if (m_movePacketTemp->dir > 10)return;
 	
 	float tempSpeed = recvPacket->speed;
 	
@@ -510,15 +510,39 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	{
 	case MV_FRONT:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
+		for (int i = 0; i < 4; i++) {
+			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+		}
 		break;
 	case MV_LEFT:
 		tempWorldDir = tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
+		for (int i = 0; i < 4; i++) {
+			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+		}
 		break;
 	case MV_RIGHT:
 		tempWorldDir = tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
+		for (int i = 0; i < 4; i++) {
+			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+		}
 		break;
 	case MV_BACK:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
+		for (int i = 0; i < 4; i++) {
+			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+		}
 		break;
 	case MV_IDLE:case 0:
 		break;
@@ -527,15 +551,11 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 		cout << "Unknown Direction from Client move packet!\n";
 		DebugBreak();
 		exit(-1);
+		break;
 	}
 	
 
-	for (int i = 0; i < 4; i++) {
-		tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
-		tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
-		g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
-		
-	}
+	
 }
 
 Vector2 CPlayerScript::Search_Interpolation_Points(Vector2* points, float time)

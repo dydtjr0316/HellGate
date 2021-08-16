@@ -179,9 +179,6 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
     if (pClient == nullptr)return;
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
-
- 
-
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
 
@@ -215,18 +212,25 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
         {
             pClient->GetViewList().insert(ob);
             m_pSendMgr->Send_Enter_Packet(user_id, ob);
-            if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT) && ob != user_id)
-            {
-                if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
-                {
-                    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-                    m_pSendMgr->Send_Enter_Packet(ob, user_id);
-                }
-                else
-                {
-                    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
-                }
-            }
+
+            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id))
+                m_pSendMgr->Send_Enter_Packet(ob, user_id);
+            else
+                m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+
+                //if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT) && ob != user_id)
+                //{
+                //    
+                //    //if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
+                //    //{
+                //    //    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                //    //    m_pSendMgr->Send_Enter_Packet(ob, user_id);
+                //    //}
+                //    //else
+                //    //{
+                //    //    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+                //    //}
+                //}
         }
         else // 이전에도 있던 아이디 
         {
@@ -234,11 +238,11 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
             {
                 if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
-                    /*CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-                    m_pSendMgr->Send_Enter_Packet(ob, user_id);*/
+                    m_pSendMgr->Send_Enter_Packet(ob, user_id);
                 }
                 else
                 {
+                    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
                     m_pSendMgr->Send_Move_Packet(ob, user_id, dir);
                 }
             }
@@ -253,17 +257,14 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
             cout << "\t\t\tDo_Move---------------------" << endl;
             m_pSendMgr->Send_Leave_Packet(user_id, ob);
             tempLock.unlock();
-
-            if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
+            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) != 0)
             {
-                if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) != 0)
-                {
-                    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().erase(user_id);
-                    cout << "\t\t\tDo_Move---------------------안쪽" << endl;
-                    m_pSendMgr->Send_Leave_Packet(ob, user_id);
-                }
+                CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().erase(user_id);
+                cout << "\t\t\tDo_Move---------------------안쪽" << endl;
+                m_pSendMgr->Send_Leave_Packet(ob, user_id);
             }
         }
+
     }
 }
 
@@ -402,6 +403,7 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
              /*else if (IsNpc(id))
                  WakeUp_NPC(id);*/
          }
+         tempLock.lock();
         if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
         {
             if (CAST_CLIENT(m_pMediator->Find(id))->GetViewList().count(user_id) == 0)
@@ -415,6 +417,7 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
             pUser->GetViewList().insert(id);
             m_pSendMgr->Send_Enter_Packet(user_id, id);
         }
+        tempLock.unlock();
     }
 
     if (m_pMediator->IsType(user_id, OBJECT_TYPE::CLIENT)) pUser->SetStatus(OBJSTATUS::ST_ACTIVE);
@@ -501,6 +504,8 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_MONSTER_DEAD:
     {
         cs_packet_MonsterDead* packet = reinterpret_cast<cs_packet_MonsterDead*>(buf);
+        //m_pMediator->Find(packet->id)->SetIsMoving(false);
+
         if(m_pMediator->Count(packet->id)!=0)
             Kill_Monster(packet->id);
     }
@@ -856,12 +861,7 @@ void CNetMgr::Processing_Thead()
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
                 {
-                    /*  cout << "--------------------------------" << endl;
-                      cout << drmPacket->localVec.x << " || " << drmPacket->localVec.z <<" || " << drmPacket->DirVec.z << endl;
-                      cout << "이전//" <<  "  Speed -> " << obj->GetSpeed() << " X좌표 -> " << obj->GetLocalPosVector().x << " Z좌표 -> " << obj->GetLocalPosVector().z << endl;
-                      cout << obj->GetSpeed() << endl;
-                      cout << DeltaTime << endl;*/
-                      //obj->GetLock().lock();
+
                     obj->SetRotateY(drmPacket->rotateY);
 
                     //여기
@@ -875,7 +875,7 @@ void CNetMgr::Processing_Thead()
                     g_QuadTree.Insert(obj);
                     obj->GetLock().unlock();
 
-
+                    // do move 내용 옮기기
 
 
                     CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
@@ -954,7 +954,7 @@ void CNetMgr::Processing_Thead()
                     //if (m_pMediator->Find(monster) != nullptr)
                     {
                        // tempLock.lock();
-
+                        if (m_pMediator->Count(monster) == 0)continue;
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
                         if(monster == 1000)

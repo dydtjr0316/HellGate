@@ -26,8 +26,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -206,12 +206,21 @@ void CNetMgr::Send_Rotate_Packet(const uShort& id, const Vector3& rotate)
 	Send_Packet(&p);
 }
 
-void CNetMgr::Send_Stop_Packet(const bool& isMoving)
+void CNetMgr::Send_Stop_Packet(const bool& isMoving, const uShort& id)
 {
 	cs_packet_stop p;
 	p.type = CS_STOP;
 	p.size = sizeof(p);
+	p.id = id;
 	p.isMoving = isMoving;
+	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
+	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
+	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
+	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
+	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
+	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
+	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
+	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
 	Send_Packet(&p);
 }
 
@@ -681,6 +690,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (other_id == g_myid)
 		{
 
+			if (g_Object.count(other_id) == 0)break;
+			if (g_Object.find(other_id)->second == nullptr)break;
+
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -883,8 +898,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "다시 받을 때 item pos: " << packet->vPos.x << "\t" << packet->vPos.y << "\t" << packet->vPos.z << endl;
 		
 		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
-		CEventMgr::GetInst()->update();
-		
 
 	}
 	break;
