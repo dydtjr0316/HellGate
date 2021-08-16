@@ -528,6 +528,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						{
 							int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
+
 							float fHeight = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(my_packet->localVec.x, my_packet->localVec.z, ((z % 2) != 0)) * 2.f ;
 
 							if (my_packet->localVec.y != fHeight)
@@ -602,7 +603,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					system_clock::time_point end = system_clock::now();
 					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(true);
 
 					if (packet->isMoving)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
@@ -689,6 +690,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -697,8 +699,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (g_Object.find(other_id)->second == nullptr)break;
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
-
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+			cout << "------------------------" << endl;
+			cout << "Moving False setting\t\t"<<other_id << endl;
+			if (packet->isMoving)cout << "true" << endl;
+			else cout << "false" << endl;
+			cout << "------------------------" << endl;
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 	}
 	break;
