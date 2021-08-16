@@ -97,6 +97,10 @@ public:
 
 	void SetisDirChange(const bool moving) { m_bisDirChange = moving; }
 	bool GetisDirChange() { return m_bisDirChange; }
+
+public:
+	void Attack_Default();
+
 public:
 	CLONE(CMonsterScript);
 

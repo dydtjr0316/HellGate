@@ -20,6 +20,10 @@ private:
 	bool			m_bDead;
 
 public:
+	void SetLifeTime(float _f) { m_fTime = _f; }
+
+public:
+
 	void SetBulletType(PARTICLE_TYPE _type) { m_bType = _type; }
 
 public:

@@ -13,6 +13,7 @@ private:
 
 	Ptr<CMesh>		m_pVolumeMesh;
 	Ptr<CMaterial>	m_pLightMtrl;
+	Ptr<CMaterial>	m_pDepthMtrl;
 
 	int				m_iArrIdx;
 
