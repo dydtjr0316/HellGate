@@ -2,7 +2,9 @@
 #include "PlayerScript.h"
 #include "BulletScript.h"
 #include "RenderMgr.h"
+#include "SwordScript.h"
 #include "StaticUI.h"
+#include "Button.h"
 #include "Quest.h"
 #include "Sound.h"
 #include <iostream>
@@ -818,9 +820,11 @@ void CPlayerScript::FindItemBeUsed(int _itemId)
 		break;
 	case (UINT)ITEM_ID::BRANCH:
 		break;
-	case (UINT)ITEM_ID::BASIC_SWORD:
-		cout << "BASIC_SWORD 사용" << endl;
-		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BASIC_SWORD, false);
+	case (UINT)ITEM_ID::NEW_SWORD:
+		cout << "NEW_SWORD 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::NEW_SWORD, false);
+		ChangeWeapone(WEAPONE_TYPE::SWORD_NEW, ITEM_ID::NEW_SWORD);
+		//CSwordScript* swordScript = GetObj()->GetChild()->GetScript<CSwordScript>();
 		break;
 	case (UINT)ITEM_ID::BASIC_ARROW:
 		break;
@@ -828,8 +832,33 @@ void CPlayerScript::FindItemBeUsed(int _itemId)
 		cout << "AX 사용" << endl;
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::AX, false);
 		break;
+	case (UINT)ITEM_ID::BASIC_SWORD:
+		break;
 	default:
 		break;
+	}
+}
+
+void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)
+{
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
+	wstring a;
+
+	for (int i = 0; i < vecChild.size(); ++i) {
+		if (vecChild[i]->GetName() == L"sword") {
+			if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"mesh\\PlayerMale_Weapone_Sword.mesh") {
+				vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+
+				for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+					if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+						m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::BASIC_SWORD);
+					}
+				}
+				
+			}
+			
+			//
+		}
 	}
 }
 

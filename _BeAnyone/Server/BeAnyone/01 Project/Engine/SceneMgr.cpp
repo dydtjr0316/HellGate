@@ -1380,6 +1380,7 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"CARROT", L"Texture\\ItemButton\\CarrotTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EMPTY", L"Texture\\ItemButton\\EmptyTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"SWORD", L"Texture\\ItemButton\\SwordTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BASIC_SWORD", L"Texture\\ItemButton\\BasicSwordTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"WALLET", L"Texture\\ItemButton\\WalletTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EXIT", L"Texture\\ItemButton\\ExitStoreTex.png");
@@ -1402,6 +1403,7 @@ void CSceneMgr::LoadRes()
 	// ExplainBox texture
 	//==========================
 	Ptr<CTexture> pExplain = CResMgr::GetInst()->Load<CTexture>(L"ExplainSword", L"Texture\\ItemButton\\ExplainSwordTex.png");
+	pExplain = CResMgr::GetInst()->Load<CTexture>(L"ExplainBasicSword", L"Texture\\ItemButton\\ExplainBasicSwordTex.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainAx", L"Texture\\ItemButton\\ExplainAxTex.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainApple", L"Texture\\ItemButton\\ExplainAppleTex.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainBDash", L"Texture\\ItemButton\\ExplainBDashTex.png");
@@ -1662,6 +1664,14 @@ void CSceneMgr::init()
 	pSword->AddComponent(new CSwordScript);
 	CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
 	SwordScript->SetBoneFinalMat(pPlayerObj->Animator3D()->GetSwordFinalBoneMat());
+
+	// 무기 meshdata 추가
+	SwordScript->SetWeaponeData(pMeshData);
+	// 2번째 무기
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\sword_2.fbx", FBX_TYPE::PLAYER);
+	SwordScript->SetWeaponeData(pMeshData);
+	// 도끼
+
 	m_pCurScene->AddGameObject(L"Player", pSword, false);
 	pPlayerObj->AddChild(pSword);
 

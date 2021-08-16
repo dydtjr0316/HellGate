@@ -94,6 +94,8 @@ public:
 	void SetCnt(const float& cnt, PlAYER_ANICNT_TYPE _AniCntType) { m_fAnimationCnt[(UINT)_AniCntType] = cnt; }
 	float GetCnt(PlAYER_ANICNT_TYPE _AniCntType) { return m_fAnimationCnt[(UINT)_AniCntType]; }
 	
+	// weapone
+	void ChangeWeapone();
 	
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }

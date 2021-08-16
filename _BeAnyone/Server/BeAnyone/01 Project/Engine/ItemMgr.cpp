@@ -245,14 +245,20 @@ void CItemMgr::MakeItem()
 
 void CItemMgr::DeleteItemObj(Vector3 _itemPos)
 {
+    Vector3 mixPos = Vector3(FLT_MAX, FLT_MAX, FLT_MAX); 
+    Vector3 temp{};
+    int mixItemId{};
+
     for (int i = 0; i < m_vItem.size(); ++i) {
         if (m_vItem[i] != nullptr) {
-            if (m_vItem[i]->Transform()->GetLocalPos() == _itemPos) {
-                //DeleteObject(m_vItem[i]);
-                m_vItem[i]->GetScript<CDummyItemScript>()->DeleteObject(m_vItem[i]);
-                m_vItem[i] = nullptr;
-                // CEventMgr::GetInst()->update();
+            temp = XMVector3Length(_itemPos - m_vItem[i]->Transform()->GetLocalPos());
+            if (mixPos.x > temp.x) {
+                mixPos = temp; mixItemId = i;
             }
         }
     }
+    m_vItem[mixItemId]->GetScript<CDummyItemScript>()->DeleteObject(m_vItem[mixItemId]);
+    CEventMgr::GetInst()->update();
+    m_vItem[mixItemId] = nullptr;
+   
 }

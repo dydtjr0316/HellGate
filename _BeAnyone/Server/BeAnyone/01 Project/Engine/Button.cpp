@@ -140,7 +140,7 @@ void CButton::ChangeButtonTexture()
 		m_pExplainBox->SetUiRenderCheck(false);
 		break;
 
-	case ITEM_ID::BASIC_SWORD:
+	case ITEM_ID::NEW_SWORD:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD");
 		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainSword").GetPointer());
 		break;
@@ -148,6 +148,11 @@ void CButton::ChangeButtonTexture()
 	case ITEM_ID::AX:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"AX");
 		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainAx").GetPointer());
+		break;
+
+	case ITEM_ID::BASIC_SWORD:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BASIC_SWORD");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainBasicSowrd").GetPointer());
 		break;
 
 	case ITEM_ID::BASIC_ARROW:
@@ -246,7 +251,7 @@ void CButton::SetItemPrice()
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"EMPTY");
 		break;
 
-	case ITEM_ID::BASIC_SWORD:
+	case ITEM_ID::NEW_SWORD:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"SWORD");
 		m_iItemCount = 900;
 		break;

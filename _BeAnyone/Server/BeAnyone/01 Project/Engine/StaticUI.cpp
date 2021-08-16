@@ -193,7 +193,7 @@ void CStaticUI::update()
 				if (m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
 					if (ComputeMousePos(Pos, Scale)) {
 						UseItem(m_vecButton[i]->GetItemID());
-						if (m_vecButton[i]->GetItemID() != ITEM_ID::AX && m_vecButton[i]->GetItemID() != ITEM_ID::BASIC_SWORD) {
+						if (m_vecButton[i]->GetItemID() != ITEM_ID::AX && m_vecButton[i]->GetItemID() != ITEM_ID::NEW_SWORD) {
 							m_vecButton[i]->SubItemCount();
 							if (m_vecButton[i]->GetItemCount() == 0)
 								m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
@@ -309,8 +309,8 @@ void CStaticUI::UseItem(ITEM_ID _eType)
 	case ITEM_ID::APPLE:
 		m_bUseItem[(UINT)ITEM_ID::APPLE] = true;
 		break;
-	case ITEM_ID::BASIC_SWORD:
-		m_bUseItem[(UINT)ITEM_ID::BASIC_SWORD] = true;
+	case ITEM_ID::NEW_SWORD:
+		m_bUseItem[(UINT)ITEM_ID::NEW_SWORD] = true;
 		break;
 	case ITEM_ID::AX:
 		m_bUseItem[(UINT)ITEM_ID::AX] = true;
