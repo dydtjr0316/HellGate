@@ -452,7 +452,12 @@ void CMonsterScript::Attack_Default()
     CGameObject* pBullet = new CGameObject;
     pBullet->SetName(L"M_Attack Object");
 
-    vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::FRONT) * monster->Collider()->GetBoundingSphere().Radius;
+    if(GetObj()->GetName() == L"FireMonster")
+        vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::UP) * monster->Collider()->GetBoundingSphere().Radius;
+    else if (GetObj()->GetName() == L"GreenMonster")
+        vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::FRONT) * monster->Collider()->GetBoundingSphere().Radius;
+
+
     pBullet->AddComponent(new CTransform());
     pBullet->Transform()->SetLocalPos(vPos);
     pBullet->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f));

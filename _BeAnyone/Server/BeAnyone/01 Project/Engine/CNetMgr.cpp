@@ -609,6 +609,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
 					else
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+					cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
 
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
