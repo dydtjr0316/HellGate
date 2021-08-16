@@ -150,32 +150,32 @@ void CItemMgr::MakeItem()
 
             vItem1Pos.y -= 30.f;
             vItem2Pos.y -= 30.f;
-            vItem3Pos.y -= 30.f;
+vItem3Pos.y -= 30.f;
 
-            // 회전
-            vItem1Rot.y = XM_PI / 2;
-            vItem2Rot.y = XM_PI / 8;
-            vItem3Rot.y = XM_PI;
+// 회전
+vItem1Rot.y = XM_PI / 2;
+vItem2Rot.y = XM_PI / 8;
+vItem3Rot.y = XM_PI;
 
-            /*vItem1Rot.x = XM_PI / 2;
-            vItem2Rot.x = XM_PI / 2;
-            vItem3Rot.x = XM_PI / 2;*/
+/*vItem1Rot.x = XM_PI / 2;
+vItem2Rot.x = XM_PI / 2;
+vItem3Rot.x = XM_PI / 2;*/
 
-            m_vItem[0 + (i * 3)]->Transform()->SetLocalRot(vItem1Rot);
-            m_vItem[1 + (i * 3)]->Transform()->SetLocalRot(vItem2Rot);
-            m_vItem[2 + (i * 3)]->Transform()->SetLocalRot(vItem3Rot);
+m_vItem[0 + (i * 3)]->Transform()->SetLocalRot(vItem1Rot);
+m_vItem[1 + (i * 3)]->Transform()->SetLocalRot(vItem2Rot);
+m_vItem[2 + (i * 3)]->Transform()->SetLocalRot(vItem3Rot);
 
-            for (int j = m_iOldPosNum * 3; j < m_vItem.size(); ++j) {
-                int randNum = uidMonsterItem(dreMonsterItem);
-                m_vItem[j]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
-                m_vItem[j]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
-                wstring wstr = m_pItemMeshData[randNum]->GetMesh()->GetName();
-                // SetItemID();
-            }
+for (int j = m_iOldPosNum * 3; j < m_vItem.size(); ++j) {
+    int randNum = uidMonsterItem(dreMonsterItem);
+    m_vItem[j]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
+    m_vItem[j]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
+    wstring wstr = m_pItemMeshData[randNum]->GetMesh()->GetName();
+    // SetItemID();
+}
 
-           
-            m_bMakeFirst[i] = false;
-            m_bisUp[i] = true;
+
+m_bMakeFirst[i] = false;
+m_bisUp[i] = true;
         }
 
         // up
@@ -212,7 +212,7 @@ void CItemMgr::MakeItem()
             m_vItem[0 + (i * 3)]->AddComponent(new CDummyItemScript);
             m_vItem[1 + (i * 3)]->AddComponent(new CDummyItemScript);
             m_vItem[2 + (i * 3)]->AddComponent(new CDummyItemScript);
-           // m_vItemID.clear();
+            // m_vItemID.clear();
         }
 
         m_vItem[0 + (i * 3)]->Transform()->SetLocalPos(vItem1Pos);
@@ -245,14 +245,20 @@ void CItemMgr::MakeItem()
 
 void CItemMgr::DeleteItemObj(Vector3 _itemPos)
 {
+
+    Vector3 mixPos = Vector3(FLT_MAX, FLT_MAX, FLT_MAX); 
+    Vector3 temp{};
+    int mixItemId{};
+
     for (int i = 0; i < m_vItem.size(); ++i) {
         if (m_vItem[i] != nullptr) {
-            if (m_vItem[i]->Transform()->GetLocalPos() == _itemPos) {
-                //DeleteObject(m_vItem[i]);
-                m_vItem[i]->GetScript<CDummyItemScript>()->DeleteObject(m_vItem[i]);
-                m_vItem[i] = nullptr;
-                // CEventMgr::GetInst()->update();
+            temp = XMVector3Length(_itemPos - m_vItem[i]->Transform()->GetLocalPos());
+            if (mixPos.x > temp.x) {
+                mixPos = temp; mixItemId = i;
             }
         }
     }
+    m_vItem[mixItemId]->GetScript<CDummyItemScript>()->DeleteObject(m_vItem[mixItemId]);
+    //CEventMgr::GetInst()->update();
+    m_vItem[mixItemId] = nullptr;
 }

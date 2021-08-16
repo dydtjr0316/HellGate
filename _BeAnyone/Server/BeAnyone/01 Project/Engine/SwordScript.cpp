@@ -16,6 +16,12 @@ void CSwordScript::update()
 	
 }
 
+void CSwordScript::SetMeshData(WEAPONE_TYPE _eType)
+{
+	GetObj()->MeshRender()->SetMesh(m_pWeaponeMeshData[(UINT)_eType]->GetMesh());
+	GetObj()->MeshRender()->SetMaterial(m_pWeaponeMeshData[(UINT)_eType]->GetMtrl());
+}
+
 void CSwordScript::BoneMatrender()
 {
 	m_pBoneFinalMat->UpdateData(TEXTURE_REGISTER::t7);

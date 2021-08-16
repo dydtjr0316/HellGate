@@ -362,7 +362,12 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 
 		str.assign(sMtrlName.begin(), sMtrlName.end());
 	}
-
+	if (m_fbxType == FBX_TYPE::PLAYER) {
+		if (m_fileName == L"sword_2")
+			str = "PP_Color_Palette";
+		if (m_fileName == L"Ax")
+			str = "Ax";
+	}
 
 	tMtrlInfo.strMtrlName = wstring(str.begin(), str.end());
 
@@ -540,12 +545,27 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 				//strName = "C:\\Users\\HyoRim\\Desktop\\graduation project\\HellGate\\_BeAnyone\\Client\\BeAnyone\\02 File\\bin\\content\\FBX\\PlayerMale02.tga"; //pFbxTex->GetFileName();
 
 				if (m_fbxType == FBX_TYPE::PLAYER) {
-					strName = _pSurface->GetName();
-					strName += ".tga";
-					wstrName += wstring(strName.begin(), strName.end());
+
+					if (m_fileName == L"sword_2") {
+						strName = "PP_Color_Palette.png";
+						wstrName += wstring(strName.begin(), strName.end());
+					}
+					else {
+						strName = _pSurface->GetName();
+						strName += ".tga";
+						wstrName += wstring(strName.begin(), strName.end());
+					}
 				}
 			}
 		}
+	}
+
+	if (m_fbxType == FBX_TYPE::PLAYER){
+		if (m_fileName == L"Ax") {
+			strName = "Ax.png";
+			wstrName += wstring(strName.begin(), strName.end());
+		}
+		
 	}
 
 	if (m_fbxType == FBX_TYPE::NPC) {

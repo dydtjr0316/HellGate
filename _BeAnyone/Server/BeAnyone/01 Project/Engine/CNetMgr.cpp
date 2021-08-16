@@ -206,12 +206,14 @@ void CNetMgr::Send_Rotate_Packet(const uShort& id, const Vector3& rotate)
 	Send_Packet(&p);
 }
 
-void CNetMgr::Send_Stop_Packet(const bool& isMoving)
+void CNetMgr::Send_Stop_Packet(const bool& isMoving, const uShort& id)
 {
 	cs_packet_stop p;
 	p.type = CS_STOP;
 	p.size = sizeof(p);
+	p.id = id;
 	p.isMoving = isMoving;
+	p.id = id;
 	Send_Packet(&p);
 }
 
@@ -526,7 +528,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						{
 							int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
-							float fHeight = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(my_packet->localVec.x, my_packet->localVec.z, ((z % 2) != 0)) * 2.f + 65.f;
+
+							float fHeight = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(my_packet->localVec.x, my_packet->localVec.z, ((z % 2) != 0)) * 2.f ;
 
 							if (my_packet->localVec.y != fHeight)
 								my_packet->localVec.y = fHeight;
@@ -600,7 +603,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					system_clock::time_point end = system_clock::now();
 					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(true);
 
 					if (packet->isMoving)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
@@ -681,6 +684,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (other_id == g_myid)
 		{
 
+			if (g_Object.count(other_id) == 0)break;
+			if (g_Object.find(other_id)->second == nullptr)break;
+
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
 		{
@@ -689,8 +699,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (g_Object.find(other_id)->second == nullptr)break;
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
-
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+			cout << "------------------------" << endl;
+			cout << "Moving False setting\t\t"<<other_id << endl;
+			if (packet->isMoving)cout << "true" << endl;
+			else cout << "false" << endl;
+			cout << "------------------------" << endl;
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 	}
 	break;
@@ -809,9 +824,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 		//cout << "SC_PACKET_MONSTER_ANIMATION" << endl;
 		sc_packet_Monster_Animation* packet = reinterpret_cast<sc_packet_Monster_Animation*>(ptr);
 		int id = packet->id;
+		if (g_Object.count(id) == 0)break; 
+		if (g_Object.find(packet->id)->second == nullptr)break;
 		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
 
-		if (g_Object.find(packet->id)->second != nullptr)
+		
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 
 		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
@@ -831,6 +848,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::GREEN);
 			//else
 			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);
+		}
+
+		if (MONSTER_ANI_TYPE::DEAD == packet->aniType)
+		{
+			monsterScr->SetPacketDead(true);
 		}
 	}
 	break;
@@ -874,8 +896,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_ItemDelete_Packet* packet = reinterpret_cast<sc_packet_ItemDelete_Packet*>(ptr);
 		packet->vPos;// vector3 item position
 		cout << "다시 받을 때 item pos: " << packet->vPos.x << "\t" << packet->vPos.y << "\t" << packet->vPos.z << endl;
-		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
 		
+		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
 	}
 	break;
 

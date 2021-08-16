@@ -41,7 +41,7 @@ void CMeshRender::render()
 		}
 
 		//SwordÀÎ °æ¿ì
-		if (GetObj()->GetName() == L"sword")
+		if (GetObj()->GetName() == L"sword" || GetObj()->GetName() == L"ax")
 		{
 			CSwordScript* swordScript = GetObj()->GetScript<CSwordScript>();
 			//CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();

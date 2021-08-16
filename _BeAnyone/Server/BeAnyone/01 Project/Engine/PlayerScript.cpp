@@ -2,7 +2,9 @@
 #include "PlayerScript.h"
 #include "BulletScript.h"
 #include "RenderMgr.h"
+#include "SwordScript.h"
 #include "StaticUI.h"
+#include "Button.h"
 #include "Quest.h"
 #include "Sound.h"
 #include <iostream>
@@ -200,7 +202,6 @@ void CPlayerScript::update()
 
 		player->SetAttack(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::ATTACK_CNT);
-		player->SetAniReset(false);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
 
 	}
@@ -209,13 +210,15 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_E)) {
 		PlaySound_(Sound_Type::GET_COIN);
 		player->AnimClipReset();
-		player->SetPickUp(true);
+		//player->SetAnimation(Ani_TYPE::PICK_UP);
+		//CSound::GetInst()->Play(Sound_Type::GET_COIN);
+		m_bIsPick = true;
 		PickUp_Default();
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetPickUp(), Ani_TYPE::PICK_UP);
+		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
 
 
 	}
-	if (player->GetPickUp() && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) + DT, PlAYER_ANICNT_TYPE::PICKUP_CNT);
 		player->SetAnimation(Ani_TYPE::PICK_UP);
 		moveKeyInput = true;
@@ -223,10 +226,9 @@ void CPlayerScript::update()
 	else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
 
-		player->SetPickUp(false);
-		player->SetAniReset(false);
+		m_bIsPick = false;
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetPickUp(), Ani_TYPE::PICK_UP);
+		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
 
 
 	}
@@ -247,7 +249,6 @@ void CPlayerScript::update()
 		//Attack_Default();
 
 		player->SetDamage(false);
-		player->SetAniReset(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
 
@@ -356,7 +357,7 @@ void CPlayerScript::update()
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
 	{
 		ReckonerMove = false;
-		g_netMgr.Send_Stop_Packet(false);
+		g_netMgr.Send_Stop_Packet(false, g_myid);
 		SetTime_Zero();
 	}
 
@@ -400,7 +401,6 @@ void CPlayerScript::op_Move()
 	if (p == nullptr)return;
 	if (g_Object.count(p->id) == 0)return;
 	if (GetObj()->GetID() == p->id)return;
-	if (!p->isMoving)return;
 	if (p->id >= START_MONSTER)return;
 
 	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
@@ -408,18 +408,21 @@ void CPlayerScript::op_Move()
 	CTerrain* pTerrain = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->GetTerrain();
 	const Vector3& xmf3Scale = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
 	Vector3 temp;
+	if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket() == nullptr)return;
 
-	if (p->isMoving)
+	if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket()->isMoving)
 	{
 		if (player->GetBisFrist())
 		{
-			temp = p->localVec + p->dirVec * p->speed * DT;
+			temp = p->localVec + p->dirVec * p->speed * (DT);
 			player->SetBisFrist(false);
+			cout << "패킷인가?" << endl;
 		}
 		else
-			temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
-
-
+		{
+			temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * (DT);
+			cout << "아니면 본인좌표?" << endl;
+		}
 		playerTrans->SetLocalRot(p->rotateY);
 
 		int z = (int)(temp.z / xmf3Scale.z);
@@ -429,10 +432,13 @@ void CPlayerScript::op_Move()
 			temp.y = fHeight;
 
 		playerTrans->SetLocalPos(temp);
-
-		if (p->id == 0)
-			cout << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
+		if (p->id == 1)
+			cout << p->speed << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 	}
+	//else{
+	//	if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetisBezeir())
+	//	{
+	//		cout << "보간한다 시발~~!!!" << endl;
 
 	//{
 	//	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
@@ -453,8 +459,8 @@ void CPlayerScript::op_Move()
 	//	else
 	//	{
 	//		//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-	//	}
-	//}
+
+
 }
 
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
@@ -481,9 +487,12 @@ void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, con
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
 	sc_packet_move* recvPacket = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
-	Vector3 tempLocalPos = recvPacket->localVec;
+	if (recvPacket == nullptr)return;
+	Vector3 tempLocalPos = g_Object.find(recvPacket->id)->second->Transform()->GetLocalPos();
+	if (m_movePacketTemp->dir > 10)return;
 	
-	float tempSpeed = recvPacket->speed;
+	
+	float tempSpeed = g_Object.find(recvPacket->id)->second->GetScript<CPlayerScript>()->GetSpeed();
 	
 	Vector3 tempWorldDir;
 	Vector3 tempARR_WorldDir[3];
@@ -502,15 +511,39 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	{
 	case MV_FRONT:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
+		for (int i = 0; i < 4; i++) {
+			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+		}
 		break;
 	case MV_LEFT:
 		tempWorldDir = tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
+		for (int i = 0; i < 4; i++) {
+			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+		}
 		break;
 	case MV_RIGHT:
 		tempWorldDir = tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
+		for (int i = 0; i < 4; i++) {
+			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+		}
 		break;
 	case MV_BACK:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
+		for (int i = 0; i < 4; i++) {
+			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+		}
 		break;
 	case MV_IDLE:case 0:
 		break;
@@ -519,15 +552,11 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 		cout << "Unknown Direction from Client move packet!\n";
 		DebugBreak();
 		exit(-1);
+		break;
 	}
 	
 
-	for (int i = 0; i < 4; i++) {
-		tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
-		tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
-		g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
-		
-	}
+	
 }
 
 Vector2 CPlayerScript::Search_Interpolation_Points(Vector2* points, float time)
@@ -715,9 +744,9 @@ void CPlayerScript::ReduceUiBar()
 	float speed{};
 	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
 		if (i == (UINT)UI_BAR::HUG)
-			speed = 0.3f;
+			speed = 0.08f;
 		else
-			speed = 0.2f;
+			speed = 0.05f;
 
 		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
 		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
@@ -728,41 +757,6 @@ void CPlayerScript::ReduceUiBar()
 
 		m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
 		m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x, pos.y, pos.z));
-	}
-}
-
-void CPlayerScript::IncreaseUiBar(float _stamina, float _dash, float _hug, float _temper)
-{
-	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
-		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
-		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
-
-		switch (i) {
-		case (UINT)UI_BAR::STAMINA:
-			if (_stamina + scale.x >= 350.f)
-				_stamina = 350.f - scale.x;
-			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _stamina, scale.y, scale.z));
-			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_stamina / 2.f), pos.y, pos.z));
-			break;
-		case (UINT)UI_BAR::DASH:
-			if (_dash + scale.x >= 350.f)
-				_dash = 350.f - scale.x;
-			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _dash, scale.y, scale.z));
-			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_dash / 2.f), pos.y, pos.z));
-			break;
-		case (UINT)UI_BAR::HUG:
-			if (_hug + scale.x >= 350.f)
-				_hug = 350.f - scale.x;
-			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _hug, scale.y, scale.z));
-			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_hug / 2.f), pos.y, pos.z));
-			break;
-		case (UINT)UI_BAR::TEMPER:
-			if (_temper + scale.x >= 350.f)
-				_temper = 350.f - scale.x;
-			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _temper, scale.y, scale.z));
-			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_temper / 2.f), pos.y, pos.z));
-			break;
-		}
 	}
 }
 
@@ -779,49 +773,142 @@ void CPlayerScript::UseItem()
 
 void CPlayerScript::FindItemBeUsed(int _itemId)
 {
-
 	switch (_itemId) {
 	case (UINT)ITEM_ID::STEAK:	// steak
 		cout << "steak 사용" << endl;
-		IncreaseUiBar(0.f, 0.f, 20.f, 10.f);
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::STEAK, false);
 		break;
 	case (UINT)ITEM_ID::BOTTLE_STAMINA:
 		cout << "stamina 사용" << endl;
-		IncreaseUiBar(30.f, 0.f, 0.f, 0.f);
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_STAMINA, false);
 		break;
 	case (UINT)ITEM_ID::BOTTLE_DASH:
 		cout << "dash 사용" << endl;
-		IncreaseUiBar(0.f, 20.f, 0.f, 0.f);
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_DASH, false);
 		break;
 	case (UINT)ITEM_ID::MONEYBAG:
 		break;
 	case (UINT)ITEM_ID::CARROT:
 		cout << "carrot 사용" << endl;
-		IncreaseUiBar(0.f, 0.f, 10.f, 5.f);
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::CARROT, false);
-		break;
-	case (UINT)ITEM_ID::APPLE:
-		cout << "APPLE 사용" << endl;
-		IncreaseUiBar(0.f, 0.f, 10.f, 5.f);
-		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::APPLE, false);
 		break;
 	case (UINT)ITEM_ID::BRANCH:
 		break;
-	case (UINT)ITEM_ID::BASIC_SWORD:
-		cout << "BASIC_SWORD 사용" << endl;
-		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BASIC_SWORD, false);
+	case (UINT)ITEM_ID::NEW_SWORD:
+		cout << "NEW_SWORD 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::NEW_SWORD, false);
+		ChangeWeapone(WEAPONE_TYPE::SWORD_NEW, ITEM_ID::NEW_SWORD);
+		//CSwordScript* swordScript = GetObj()->GetChild()->GetScript<CSwordScript>();
 		break;
 	case (UINT)ITEM_ID::BASIC_ARROW:
 		break;
 	case (UINT)ITEM_ID::AX:
 		cout << "AX 사용" << endl;
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::AX, false);
+		ChangeWeapone(WEAPONE_TYPE::AX, ITEM_ID::AX);
+		break;
+	case (UINT)ITEM_ID::BASIC_SWORD:
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BASIC_SWORD, false);
+		ChangeWeapone(WEAPONE_TYPE::SWORD, ITEM_ID::BASIC_SWORD);
 		break;
 	default:
 		break;
+	}
+}
+
+void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)	// 바꿀 아이템
+{
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
+	wstring a;
+	wstring b;
+
+	for (int i = 0; i < vecChild.size(); ++i) {
+
+		a = vecChild[i]->MeshRender()->GetMesh()->GetName();
+		b = vecChild[i]->GetName();
+
+		if (vecChild[i]->GetName() == L"sword") {
+
+			switch (_iTemID) {
+			case ITEM_ID::NEW_SWORD:
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\PlayerMale_Weapon_Sword.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, XM_PI / 2.f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::BASIC_SWORD);
+						}
+					}
+				}
+				// 도끼
+				if(vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\Ax.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, XM_PI / 2.f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::AX);
+						}
+					}
+				}
+				break;
+			case ITEM_ID::BASIC_SWORD:
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\sword_2.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.0f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::NEW_SWORD);
+						}
+					}
+				}
+				// 도끼
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\Ax.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.0f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::AX);
+						}
+					}
+				}
+				break;
+			case ITEM_ID::AX:
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\PlayerMale_Weapon_Sword.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::BASIC_SWORD);
+						}
+					}
+				}
+
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\sword_2.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, XM_PI / 2.f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::NEW_SWORD);
+						}
+					}
+				}
+				break;
+			}
+			
+			//
+		}
 	}
 }
 

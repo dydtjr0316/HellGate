@@ -142,7 +142,7 @@ void CNpcScript::init()
 	storeUi->StaticUI()->m_pMousePoint = vecTemp;
 
 	// ÆÈ item ¼³Á¤
-	storeUi->StaticUI()->SetButton(ITEM_ID::BASIC_SWORD);
+	storeUi->StaticUI()->SetButton(ITEM_ID::NEW_SWORD);
 	storeUi->StaticUI()->SetButton(ITEM_ID::AX);
 	storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_STAMINA);
 	storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_DASH);

@@ -393,9 +393,10 @@ enum class ITEM_ID
 	CARROT,
 	BRANCH,
 	APPLE,
-	BASIC_SWORD,
+	NEW_SWORD,
 	BASIC_ARROW,
 	AX,
+	BASIC_SWORD,
 	EMPTY,
 	END,
 };
@@ -437,4 +438,12 @@ enum Drag_Type
 	IDLE,
 	PLUS,
 	MINUS
+};
+
+enum class WEAPONE_TYPE
+{
+	SWORD,
+	SWORD_NEW,
+	AX,
+	END,
 };
