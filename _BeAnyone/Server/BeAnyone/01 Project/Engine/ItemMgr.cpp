@@ -181,12 +181,12 @@ void CItemMgr::MakeItem()
         // up
         if (vItem1Pos.y <= mapY + 50.f && m_bisUp[i] == true) {
             // m_iTemTime += DT;
-            vItem1Pos += 60.f * DT * vItem1FromtDir;   // item1
-            vItem1Pos += 50.f * DT * vItem1UpDir;
-            vItem2Pos += 60.f * DT * vItem2FromtDir;   // item2
-            vItem2Pos += 50.f * DT * vItem2UpDir;
-            vItem3Pos += 60.f * DT * vItem3FromtDir;   // item3
-            vItem3Pos += 50.f * DT * vItem3UpDir;
+            vItem1Pos += 90.f * DT * vItem1FromtDir;   // item1
+            vItem1Pos += 80.f * DT * vItem1UpDir;
+            vItem2Pos += 90.f * DT * vItem2FromtDir;   // item2
+            vItem2Pos += 80.f * DT * vItem2UpDir;
+            vItem3Pos += 90.f * DT * vItem3FromtDir;   // item3
+            vItem3Pos += 80.f * DT * vItem3UpDir;
         }
         else {
             m_bisUp[i] = false;
@@ -195,12 +195,12 @@ void CItemMgr::MakeItem()
 
         // down
         if (vItem1Pos.y >= mapY && m_bisDown[i] == true) {
-            vItem1Pos += 60.f * DT * vItem1FromtDir;   // item1
-            vItem1Pos += 50.f * DT * -vItem1UpDir;
-            vItem2Pos += 60.f * DT * vItem2FromtDir;   // item2
-            vItem2Pos += 50.f * DT * -vItem2UpDir;
-            vItem3Pos += 60.f * DT * vItem3FromtDir;   // item3
-            vItem3Pos += 50.f * DT * -vItem3UpDir;
+            vItem1Pos += 90.f * DT * vItem1FromtDir;   // item1
+            vItem1Pos += 80.f * DT * -vItem1UpDir;
+            vItem2Pos += 90.f * DT * vItem2FromtDir;   // item2
+            vItem2Pos += 80.f * DT * -vItem2UpDir;
+            vItem3Pos += 90.f * DT * vItem3FromtDir;   // item3
+            vItem3Pos += 80.f * DT * -vItem3UpDir;
         }
         else if (m_bisUp[i] != true) {
             m_bisDown[i] = false;

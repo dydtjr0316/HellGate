@@ -193,8 +193,11 @@ void CStaticUI::update()
 				if (m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
 					if (ComputeMousePos(Pos, Scale)) {
 						UseItem(m_vecButton[i]->GetItemID());
-						if (m_vecButton[i]->GetItemID() != ITEM_ID::AX && m_vecButton[i]->GetItemID() != ITEM_ID::BASIC_SWORD)
+						if (m_vecButton[i]->GetItemID() != ITEM_ID::AX && m_vecButton[i]->GetItemID() != ITEM_ID::BASIC_SWORD) {
 							m_vecButton[i]->SubItemCount();
+							if (m_vecButton[i]->GetItemCount() == 0)
+								m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
+						}
 					}
 				}
 			}

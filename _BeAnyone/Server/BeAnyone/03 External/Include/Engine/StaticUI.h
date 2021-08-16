@@ -18,6 +18,7 @@ class CStaticUI
 
 public:
 	bool					m_bActive;
+	bool					m_bStoreTime = false; // store 중인지 아닌지
 
 	Ptr<CTexture>			m_pFrame;
 	UI_TYPE					m_eType;
@@ -32,7 +33,7 @@ public:
 	// wallet, money etc ... (only player)
 	CGameObject*			m_pWallet;
 	vector<CGameObject*>	m_pMoneyUi;
-	int						m_iMoney = 9999;
+	int						m_iMoney = 999;
 
 	// store button
 	vector<CGameObject*>	m_StoreButton;
@@ -65,8 +66,8 @@ public:
 
 	// item
 	void UseItem(ITEM_ID _eType);
-	bool GetUseItemID(int itemid) { return m_bUseItem[itemid]; } // player에서 가져올 거
-
+	bool GetUseItemID(int _itemId) { return m_bUseItem[_itemId]; } // player에서 가져올 거
+	void SetUseItemID(int _itemId, bool _bool) { m_bUseItem[_itemId] = _bool; }
 public:
 	void init(UI_TYPE );
 

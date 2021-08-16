@@ -86,6 +86,10 @@ public:
 	void SetDamage(bool _isDamage) { m_bisDamage = _isDamage; }
 	bool GetDamage() { return m_bisDamage; }
 
+	//pick up
+	void SetPickUp(bool _isPick) { m_bIsPick = _isPick; }
+	bool GetPickUp() { return m_bIsPick; }
+
 	// animclip
 	void SetCnt(const float& cnt, PlAYER_ANICNT_TYPE _AniCntType) { m_fAnimationCnt[(UINT)_AniCntType] = cnt; }
 	float GetCnt(PlAYER_ANICNT_TYPE _AniCntType) { return m_fAnimationCnt[(UINT)_AniCntType]; }
@@ -113,6 +117,7 @@ public:
 	void ClickUiButton();
 	void FindQuestItem();
 	void ReduceUiBar();
+	void IncreaseUiBar(float _stamina, float _dash, float _hug, float _temper);
 
 	// use item
 	void UseItem();

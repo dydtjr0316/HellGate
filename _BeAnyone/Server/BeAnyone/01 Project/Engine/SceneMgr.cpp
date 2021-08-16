@@ -1441,8 +1441,8 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcScript->SetAnimationData(pMeshData->GetMesh());
 
 	// Talk
-	Ptr<CMeshData> pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_4@Talking.fbx", FBX_TYPE::NPC);
-	pNpcScript->SetAnimationData(pMeshDataKey->GetMesh());
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_4@Talking.fbx", FBX_TYPE::NPC);
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
 	
 	//--------------------------
 	// Npc_2
@@ -1469,7 +1469,8 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcScript2->SetAnimationData(pMeshData->GetMesh());
 
 	// Talk
-	pNpcScript2->SetAnimationData(pMeshDataKey->GetMesh());
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_1@Talking.fbx", FBX_TYPE::NPC);
+	pNpcScript2->SetAnimationData(pMeshData->GetMesh());
 
 	//--------------------------
 	// Npc_3(store)
@@ -1496,7 +1497,8 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcScript3->SetAnimationData(pMeshData->GetMesh());
 
 	// Talk
-	pNpcScript3->SetAnimationData(pMeshDataKey->GetMesh());
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_3@Talking.fbx", FBX_TYPE::NPC);
+	pNpcScript3->SetAnimationData(pMeshData->GetMesh());
 	pNpcScript3->init();
 }
 

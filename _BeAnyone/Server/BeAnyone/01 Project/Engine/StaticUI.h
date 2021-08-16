@@ -33,7 +33,7 @@ public:
 	// wallet, money etc ... (only player)
 	CGameObject*			m_pWallet;
 	vector<CGameObject*>	m_pMoneyUi;
-	int						m_iMoney = 9999;
+	int						m_iMoney = 999;
 
 	// store button
 	vector<CGameObject*>	m_StoreButton;

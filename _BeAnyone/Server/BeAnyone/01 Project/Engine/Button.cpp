@@ -201,12 +201,7 @@ void CButton::ChangeButtonTexture()
 
 void CButton::ChangeNumTexture()
 {
-	if (m_iItemCount / 10 < 1) {	// 개수가 1의 자리
-		string str = to_string(m_iItemCount);
-		wstring wstr = wstring(str.begin(), str.end());
-		m_vItemNum[(UINT)ITEM_NUM::UNIT]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
-	}
-	else if((m_iItemCount / 10 >= 1) && (m_iItemCount / 100 < 1)){	// 개수가 10의 자리
+	if(m_iItemCount < 100) {	
 		int unit = m_iItemCount % 10;
 		int tens = m_iItemCount / 10;
 		// 1의 자리

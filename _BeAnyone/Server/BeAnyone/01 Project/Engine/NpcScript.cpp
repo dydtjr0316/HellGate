@@ -489,6 +489,10 @@ void CNpcScript::ChangeBoxTexture()
 				m_vIsQuest[0] = REQUEST_STATE::COMPLETE;
 			else if(m_vIsQuest[0] == REQUEST_STATE::COMPLETE)
 				m_vIsQuest[1] = REQUEST_STATE::COMPLETE;
+
+			// µ· ÁÖ±â
+			m_pPlayer->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->m_iMoney += 300;
+			m_pPlayer->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetWalletMoney();
 		}
 	}
 	// NPC_2
@@ -530,6 +534,10 @@ void CNpcScript::ChangeBoxTexture()
 				m_vIsQuest[0] = REQUEST_STATE::COMPLETE;
 			else if (m_vIsQuest[0] == REQUEST_STATE::COMPLETE)
 				m_vIsQuest[1] = REQUEST_STATE::COMPLETE;
+
+			// µ· ÁÖ±â
+			m_pPlayer->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->m_iMoney += 300;
+			m_pPlayer->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetWalletMoney();
 		}
 	}
 

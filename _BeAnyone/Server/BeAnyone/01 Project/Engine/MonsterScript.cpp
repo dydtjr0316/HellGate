@@ -135,7 +135,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
         m_bisMoving = false;
 
         // 죽으면 하는 걸로 바꿔야 함 일단 오류나니까 여기서 처리하기
-        CItemMgr::GetInst()->SetIsMake(true);
+        //CItemMgr::GetInst()->SetIsMake(true);
         g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
 
         m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
