@@ -175,6 +175,7 @@ void CSendMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, c
     p.size = sizeof(p);
     p.type = SC_PACKET_MOVE;
     p.localVec = Netmgr.GetMediatorMgr()->Find(mover_id)->GetLocalPosVector();
+
     p.dirVec = Netmgr.GetMediatorMgr()->Find(mover_id)->GetDirVector();
     p.dir = dir;
     p.move_time = Netmgr.GetMediatorMgr()->Find(mover_id)->GetClientTime();

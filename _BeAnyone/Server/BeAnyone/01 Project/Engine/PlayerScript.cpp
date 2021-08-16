@@ -393,7 +393,6 @@ void CPlayerScript::update()
 	UseItem();
 
 }
-
 void CPlayerScript::op_Move()
 {
 	sc_packet_move* p = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
@@ -412,6 +411,7 @@ void CPlayerScript::op_Move()
 
 	if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket()->isMoving)
 	{
+		if (p->dirVec.x > 10.f || p->dirVec.z < 0.00001f)return;
 		if (player->GetBisFrist())
 		{
 			temp = p->localVec + p->dirVec * p->speed * (DT);
@@ -422,6 +422,11 @@ void CPlayerScript::op_Move()
 		{
 			temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * (DT);
 			cout << "아니면 본인좌표?" << endl;
+			cout << p->dirVec.x << ", dir , " << p->dirVec.z << endl;
+			cout << "-----------------------------" << endl;
+			cout << playerTrans->GetLocalPos().x << ", pos , " << playerTrans->GetLocalPos().z << endl;
+			cout << "-----------------------------" << endl;
+			cout << "-----------------------------" << endl;
 		}
 		playerTrans->SetLocalRot(p->rotateY);
 
