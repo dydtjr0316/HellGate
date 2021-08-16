@@ -186,6 +186,10 @@ bool CCollisionMgr::IsCollision(CCollider* _pCollider1, CCollider* _pCollider2)
 	{
 		return CollisionRect(_pCollider1, _pCollider2);
 	}
+	else if (COLLIDER_TYPE::RECT == _pCollider1->GetColliderType() && COLLIDER_TYPE::RECT == _pCollider2->GetColliderType())
+	{
+		return CollisionRect(_pCollider1, _pCollider2);
+	}
 	else
 	{
 		return CollisionRectCircle(_pCollider1, _pCollider2);
@@ -213,6 +217,22 @@ bool CCollisionMgr::CollisionSphere(CCollider* _pCollider1, CCollider* _pCollide
 	}
 	return false;
 }
+
+//bool CCollisionMgr::CollisionBoxSphere(CCollider* _pCollider1, CCollider* _pCollider2)
+//{
+//	BoundingSphere bBX1 = _pCollider1->GetBoundingSphere();
+//	BoundingSphere bBX2 = _pCollider2->GetBoundingSphere();
+//
+//	if (bBX1.Contains(bBX2) == 1)
+//	{
+//		//	바운딩 구 중점, 크기 check용 cout.
+//		wstring a = _pCollider1->GetObj()->GetName();
+//		wstring b = _pCollider2->GetObj()->GetName();
+//		return true;
+//	}
+//	return false;
+//}
+
 
 bool CCollisionMgr::CollisionBox(CCollider* _pCollider1, CCollider* _pCollider2)
 {

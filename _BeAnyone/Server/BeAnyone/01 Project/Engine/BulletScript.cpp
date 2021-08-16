@@ -41,11 +41,9 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 
 	switch ((UINT)m_bType)
 	{
-	case 0:
+	case (UINT)BULLET_TYPE::DEFAULT:
 		if (L"FireMonster" == _pOther->GetObj()->GetName())
 		{
-			
-
 			/// 여기까지 파티클 생성하는거
 			/// ////////////////////////////////////////////////////////////////////////////////
 
@@ -53,13 +51,16 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 			m_fTime = 2.0f;
 		}
 		break;
-	case 1:
+	case (UINT)BULLET_TYPE::PICKUP:
 		//	여기다가 픽업 불릿 분기문 설정
 		break;
-	case 2:	
+	case (UINT)BULLET_TYPE::MONSTER_ATTACK:	
+		if (L"PlayerMale" == _pOther->GetObj()->GetName())
+			cout << "플레이어 쳐맞음!" << endl;
 		//	몬스터의 공격
-
 		break;
 
+	default:
+		break;
 	}
 }

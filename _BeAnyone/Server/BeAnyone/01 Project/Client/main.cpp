@@ -20,6 +20,10 @@
 #endif
 
 #define MAX_LOADSTRING 100
+
+#define SCREEN_WIDTH 1680
+#define SCREEN_HEIGHT 1050
+
 SOCKET g_Socket;
 char name[10];
 int frameCnt = 0;
@@ -64,7 +68,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    if (FAILED(CCore::GetInst()->init(g_hWnd, tResolution{ 1680, 1050 }, true)))
+    if (FAILED(CCore::GetInst()->init(g_hWnd, tResolution{ SCREEN_WIDTH, SCREEN_HEIGHT }, true)))
     {
         return 0;
     }
@@ -116,7 +120,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW);
     wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_CLIENT);
     wcex.lpszClassName = szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -138,7 +142,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-    g_hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+    g_hWnd = CreateWindowW(szWindowClass, L"BeAnyone", WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
     if (!g_hWnd)
@@ -146,8 +150,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
         return FALSE;
     }
 
+    UINT wStyle = WS_OVERLAPPEDWINDOW & ~(WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
+
+    ::SetWindowLongW(g_hWnd, GWL_STYLE, wStyle);
     ShowWindow(g_hWnd, false);
     UpdateWindow(g_hWnd);
+    SetMenu(g_hWnd, NULL);
 
     return TRUE;
 }
@@ -167,23 +175,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
    // CreateFontIndirectW
     switch (message)
     {
-    case WM_COMMAND:
-    {
-        int wmId = LOWORD(wParam);
-        // 메뉴 선택을 구문 분석합니다:
-        switch (wmId)
-        {
-        case IDM_ABOUT:
-            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-            break;
-        case IDM_EXIT:
-            DestroyWindow(hWnd);
-            break;
-        default:
-            return DefWindowProc(hWnd, message, wParam, lParam);
-        }
-    }
-    break;
+    //case WM_COMMAND:
+    //{
+    //    int wmId = LOWORD(wParam);
+    //    // 메뉴 선택을 구문 분석합니다:
+    //    switch (wmId)
+    //    {
+    //    case IDM_ABOUT:
+    //        DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+    //        break;
+    //    case IDM_EXIT:
+    //        DestroyWindow(hWnd);
+    //        break;
+    //    default:
+    //        return DefWindowProc(hWnd, message, wParam, lParam);
+    //    }
+    //}
+    //break;
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
