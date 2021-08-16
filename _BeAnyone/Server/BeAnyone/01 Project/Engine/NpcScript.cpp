@@ -282,6 +282,10 @@ void CNpcScript::SetStaticUiRender(bool _bool)
 	}
 
 	m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->SetUiRenderCheck(_bool);
+
+	// store time인지 명시
+	m_pStoreUi->StaticUI()->m_bStoreTime = _bool;
+	m_pPlayerUi->StaticUI()->m_bStoreTime = _bool;
 }
 
 void CNpcScript::SellAndBuy()

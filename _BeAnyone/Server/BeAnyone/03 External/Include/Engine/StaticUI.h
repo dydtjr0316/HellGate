@@ -37,6 +37,9 @@ public:
 	// store button
 	vector<CGameObject*>	m_StoreButton;
 
+	// item
+	vector<bool>			m_bUseItem;
+
 public:
 	void CreatePickingObj();
 	void CreateButton(CCamera*);
@@ -54,13 +57,15 @@ public:
 	// quest
 	int GetQuestItemCount();
 
-	// UI
-	void Sell();
 	// money
 	void SetWalletMoney();
 
 	// 이걸로 통일하기
 	bool ComputeMousePos(Vector3& _pos, Vector3& _scale);
+
+	// item
+	void UseItem(ITEM_ID _eType);
+	bool GetUseItemID(int itemid) { return m_bUseItem[itemid]; } // player에서 가져올 거
 
 public:
 	void init(UI_TYPE );

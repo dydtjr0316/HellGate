@@ -18,6 +18,7 @@ enum class UI_BUTTON {
 	END,
 };
 
+
 class CDeadReckoner;
 class CPlayerScript
 	: public CScript
@@ -112,6 +113,10 @@ public:
 	void ClickUiButton();
 	void FindQuestItem();
 	void ReduceUiBar();
+
+	// use item
+	void UseItem();
+	void FindItemBeUsed(int _itemId);
 public:
 	// sound
 	void PlaySound_(const Sound_Type& sound);
