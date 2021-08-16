@@ -425,33 +425,33 @@ void CPlayerScript::op_Move()
 	playerTrans->SetLocalPos(temp);
 
 	{
-		//CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
-		//CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+		CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+		CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 
 
-		//pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+		pScript->Search_Origin_Points(p->id, pScript->GetRTT());
 
 
-		//pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
+		pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
 
-		//CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
-		//ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+		CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+		ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
 
 
 
-		//if (player->GetInterpolationCnt() != 4)
-		//{
-		//	ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
-		//		p->localVec.y,
-		//		player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
-		//	cout << ObjTrans->GetLocalPos().x << endl;
-		//	cout << ObjTrans->GetLocalPos().z << endl<<endl;
-		//	player->InterpolationCnt_PP();
-		//}
-		//else
-		//{
-		//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-		//}
+		if (player->GetInterpolationCnt() != 4)
+		{
+			ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
+				p->localVec.y,
+				player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
+			cout << ObjTrans->GetLocalPos().x << endl;
+			cout << ObjTrans->GetLocalPos().z << endl<<endl;
+			player->InterpolationCnt_PP();
+		}
+		else
+		{
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+		}
 	}
 }
 
