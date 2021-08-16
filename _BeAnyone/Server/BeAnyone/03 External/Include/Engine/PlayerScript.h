@@ -53,6 +53,7 @@ private:
 	bool			m_bisAttack = false;
 	bool			m_bisAniReset = false;
 	bool			m_bisDamage = false;
+	bool			m_isBezier = true;
 	float			m_fAnimationCnt[(UINT)PlAYER_ANICNT_TYPE::END]{};
 
 	CTerrain*		m_pTerrainObj;
@@ -78,6 +79,8 @@ private:
 	float						m_fTime = 0.0f;
 
 public:
+	bool GetisBezeir() { return m_isBezier; }
+	void SetisBezeir(const bool& b) { m_isBezier = b; }
 	bool GetAniReset() { return m_bisAniReset; }
 	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
 	void SetAttack(bool isattack) { m_bisAttack = isattack; }
