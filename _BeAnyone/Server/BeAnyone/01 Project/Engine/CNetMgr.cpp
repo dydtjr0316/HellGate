@@ -26,8 +26,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -600,6 +600,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 					system_clock::time_point end = system_clock::now();
 					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+
 					if (packet->isMoving)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
 					else

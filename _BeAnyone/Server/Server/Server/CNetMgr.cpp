@@ -421,13 +421,25 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_MOVE: {
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 
-        cout << "Packet 받았을때" << endl;
-        cout << "-------------------------------" << endl;
-        cout << "-------------------------------" << endl;
-        cout << m_pMediator->Find(user_id)->GetLocalPosVector().x << " , " << m_pMediator->Find(user_id)->GetLocalPosVector().z << endl;
-        cout << "-------------------------------" << endl;
-        cout << "-------------------------------" << endl;
-        m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
+        if (user_id == 0)
+        {
+            cout << "Packet 받았을때 현재 서버 상태" << endl;
+            cout << "-------------------------------" << endl;
+            cout << "-------------------------------" << endl;
+            cout << m_pMediator->Find(user_id)->GetLocalPosVector().x << " , " << m_pMediator->Find(user_id)->GetLocalPosVector().z << endl;
+            cout << "-------------------------------" << endl;
+            cout << "-------------------------------" << endl;
+            cout << "************************************************" << endl;
+            cout << "Packet 받았을때 Packet 상태" << endl;
+            cout << "-------------------------------" << endl;
+            cout << "-------------------------------" << endl;
+            cout << packet->localVec.x << " , " << packet->localVec.z << endl;
+            cout << "-------------------------------" << endl;
+            cout << "-------------------------------" << endl;
+        }
+        tempLock.lock();
+        m_pMediator->Find(user_id)->SetIsMoving(true);
+        tempLock.unlock();
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
@@ -444,7 +456,9 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_STOP:
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
-        m_pMediator->Find(user_id)->SetIsMoving(packet->isMoving);
+        tempLock.lock();
+        m_pMediator->Find(user_id)->SetIsMoving(false);
+        tempLock.unlock();
 
         Do_Stop(user_id, packet->isMoving);
     }
@@ -710,9 +724,6 @@ void CNetMgr::Worker_Thread()
                     (float)(rand() % 1000) + 500.f);
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
-               // if (pClient->GetLocalPosVector().x == 724.f)
-                    //cout << "귀신이다 !!!!" << endl;
-                ////////////////////////////////////////////////////////
                 
                 pClient->SetFirstPos(pClient->GetLocalPosVector());
 
@@ -850,8 +861,9 @@ void CNetMgr::Processing_Thead()
 
                     obj->GetLock().lock();
                     g_QuadTree.Delete(obj);
-                    obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * DeltaTime);
-                    cout << "\t\t" << obj->GetLocalPosVector().x << " , " << obj->GetLocalPosVector().z << endl;
+                    obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * (DeltaTime));
+                    if(reckoner == 0)
+                        cout << "\t\t" << obj->GetLocalPosVector().x << " , " << obj->GetLocalPosVector().z << endl;
 
                     g_QuadTree.Insert(obj);
                     obj->GetLock().unlock();
@@ -860,10 +872,10 @@ void CNetMgr::Processing_Thead()
 
 
                     CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 1.f)
+                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 0.5f)
                     {
                         //cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
-                       // m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
+                         m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
                     }
                 }

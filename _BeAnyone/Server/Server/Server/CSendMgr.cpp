@@ -135,6 +135,13 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
             << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().z << ">" << endl;
         cout << "********************" << endl << endl;*/
     }
+    {
+        cout << "********************" << endl;
+        cout << "********************" << endl;
+        cout << other_id << "가 " << user_id << "에게 Enter Packet 전송" << endl;
+        cout << "********************" << endl;
+        cout << "********************" << endl;
+    }
     Send_Packet(user_id, &p);
 }
 
@@ -151,7 +158,10 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
    // if (p.id >= START_MONSTER && p.id < END_MONSTER)
     {
         cout << "********************" << endl;
+        cout << "********************" << endl;
         cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
+        cout << "********************" << endl;
+        cout << "********************" << endl;
     }
     Send_Packet(user_id, &p);
 }
