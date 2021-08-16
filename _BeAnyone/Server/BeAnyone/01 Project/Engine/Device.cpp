@@ -24,6 +24,7 @@ CDevice::CDevice()
 CDevice::~CDevice()
 {
 	FlushCommandQueue();
+	m_pSwapChain->SetFullscreenState(FALSE, NULL);
 	CloseHandle(m_hFenceEvent);
 
 	for (size_t i = 0; i < m_vecCB.size(); ++i)
@@ -233,10 +234,10 @@ void CDevice::CreateSwapChain()
 	tDesc.BufferDesc.RefreshRate.Denominator = 1;				// 화면 갱신 비율
 	
 	tDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;		// 출력 타겟 용도로 버퍼를 만든다.
-	tDesc.Flags = 0;//DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	tDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;		// 전체 화면 허용
 	
-	tDesc.OutputWindow = m_hWnd;			// 출력 윈도우
-	tDesc.Windowed = m_bWindowed;		// 창 모드 or 전체화면 모드
+	tDesc.OutputWindow = m_hWnd;								// 출력 윈도우
+	tDesc.Windowed = m_bWindowed;								// 창 모드 or 전체화면 모드
 	tDesc.SampleDesc.Count = 1;									// 멀티 샘플링 사용 안 함
 	tDesc.SampleDesc.Quality = 0;
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;			// 전면 후면 버퍼 교체 시 이전 프레임 정보 버림

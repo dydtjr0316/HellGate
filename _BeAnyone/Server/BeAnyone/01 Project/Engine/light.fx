@@ -92,8 +92,8 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _in)
     output.vDiffuse = tCurCol.vDiff + tCurCol.vAmb;
     output.vSpecular = tCurCol.vSpec;
 
-    output.vDiffuse *= fFactor;
-    output.vSpecular *= fFactor;
+    /*output.vDiffuse *= fFactor;
+    output.vSpecular *= fFactor;*/
 
     return output;
 }

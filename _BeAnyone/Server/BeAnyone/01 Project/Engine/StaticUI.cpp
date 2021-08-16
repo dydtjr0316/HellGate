@@ -153,6 +153,7 @@ void CStaticUI::update()
 	if (KEY_TAB(KEY_TYPE::KEY_I) && (m_eType == UI_TYPE::PRIVATE_ITEM_UI))
 	{
 		m_bActive = !m_bActive;
+		::ShowCursor(m_bActive);
 		for (int i = 0; i < m_vecButton.size(); ++i)
 			m_vecButton[i]->SetActive(m_bActive);
 		if (m_eType == UI_TYPE::PRIVATE_ITEM_UI)
@@ -327,7 +328,9 @@ CStaticUI::CStaticUI()
 	: CComponent(COMPONENT_TYPE::UI)
 	, m_pMousePoint{ nullptr }
 	, m_pWallet{ nullptr }
+	, m_bActive(false)
 {
+	//::ShowCursor(m_bActive);
 }
 
 CStaticUI::~CStaticUI()

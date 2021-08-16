@@ -132,6 +132,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 	pMapObject->Transform()->SetLocalScale(Vector3(60.f, 60.f, 60.f));//(1.0f, 1.0f, 1.0f));
 	pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 	pMapObject->AddComponent(new CCollider);
+	pMapObject->MeshRender()->SetDynamicShadow(true);
 	pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tree");
 	pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 	pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
@@ -165,6 +166,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 
 			//m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 			// 나무 충돌 스크립트
@@ -212,7 +214,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
-
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			//m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
 			//-------item load---------
@@ -256,6 +258,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"JoshuaTree1");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
@@ -294,6 +297,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House1");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집1 tile
@@ -315,6 +319,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tile5");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집2 fence2
@@ -336,6 +341,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		for (int i = 0; i < 3; ++i) {
@@ -358,6 +364,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -381,6 +388,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 	}{}
@@ -404,6 +412,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House2");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집2 tile
@@ -425,6 +434,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tile5");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집2 fence1
@@ -446,6 +456,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집2 fence2
@@ -467,6 +478,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		for (int i = 0; i < 3; ++i) {
@@ -489,6 +501,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -512,6 +525,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -535,6 +549,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 	}{}
@@ -560,6 +575,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tree");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		
 		// 천막
@@ -581,6 +597,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Market_Roof");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 테이블
@@ -602,6 +619,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Market_Table");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 수레
@@ -623,6 +641,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Cart");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
 	// 집3
@@ -646,6 +665,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House_01");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집3 fence1
@@ -667,6 +687,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집3 fence2
@@ -688,6 +709,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		for (int i = 0; i < 3; ++i) {
@@ -710,6 +732,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -733,6 +756,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -756,6 +780,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 	}
@@ -783,6 +808,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"House2");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집3 tile
@@ -804,6 +830,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tile5");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집3 fence1
@@ -825,6 +852,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 집3 fence2
@@ -846,6 +874,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		for (int i = 0; i < 2; ++i) {
@@ -868,6 +897,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -891,6 +921,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -913,6 +944,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
@@ -935,6 +967,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Fence");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}{}
 	// 집5
@@ -962,6 +995,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Market_Roof");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 테이블
@@ -983,6 +1017,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Market_Table");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
 	// 가운데 나무, 돌
@@ -1007,6 +1042,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tree");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		// 나무 충돌 스크립트
 		// 나무 충돌 스크립트
@@ -1045,6 +1081,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tree");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		
 		// 가운데 나무3
@@ -1066,6 +1103,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tree");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		
 		// 가운데 돌1
@@ -1087,6 +1125,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Rock");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		
 		// 가운데 돌1
@@ -1108,6 +1147,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Rock");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}{}
 	// 가운데 우물
@@ -1131,6 +1171,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Well");
 		pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 
 		// 테이블
@@ -1153,6 +1194,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Table_01");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -1176,6 +1218,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Bench_02");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -1199,6 +1242,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Bench_02");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents(pMapObject->Transform()->GetLocalScale())));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 	}
@@ -1232,14 +1276,14 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(250.f, mapY * 2, (wallX * i) + wallX / 2));
+			pMapObject->Transform()->SetLocalPos(Vector3(250.f, mapY * 2 - 50.f, (wallX * i) + wallX / 2));
 			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
 			/*pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -1258,14 +1302,14 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(76500.f, mapY * 2, (wallX * i) + wallX / 2));
+			pMapObject->Transform()->SetLocalPos(Vector3(76500.f, mapY * 2 - 1000.f, (wallX * i) + wallX / 2));
 			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 			/*pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -1284,14 +1328,14 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 76300.f, true);
 
-			pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2, 76300.f));
+			pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2 - 100.f, 76300.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.f, 0.f));
 			/*pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 
@@ -1310,14 +1354,14 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 300.f, true);
 
-			pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2, 300.f));
+			pMapObject->Transform()->SetLocalPos(Vector3((wallX * i) + wallX / 2, mapY * 2 - 50.f, 300.f));
 			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI, 0.f));
 			/*pMapObject->AddComponent(new CCollider);
 			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-
+			pMapObject->MeshRender()->SetDynamicShadow(true);
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 	}
@@ -1413,8 +1457,6 @@ void CSceneMgr::LoadRes()
 
 }
 
-
-
 void CSceneMgr::CreateNpc(CTerrain* _terrain)
 {
 
@@ -1432,7 +1474,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Npc_1");
 	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-	//pNpcObject->MeshRender()->SetDynamicShadow(true);
+	pNpcObject->MeshRender()->SetDynamicShadow(true);
  	pNpcObject->AddComponent(new CNpcScript);
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
 
@@ -1460,7 +1502,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Npc_2");
 	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-	//pNpcObject->MeshRender()->SetDynamicShadow(true);
+	pNpcObject->MeshRender()->SetDynamicShadow(true);
 	pNpcObject->AddComponent(new CNpcScript);
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
 
@@ -1488,7 +1530,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Npc_3");
 	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-	//pNpcObject->MeshRender()->SetDynamicShadow(true);
+	pNpcObject->MeshRender()->SetDynamicShadow(true);
 	pNpcObject->AddComponent(new CNpcScript);
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false); 
 
@@ -1655,8 +1697,8 @@ void CSceneMgr::init()
 	//pSword->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pSword->AddComponent(new CCollider);
 	pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
-	pSword->Collider()->SetBoundingBox(BoundingBox(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	pSword->Collider()->SetBoundingSphere(BoundingSphere(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	//pSword->Collider()->SetBoundingBox(BoundingBox(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	//pSword->Collider()->SetBoundingSphere(BoundingSphere(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
 	pSword->MeshRender()->SetDynamicShadow(true);
 	// Script 설정
 	pSword->AddComponent(new CSwordScript);
@@ -1670,12 +1712,10 @@ void CSceneMgr::init()
 	//=============
 	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@idle.fbx", FBX_TYPE::MONSTER);
 	//CGameObject* pMonster = new CGameObject;
-
 	//pMonster = pMeshData->Instantiate();
 	//pMonster->SetName(L"StoneMonster");
 	//pMonster->FrustumCheck(false);
 	//pMonster->Transform()->SetLocalPos(Vector3(100.f, 50.f, 100.f));
-
 	//pMonster->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 	//pMonster->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 	//pMonster->AddComponent(new CCollider);
@@ -1686,7 +1726,6 @@ void CSceneMgr::init()
 	//// Script 설정
 	//pMonster->AddComponent(new CMonsterScript);
 	//CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", pMonster, false);
-
 	//CMonsterScript* monsterScript = pMonster->GetScript<CMonsterScript>();
 	//monsterScript->SetMonsterType(MONSTER_TYPE::MONSTER2);
 	////animation
@@ -1704,7 +1743,6 @@ void CSceneMgr::init()
 	////damage
 	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
 	//monsterScript->SetAnimationData(pMeshData->GetMesh());
-
 	// ==================
 	//	item 객체 생성
 	// ==================
@@ -1917,7 +1955,6 @@ void CSceneMgr::init()
 	//	m_pCurScene->FindLayer(L"UI")->AddGameObject(pButtonObj);
 	//}
 
-
 	// ====================
 	// 3D Light Object 추가
 	// ====================
@@ -1927,28 +1964,11 @@ void CSceneMgr::init()
 	pObject->Light()->SetLightPos(Vector3(0.f, 1000.f, 1000.f));
 	pObject->Light()->SetLightType(LIGHT_TYPE::DIR);
 	pObject->Light()->SetDiffuseColor(Vector3(1.f, 1.f, 1.f));
-	pObject->Light()->SetSpecular(Vector3(0.3f, 0.3f, 0.3f));
+	pObject->Light()->SetSpecular(Vector3(0.1f, 0.1f, 0.1f));
 	pObject->Light()->SetAmbient(Vector3(0.1f, 0.1f, 0.1f));
-	pObject->Light()->SetLightDir(Vector3(1.f, -1.f, 1.f));
+	pObject->Light()->SetLightDir(Vector3(-1.f, -1.f, -1.f));
 	pObject->Light()->SetLightRange(1000.f);
-	pObject->Transform()->SetLocalPos(Vector3(-1000.f, 1700.f, -1000.f));
-	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
-
-
-	//	테스트 텍스쳐
-	pObject = new CGameObject;
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	// Transform 설정
-	pObject->Transform()->SetLocalPos(Vector3(0.f, 100.f, 300.f));
-	pObject->Transform()->SetLocalScale(Vector3(2000.f, 2000.f, 1.f));
-	pObject->Transform()->SetLocalRot(Vector3(XM_PI / 2.f, 0.f, 0.f));
-	// MeshRender 설정
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-	pObject->MeshRender()->SetDynamicShadow(false);
+	pObject->Transform()->SetLocalPos(Vector3(5000.f, 1000.f, 1000.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 	// monster
@@ -2053,6 +2073,8 @@ void CSceneMgr::init()
 	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Bullet", L"Item");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Item", L"Player");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"UI", L"PUI");
+
+
 
 	m_pCurScene->awake();
 	m_pCurScene->start();

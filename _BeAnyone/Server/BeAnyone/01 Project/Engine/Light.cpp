@@ -38,7 +38,7 @@ void CLight::SetLightType(LIGHT_TYPE _eType)
 		m_pDepthMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
 
 		m_pCamObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		m_pCamObj->Camera()->SetScale(5.f);
+		m_pCamObj->Camera()->SetScale(7.f);
 		m_pCamObj->Camera()->SetFar(100000.f);
 		m_pCamObj->Camera()->SetWidth(512.f);
 		m_pCamObj->Camera()->SetHeight(512.f);
@@ -91,6 +91,8 @@ void CLight::finalupdate()
 		auto a = *Transform();
 		a.SetLocalPos(a.GetLocalPos() + vectemp[0]->Transform()->GetLocalPos());
 		*m_pCamObj->Transform() = a;
+		//Vector3 temp = a.Transform()->GetLocalPos();
+		//m_pCamObj->Transform()->SetLocalPos(Vector3(temp.x, temp.y, temp.z + 500.f));
 
 	}
 
