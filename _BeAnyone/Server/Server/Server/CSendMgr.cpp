@@ -135,6 +135,13 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
             << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().z << ">" << endl;
         cout << "********************" << endl << endl;*/
     }
+    {
+        cout << "********************" << endl;
+        cout << "********************" << endl;
+        cout << other_id << "가 " << user_id << "에게 Enter Packet 전송" << endl;
+        cout << "********************" << endl;
+        cout << "********************" << endl;
+    }
     Send_Packet(user_id, &p);
 }
 
@@ -142,20 +149,19 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
 {
     if (Netmgr.GetMediatorMgr()->Count(other_id) == 0)return;
     //g_QuadTree.Delete(Netmgr.GetMediatorMgr()->Find(other_id));
+
     sc_packet_leave p;
     p.id = other_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
     p.isAttack = isAttack;
-    if (p.id >= START_MONSTER && p.id < END_MONSTER)
+   // if (p.id >= START_MONSTER && p.id < END_MONSTER)
     {
-        /*cout << "********************" << endl;
+        cout << "********************" << endl;
+        cout << "********************" << endl;
         cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
-        cout << "player POS ->   <" << Netmgr.GetMediatorMgr()->Find(user_id)->GetLocalPosVector().x << ", "
-            << Netmgr.GetMediatorMgr()->Find(user_id)->GetLocalPosVector().z << ">" << endl;
-        cout << "Monster POS ->   <" << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().x << ", "
-            << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().z << ">" << endl;
-         cout << "********************" << endl<<endl;*/
+        cout << "********************" << endl;
+        cout << "********************" << endl;
     }
     Send_Packet(user_id, &p);
 }
@@ -189,13 +195,14 @@ void CSendMgr::Send_Attack_Animation_Packet(const uShort& user_id, const uShort&
     Send_Packet(user_id, &p);
 }
 
-void CSendMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const uShort& user_id, const MONSTER_ANI_TYPE& aniType)
+void CSendMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const uShort& user_id, const MONSTER_ANI_TYPE& aniType, const uShort& id)
 {
     sc_packet_Monster_Animation p;
     p.id = monster_id;
     p.size = sizeof(p);
     p.type = SC_PACKET_MONSTER_ANIMATION;
     p.aniType = aniType;
+    p.otherid = user_id;
     Send_Packet(user_id, &p);
 
 }
@@ -230,4 +237,14 @@ void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, c
     p.id = mover_id;
     p.isMoving = isMoving;
     Send_Packet(user_id, &p);
+}
+
+void CSendMgr::Send_Rotate_Packet(const uShort& moverid, const uShort& userid, const Vector3& rotate)
+{
+    sc_packet_rotate p;
+    p.size = sizeof(p);
+    p.type = SC_ROTATE;
+    p.id = moverid;
+    p.rotate = rotate;
+    Send_Packet(userid, &p);
 }

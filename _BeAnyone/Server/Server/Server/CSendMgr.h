@@ -11,10 +11,11 @@ public:		//player
 	void Send_Leave_Packet(const uShort& user_id, const uShort& other_id, const bool& isAttack = false);
 	void Send_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
 	void Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool& isMoving);
+	void Send_Rotate_Packet(const uShort& moverid, const uShort& userid, const Vector3& rotate);
 
 	//°¡¶ó
 	void Send_Attack_Animation_Packet(const uShort& user_id, const uShort& attackerid, const bool& isAttack, const Ani_TYPE& type);
-	void Send_Monster_Animation_Packet(const uShort& monster_id, const uShort& user_id, const MONSTER_ANI_TYPE& aniType);
+	void Send_Monster_Animation_Packet(const uShort& monster_id, const uShort& user_id, const MONSTER_ANI_TYPE& aniType, const uShort& id = -1);
 public:		// monster
 	void Send_Monster_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
 	

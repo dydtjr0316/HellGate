@@ -200,6 +200,7 @@ void CPlayerScript::update()
 
 		player->SetAttack(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::ATTACK_CNT);
+		player->SetAniReset(false);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
 
 	}
@@ -208,24 +209,24 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_E)) {
 		PlaySound_(Sound_Type::GET_COIN);
 		player->AnimClipReset();
-		//player->SetAnimation(Ani_TYPE::PICK_UP);
-		//CSound::GetInst()->Play(Sound_Type::GET_COIN);
-		m_bIsPick = true;
+		player->SetPickUp(true);
 		PickUp_Default();
-		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetPickUp(), Ani_TYPE::PICK_UP);
 
 
 	}
-	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+	if (player->GetPickUp() && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) + DT, PlAYER_ANICNT_TYPE::PICKUP_CNT);
 		player->SetAnimation(Ani_TYPE::PICK_UP);
+		moveKeyInput = true;
 	}
 	else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
 
-		m_bIsPick = false;
+		player->SetPickUp(false);
+		player->SetAniReset(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
-		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
+		g_netMgr.Send_Player_Animation_Packet(id, player->GetPickUp(), Ani_TYPE::PICK_UP);
 
 
 	}
@@ -246,19 +247,14 @@ void CPlayerScript::update()
 		//Attack_Default();
 
 		player->SetDamage(false);
+		player->SetAniReset(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
 
 	}
 
-	// stamina ui
-	ClickUiButton();
+	
 
-	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
-	{
-		vRot.y += vDrag.x * DT * ROTATE_SPEED;
-		GetObj()->Transform()->SetLocalRot(vRot);
-	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
 	{
@@ -309,6 +305,22 @@ void CPlayerScript::update()
 		player->SetAnimation(Ani_TYPE::WALK_F);
 		moveKeyInput = true;
 	}
+	if (KEY_HOLD(KEY_TYPE::KEY_LBTN) )
+	{
+		vRot.y += vDrag.x * DT * ROTATE_SPEED;
+
+		if (vDrag.x > 0)m_eDrag = Drag_Type::PLUS;
+		else if (vDrag.x < 0)m_eDrag = Drag_Type::MINUS;
+		else m_eDrag = Drag_Type::IDLE;
+
+		//drag.x만 보내주면되남
+		if (vDrag.x != 0&& !moveKeyInput)
+			g_netMgr.Send_Rotate_Packet(GetObj()->GetID(), vRot);
+
+
+		//cout << "\t\t\t" << vDrag.x << endl;
+		GetObj()->Transform()->SetLocalRot(vRot);
+	}
 	if (moveKeyInput)
 	{
 		int z = (int)(localPos.z / xmf3Scale.z);
@@ -319,6 +331,7 @@ void CPlayerScript::update()
 		if (localPos.y != fHeight)
 			localPos.y = fHeight;
 		playerTrans->SetLocalPos(localPos);
+		//cout << "\t\t" << localPos.x << " , " << localPos.z << endl;
 	}
 	else
 	{
@@ -372,6 +385,12 @@ void CPlayerScript::update()
 	// quest::find item
 	if (GetObj()->Quest()->GetDoQuest(QUEST_TYPE::GET_ITEM) == false)
 		FindQuestItem();
+
+	// stamina ui
+	ClickUiButton();
+	ReduceUiBar();
+	UseItem();
+
 }
 
 void CPlayerScript::op_Move()
@@ -390,62 +409,69 @@ void CPlayerScript::op_Move()
 	const Vector3& xmf3Scale = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
 	Vector3 temp;
 
-	
-	if (player->GetBisFrist())
+	if (p->isMoving)
 	{
-		temp = p->localVec + p->dirVec * p->speed * DT;
-		player->SetBisFrist(false);
+		if (player->GetBisFrist())
+		{
+			temp = p->localVec + p->dirVec * p->speed * DT;
+			player->SetBisFrist(false);
+		}
+		else
+			temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
+
+
+		playerTrans->SetLocalRot(p->rotateY);
+
+		int z = (int)(temp.z / xmf3Scale.z);
+		float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f /*+ 100.f*/;
+
+		if (temp.y != fHeight)
+			temp.y = fHeight;
+
+		playerTrans->SetLocalPos(temp);
+
+		if (p->id == 0)
+			cout << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 	}
-	else
-		temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * DT;
+
+	//{
+	//	CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
+	//	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
 
 
-	playerTrans->SetLocalRot(p->rotateY);
-
-	int z = (int)(temp.z / xmf3Scale.z);
-	float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f /*+ 100.f*/;
-
-	if (temp.y != fHeight)
-		temp.y = fHeight;
-
-	playerTrans->SetLocalPos(temp);
-
-	{
-		//CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
-		//CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
+	//	pScript->Search_Origin_Points(p->id, pScript->GetRTT());
 
 
-		//pScript->Search_Origin_Points(p->id, pScript->GetRTT());
+	//	pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
 
-
-		//pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
-
-		//CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
-		//ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
+	//	CTransform* ObjTrans = g_Object.find(p->id)->second->Transform();;
+	//	ObjTrans->SetLocalRot(Vector3(0.f, p->rotateY, 0.f));
 
 
 
-		//if (player->GetInterpolationCnt() != 4)
-		//{
-		//	ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
-		//		p->localVec.y,
-		//		player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
-		//	cout << ObjTrans->GetLocalPos().x << endl;
-		//	cout << ObjTrans->GetLocalPos().z << endl<<endl;
-		//	player->InterpolationCnt_PP();
-		//}
-		//else
-		//{
-		//	g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-		//}
-	}
+	//	if (player->GetInterpolationCnt() != 4)
+	//	{
+	//		ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
+	//			p->localVec.y,
+	//			player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
+	//		cout << ObjTrans->GetLocalPos().x << endl;
+	//		cout << ObjTrans->GetLocalPos().z << endl<<endl;
+	//		player->InterpolationCnt_PP();
+	//	}
+	//	else
+	//	{
+	//		//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
+	//	}
+	//}
 }
 
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 {
 	m_movePacketTemp = new sc_packet_move;
+	
 	m_movePacketTemp = p;
 	m_fRTT = rtt;
+	
 }
 
 void CPlayerScript::SetOrigin_Point(const int& index, const float& x, const float& y)
@@ -494,9 +520,10 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	case MV_BACK:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
 		break;
-	case MV_IDLE:
+	case MV_IDLE:case 0:
 		break;
 	default:
+		cout << m_movePacketTemp->dir << endl;
 		cout << "Unknown Direction from Client move packet!\n";
 		DebugBreak();
 		exit(-1);
@@ -688,6 +715,121 @@ void CPlayerScript::ClickUiButton()
 				}
 			}
 		}
+	}
+}
+
+void CPlayerScript::ReduceUiBar()
+{
+	float speed{};
+	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
+		if (i == (UINT)UI_BAR::HUG)
+			speed = 0.3f;
+		else
+			speed = 0.2f;
+
+		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
+		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
+		
+		//float a = (0.05 * DT);
+		scale.x -= (speed * DT);
+		pos.x -= (speed * DT) / 2.f;
+
+		m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
+		m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x, pos.y, pos.z));
+	}
+}
+
+void CPlayerScript::IncreaseUiBar(float _stamina, float _dash, float _hug, float _temper)
+{
+	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
+		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
+		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
+
+		switch (i) {
+		case (UINT)UI_BAR::STAMINA:
+			if (_stamina + scale.x >= 350.f)
+				_stamina = 350.f - scale.x;
+			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _stamina, scale.y, scale.z));
+			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_stamina / 2.f), pos.y, pos.z));
+			break;
+		case (UINT)UI_BAR::DASH:
+			if (_dash + scale.x >= 350.f)
+				_dash = 350.f - scale.x;
+			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _dash, scale.y, scale.z));
+			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_dash / 2.f), pos.y, pos.z));
+			break;
+		case (UINT)UI_BAR::HUG:
+			if (_hug + scale.x >= 350.f)
+				_hug = 350.f - scale.x;
+			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _hug, scale.y, scale.z));
+			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_hug / 2.f), pos.y, pos.z));
+			break;
+		case (UINT)UI_BAR::TEMPER:
+			if (_temper + scale.x >= 350.f)
+				_temper = 350.f - scale.x;
+			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _temper, scale.y, scale.z));
+			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_temper / 2.f), pos.y, pos.z));
+			break;
+		}
+	}
+}
+
+void CPlayerScript::UseItem()
+{
+	if(m_pItemUIObj->StaticUI()->m_bActive == true){
+		for (int i = 0; i < (UINT)ITEM_ID::END; ++i) {
+			if (m_pItemUIObj->StaticUI()->GetUseItemID(i) == true) {
+				FindItemBeUsed(i);
+			}
+		}
+	}
+}
+
+void CPlayerScript::FindItemBeUsed(int _itemId)
+{
+
+	switch (_itemId) {
+	case (UINT)ITEM_ID::STEAK:	// steak
+		cout << "steak 사용" << endl;
+		IncreaseUiBar(0.f, 0.f, 20.f, 10.f);
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::STEAK, false);
+		break;
+	case (UINT)ITEM_ID::BOTTLE_STAMINA:
+		cout << "stamina 사용" << endl;
+		IncreaseUiBar(30.f, 0.f, 0.f, 0.f);
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_STAMINA, false);
+		break;
+	case (UINT)ITEM_ID::BOTTLE_DASH:
+		cout << "dash 사용" << endl;
+		IncreaseUiBar(0.f, 20.f, 0.f, 0.f);
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_DASH, false);
+		break;
+	case (UINT)ITEM_ID::MONEYBAG:
+		break;
+	case (UINT)ITEM_ID::CARROT:
+		cout << "carrot 사용" << endl;
+		IncreaseUiBar(0.f, 0.f, 10.f, 5.f);
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::CARROT, false);
+		break;
+	case (UINT)ITEM_ID::APPLE:
+		cout << "APPLE 사용" << endl;
+		IncreaseUiBar(0.f, 0.f, 10.f, 5.f);
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::APPLE, false);
+		break;
+	case (UINT)ITEM_ID::BRANCH:
+		break;
+	case (UINT)ITEM_ID::BASIC_SWORD:
+		cout << "BASIC_SWORD 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BASIC_SWORD, false);
+		break;
+	case (UINT)ITEM_ID::BASIC_ARROW:
+		break;
+	case (UINT)ITEM_ID::AX:
+		cout << "AX 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::AX, false);
+		break;
+	default:
+		break;
 	}
 }
 

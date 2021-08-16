@@ -27,8 +27,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 
 //const char ip[] = "192.168.0.11";
 //const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
-const char ip[] = "221.151.160.142";
+const char ip[] = "192.168.0.13";
+//const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
 
@@ -185,8 +185,24 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local,
 	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
 	p.deltaTime = delta;
 	p.isMoving = isMoving;
+	cout << "-------------------------------" << endl;
+	cout << "-------------------------------" << endl;
+	cout << "Send_Move_Packet" << endl;
+	cout << local.x << " , " << local.z << endl;
+	cout << "-------------------------------" << endl;
+	cout << "-------------------------------" << endl;
 
 
+	Send_Packet(&p);
+}
+
+void CNetMgr::Send_Rotate_Packet(const uShort& id, const Vector3& rotate)
+{
+	cs_packet_rotate p;
+	p.type = CS_ROTATE;
+	p.size = sizeof(p);
+	p.id = id;
+	p.rotate = rotate;
 	Send_Packet(&p);
 }
 
@@ -584,6 +600,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 					system_clock::time_point end = system_clock::now();
 					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+
 					if (packet->isMoving)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
 					else
@@ -646,6 +664,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	}
 	break;
+	case SC_ROTATE:
+	{
+		sc_packet_rotate* packet = reinterpret_cast<sc_packet_rotate*>(ptr);
+		if (packet->id != g_myid && g_Object.count(packet->id) != 0)
+			g_Object.find(packet->id)->second->Transform()->SetLocalRot(packet->rotate);
+	}
+	break;
+
 	case SC_PACKET_STOP:
 	{
 		//cout << "SC_PACKET_STOP" << endl;
@@ -787,9 +813,25 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		if (g_Object.find(packet->id)->second != nullptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
+
 		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(false);
+		else
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 
+		// 플레이어에게 공격
+
+		if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
+		{
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
+			//cout << "\t\t\t 강제로 넣은 userid == " << packet->otherid << endl;
+			//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPlayer(g_Object.find(packet->otherid)->second);
+
+			//if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
+			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::GREEN);
+			//else
+			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->AttackToPlayer(MOB_TYPE::YELLOW);
+		}
 	}
 	break;
 	case SC_ITEMCREATE:

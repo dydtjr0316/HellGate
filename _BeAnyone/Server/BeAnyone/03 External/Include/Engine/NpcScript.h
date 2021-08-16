@@ -99,7 +99,8 @@ public:
 	// static ui
 	void SetStaticUiRender(bool _bool);
 	void SellAndBuy();
-public:
+	bool ComputeMousePos(Vector3& _pos, Vector3& _scale);
+
 	CLONE(CNpcScript);
 
 public:

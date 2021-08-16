@@ -18,6 +18,7 @@ enum class UI_BUTTON {
 	END,
 };
 
+
 class CDeadReckoner;
 class CPlayerScript
 	: public CScript
@@ -42,7 +43,8 @@ public:
 private:
 	Vector3				m_vecPlayerDir;
 	CGameObject*		m_pItemUIObj;
-	
+	Drag_Type			m_eDrag;
+	float				m_fBeforeDragX = 0.f;
 
 private:
 	float			m_ftimeCount = 0.f;
@@ -73,6 +75,8 @@ private:
 	vector<CGameObject*>		m_vUiButton;
 	bool						m_bUiCheck = true;
 
+	float						m_fTime = 0.0f;
+
 public:
 	bool GetAniReset() { return m_bisAniReset; }
 	void SetAniReset(const bool& reset) { m_bisAniReset = reset; }
@@ -81,6 +85,10 @@ public:
 
 	void SetDamage(bool _isDamage) { m_bisDamage = _isDamage; }
 	bool GetDamage() { return m_bisDamage; }
+
+	//pick up
+	void SetPickUp(bool _isPick) { m_bIsPick = _isPick; }
+	bool GetPickUp() { return m_bIsPick; }
 
 	// animclip
 	void SetCnt(const float& cnt, PlAYER_ANICNT_TYPE _AniCntType) { m_fAnimationCnt[(UINT)_AniCntType] = cnt; }
@@ -108,6 +116,12 @@ public:
 	// ui
 	void ClickUiButton();
 	void FindQuestItem();
+	void ReduceUiBar();
+	void IncreaseUiBar(float _stamina, float _dash, float _hug, float _temper);
+
+	// use item
+	void UseItem();
+	void FindItemBeUsed(int _itemId);
 public:
 	// sound
 	void PlaySound_(const Sound_Type& sound);

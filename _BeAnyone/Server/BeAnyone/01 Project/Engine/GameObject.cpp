@@ -239,34 +239,7 @@ void CGameObject::update()
 		}
 		else/* if(GetLayerIdx())*/
 		{
-			if (GetID() == 1000 || GetID() == 1001)
-			{
-				cout << GetID() << "의 " << i << "스크립트------  else update 들어가기 전" << endl;
-				for (auto& obj : g_Object)
-				{
-					if ((obj.first == 1000 || obj.first == 1001) &&
-						obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
-					{
-						cout << "ID : " << obj.first << "    Dir : " <<
-							(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
-					}
-				}
-			}
 			m_vecScript[i]->update();
-
-			if (GetID() == 1000 || GetID() == 1001)
-			{
-				cout << GetID() << i << "스크립트------  else update 나온 후 " << endl;
-				for (auto& obj : g_Object)
-				{
-					if ((obj.first == 1000 || obj.first == 1001) &&
-						obj.second->GetScript<CMonsterScript>()->GetPacketMove() != nullptr)
-					{
-						cout << "ID : " << obj.first << "    Dir : " <<
-							(int)obj.second->GetScript<CMonsterScript>()->GetPacketMove()->eDir << endl;
-					}
-				}
-			}
 		}
 
 	}

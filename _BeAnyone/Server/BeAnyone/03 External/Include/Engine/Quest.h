@@ -14,6 +14,7 @@ private:
 	// quest »Æ¿Œ
 	vector<int>				m_vQuestCheck;
 	bool					m_bDoQuest[(UINT)QUEST_TYPE::END];
+	bool					m_bDoAllQuest = false;
 
 public:
 	vector<CGameObject*>	m_pQuestBox;

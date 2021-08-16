@@ -70,14 +70,26 @@ void CQuest::update()
 			if(m_vExistQuestBox[i] == QUESTBOX_TYPE::NPC_1)
 				m_pQuestBox[i]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"MonsterKill_Complete").GetPointer());
 		}
-
-		
 	}
 	// Get item
 	if (m_vQuestCheck[(UINT)QUEST_TYPE::GET_ITEM] >= 3) {
 		for (int i = 0; i < 2; ++i) {
 			if (m_vExistQuestBox[i] == QUESTBOX_TYPE::NPC_1)
 				m_pQuestBox[i]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"GetItem_Complete").GetPointer());
+		}
+	}
+	// Buy Potion
+	if (m_vQuestCheck[(UINT)QUEST_TYPE::BUY_POTION] >= 3) {
+		for (int i = 0; i < 2; ++i) {
+			if (m_vExistQuestBox[i] == QUESTBOX_TYPE::NPC_2)
+				m_pQuestBox[i]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"BuyPotion_Complete").GetPointer());
+		}
+	}
+	// Buy Weapone
+	if (m_vQuestCheck[(UINT)QUEST_TYPE::BUY_WEAPON] >= 1) {
+		for (int i = 0; i < 2; ++i) {
+			if (m_vExistQuestBox[i] == QUESTBOX_TYPE::NPC_2)
+				m_pQuestBox[i]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"BuyWeapone_Complete").GetPointer());
 		}
 	}
 

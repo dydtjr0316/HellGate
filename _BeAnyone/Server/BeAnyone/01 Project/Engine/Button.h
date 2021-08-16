@@ -49,6 +49,9 @@ private:
 	int						m_iItemCount = 0;
 	bool					m_bChangeCount;
 
+	// explain box
+	CGameObject*			m_pExplainBox;
+
 public:
 	void					init();
 
@@ -88,6 +91,9 @@ public:
 	void SetItemPrice();
 	void CreateItemNum(int num);	// item num or item price ¸¸µé±â
 
+	// explain box
+	void CreateExplainBox();
+	CGameObject* GetExplainBox() { return m_pExplainBox; }
 public:
 	CButton();
 	virtual ~CButton();

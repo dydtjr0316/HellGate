@@ -431,3 +431,10 @@ enum Sound_Type
 	GET_COIN,	// 동전 주울때
 	SET_COIN	// 동전 떨어질때
 };
+
+enum Drag_Type
+{
+	IDLE,
+	PLUS,
+	MINUS
+};

@@ -81,8 +81,7 @@ void CNpcScript::init()
 	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
 	m_pCam = FindCam(L"UiCam", L"Default");
 	storeUi->StaticUI()->SetCameraProj(m_pCam->Camera());
-	//	플레이어 스크립트(오브젝트)에 StaticUI 귀속
-	// pPlayerObj->GetScript<CPlayerScript>()->SetUIObj(pObject);
+	
 	// Transform 설정
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	storeUi->Transform()->SetLocalPos(Vector3(-400.f, 80.f, 1.f));
@@ -95,6 +94,7 @@ void CNpcScript::init()
 	float fUI = 0.5f;
 	storeUi->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
 	storeUi->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
+	
 	// AddGameObject
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(storeUi);
 	m_pStoreUi = storeUi;
@@ -105,6 +105,9 @@ void CNpcScript::init()
 	Vector3 vObjectScale = storeUi->Transform()->GetLocalScale();
 	float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;
 	float	fEmptyX = (vObjectScale.x - (vScale.x * 4.f)) / 5.f;
+	storeUi->StaticUI()->CreateStoreButton();
+	storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->SetLocalPos(Vector3(vObjectPos.x, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
+	storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"EXIT").GetPointer());
 	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
 	{
 		Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
@@ -147,10 +150,15 @@ void CNpcScript::init()
 
 	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
 		storeUi->StaticUI()->m_vecButton[i]->init();
+
+	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
+		storeUi->StaticUI()->m_vecButton[i]->CreateExplainBox();
+
 }
 
 void CNpcScript::update()
 {
+	//if (g_myid < 0)return;
 	CTransform* NpcTrans = GetObj()->Transform();
 	Vector3 NpcPos = NpcTrans->GetLocalPos();
 	Vector3 RequestPos{};
@@ -208,8 +216,22 @@ void CNpcScript::update()
 				if (m_iClickNum == 1) {
 					SetStaticUiRender(true);
 					m_pConversationBox->SetUiRenderCheck(false);
+					m_pPlayerUi->StaticUI()->SetWalletMoney();
 				}
-				// 사고 팔기
+				
+				Vector3 pos = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalPos();
+				Vector3 scale = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalScale();
+				if (ComputeMousePos(pos, scale)) {
+					SetCameraState(CAMERA_STATE::FIXED_CAMERA);
+					SetAnimation(NPC_ANI_TYPE::IDLE);
+					m_bisAniReset = false;
+					m_pConversationBox->SetUiRenderCheck(false);
+					m_bIsTalk = false;
+					m_bIsCollision = false;
+					m_iClickNum = 0;
+					m_bQuestBox = true;
+					SetStaticUiRender(false);
+				}
 				
 			}
 		}
@@ -227,6 +249,7 @@ void CNpcScript::update()
 			m_bGetParentCamera = false;
 			AnimClipReset();
 			SetAnimation(NPC_ANI_TYPE::TALK);
+			
 
 			// 첫 대화가 나와야 함
 			// 클릭할 때마다 다른 대화
@@ -242,7 +265,7 @@ void CNpcScript::update()
 			m_pPlayer->StaticUI()->m_iMoney += 300;*/
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_RBTN) && GetObj()->GetName() == L"Npc_3") {
+	if (KEY_TAB(KEY_TYPE::KEY_RBTN) && GetObj()->GetName() == L"Npc_3" && (m_bIsTalk == true)) {
 		SellAndBuy();
 	}
 }
@@ -257,60 +280,114 @@ void CNpcScript::SetStaticUiRender(bool _bool)
 		m_pStoreUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
 		m_pPlayerUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
 	}
+
+	m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->SetUiRenderCheck(_bool);
+
+	// store time인지 명시
+	m_pStoreUi->StaticUI()->m_bStoreTime = _bool;
+	m_pPlayerUi->StaticUI()->m_bStoreTime = _bool;
 }
 
 void CNpcScript::SellAndBuy()
 {
 	int playerMoney = m_pPlayerUi->StaticUI()->m_iMoney;
+
+	CStaticUI* storeUi = m_pStoreUi->StaticUI();
+	CStaticUI* playerUi = m_pPlayerUi->StaticUI();
+
+	// store
+	if (ComputeMousePos((Vector3)m_pStoreUi->Transform()->GetLocalPos(), (Vector3)m_pStoreUi->Transform()->GetLocalScale())) {
+		for (int i = 0; i < storeUi->m_vecButton.size(); ++i) {
+			if (storeUi->m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
+				Vector3 ButtonPos = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
+				Vector3 ButtonScale = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
+
+				if (ComputeMousePos(ButtonPos, ButtonScale)) {
+					if (playerMoney - storeUi->m_vecButton[i]->GetItemCount() >= 0) {
+						playerUi->SetButton(storeUi->m_vecButton[i]->GetItemID());
+						playerUi->m_iMoney -= storeUi->m_vecButton[i]->GetItemCount();
+						playerUi->SetWalletMoney();
+
+						if (m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::BUY_POTION) == false ||
+							m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::BUY_WEAPON) == false) {
+							// stamina potion
+							switch (storeUi->m_vecButton[i]->GetItemID()) {
+							case ITEM_ID::BOTTLE_STAMINA:
+								m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::BUY_POTION);
+								break;
+							case ITEM_ID::AX:	// 다른 무기 추가해도 ㄱㅊ을 듯
+								m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::BUY_WEAPON);
+								break;
+							default:
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	// player
+	else {
+		for (int i = 0; i < playerUi->m_vecButton.size(); ++i) {
+			if (playerUi->m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
+				Vector3 ButtonPos = playerUi->m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
+				Vector3 ButtonScale = playerUi->m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
+
+				if (ComputeMousePos(ButtonPos, ButtonScale)) {
+					if (playerUi->m_vecButton[i]->GetItemCount() > 1) {
+						playerUi->m_vecButton[i]->SubItemCount();
+						playerUi->SetWalletMoney();
+						playerUi->m_iMoney += 10;		// 팔고 돈 올리기
+					}
+					else if (playerUi->m_vecButton[i]->GetItemCount() == 1) {
+						playerUi->m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
+						playerUi->m_vecButton[i]->SubItemCount();
+						playerUi->SetWalletMoney();
+						playerUi->m_iMoney += 10;
+					}
+				}
+			}
+		}
+	}
+}
+
+bool CNpcScript::ComputeMousePos(Vector3& _pos, Vector3& _scale)
+{
 	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	pMousePos.x -= res.fWidth / 2.f;
 	pMousePos.y -= res.fHeight / 2.f;
 	pMousePos.y = -pMousePos.y;
 
-	CStaticUI* storeUi = m_pStoreUi->StaticUI();
-	CStaticUI* playerUi = m_pPlayerUi->StaticUI();
-	// store
-	for (int i = 0; i < storeUi->m_vecButton.size(); ++i) {
-		if (storeUi->m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
-			Vector3 ButtonPos = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
-			Vector3 ButtonScale = storeUi->m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
-			
-			if (pMousePos.x >= ButtonPos.x - (ButtonScale.x / 2) && pMousePos.x <= ButtonPos.x + (ButtonScale.x / 2)
-				&& pMousePos.y <= ButtonPos.y + (ButtonScale.y / 2) && pMousePos.y >= ButtonPos.y - (ButtonScale.y / 2)) {
-				if (playerMoney - storeUi->m_vecButton[i]->GetItemCount() >= 0) {
-					playerUi->SetButton(storeUi->m_vecButton[i]->GetItemID());
-					playerUi->m_iMoney -= storeUi->m_vecButton[i]->GetItemCount();
-					playerUi->SetWalletMoney();
-				}
-			}
-		
-		}
-	}
+	if (pMousePos.x >= _pos.x - (_scale.x / 2) && pMousePos.x <= _pos.x + (_scale.x / 2)
+		&& pMousePos.y <= _pos.y + (_scale.y / 2) && pMousePos.y >= _pos.y - (_scale.y / 2))
+		return true;
+	return false;
 }
-//
-//void CNpcScript::ComputeMousePos(Vector3& _pos, Vector3& _scale, POINT& _mousePos)
-//{
-//	if (_mousePos.x >= _pos.x - (_scale.x / 2) && _mousePos.x <= _pos.x + (_scale.x / 2)
-//		&& _mousePos.y <= -_pos.y + (_scale.x / 2) && _mousePos.y >= -_pos.y - (_scale.x / 2)) {
-//
-//	}
-//}
 
 
 void CNpcScript::CheckPlayer()
 {
 	m_vPlayerQuest = m_pPlayer->Quest()->GetQuestCheck();
 
-	if (m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] == 3 && GetObj()->GetName() == L"Npc_1") {
+	if (m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] >= 3 && GetObj()->GetName() == L"Npc_1") {
 		m_vIsQuest[0] = REQUEST_STATE::REQUEST_RESOLUTION;
 		m_vPlayerQuest[(UINT)QUEST_TYPE::KILL_MONSTER] = 0;
 		m_pPlayer->Quest()->ResetQuestCheck(QUEST_TYPE::KILL_MONSTER);
 		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::KILL_MONSTER, true);
 	}
-	else if (m_vIsQuest[1] == REQUEST_STATE::REQUESTING && m_vPlayerQuest[(UINT)QUEST_TYPE::GET_ITEM] == 3 && GetObj()->GetName() == L"Npc_1") {
+	else if (m_vIsQuest[1] == REQUEST_STATE::REQUESTING && m_vPlayerQuest[(UINT)QUEST_TYPE::GET_ITEM] >= 3 && GetObj()->GetName() == L"Npc_1") {
 		m_vIsQuest[1] = REQUEST_STATE::REQUEST_RESOLUTION;
 		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::GET_ITEM, true);
+	}
+	else if (m_vIsQuest[0] == REQUEST_STATE::REQUESTING && m_vPlayerQuest[(UINT)QUEST_TYPE::BUY_POTION] >= 3 && GetObj()->GetName() == L"Npc_2") {
+		m_vIsQuest[0] = REQUEST_STATE::REQUEST_RESOLUTION;
+		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::BUY_POTION, true);
+	}
+	else if (m_vIsQuest[1] == REQUEST_STATE::REQUESTING && m_vPlayerQuest[(UINT)QUEST_TYPE::BUY_WEAPON] >= 1 && GetObj()->GetName() == L"Npc_2") {
+		m_vIsQuest[1] = REQUEST_STATE::REQUEST_RESOLUTION;
+		m_pPlayer->Quest()->SetDoQuest(QUEST_TYPE::BUY_WEAPON, true);
 	}
 	
 
@@ -353,7 +430,7 @@ void CNpcScript::DecideQuestType()
 		if (GetObj()->GetName() == L"Npc_1") 
 			SetQuestBox(L"QuestBase", QUESTBOX_TYPE::NPC_1);
 		else if (GetObj()->GetName() == L"Npc_2") 
-			SetQuestBox(L"BuyPotion", QUESTBOX_TYPE::NPC_2);
+			SetQuestBox(L"QuestBase", QUESTBOX_TYPE::NPC_2);
 	}
 	else if (m_vIsQuest[0] == REQUEST_STATE::COMPLETE && m_vIsQuest[1] == REQUEST_STATE::NOT_RECIEVE) {
 		if (GetObj()->GetName() == L"Npc_1") {
@@ -412,6 +489,10 @@ void CNpcScript::ChangeBoxTexture()
 				m_vIsQuest[0] = REQUEST_STATE::COMPLETE;
 			else if(m_vIsQuest[0] == REQUEST_STATE::COMPLETE)
 				m_vIsQuest[1] = REQUEST_STATE::COMPLETE;
+
+			// 돈 주기
+			m_pPlayer->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->m_iMoney += 300;
+			m_pPlayer->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetWalletMoney();
 		}
 	}
 	// NPC_2
@@ -449,6 +530,14 @@ void CNpcScript::ChangeBoxTexture()
 		}
 		else if (m_eQuestType == NPC_QUEST::DONE) {
 			m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc2_done").GetPointer());
+			if (m_vIsQuest[0] == REQUEST_STATE::REQUEST_RESOLUTION)
+				m_vIsQuest[0] = REQUEST_STATE::COMPLETE;
+			else if (m_vIsQuest[0] == REQUEST_STATE::COMPLETE)
+				m_vIsQuest[1] = REQUEST_STATE::COMPLETE;
+
+			// 돈 주기
+			m_pPlayer->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->m_iMoney += 300;
+			m_pPlayer->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetWalletMoney();
 		}
 	}
 
@@ -506,19 +595,6 @@ void CNpcScript::OnCollisionExit(CCollider* _pOther)
 
 void CNpcScript::SetCameraState(CAMERA_STATE _eCamState)
 {
-
-	/*CGameObject* cam;
-	vector<CGameObject*> objects;
-	objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetObjects();
-
-	vector<CGameObject*>::iterator iter = objects.begin();
-
-	for (; iter != objects.end();) {
-		if ((*iter)->GetName() == L"MainCam")
- 			cam = *iter;
-		++iter;
-	}*/
-
 	m_pCam = FindCam(L"MainCam", L"Default");
 
 	Vector3 npcPos = GetObj()->Transform()->GetLocalPos();

@@ -93,12 +93,13 @@ void CStaticUI::CreateStoreButton()
 		storeButton->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 		storeButton->AddComponent(new CTransform);
 		storeButton->AddComponent(new CMeshRender);
-		storeButton->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 0.0f));
+		storeButton->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 1.0f));
 		storeButton->Transform()->SetLocalScale(Vector3(200.f, 50.f, 1.f));
 		//MeshRender 설정
 		storeButton->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		storeButton->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
 		storeButton->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"LACK_MONEY").GetPointer());
+		storeButton->SetUiRenderCheck(false);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(storeButton);
 		m_StoreButton.push_back(storeButton);
 	}
@@ -135,6 +136,9 @@ void CStaticUI::init(UI_TYPE _eType)
 	{
 		m_vecButton.push_back(new CButton);
 	}
+
+	for (int i = 0; i < (UINT)ITEM_ID::END; ++i)
+		m_bUseItem.push_back(false);
 }
 
 void CStaticUI::update()
@@ -180,11 +184,25 @@ void CStaticUI::update()
 			}
 		}
 
-		/*if (KEY_TAB(KEY_TYPE::KEY_RBTN))	
+		if (KEY_TAB(KEY_TYPE::KEY_RBTN) && (m_eType == UI_TYPE::PRIVATE_ITEM_UI) && (m_bStoreTime == false))
 		{
-
+			for (int i = 0; i < m_vecButton.size(); ++i) {
+				Vector3 Pos = m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
+				Vector3 Scale = m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
+				
+				if (m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
+					if (ComputeMousePos(Pos, Scale)) {
+						UseItem(m_vecButton[i]->GetItemID());
+						if (m_vecButton[i]->GetItemID() != ITEM_ID::AX && m_vecButton[i]->GetItemID() != ITEM_ID::BASIC_SWORD) {
+							m_vecButton[i]->SubItemCount();
+							if (m_vecButton[i]->GetItemCount() == 0)
+								m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
+						}
+					}
+				}
+			}
 		}
-		else if (KEY_HOLD(KEY_TYPE::KEY_RBTN))		
+		/*else if (KEY_HOLD(KEY_TYPE::KEY_RBTN))
 		{
 
 		}
@@ -199,7 +217,37 @@ void CStaticUI::update()
 				}
 			}
 		}*/
+
+
+		for (int i = 0; i < m_vecButton.size(); ++i) {
+			Vector3 Pos = m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
+			Vector3 Scale = m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
+
+			if (m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
+				if (ComputeMousePos(Pos, Scale))
+					m_vecButton[i]->GetExplainBox()->SetUiRenderCheck(true);
+				else
+					m_vecButton[i]->GetExplainBox()->SetUiRenderCheck(false);
+			}
+			/*else
+				m_vecButton[i]->GetExplainBox()->SetUiRenderCheck(false);*/
+		}
 	}
+}
+
+
+bool CStaticUI::ComputeMousePos(Vector3& _pos, Vector3& _scale)
+{
+	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	pMousePos.x -= res.fWidth / 2.f;
+	pMousePos.y -= res.fHeight / 2.f;
+	pMousePos.y = -pMousePos.y;
+
+	if (pMousePos.x >= _pos.x - (_scale.x / 2) && pMousePos.x <= _pos.x + (_scale.x / 2)
+		&& pMousePos.y <= _pos.y + (_scale.y / 2) && pMousePos.y >= _pos.y - (_scale.y / 2))
+		return true;
+	return false;
 }
 
 int CStaticUI::GetQuestItemCount()
@@ -241,6 +289,33 @@ void CStaticUI::SetWalletMoney()
 	str = to_string(tenThousands);
 	wstr = wstring(str.begin(), str.end());
 	m_pMoneyUi[0]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+}
+
+void CStaticUI::UseItem(ITEM_ID _eType)
+{
+	switch (_eType) {
+	case ITEM_ID::STEAK:
+		m_bUseItem[(UINT)ITEM_ID::STEAK] = true;
+		break;
+	case ITEM_ID::BOTTLE_STAMINA:
+		m_bUseItem[(UINT)ITEM_ID::BOTTLE_STAMINA] = true;
+		break;
+	case ITEM_ID::BOTTLE_DASH:
+		m_bUseItem[(UINT)ITEM_ID::BOTTLE_DASH] = true;
+		break;
+	case ITEM_ID::CARROT:
+		m_bUseItem[(UINT)ITEM_ID::CARROT] = true;
+		break;
+	case ITEM_ID::APPLE:
+		m_bUseItem[(UINT)ITEM_ID::APPLE] = true;
+		break;
+	case ITEM_ID::BASIC_SWORD:
+		m_bUseItem[(UINT)ITEM_ID::BASIC_SWORD] = true;
+		break;
+	case ITEM_ID::AX:
+		m_bUseItem[(UINT)ITEM_ID::AX] = true;
+		break;
+	}
 }
 
 void CStaticUI::finalupdate()
