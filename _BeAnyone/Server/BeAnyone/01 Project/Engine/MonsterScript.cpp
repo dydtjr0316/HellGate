@@ -135,6 +135,11 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
         m_bisMoving = false;
      
         m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
+        g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
+
+        if (m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)
+            m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
+
         m_bisDamaged = true;
     }
 }
@@ -309,10 +314,9 @@ void CMonsterScript::Attack()
         g_netMgr.Send_MonsterDead_Packet(monsterid);
         //m_Packet_autoMove->eDir = (char)MONSTER_AUTOMOVE_DIR::AUTO;
         
-        g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
+        //g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
         g_netMgr.Send_MonsterDead_Packet(m_sId);
-        if (m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)
-            m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
+        
 
         m_packetDead = false;
         // 여기가 죽는 부분

@@ -152,7 +152,7 @@ void CButton::ChangeButtonTexture()
 
 	case ITEM_ID::BASIC_SWORD:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BASIC_SWORD");
-		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainBasicSowrd").GetPointer());
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainBasicSword").GetPointer());
 		break;
 
 	case ITEM_ID::BASIC_ARROW:

@@ -1671,6 +1671,8 @@ void CSceneMgr::init()
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\sword_2.fbx", FBX_TYPE::PLAYER);
 	SwordScript->SetWeaponeData(pMeshData);
 	// µµ³¢
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\Ax.fbx", FBX_TYPE::PLAYER);
+	SwordScript->SetWeaponeData(pMeshData);
 
 	m_pCurScene->AddGameObject(L"Player", pSword, false);
 	pPlayerObj->AddChild(pSword);

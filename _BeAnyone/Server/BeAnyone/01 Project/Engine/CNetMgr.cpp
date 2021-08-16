@@ -26,8 +26,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -206,12 +206,13 @@ void CNetMgr::Send_Rotate_Packet(const uShort& id, const Vector3& rotate)
 	Send_Packet(&p);
 }
 
-void CNetMgr::Send_Stop_Packet(const bool& isMoving)
+void CNetMgr::Send_Stop_Packet(const bool& isMoving, const uShort& id)
 {
 	cs_packet_stop p;
 	p.type = CS_STOP;
 	p.size = sizeof(p);
 	p.isMoving = isMoving;
+	p.id = id;
 	Send_Packet(&p);
 }
 
@@ -883,7 +884,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "다시 받을 때 item pos: " << packet->vPos.x << "\t" << packet->vPos.y << "\t" << packet->vPos.z << endl;
 		
 		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
-		CEventMgr::GetInst()->update();
 		
 
 	}
