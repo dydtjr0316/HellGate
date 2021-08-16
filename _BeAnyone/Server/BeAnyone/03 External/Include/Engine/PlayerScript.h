@@ -95,7 +95,7 @@ public:
 	float GetCnt(PlAYER_ANICNT_TYPE _AniCntType) { return m_fAnimationCnt[(UINT)_AniCntType]; }
 	
 	// weapone
-	void ChangeWeapone();
+	void ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID);
 	
 public:
 	XMFLOAT3 GetVelocity() { return m_xmf3Velocity; }

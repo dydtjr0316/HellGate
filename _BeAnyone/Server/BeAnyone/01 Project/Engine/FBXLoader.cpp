@@ -365,6 +365,8 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 	if (m_fbxType == FBX_TYPE::PLAYER) {
 		if (m_fileName == L"sword_2")
 			str = "PP_Color_Palette";
+		if (m_fileName == L"Ax")
+			str = "Ax";
 	}
 
 	tMtrlInfo.strMtrlName = wstring(str.begin(), str.end());
@@ -556,6 +558,14 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 				}
 			}
 		}
+	}
+
+	if (m_fbxType == FBX_TYPE::PLAYER){
+		if (m_fileName == L"Ax") {
+			strName = "Ax.png";
+			wstrName += wstring(strName.begin(), strName.end());
+		}
+		
 	}
 
 	if (m_fbxType == FBX_TYPE::NPC) {

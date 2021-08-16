@@ -804,30 +804,106 @@ void CPlayerScript::FindItemBeUsed(int _itemId)
 	case (UINT)ITEM_ID::AX:
 		cout << "AX ªÁøÎ" << endl;
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::AX, false);
+		ChangeWeapone(WEAPONE_TYPE::AX, ITEM_ID::AX);
 		break;
 	case (UINT)ITEM_ID::BASIC_SWORD:
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BASIC_SWORD, false);
+		ChangeWeapone(WEAPONE_TYPE::SWORD, ITEM_ID::BASIC_SWORD);
 		break;
 	default:
 		break;
 	}
 }
 
-void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)
+void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)	// πŸ≤‹ æ∆¿Ã≈€
 {
 	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
 	wstring a;
+	wstring b;
 
 	for (int i = 0; i < vecChild.size(); ++i) {
-		if (vecChild[i]->GetName() == L"sword") {
-			if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"mesh\\PlayerMale_Weapone_Sword.mesh") {
-				vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
 
-				for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
-					if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
-						m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::BASIC_SWORD);
+		a = vecChild[i]->MeshRender()->GetMesh()->GetName();
+		b = vecChild[i]->GetName();
+
+		if (vecChild[i]->GetName() == L"sword") {
+
+			switch (_iTemID) {
+			case ITEM_ID::NEW_SWORD:
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\PlayerMale_Weapon_Sword.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, XM_PI / 2.f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::BASIC_SWORD);
+						}
 					}
 				}
-				
+				// µµ≥¢
+				if(vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\Ax.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, XM_PI / 2.f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::AX);
+						}
+					}
+				}
+				break;
+			case ITEM_ID::BASIC_SWORD:
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\sword_2.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.0f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::NEW_SWORD);
+						}
+					}
+				}
+				// µµ≥¢
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\Ax.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.0f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::AX);
+						}
+					}
+				}
+				break;
+			case ITEM_ID::AX:
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\PlayerMale_Weapon_Sword.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::BASIC_SWORD);
+						}
+					}
+				}
+
+				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\sword_2.mesh") {
+					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
+					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, XM_PI / 2.f, 0.f));
+					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+
+					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
+						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
+							m_pItemUIObj->StaticUI()->m_vecButton[j]->SetItemID(ITEM_ID::NEW_SWORD);
+						}
+					}
+				}
+				break;
 			}
 			
 			//

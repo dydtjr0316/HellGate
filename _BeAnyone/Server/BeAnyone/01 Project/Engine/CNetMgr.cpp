@@ -213,6 +213,7 @@ void CNetMgr::Send_Stop_Packet(const bool& isMoving, const uShort& id)
 	p.size = sizeof(p);
 	p.id = id;
 	p.isMoving = isMoving;
+<<<<<<< HEAD
 	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
 	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
 	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
@@ -221,6 +222,9 @@ void CNetMgr::Send_Stop_Packet(const bool& isMoving, const uShort& id)
 	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
 	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
 	cout << "보냈잖아 시바라 왜 안받아 개 족같은새끼야\t\t\t"<<p.id << endl;
+=======
+	p.id = id;
+>>>>>>> bf8d15bab78070bd35929dee751d191e405a5b0c
 	Send_Packet(&p);
 }
 
@@ -898,6 +902,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 		cout << "다시 받을 때 item pos: " << packet->vPos.x << "\t" << packet->vPos.y << "\t" << packet->vPos.z << endl;
 		
 		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
+<<<<<<< HEAD
+=======
+		
+>>>>>>> bf8d15bab78070bd35929dee751d191e405a5b0c
 
 	}
 	break;
