@@ -292,7 +292,7 @@ void CDevice::CreateRootSignature()
 	D3D12_ROOT_SIGNATURE_DESC sigDesc = {};
 	sigDesc.NumParameters = 1;
 	sigDesc.pParameters = &slotParam;	// Descriptor Table 0번 슬롯 설명
-	sigDesc.NumStaticSamplers = 2;		// m_vecSamplerDesc.size(); -> 얘네 뭐 하는 애들이지?
+	sigDesc.NumStaticSamplers = m_vecSamplerDesc.size(); // -> 얘네 뭐 하는 애들이지?
 	sigDesc.pStaticSamplers = &m_vecSamplerDesc[0]; // 사용될 Sampler 정보
 	sigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT; // 입력 조립기 단계
 
@@ -403,6 +403,23 @@ void CDevice::CreateSamplerDesc()
 	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
 	m_vecSamplerDesc.push_back(sampler);
+
+	//	PCF 표본 추출기
+	sampler.Filter = D3D12_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.MipLODBias = 0;
+	sampler.MaxAnisotropy = 16;
+	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
+	sampler.MinLOD = 0.0f;
+	sampler.MaxLOD = D3D12_FLOAT32_MAX;
+	sampler.ShaderRegister = 6;
+	sampler.RegisterSpace = 0;
+	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	m_vecSamplerDesc.push_back(sampler);
 }
 
 void CDevice::CreateConstBuffer(const wstring& _strName, size_t _iSize,
@@ -451,7 +468,6 @@ void CDevice::SetGlobalConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffse
 	m_pDevice->CopyDescriptors(1, &hDescHandle, &iDestRange
 		, 1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
-
 
 void CDevice::SetTextureToRegister(CTexture* _pTex, TEXTURE_REGISTER _eRegisterNum)
 {

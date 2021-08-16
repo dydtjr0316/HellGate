@@ -24,6 +24,7 @@ private:
     CTerrain* m_pTerrainObj;
     vector<Ptr<CMesh>>   m_pAniData;
 
+    bool m_packetDead = false;
     bool m_bisAttack = false;
     bool m_bisAniReset = false;
     bool m_bisDamaged = false;
@@ -102,7 +103,7 @@ public:
     void  SetPlayer(CGameObject* p) {
         m_pPlayer = p;
     };
-
+    void SetPacketDead(const bool& dead) { m_packetDead = dead; }
 public:
     void Attack_Default();
 

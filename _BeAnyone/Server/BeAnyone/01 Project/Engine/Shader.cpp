@@ -206,7 +206,7 @@ void CShader::Create(SHADER_POV _ePOV, D3D_PRIMITIVE_TOPOLOGY _eTopology)
 
 	m_tPipeline.SampleMask = UINT_MAX;
 	m_tPipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-	m_tPipeline.SampleDesc.Count = 1;
+	m_tPipeline.SampleDesc.Count = 2;
 
 	switch (m_ePOV)
 	{
@@ -225,6 +225,7 @@ void CShader::Create(SHADER_POV _ePOV, D3D_PRIMITIVE_TOPOLOGY _eTopology)
 		m_tPipeline.NumRenderTargets = 2;
 		m_tPipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 		m_tPipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		//m_tPipeline.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;
 		break;
 	case SHADER_POV::COMPUTE:
 		m_tPipeline.NumRenderTargets = 0;

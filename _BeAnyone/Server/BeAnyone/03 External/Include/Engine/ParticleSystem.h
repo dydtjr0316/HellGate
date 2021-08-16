@@ -48,6 +48,7 @@ public:
 
 public:
 	void Init(float frequency, float acctime, float minLife, float maxLife, float minSpeed, float maxSpeed, float StartScale, float EndScale, Vector4 StartColor, Vector4 EndColor);
+	void SetMaxParticle(UINT _i) { m_iMaxParticle = _i; }
 	void SetStartColor(const Vector4& _vColor) { m_vStartColor = _vColor; }
 	void SetEndColor(const Vector4& _vColor) { m_vEndColor = _vColor; }
 	void SetFrequency(float _fre) { m_fFrequency = _fre; }
