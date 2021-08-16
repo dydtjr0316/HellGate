@@ -1840,7 +1840,7 @@ void CSceneMgr::init()
 	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	
 	//	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
-	vScale = Vector3(80.f, 120.f, 1.f);
+	vScale = Vector3(100.f, 100.f, 1.f);
 	Vector3 vObjectPos = pObject->Transform()->GetLocalPos();
 	Vector3 vObjectScale = pObject->Transform()->GetLocalScale(); 
 	float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;

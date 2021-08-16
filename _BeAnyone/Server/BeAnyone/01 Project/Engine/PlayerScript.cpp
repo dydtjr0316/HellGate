@@ -46,13 +46,13 @@ CPlayerScript::CPlayerScript()
 			if (i == 1) {
 				vScale = Vector3(350.f, 20.f, 1.f);
 			}
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) 
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f 
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
 				, 1.f));
 		}
 		else if (i == 2 || i == 3) {
-			vScale = Vector3(360.f, 2.f, 1.f);
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) 
+			vScale = Vector3(350.f, 2.f, 1.f);
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
 				, 1.f));
 		}
@@ -86,7 +86,7 @@ CPlayerScript::CPlayerScript()
 				, 1.f));
 		}
 		else if (i == 2 || i == 3) {
-			vScale = Vector3(360.f, 2.f, 1.f);
+			vScale = Vector3(350.f, 2.f, 1.f);
 			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 600.f
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (15.f * (i - 1) + (5.f * (i - 2)))
 				, 1.f));
@@ -744,9 +744,9 @@ void CPlayerScript::ReduceUiBar()
 	float speed{};
 	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
 		if (i == (UINT)UI_BAR::HUG)
-			speed = 0.08f;
+			speed = 0.13f;
 		else
-			speed = 0.05f;
+			speed = 0.09f;
 
 		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
 		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
@@ -758,6 +758,20 @@ void CPlayerScript::ReduceUiBar()
 		m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
 		m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x, pos.y, pos.z));
 	}
+}
+
+void CPlayerScript::ReduceHpBar()
+{
+	float damage = 20.f;
+
+	Vector3 scale = m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->GetLocalScale();
+	Vector3 pos = m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->GetLocalPos();
+
+	scale.x -= damage;
+	pos.x -= damage / 2.f;
+
+	m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
+	m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->SetLocalPos(Vector3(pos.x, pos.y, pos.z));
 }
 
 void CPlayerScript::UseItem()
@@ -834,7 +848,7 @@ void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)	// ¹Ù²Ü 
 				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\PlayerMale_Weapon_Sword.mesh") {
 					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
 					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, XM_PI / 2.f, 0.f));
-					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+					vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
 
 					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
 						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
@@ -859,7 +873,7 @@ void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)	// ¹Ù²Ü 
 				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\sword_2.mesh") {
 					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
 					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.0f, 0.f));
-					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+					vecChild[i]->Transform()->SetLocalPos(Vector3(0.f, 0.f, -0.f));
 
 					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
 						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
@@ -871,7 +885,7 @@ void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)	// ¹Ù²Ü 
 				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\Ax.mesh") {
 					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
 					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.0f, 0.f));
-					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+					vecChild[i]->Transform()->SetLocalPos(Vector3(0.f, 0.f, 0.f));
 
 					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
 						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
@@ -884,7 +898,7 @@ void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)	// ¹Ù²Ü 
 				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\PlayerMale_Weapon_Sword.mesh") {
 					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
 					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+					//vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
 
 					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
 						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
@@ -896,7 +910,7 @@ void CPlayerScript::ChangeWeapone(WEAPONE_TYPE _eType, ITEM_ID _iTemID)	// ¹Ù²Ü 
 				if (vecChild[i]->MeshRender()->GetMesh()->GetName() == L"Mesh\\sword_2.mesh") {
 					vecChild[i]->GetScript<CSwordScript>()->SetMeshData(_eType);
 					vecChild[i]->Transform()->SetLocalRot(Vector3(0.f, XM_PI / 2.f, 0.f));
-					//	vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
+					vecChild[i]->Transform()->SetLocalPos(Vector3(-30.f, 0.f, -30.f));
 
 					for (int j = 0; j < m_pItemUIObj->StaticUI()->m_vecButton.size(); ++j) {
 						if (m_pItemUIObj->StaticUI()->m_vecButton[j]->GetItemID() == _iTemID) {
