@@ -395,40 +395,39 @@ void CPlayerScript::update()
 }
 void CPlayerScript::op_Move()
 {
-	sc_packet_move* p = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
+	//sc_packet_move* p = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
 
-	if (p == nullptr)return;
-	if (g_Object.count(p->id) == 0)return;
-	if (GetObj()->GetID() == p->id)return;
-	if (p->id >= START_MONSTER)return;
+	//if (p == nullptr)return;
+	if (g_Object.count(pacektID) == 0)return;
+	if (GetObj()->GetID() == pacektID)return;
+	if (pacektID >= START_MONSTER)return;
 
-	CPlayerScript* player = g_Object.find(p->id)->second->GetScript<CPlayerScript>();
-	CTransform* playerTrans = g_Object.find(p->id)->second->Transform();
-	CTerrain* pTerrain = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->GetTerrain();
-	const Vector3& xmf3Scale = g_Object.find(p->id)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
+	CPlayerScript* player = g_Object.find(pacektID)->second->GetScript<CPlayerScript>();
+	CTransform* playerTrans = g_Object.find(pacektID)->second->Transform();
+	CTerrain* pTerrain = g_Object.find(pacektID)->second->GetScript<CPlayerScript>()->GetTerrain();
+	const Vector3& xmf3Scale = g_Object.find(pacektID)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
 	Vector3 temp;
 	if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket() == nullptr)return;
 
-	if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket()->isMoving)
+	if (packetMoving)
 	{
-		if (p->dirVec.x > 10.f || p->dirVec.z < 0.00001f)return;
+		if (packetDirVec.x > 1.f || packetDirVec.x < -1.f)return;
+		if (packetDirVec.z > 1.f || packetDirVec.z < -1.f)return;
 		if (player->GetBisFrist())
 		{
-			temp = p->localVec + p->dirVec * p->speed * (DT);
+			temp = packetLocalPos + packetDirVec * packetspeed * (DT);
 			player->SetBisFrist(false);
-			cout << "패킷인가?" << endl;
+			//cout << "패킷인가?" << endl;
 		}
 		else
 		{
-			temp = playerTrans->GetLocalPos() + p->dirVec * p->speed * (DT);
-			cout << "아니면 본인좌표?" << endl;
-			cout << p->dirVec.x << ", dir , " << p->dirVec.z << endl;
-			cout << "-----------------------------" << endl;
-			cout << playerTrans->GetLocalPos().x << ", pos , " << playerTrans->GetLocalPos().z << endl;
-			cout << "-----------------------------" << endl;
-			cout << "-----------------------------" << endl;
+			temp = playerTrans->GetLocalPos() + packetDirVec * packetspeed * (DT);
+			/*cout << "아니면 본인좌표?" << endl;*/
+			cout << packetDirVec.x << ", dir , " << packetDirVec.z << endl;
+			/*cout << playerTrans->GetLocalPos().x << ", pos , " << playerTrans->GetLocalPos().z << endl;
+			cout << "-----------------------------" << endl;*/
 		}
-		playerTrans->SetLocalRot(p->rotateY);
+		playerTrans->SetLocalRot(packetrotateY);
 
 		int z = (int)(temp.z / xmf3Scale.z);
 		float fHeight = pTerrain->GetHeight(temp.x, temp.z, ((z % 2) != 0)) * 2.f /*+ 100.f*/;
@@ -437,8 +436,11 @@ void CPlayerScript::op_Move()
 			temp.y = fHeight;
 
 		playerTrans->SetLocalPos(temp);
-		if (p->id == 1)
-			cout << p->speed << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
+		if (pacektID == 1)
+			cout <<  "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
+		cout << "-----------------------------" << endl;
+		cout << "-----------------------------" << endl;
+
 	}
 	//else{
 	//	if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetisBezeir())
@@ -472,7 +474,14 @@ void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 {
 	m_movePacketTemp = new sc_packet_move;
 	
-	m_movePacketTemp = p;
+	packetLocalPos = p->localVec;
+	packetDir = p->dir;
+	packetDirVec = p->dirVec;
+	packetspeed = p->speed;
+	packetrotateY = p->rotateY;
+	pacektID = p->id;
+	packetMoving = p->isMoving;
+	//m_movePacketTemp = p;
 	m_fRTT = rtt;
 	
 }

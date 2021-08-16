@@ -908,10 +908,15 @@ void CNetMgr::Processing_Thead()
             CGameObject* obj = nullptr;
             cs_packet_move* drmPacket = nullptr;
             Vector3 objPos;
+
+          
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
                 if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
+                
                 obj = m_pMediator->Find(reckoner);
+                if (!obj->GetIsMoving())cout << "false" << endl;
+                else cout << "true" << endl;
                 objPos = obj->GetLocalPosVector();
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
@@ -940,7 +945,10 @@ void CNetMgr::Processing_Thead()
                         //cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
                         for (auto& id : g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner))))
                             if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+                            {
+                                cout << "Process Thread" << endl;
                                 m_pSendMgr->Send_Move_Packet(id, reckoner, drmPacket->dir);
+                            }
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
                     }
                 }
@@ -955,18 +963,20 @@ void CNetMgr::Processing_Thead()
             Vector3 monsterPos;
             MONSTER_AUTOMOVE_DIR monsterDir;
             bool ismoving = false;
-            for (auto& monster : m_pMediator->GetMonsterReckonerList())
+           /* for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
                 if (m_pMediator->Find(monster) == nullptr)continue;
                 if (m_pMediator->MonsterReckonerCount(monster) == 0)continue;
                 if (!m_pMediator->Find(monster)->GetIsMoving())continue;
 
-            }
+            }*/
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
                 if (m_pMediator->Find(monster) == nullptr)continue;
                 if (m_pMediator->MonsterReckonerCount(monster) == 0)continue;
                 if (!m_pMediator->Find(monster)->GetIsMoving())continue;
+             
+
                // if (monster != 1000)continue;
                 MonsterObj = m_pMediator->Find(monster);
                 monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();

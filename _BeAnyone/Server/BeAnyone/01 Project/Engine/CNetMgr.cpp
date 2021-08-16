@@ -26,8 +26,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -185,12 +185,12 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local,
 	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
 	p.deltaTime = delta;
 	p.isMoving = isMoving;
-	cout << "-------------------------------" << endl;
+	/*cout << "-------------------------------" << endl;
 	cout << "-------------------------------" << endl;
 	cout << "Send_Move_Packet" << endl;
 	cout << local.x << " , " << local.z << endl;
 	cout << "-------------------------------" << endl;
-	cout << "-------------------------------" << endl;
+	cout << "-------------------------------" << endl;*/
 
 
 	Send_Packet(&p);
@@ -306,14 +306,14 @@ void CNetMgr::Send_MonsterDir_Packet(const uShort& monser_id, const Vector3& dir
 	p.id = monser_id;
 	p.dir = dir;
 
-	{
+	{/*
  		cout << "**********" << endl;
 		cout << "**********" << endl;
 		cout << "**********" << endl;
 		cout << p.dir.z << endl;
 		cout << "**********" << endl;
 		cout << "**********" << endl;
-		cout << "**********" << endl;
+		cout << "**********" << endl;*/
 	}
 	if (p.dir.z == -1)
 	{
@@ -690,6 +690,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
 
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetPacketMoving(packet->isMoving);
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
@@ -700,11 +701,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (g_Object.find(other_id)->second == nullptr)break;
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
-			cout << "------------------------" << endl;
+			/*cout << "------------------------" << endl;
 			cout << "Moving False setting\t\t"<<other_id << endl;
 			if (packet->isMoving)cout << "true" << endl;
 			else cout << "false" << endl;
-			cout << "------------------------" << endl;
+			cout << "------------------------" << endl;*/
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetPacketMoving(false);
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
@@ -896,7 +898,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		// 아이템 삭제부 - 효림
 		sc_packet_ItemDelete_Packet* packet = reinterpret_cast<sc_packet_ItemDelete_Packet*>(ptr);
 		packet->vPos;// vector3 item position
-		cout << "다시 받을 때 item pos: " << packet->vPos.x << "\t" << packet->vPos.y << "\t" << packet->vPos.z << endl;
+		//cout << "다시 받을 때 item pos: " << packet->vPos.x << "\t" << packet->vPos.y << "\t" << packet->vPos.z << endl;
 		
 		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
 	}
