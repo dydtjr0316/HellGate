@@ -623,6 +623,13 @@ bool CPlayerScript::isInMap(const Vector3& localPos)
 
 void CPlayerScript::OnCollisionEnter(CCollider* _pOther)
 {
+
+	auto a = _pOther->GetObj()->GetName();
+	if (L"M_Attack Object" == a)
+	{
+	
+		
+	}
 }
 
 void CPlayerScript::OnCollision(CCollider* _pOther)
