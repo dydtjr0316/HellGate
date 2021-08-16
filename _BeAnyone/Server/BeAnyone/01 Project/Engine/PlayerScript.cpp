@@ -200,7 +200,6 @@ void CPlayerScript::update()
 
 		player->SetAttack(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::ATTACK_CNT);
-		player->SetAniReset(false);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
 
 	}
@@ -209,24 +208,24 @@ void CPlayerScript::update()
 	if (KEY_TAB(KEY_TYPE::KEY_E)) {
 		PlaySound_(Sound_Type::GET_COIN);
 		player->AnimClipReset();
-		player->SetPickUp(true);
+		//player->SetAnimation(Ani_TYPE::PICK_UP);
+		//CSound::GetInst()->Play(Sound_Type::GET_COIN);
+		m_bIsPick = true;
 		PickUp_Default();
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetPickUp(), Ani_TYPE::PICK_UP);
+		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
 
 
 	}
-	if (player->GetPickUp() && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
 		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) + DT, PlAYER_ANICNT_TYPE::PICKUP_CNT);
 		player->SetAnimation(Ani_TYPE::PICK_UP);
-		moveKeyInput = true;
 	}
 	else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
 	{
 
-		player->SetPickUp(false);
-		player->SetAniReset(false);
+		m_bIsPick = false;
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetPickUp(), Ani_TYPE::PICK_UP);
+		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
 
 
 	}
@@ -247,7 +246,6 @@ void CPlayerScript::update()
 		//Attack_Default();
 
 		player->SetDamage(false);
-		player->SetAniReset(false);
 		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
 		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
 
@@ -723,9 +721,9 @@ void CPlayerScript::ReduceUiBar()
 	float speed{};
 	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
 		if (i == (UINT)UI_BAR::HUG)
-			speed = 0.3f;
+			speed = 0.08f;
 		else
-			speed = 0.2f;
+			speed = 0.05f;
 
 		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
 		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
@@ -736,41 +734,6 @@ void CPlayerScript::ReduceUiBar()
 
 		m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
 		m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x, pos.y, pos.z));
-	}
-}
-
-void CPlayerScript::IncreaseUiBar(float _stamina, float _dash, float _hug, float _temper)
-{
-	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
-		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
-		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
-
-		switch (i) {
-		case (UINT)UI_BAR::STAMINA:
-			if (_stamina + scale.x >= 350.f)
-				_stamina = 350.f - scale.x;
-			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _stamina, scale.y, scale.z));
-			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_stamina / 2.f), pos.y, pos.z));
-			break;
-		case (UINT)UI_BAR::DASH:
-			if (_dash + scale.x >= 350.f)
-				_dash = 350.f - scale.x;
-			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _dash, scale.y, scale.z));
-			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_dash / 2.f), pos.y, pos.z));
-			break;
-		case (UINT)UI_BAR::HUG:
-			if (_hug + scale.x >= 350.f)
-				_hug = 350.f - scale.x;
-			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _hug, scale.y, scale.z));
-			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_hug / 2.f), pos.y, pos.z));
-			break;
-		case (UINT)UI_BAR::TEMPER:
-			if (_temper + scale.x >= 350.f)
-				_temper = 350.f - scale.x;
-			m_vUiBar[i]->Transform()->SetLocalScale(Vector3(scale.x + _temper, scale.y, scale.z));
-			m_vUiBar[i]->Transform()->SetLocalPos(Vector3(pos.x + (_temper / 2.f), pos.y, pos.z));
-			break;
-		}
 	}
 }
 
@@ -787,34 +750,24 @@ void CPlayerScript::UseItem()
 
 void CPlayerScript::FindItemBeUsed(int _itemId)
 {
-
 	switch (_itemId) {
 	case (UINT)ITEM_ID::STEAK:	// steak
 		cout << "steak 사용" << endl;
-		IncreaseUiBar(0.f, 0.f, 20.f, 10.f);
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::STEAK, false);
 		break;
 	case (UINT)ITEM_ID::BOTTLE_STAMINA:
 		cout << "stamina 사용" << endl;
-		IncreaseUiBar(30.f, 0.f, 0.f, 0.f);
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_STAMINA, false);
 		break;
 	case (UINT)ITEM_ID::BOTTLE_DASH:
 		cout << "dash 사용" << endl;
-		IncreaseUiBar(0.f, 20.f, 0.f, 0.f);
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_DASH, false);
 		break;
 	case (UINT)ITEM_ID::MONEYBAG:
 		break;
 	case (UINT)ITEM_ID::CARROT:
 		cout << "carrot 사용" << endl;
-		IncreaseUiBar(0.f, 0.f, 10.f, 5.f);
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::CARROT, false);
-		break;
-	case (UINT)ITEM_ID::APPLE:
-		cout << "APPLE 사용" << endl;
-		IncreaseUiBar(0.f, 0.f, 10.f, 5.f);
-		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::APPLE, false);
 		break;
 	case (UINT)ITEM_ID::BRANCH:
 		break;

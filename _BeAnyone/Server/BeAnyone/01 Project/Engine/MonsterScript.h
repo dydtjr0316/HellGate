@@ -24,6 +24,7 @@ private:
     CTerrain* m_pTerrainObj;
     vector<Ptr<CMesh>>   m_pAniData;
 
+    bool m_packetDead = false;
     bool m_bisAttack = false;
     bool m_bisAniReset = false;
     bool m_bisDamaged = false;

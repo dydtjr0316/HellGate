@@ -809,9 +809,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 		//cout << "SC_PACKET_MONSTER_ANIMATION" << endl;
 		sc_packet_Monster_Animation* packet = reinterpret_cast<sc_packet_Monster_Animation*>(ptr);
 		int id = packet->id;
+		if (g_Object.count(id) == 0)break; 
+		if (g_Object.find(packet->id)->second == nullptr)break;
 		CMonsterScript* monsterScr = g_Object.find(id)->second->GetScript<CMonsterScript>();
 
-		if (g_Object.find(packet->id)->second != nullptr)
+		
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 
 		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
@@ -874,8 +876,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_ItemDelete_Packet* packet = reinterpret_cast<sc_packet_ItemDelete_Packet*>(ptr);
 		packet->vPos;// vector3 item position
 		cout << "다시 받을 때 item pos: " << packet->vPos.x << "\t" << packet->vPos.y << "\t" << packet->vPos.z << endl;
-		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
 		
+		CItemMgr::GetInst()->DeleteItemObj(packet->vPos);
+		CEventMgr::GetInst()->update();
+		
+
 	}
 	break;
 

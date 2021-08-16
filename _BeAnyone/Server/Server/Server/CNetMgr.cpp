@@ -269,8 +269,9 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
     if (pClient == nullptr)return;
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
-
-    pClient->SetIsMoving(isMoving);
+    tempLock.lock();
+    pClient->SetIsMoving(false);
+    tempLock.unlock();
     unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
 
     for (auto& ob : vSectors)
@@ -552,10 +553,12 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     case CS_ITEMDELETE:
     {
         cs_packet_ItemDelete_Packet* packet = reinterpret_cast<cs_packet_ItemDelete_Packet*>(buf);
+        
         for (auto& obj : m_pMediator->GetReckonerList())
         {
             cout << packet->vPos.x << " - " << packet->vPos.y << " - " << packet->vPos.z << " - " << endl;
             m_pSendMgr->Send_ItemDelete_Packet(obj, packet->vPos);
+
         }
     }
     break;
