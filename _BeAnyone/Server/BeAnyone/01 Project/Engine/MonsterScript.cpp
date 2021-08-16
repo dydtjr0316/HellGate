@@ -134,10 +134,6 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
         g_netMgr.Send_Attack_Packet(m_sId);
         m_bisMoving = false;
         m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
-<<<<<<< HEAD
-
-=======
->>>>>>> bf8d15bab78070bd35929dee751d191e405a5b0c
         g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
 
         if (m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)
@@ -319,10 +315,6 @@ void CMonsterScript::Attack()
         
         //g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
         g_netMgr.Send_MonsterDead_Packet(m_sId);
-<<<<<<< HEAD
-=======
-        
->>>>>>> bf8d15bab78070bd35929dee751d191e405a5b0c
 
         m_bisMoving = false;
         m_packetDead = false;

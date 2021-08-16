@@ -162,6 +162,8 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
         cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
         cout << "********************" << endl;
         cout << "********************" << endl;
+        //Netmgr.GetMediatorMgr()->Find(other_id)->SetIsMoving(false);
+
     }
     Send_Packet(user_id, &p);
 }
@@ -180,6 +182,8 @@ void CSendMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, c
     p.speed = Netmgr.GetMediatorMgr()->Find(mover_id)->GetSpeed();
     p.Start = Netmgr.GetMediatorMgr()->Find(mover_id)->GetHalfRTT();
     p.isMoving = Netmgr.GetMediatorMgr()->Find(mover_id)->GetIsMoving();
+
+    Netmgr.GetMediatorMgr()->Find(mover_id)->SetIsMoving(true);
 
     Send_Packet(user_id, &p);
 }
@@ -237,6 +241,8 @@ void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, c
     p.id = mover_id;
     cout << "스톱패킷 안주지?? 시1발러마" << endl;
     p.isMoving = isMoving;
+    Netmgr.GetMediatorMgr()->Find(mover_id)->SetIsMoving(false);
+
     Send_Packet(user_id, &p);
 }
 

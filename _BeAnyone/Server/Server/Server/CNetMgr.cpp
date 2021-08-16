@@ -166,8 +166,11 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
         // g_QuadTree.Delete(m_pMediator->Find(monster_id));
         tempLock.lock();
         cout << "Do_Attack : " << monster_id << endl;
-        for(auto& clientID: m_pMediator->GetReckonerList())
+        for (auto& clientID : m_pMediator->GetReckonerList())
+        {
+            Netmgr.GetMediatorMgr()->Find(clientID)->SetIsMoving(false);
             m_pSendMgr->Send_Leave_Packet(clientID, monster_id, false);
+        }
         m_pMediator->Delete_Obj(monster_id);
         m_pMediator->Delete_MonsterReckoner(monster_id);
         tempLock.unlock();
@@ -208,41 +211,39 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
 
     for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
     {
+        if (ob == user_id)continue;
         if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
         {
+            tempLock.lock();
             pClient->GetViewList().insert(ob);
             m_pSendMgr->Send_Enter_Packet(user_id, ob);
-
-            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id))
-                m_pSendMgr->Send_Enter_Packet(ob, user_id);
-            else
-                m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
-
-                //if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT) && ob != user_id)
-                //{
-                //    
-                //    //if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
-                //    //{
-                //    //    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-                //    //    m_pSendMgr->Send_Enter_Packet(ob, user_id);
-                //    //}
-                //    //else
-                //    //{
-                //    //    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
-                //    //}
-                //}
-        }
-        else // 이전에도 있던 아이디 
-        {
-            if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT) && ob != user_id)
+            if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
             {
                 if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
                 {
+                    if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
+                        CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                    m_pSendMgr->Send_Enter_Packet(ob, user_id);
+                }
+                else
+                    m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
+            }
+            tempLock.unlock();
+
+        }
+        else // 이전에도 있던 아이디 
+        {
+            if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
+            {
+                if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
+                {
+                    tempLock.lock();
+                        CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
+                    tempLock.unlock();
                     m_pSendMgr->Send_Enter_Packet(ob, user_id);
                 }
                 else
                 {
-                    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
                     m_pSendMgr->Send_Move_Packet(ob, user_id, dir);
                 }
             }
@@ -250,19 +251,27 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
     }
     for (auto& ob : old_viewList)
     {
+        if (ob == user_id)continue;
         if (new_viewList.count(ob) == 0)
         {
-            pClient->GetViewList().erase(ob);
             tempLock.lock();
+            pClient->GetViewList().erase(ob);
             cout << "\t\t\tDo_Move---------------------" << endl;
+            Netmgr.GetMediatorMgr()->Find(ob)->SetIsMoving(false);
             m_pSendMgr->Send_Leave_Packet(user_id, ob);
-            tempLock.unlock();
-            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) != 0)
+            if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
             {
-                CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().erase(user_id);
-                cout << "\t\t\tDo_Move---------------------안쪽" << endl;
-                m_pSendMgr->Send_Leave_Packet(ob, user_id);
+                if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) != 0)
+                {
+                    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().erase(user_id);
+                    cout << "\t\t\tDo_Move---------------------안쪽" << endl;
+                    Netmgr.GetMediatorMgr()->Find(user_id)->SetIsMoving(false);
+                    m_pSendMgr->Send_Leave_Packet(ob, user_id);
+                }
             }
+
+                
+            tempLock.unlock();
         }
 
     }
@@ -281,6 +290,7 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 
     for (auto& ob : vSectors)
     {
+        if (ob == user_id)continue;
         m_pSendMgr->Send_Stop_Packet(ob, user_id, isMoving);
     }
 
@@ -349,6 +359,7 @@ void CNetMgr::Disconnect(const uShort& user_id)
 
     m_pMediator->Delete_Reckoner(user_id);
 
+    Netmgr.GetMediatorMgr()->Find(user_id)->SetIsMoving(false);
     m_pSendMgr->Send_Leave_Packet( user_id, user_id);
 
     pUser->GetLock().lock();
@@ -362,6 +373,7 @@ void CNetMgr::Disconnect(const uShort& user_id)
                     if (CAST_CLIENT(m_pMediator->Find(i))->GetViewList().count(user_id))
                     {
                         CAST_CLIENT(m_pMediator->Find(i))->GetViewList().erase(user_id);
+                        Netmgr.GetMediatorMgr()->Find(user_id)->SetIsMoving(false);
                         m_pSendMgr->Send_Leave_Packet(i, user_id);
                     }
                 }
@@ -465,10 +477,18 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     {
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         tempLock.lock();
-        m_pMediator->Find(user_id)->SetIsMoving(false);
+        m_pMediator->Find(packet->id)->SetIsMoving(false);
         tempLock.unlock();
-
-        Do_Stop(user_id, packet->isMoving);
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        cout << "시바라 스탑했잖아 왜안되는데 개 족같은새끼야" << endl;
+        Do_Stop(packet->id, m_pMediator->Find(packet->id)->GetIsMoving());
     }
     break;
     case CS_LOGIN: {
@@ -861,28 +881,31 @@ void CNetMgr::Processing_Thead()
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
                 {
-
-                    obj->SetRotateY(drmPacket->rotateY);
-
-                    //여기
+                    unordered_set<uShort> new_viewList;
+                    unordered_set<uShort> old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
+                    obj->SetRotateY(drmPacket->rotateY);// 안해도되는가?
 
                     obj->GetLock().lock();
                     g_QuadTree.Delete(obj);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * (DeltaTime));
-                    if(reckoner == 0)
+                    if(reckoner == 1)
                         cout << "\t\t" << obj->GetLocalPosVector().x << " , " << obj->GetLocalPosVector().z << endl;
-
                     g_QuadTree.Insert(obj);
                     obj->GetLock().unlock();
+
+                    //cout <<reckoner <<"의 스피드 : " << obj->GetSpeed() << endl;
+
 
                     // do move 내용 옮기기
 
 
                     CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 0.5f)
+                    if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 5.f)
                     {
                         //cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
-                         m_pSendMgr->Send_Move_Packet(reckoner, reckoner, drmPacket->dir);
+                        for (auto& id : g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner))))
+                            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+                                m_pSendMgr->Send_Move_Packet(id, reckoner, drmPacket->dir);
                         CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
                     }
                 }
@@ -1009,6 +1032,7 @@ void CNetMgr::Processing_Thead()
                                     m_pMediator->Delete_Obj(monster);
 
                                     cout << "\t\t\tProcess packet monster dead reckoining" << endl;
+                                    Netmgr.GetMediatorMgr()->Find(monster)->SetIsMoving(false);
                                     m_pSendMgr->Send_Leave_Packet(id, monster);
                                 }
                             }
