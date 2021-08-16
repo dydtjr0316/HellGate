@@ -134,7 +134,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
         g_netMgr.Send_Attack_Packet(m_sId);
         m_bisMoving = false;
         m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
-        g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
+       // g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
 
         if (m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)
             m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
@@ -304,6 +304,7 @@ void CMonsterScript::Attack()
         monsterScript->AnimClipReset();
         monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) + DT, MONSTER_ANICNT_TYPE::DEATH_CNT);
         SetAnimation(MONSTER_ANI_TYPE::DEAD);
+        m_bisMoving = false;
     }
     if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && m_packetDead)
     {
@@ -313,7 +314,7 @@ void CMonsterScript::Attack()
         //g_netMgr.Send_MonsterDead_Packet(monsterid);
         //m_Packet_autoMove->eDir = (char)MONSTER_AUTOMOVE_DIR::AUTO;
         
-        //g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
+        g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
         g_netMgr.Send_MonsterDead_Packet(m_sId);
 
         m_bisMoving = false;

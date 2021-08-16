@@ -452,14 +452,15 @@ void CPlayerScript::op_Move()
 				p->localVec.y,
 				player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
 			player->InterpolationCnt_PP();
+
+			if (p->id == 1)
+				cout << p->speed << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 		}
 		else
 		{
 			//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
 		}
 
-		if (p->id == 1)
-			cout << p->speed << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 	}
 }
 
