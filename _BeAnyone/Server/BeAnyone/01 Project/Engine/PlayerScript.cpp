@@ -764,11 +764,11 @@ void CPlayerScript::ClickUiButton()
 void CPlayerScript::ReduceUiBar()
 {
 	float speed{};
-	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
+	for (int i = 2; i < (UINT)UI_BAR::END; ++i) {
 		if (i == (UINT)UI_BAR::HUG)
-			speed = 0.13f;
+			speed = 0.4f;
 		else
-			speed = 0.09f;
+			speed = 0.25f;
 
 		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
 		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
@@ -784,7 +784,7 @@ void CPlayerScript::ReduceUiBar()
 
 void CPlayerScript::ReduceHpBar()
 {
-	float damage = 20.f;
+	float damage = 2.f;
 
 	Vector3 scale = m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->GetLocalScale();
 	Vector3 pos = m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->GetLocalPos();

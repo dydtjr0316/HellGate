@@ -3,6 +3,7 @@
   <ProjectOutputs />
   <ContentFiles>
     <ContentFile>
+<<<<<<< HEAD
       <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso</FullPath>
     </ContentFile>
     <ContentFile>
@@ -25,6 +26,30 @@
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso</FullPath>
+=======
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\particle.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso</FullPath>
+>>>>>>> d5c4d34a61d3cdcd38276f60fe2b00d1758a743a
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

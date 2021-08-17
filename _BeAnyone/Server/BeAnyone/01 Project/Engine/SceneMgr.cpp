@@ -168,7 +168,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
 			pMapObject->MeshRender()->SetDynamicShadow(true);
 
-			//m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 			// 나무 충돌 스크립트
 			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
 			//-------item load---------
@@ -215,7 +215,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
 			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * (120.f / 3.f)));
 			pMapObject->MeshRender()->SetDynamicShadow(true);
-			//m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 			CTreeScript* pTreeScript = pMapObject->GetScript<CTreeScript>();
 			//-------item load---------
 			// 나뭇가지
@@ -1434,6 +1434,7 @@ void CSceneMgr::LoadRes()
 	// QuestBox texture
 	//==========================
 	Ptr<CTexture> pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"QuestBase", L"Texture\\Quest\\QuestBase.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"QuestBase", L"Texture\\Quest\\QuestBase_2.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"MonsterKill", L"Texture\\Quest\\MonsterKill.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"MonsterKill_Complete", L"Texture\\Quest\\MonsterKill_Complete.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"GetItem", L"Texture\\Quest\\GetItem.png");

@@ -2,6 +2,7 @@
 #include "BulletScript.h"
 #include "ParticleSystem.h"
 #include "ParticleScript.h"
+#include "PlayerScript.h"
 
 
 CBulletScript::CBulletScript()
@@ -54,7 +55,13 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 		{
 			CGameObject* pPlayer = _pOther->GetObj();
 			//	--------------------여따하면 댐---------------------------------------
-
+			CPlayerScript* playerScript = pPlayer->GetScript<CPlayerScript>();
+			playerScript->ReduceHpBar();
+			cout << "++++++++++++++++++++++++++" << endl;
+			cout << "++++++++++아아아++++++++++++++++" << endl;
+			cout << "+++++++++++여러번+++++++++++" << endl;
+			cout << "+++++++++++++불림++++++++++" << endl;
+			cout << "++++++++++++++++++++++++++" << endl;
 
 			//---------------------------------------------------------------------------
 			

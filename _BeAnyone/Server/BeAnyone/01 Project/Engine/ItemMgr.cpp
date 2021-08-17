@@ -259,6 +259,6 @@ void CItemMgr::DeleteItemObj(Vector3 _itemPos)
         }
     }
     m_vItem[mixItemId]->GetScript<CDummyItemScript>()->DeleteObject(m_vItem[mixItemId]);
-    //CEventMgr::GetInst()->update();
+    CEventMgr::GetInst()->update();
     m_vItem[mixItemId] = nullptr;
 }
