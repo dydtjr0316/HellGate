@@ -56,6 +56,14 @@ private:
 	bool			m_isBezier = true;
 	float			m_fAnimationCnt[(UINT)PlAYER_ANICNT_TYPE::END]{};
 
+	Vector3			packetLocalPos;
+	uShort			 packetDir;
+	Vector3			 packetDirVec;
+	float			packetspeed;
+	float			packetrotateY;
+	uShort			pacektID;
+	bool			packetMoving;
+
 	CTerrain*		m_pTerrainObj;
 	XMFLOAT3		m_xmf3Velocity;
 	float			m_fSpeed;
@@ -150,6 +158,7 @@ public:
 	CDeadReckoner* GetReckoner() { return m_pDeadReckoner; }
 	void op_Move();
 	void SetOtherMovePacket(sc_packet_move* p, const float& rtt);
+	void SetPacketMoving(const bool& b) { packetMoving = b; }
 	void SetOtherMovePacket__IsMoving(const bool& isMoving) { 
 		if(m_movePacketTemp!=nullptr)m_movePacketTemp->isMoving = isMoving;
 	}
