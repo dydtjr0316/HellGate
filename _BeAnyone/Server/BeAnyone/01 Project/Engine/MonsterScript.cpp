@@ -196,12 +196,16 @@ void CMonsterScript::Move()
     Vector3 tempWorldPos(0.f, 0.f, 0.f);
     if (monsterScript->GetPacketMove() != nullptr && m_bisMoving)
     {
-      /*  if (GetID() == 1000)
+        if (GetID() == 1001)
         {
             cout << "dir : " << (int)m_eDir << endl;
             cout << monsterTrans->GetLocalPos().x << " , " << monsterTrans->GetLocalPos().z << endl;
-        }*/
+        }
         monsterDir = (MONSTER_AUTOMOVE_DIR)monsterScript->GetDir();
+        if (monster->GetName() == L"GreenMonster")
+        {
+            cout << "MOnster dir : " << (int)monsterDir << endl;
+        }
         if ((int)monsterDir >= 0 && (int)monsterDir <= 6)
         {
             switch (monsterDir)
@@ -211,12 +215,13 @@ void CMonsterScript::Move()
                     monsterTrans->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
                     //tempWorldPos.z = 1.f;
                     worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
+                  
                 }
                 else {
                     monsterTrans->SetLocalRot(Vector3(XM_PI / 2, XM_PI + m_fAngleY, 0.f));
                     worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::UP);
                     //tempWorldPos.z = 1.f;
-                    monsterPos += worldDir * 20.f * DT;
+               
 
                 }
                 break;

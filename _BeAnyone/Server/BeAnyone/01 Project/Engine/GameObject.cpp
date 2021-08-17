@@ -225,7 +225,7 @@ void CGameObject::update()
 		if (GetName() == L"PlayerMale") {
 			if (GetID() == g_myid && g_Object.size() != 0 && g_Object.find(g_myid)->second != nullptr)
 				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->update();
-			m_vecScript[i]->update();
+			
 		}
 		else if (GetName() == L"FireMonster" || GetName() == L"GreenMonster")
 		{

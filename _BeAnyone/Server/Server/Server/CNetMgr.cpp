@@ -786,9 +786,9 @@ void CNetMgr::Worker_Thread()
 
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(
-                    (float)(rand() % 1000)+500.f, // 수정 real float
-                    (float)(240.f),
-                    (float)(rand() % 1000) + 500.f);
+                    (float)(rand() % 1000)+2000.f, // 수정 real float
+                    (float)(2800.f),
+                    (float)(rand() % 1000) + 1000.f);
 
                 cout << pClient->GetLocalPosVector().x << ", " << pClient->GetLocalPosVector().z << endl;
                 
@@ -873,7 +873,7 @@ void CNetMgr::Worker_Thread()
             }
             
             if (true == keep_alive) {
-                if (user_id < 1001)
+                if (user_id < 1010)
                     Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 5 + 5));
                 else
                     Add_Timer(user_id, ENUMOP::OP_RAMDON_MOVE_MONSTER, system_clock::now() + (seconds)(rand() % 7 + 3));
@@ -915,8 +915,8 @@ void CNetMgr::Processing_Thead()
                 if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
                 
                 obj = m_pMediator->Find(reckoner);
-                if (!obj->GetIsMoving())cout << "false" << endl;
-                else cout << "true" << endl;
+        /*        if (!obj->GetIsMoving())cout << "false" << endl;
+                else cout << "true" << endl;*/
                 objPos = obj->GetLocalPosVector();
                 drmPacket = obj->GetDeadReckoningPacket();
                 if (obj->GetIsMoving())
@@ -1016,7 +1016,7 @@ void CNetMgr::Processing_Thead()
                         break;
                     }
                    // tempLock.unlock();
-                    if(monster==1000)
+                    if(monster==1001)
                         cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ",  " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
 
                     //if (m_pMediator->Find(monster) != nullptr)
@@ -1025,7 +1025,7 @@ void CNetMgr::Processing_Thead()
                         if (m_pMediator->Count(monster) == 0)continue;
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
-                        if(monster == 1000)
+                        //if(monster == 1000)
                         //cout << m_pMediator->Find(monster)->GetLocalPosVector().x << " , " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
                         //cout << m_pMediator->Find(monster)->GetLocalPosVector().x << ", " << m_pMediator->Find(monster)->GetLocalPosVector().z << endl;
                         CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);

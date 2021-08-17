@@ -37,16 +37,14 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 	Vector3 vecYPos = Transform()->GetLocalPos();
 	vecYPos.y += 200.f;
 	vecYPos.z += 30.f;
-	g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, true);
 
 	switch ((UINT)m_bType)
 	{
 	case (UINT)BULLET_TYPE::DEFAULT:
-		if (L"FireMonster" == _pOther->GetObj()->GetName())
-		{
-			//	총알 객체 삭제 (자신)
+		g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, true);
+
 			m_fTime = 3.0f;
-		}
+
 		break;
 	case (UINT)BULLET_TYPE::PICKUP:
 		//	여기다가 픽업 불릿 분기문 설정

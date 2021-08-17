@@ -456,7 +456,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				if (0 == g_Object.count(id))
 				{
-					if (id == 1000)
+					if (id%2 == 0)
 					{
 						Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@walking.fbx", FBX_TYPE::MONSTER);
 						Ptr<CMeshData> pIdleMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@idle.fbx", FBX_TYPE::MONSTER);
@@ -466,7 +466,16 @@ void CNetMgr::ProcessPacket(char* ptr)
 						//
 						g_Object.find(id)->second = pMeshData->Instantiate();
 						g_Object.find(id)->second->SetName(L"FireMonster");
+						g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 						g_Object.find(id)->second->FrustumCheck(false);
+						{
+							int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
+
+							float fHeight = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(my_packet->localVec.x, my_packet->localVec.z, ((z % 2) != 0)) * 2.f;
+
+							if (my_packet->localVec.y != fHeight)
+								my_packet->localVec.y = fHeight;
+						}
 						g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
 
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
@@ -524,7 +533,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second = pMeshData->Instantiate();
 						g_Object.find(id)->second->SetName(L"GreenMonster");
 						g_Object.find(id)->second->FrustumCheck(false);
-
+						g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						{
 							int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
@@ -575,6 +584,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
+						//g_netMgr.Send_MonsterDir_Packet(id, Vector3(0.f, 0.f, -1.f)/*g_Object.find(id)->second->Transform()->GetWorldDir(DIR_TYPE::UP)*/);
+
 					}
 				}
 			}
@@ -634,32 +645,33 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (g_Object.find(packet->id)->second == nullptr)break;
 
 		if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER) {
-			if (monster_id == 1000)
-			{
-				if ((int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() != (int)packet->eDir)
-				{
-					g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
-				}
-				else
-					g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(false);
 
-				cout << "-----------------------------------------------------------" << endl;
-				cout << "-----------------------------------------------------------" << endl;
-				cout << (int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() << endl;
-				cout << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << " , " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;
-				cout << "-----------------------------------------------------------" << endl;
-				cout << "-----------------------------------------------------------" << endl;
+			if ((int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() != (int)packet->eDir)
+			{
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
 			}
+			else
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(false);
+
+			/*cout << "-----------------------------------------------------------" << endl;
+			cout << "-----------------------------------------------------------" << endl;
+			cout << (int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() << endl;
+			cout << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << " , " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;
+			cout << "-----------------------------------------------------------" << endl;
+			cout << "-----------------------------------------------------------" << endl;*/
+
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+
+
 			if (g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() != (MONSTER_AUTOMOVE_DIR)packet->eDir)
 			{
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
 			}
-			
+
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
-			
-			
+
+
 			g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);
 
 		}

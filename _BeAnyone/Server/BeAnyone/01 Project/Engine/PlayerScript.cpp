@@ -615,6 +615,7 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 
 void CPlayerScript::SetAnimation(const Ani_TYPE& type)
 {
+	if (m_pAniData.size() == 0)return;
 	GetObj()->Animator3D()->SetBones(m_pAniData[(int)type]->GetBones());
 	GetObj()->Animator3D()->SetAnimClip(m_pAniData[(int)type]->GetAnimClip());
 	GetObj()->MeshRender()->SetMesh(m_pAniData[(int)type]);
