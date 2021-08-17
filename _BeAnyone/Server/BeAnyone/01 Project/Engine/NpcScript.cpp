@@ -36,7 +36,7 @@ CNpcScript::CNpcScript()
 	//m_eReqState = REQUEST_STATE::REQUESTING;
 
 	// Conversation Box Create
-	Vector3 vScale(1100.f, 230.f, 1.f);
+	Vector3 vScale(1500.f, 300.f, 1.f);
 
 	m_pConversationBox = new CGameObject;
 	m_pConversationBox->SetName(L"Conversation_Box");
@@ -45,7 +45,7 @@ CNpcScript::CNpcScript()
 	m_pConversationBox->AddComponent(new CMeshRender);
 
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	m_pConversationBox->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 90.f
+	m_pConversationBox->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 100.f
 		, -(res.fHeight / 2.f) + (vScale.y / 2.f) + 30.f
 		, 1.f));
 	m_pConversationBox->Transform()->SetLocalScale(vScale);

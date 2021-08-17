@@ -130,7 +130,7 @@ void CStaticUI::init(UI_TYPE _eType)
 {
 	m_bActive = false;
 	m_eType = _eType;
-	m_pFrame = CResMgr::GetInst()->Load<CTexture>(L"ButtonFrame", L"Texture\\Terrain\\Lava1.png");
+	m_pFrame = CResMgr::GetInst()->Load<CTexture>(L"ButtonFrame", L"Texture\\ItemButton\\StaticUiBase.png");
 
 	for (int i = 0; i < 16; ++i)
 	{

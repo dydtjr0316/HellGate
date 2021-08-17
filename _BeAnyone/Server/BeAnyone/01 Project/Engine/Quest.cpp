@@ -38,18 +38,18 @@ CQuest::CQuest()
 	
 	Vector3 QuestBasePos = m_pQuestBoxBase->Transform()->GetLocalPos();
 	for (int i = 0; i < 2; ++i) {
-		QuestBoxScale = Vector3(300.f, 60.f, 1.f);
+		QuestBoxScale = Vector3(280.f, 60.f, 1.f);
 		pObject = new CGameObject;
 		pObject->SetName(L"QuestBox");
 		pObject->FrustumCheck(false);
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CMeshRender);
-		pObject->Transform()->SetLocalPos(Vector3(QuestBasePos.x, QuestBasePos.y + 200.f - (QuestBoxScale.y / 2.f) - (i * QuestBoxScale.y), 1.f));
+		pObject->Transform()->SetLocalPos(Vector3(QuestBasePos.x, QuestBasePos.y + 190.f - (QuestBoxScale.y / 2.f) - (i * QuestBoxScale.y), 1.f));
 		pObject->Transform()->SetLocalScale(QuestBoxScale);
 		//MeshRender ¼³Á¤
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"QuestBoxMtrl"));
-		pObject->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"QuestBase").GetPointer());
+		pObject->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"QuestBase_2").GetPointer());
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
 		pObject->SetUiRenderCheck(m_bBoxRender);
 		m_pQuestBox.push_back(pObject);
@@ -65,7 +65,7 @@ CQuest::~CQuest()
 void CQuest::update()
 {
 	// KIIL_MONSTER
-	if (m_vQuestCheck[(UINT)QUEST_TYPE::KILL_MONSTER] == 3) {
+	if (m_vQuestCheck[(UINT)QUEST_TYPE::KILL_MONSTER] >= 10) {
 		for (int i = 0; i < 2; ++i) {
 			if(m_vExistQuestBox[i] == QUESTBOX_TYPE::NPC_1)
 				m_pQuestBox[i]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"MonsterKill_Complete").GetPointer());

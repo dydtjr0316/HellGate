@@ -48,7 +48,7 @@ private:
 
 private:
 	float			m_ftimeCount = 0.f;
-	float			m_fDelayTime = 0.5f;
+	float			m_fDelayTime = 0.1f;
 	bool			FirstPacket = false;
 	bool			m_bisAttack = false;
 	bool			m_bisAniReset = false;
@@ -122,6 +122,7 @@ public:
 	void ClickUiButton();
 	void FindQuestItem();
 	void ReduceUiBar();
+	void ReduceHpBar();
 	void IncreaseUiBar(float _stamina, float _dash, float _hug, float _temper);
 
 	// use item

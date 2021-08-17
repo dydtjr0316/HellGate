@@ -284,7 +284,7 @@ void CButton::SetItemPrice()
 void CButton::CreateExplainBox()
 {
 	Vector3 pos = GetObj()->Transform()->GetLocalPos();
-	Vector3 Scale = Vector3(600.f, 150.f, 1.f);
+	Vector3 Scale = Vector3(300.f, 360.f, 1.f);
 	CGameObject* pExplainBox = new CGameObject;
 	pExplainBox->SetName(L"Explain Box");
 	pExplainBox->AddComponent(new CTransform);
