@@ -10,23 +10,23 @@ CQuadTree::CQuadTree(const CBoundary& _m_boundary, const int& n)
 
 void CQuadTree::PrintQuadTree()
 {
-	/*cout << "------------------" << endl;
-	cout << "DEPTH : " << m_iDepth << endl;
-	cout << "------------------" << endl;
+	/*//cout << "------------------" << endl;
+	//cout << "DEPTH : " << m_iDepth << endl;
+	//cout << "------------------" << endl;
 	if (!m_bisDivide)
 	{
 		for (auto& obj : m_vpPlayers)
 		{
 			CGameObject* temp = Netmgr.GetMediatorMgr()->Find(obj);
-			cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetLocalPosVector().x << ", "
+			//cout << "ID : " << temp->GetID() << "\tPOS : (" << temp->GetLocalPosVector().x << ", "
 				<< temp->GetLocalPosVector().z << ")" << endl;
-			cout << "------------------" << endl;
+			//cout << "------------------" << endl;
 
 		}
 	}
 	else
 	{
-		cout << "자식이 있는 노드 입니다" << endl << endl;
+		//cout << "자식이 있는 노드 입니다" << endl << endl;
 		for (auto& obj : m_pChild)
 		{
 			obj->PrintQuadTree();
@@ -58,8 +58,8 @@ bool CQuadTree::Insert(CGameObject* p)
 		for (auto& obj : m_pChild)
 			if (obj->Insert(p))return true;
 	}
-	//cout << endl;
-	//cout << "Insert**********************" << endl;
+	////cout << endl;
+	////cout << "Insert**********************" << endl;
 	//PrintQuadTree();
 	//return true;// 여기서 true 반환하는거 괜찮은지 보기
 }
@@ -73,8 +73,8 @@ void CQuadTree::Delete(CGameObject* p)
 
 	if (!m_bisDivide && m_boundary.contains(p))		// player p를 포함하는 리프 노드인가?
 	{
-		//cout << "Test 출력" << endl;
-		//cout << m_boundary.GetX() << " - " << m_boundary.GetZ() << " - "
+		////cout << "Test 출력" << endl;
+		////cout << m_boundary.GetX() << " - " << m_boundary.GetZ() << " - "
 		//	<< m_boundary.GetW() << " - " << m_boundary.GetH() << endl;
 		// 노드에서 해당 플레이어를 뺀다
 		for (auto& playerID : m_vpPlayers)
@@ -196,7 +196,7 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 	CBoundary temp = range;
 	if (m_boundary.intersects(temp))
 	{
-		//cout << "search 시작" << endl;
+		////cout << "search 시작" << endl;
 			quadlock.lock();
 		for (auto& p : m_vpPlayers)
 		{
@@ -207,7 +207,7 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 
 		}
 			quadlock.unlock();
-		//cout << "-*---------------" << endl;
+		////cout << "-*---------------" << endl;
 	}
 	if (m_bisDivide)
 	{

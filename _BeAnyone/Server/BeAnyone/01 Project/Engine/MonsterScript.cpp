@@ -198,13 +198,13 @@ void CMonsterScript::Move()
     {
         if (GetID() == 1001)
         {
-            cout << "dir : " << (int)m_eDir << endl;
-            cout << monsterTrans->GetLocalPos().x << " , " << monsterTrans->GetLocalPos().z << endl;
+            //cout << "dir : " << (int)m_eDir << endl;
+            //cout << monsterTrans->GetLocalPos().x << " , " << monsterTrans->GetLocalPos().z << endl;
         }
         monsterDir = (MONSTER_AUTOMOVE_DIR)monsterScript->GetDir();
         if (monster->GetName() == L"GreenMonster")
         {
-            cout << "MOnster dir : " << (int)monsterDir << endl;
+            //cout << "MOnster dir : " << (int)monsterDir << endl;
         }
         if ((int)monsterDir >= 0 && (int)monsterDir <= 6)
         {
@@ -448,11 +448,11 @@ void CMonsterScript::Attack_Default()
 
     if (!vecObj.empty())
     {
-        cout << "¸ó½ºÅÍ ÃÑ¾Ë °´Ã¼ »ý¼º ¾È‰Î" << endl;
+        //cout << "¸ó½ºÅÍ ÃÑ¾Ë °´Ã¼ »ý¼º ¾È‰Î" << endl;
         return;
     }
     else
-        cout << "¸ó½ºÅÍ °ø°Ý °´Ã¼ »ý¼º" << endl << endl;
+        //cout << "¸ó½ºÅÍ °ø°Ý °´Ã¼ »ý¼º" << endl << endl;
 
     CGameObject* pBullet = new CGameObject;
     pBullet->SetName(L"M_Attack Object");

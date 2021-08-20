@@ -57,8 +57,8 @@
 //						c.m_id, n, (int)c.m_ilevel, (int)c.x, (int)c.y, (int)c.m_iHP, c.m_iexp);
 //					retcode = SQLExecDirect(hstmt, (SQLWCHAR*)query, SQL_NTS);
 //					if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-//						cout << "DB 历厘 己傍, ID : " << c.m_id << endl;
-//						cout << "NAME : " << n << endl << endl;
+//						//cout << "DB 历厘 己傍, ID : " << c.m_id << endl;
+//						//cout << "NAME : " << n << endl << endl;
 //					}
 //					else {
 //						HandleDiagnosticRecord(SQL_HANDLE_STMT, retcode);
@@ -134,15 +134,15 @@
 //
 //
 //
-//					cout << name << endl;
+//					//cout << name << endl;
 //
 //					wsprintf(query, L"EXEC UPDATE_DB %d, %d, %d, %d, %d, %d, %d",
 //						c.m_id, intname, (int)c.m_ilevel, (int)c.x, (int)c.y, (int)c.m_iHP, c.m_iexp);
 //					retcode = SQLExecDirect(hstmt, (SQLWCHAR*)query, SQL_NTS);
 //					if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 //						printf("DB 历厘 己傍, ID : %d NAME : %d\n", c.m_id, intname);
-//						cout << "DB 历厘 己傍, ID : " << c.m_id << endl;
-//						cout << "NAME : " << intname << endl << endl;
+//						//cout << "DB 历厘 己傍, ID : " << c.m_id << endl;
+//						//cout << "NAME : " << intname << endl << endl;
 //					}
 //					else {
 //						HandleDiagnosticRecord(SQL_HANDLE_STMT, retcode);
@@ -178,7 +178,7 @@
 //
 //				if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 //					retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
-//					cout << c.m_id << endl;
+//					//cout << c.m_id << endl;
 //
 //					SQLWCHAR query[1024];
 //					wsprintf(query, L"EXEC select_highlevel %d", c.m_id);

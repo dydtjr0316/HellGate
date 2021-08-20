@@ -35,8 +35,8 @@ void CMediatorMgr::InitObject()
         
         
         
-        cout<< "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP()<<"         "<<
-            pObj->GetLocalPosVector().x<<", "<<pObj->GetLocalPosVector().z << endl;
+        //cout<< "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP()<<"         "<<
+         //   pObj->GetLocalPosVector().x<<", "<<pObj->GetLocalPosVector().z << endl;
     }
 
     // NPC init

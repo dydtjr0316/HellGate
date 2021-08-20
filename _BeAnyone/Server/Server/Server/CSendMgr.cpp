@@ -110,7 +110,7 @@ void CSendMgr::Send_LoginOK_Packet(const uShort& user_id)
     p.Attack_Damage = pClient->GetAttackDamage();
 
 
-    // cout << "Login 갯수 -> " << login <<endl;
+    // //cout << "Login 갯수 -> " << login <<endl;
 
     Send_Packet(user_id, &p);
 }
@@ -129,18 +129,18 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
     {
         p.hp = dynamic_cast<CMonster*>(Netmgr.GetMediatorMgr()->Find(other_id))->GetHP();
 
-     /*   cout << "********************" << endl;
-        cout << other_id << "가 " << user_id << "에게  Enter Packet 전송" << endl;
-        cout << "Monster POS ->   <" << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().x << ", "
+     /*   //cout << "********************" << endl;
+        //cout << other_id << "가 " << user_id << "에게  Enter Packet 전송" << endl;
+        //cout << "Monster POS ->   <" << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().x << ", "
             << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().z << ">" << endl;
-        cout << "********************" << endl << endl;*/
+        //cout << "********************" << endl << endl;*/
     }
     {
-        cout << "********************" << endl;
-        cout << "********************" << endl;
-        cout << other_id << "가 " << user_id << "에게 Enter Packet 전송" << endl;
-        cout << "********************" << endl;
-        cout << "********************" << endl;
+        //cout << "********************" << endl;
+        //cout << "********************" << endl;
+        //cout << other_id << "가 " << user_id << "에게 Enter Packet 전송" << endl;
+        //cout << "********************" << endl;
+        //cout << "********************" << endl;
     }
     Send_Packet(user_id, &p);
 }
@@ -157,11 +157,11 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
     p.isAttack = isAttack;
    // if (p.id >= START_MONSTER && p.id < END_MONSTER)
     {
-        cout << "********************" << endl;
-        cout << "********************" << endl;
-        cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
-        cout << "********************" << endl;
-        cout << "********************" << endl;
+        //cout << "********************" << endl;
+        //cout << "********************" << endl;
+        //cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
+        //cout << "********************" << endl;
+        //cout << "********************" << endl;
         //Netmgr.GetMediatorMgr()->Find(other_id)->SetIsMoving(false);
 
     }
@@ -223,12 +223,12 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
 
     if (p.id == 1000)
     {
-        cout << "-----------------------------------------------------------" << endl;
-        cout << "-----------------------------------------------------------" << endl;
-         cout << "id : " << mover_id << "  Dir :  " << (int)p.eDir << endl;
-        cout << p.pos.x << ", " << p.pos.z << endl;
-        cout << "-----------------------------------------------------------" << endl;
-        cout << "-----------------------------------------------------------" << endl;
+        //cout << "-----------------------------------------------------------" << endl;
+        //cout << "-----------------------------------------------------------" << endl;
+         //cout << "id : " << mover_id << "  Dir :  " << (int)p.eDir << endl;
+        //cout << p.pos.x << ", " << p.pos.z << endl;
+        //cout << "-----------------------------------------------------------" << endl;
+        //cout << "-----------------------------------------------------------" << endl;
     }
     Send_Packet(user_id, &p);
 }
@@ -240,7 +240,7 @@ void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, c
     p.size = sizeof(p);
     p.type = SC_PACKET_STOP;
     p.id = mover_id;
-    cout << "스톱패킷 안주지?? 시1발러마" << endl;
+    //cout << "스톱패킷 안주지?? 시1발러마" << endl;
     p.isMoving = isMoving;
     Netmgr.GetMediatorMgr()->Find(mover_id)->SetIsMoving(false);
 
