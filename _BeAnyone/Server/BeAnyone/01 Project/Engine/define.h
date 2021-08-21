@@ -447,3 +447,12 @@ enum class WEAPONE_TYPE
 	AX,
 	END,
 };
+
+
+enum class MOB_TYPE
+{
+	YELLOW,
+	GREEN,
+	BOSS,
+	END,
+};

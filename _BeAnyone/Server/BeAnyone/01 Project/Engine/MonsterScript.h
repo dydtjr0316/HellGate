@@ -1,18 +1,12 @@
 #pragma once
 #include "Script.h"
 
-enum class MOB_TYPE
-{
-    YELLOW,
-    GREEN,
-    END,
-};
-
 class CMonsterScript :
     public CScript
 {
 private:
-    MONSTER_TYPE m_eMonsterType;
+    MONSTER_TYPE m_eMonsterType;    // server에서 어떻게 쓰이고 있는지 모르겠음 없애도 되나
+    MOB_TYPE     m_eMobType;
     float m_fSpeed = 2.0f;
 
     // ui
@@ -76,13 +70,16 @@ public:
     bool GetIsPunch() { return m_bisPunch; }
 
     // monster type
-    void SetMonsterType(MONSTER_TYPE _eMonsterType) { m_eMonsterType = _eMonsterType; }
-    MONSTER_TYPE GetMonsterType() { return m_eMonsterType; }
+    void SetMonsterType(MONSTER_TYPE _eMonsterType) { m_eMonsterType = _eMonsterType; }// 둘 중에 하나 없애야 함 
+    MONSTER_TYPE GetMonsterType() { return m_eMonsterType; }                           // 둘 중에 하나 없애야 함 
+    void SetMobTYpe(MOB_TYPE _eMobType) { m_eMobType = _eMobType; }
+    MOB_TYPE GetMobTYpe() { return m_eMobType; }
 
     CTerrain* GetTerrain() { return this->m_pTerrainObj; }
 
     void DecreaseHp();
     void Move();
+    void BossMove();
     void Attack();
     void AttackToPlayer(MOB_TYPE _eType);
 

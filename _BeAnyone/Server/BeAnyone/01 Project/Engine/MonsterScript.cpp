@@ -85,8 +85,15 @@ void CMonsterScript::SetPacketMove(sc_packet_monster_automove* p)
 
 void CMonsterScript::update()
 {
-    Move();
+    if (m_eMobType != MOB_TYPE::BOSS)
+        Move();
+    else
+        BossMove();
+    
+    
     Attack();
+   
+    
     //------
     // ui
     //------
@@ -172,6 +179,11 @@ void CMonsterScript::AnimClipReset()
 }
 
 void CMonsterScript::DecreaseHp()
+{
+
+}
+
+void CMonsterScript::BossMove()
 {
 
 }
@@ -446,13 +458,13 @@ void CMonsterScript::Attack_Default()
     vector<CGameObject*> vecObj;
     CSceneMgr::GetInst()->FindGameObjectByTag(L"M_Attack Object", vecObj);
 
-    if (!vecObj.empty())
-    {
-        //cout << "¸ó½ºÅÍ ÃÑ¾Ë °´Ã¼ »ý¼º ¾È‰Î" << endl;
-        return;
-    }
-    else
-        //cout << "¸ó½ºÅÍ °ø°Ý °´Ã¼ »ý¼º" << endl << endl;
+    //if (!vecObj.empty())
+    //{
+    //    cout << "¸ó½ºÅÍ ÃÑ¾Ë °´Ã¼ »ý¼º ¾È‰Î" << endl;
+    //    return;
+    //}
+    //else
+    //    cout << "¸ó½ºÅÍ °ø°Ý °´Ã¼ »ý¼º" << endl << endl;
 
     CGameObject* pBullet = new CGameObject;
     pBullet->SetName(L"M_Attack Object");

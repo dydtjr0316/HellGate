@@ -68,6 +68,8 @@ void CFBXLoader::LoadFbx(const wstring& _strPath, FBX_TYPE _fbxType)
 			m_eMonsterType = MONSTER_TYPE::MONSTER1;
 		else if (fileName == L"TreantGuard")
 			m_eMonsterType = MONSTER_TYPE::MONSTER2;
+		else if (fileName == L"Polygonal Alien Serpent")
+			m_eMonsterType = MONSTER_TYPE::BOSS_MONSTER;
 
 	}
 
@@ -360,6 +362,9 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 			sMtrlName = m_fileName;
 		}
 
+		if (m_eMonsterType == MONSTER_TYPE::BOSS_MONSTER)
+			sMtrlName = L"Serpent Black";
+
 		str.assign(sMtrlName.begin(), sMtrlName.end());
 	}
 	if (m_fbxType == FBX_TYPE::PLAYER) {
@@ -642,6 +647,12 @@ wstring CFBXLoader::GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char
 		}
 		sMtrlName += L".png";
 		wstrName += wstring(sMtrlName.begin(), sMtrlName.end());
+	}
+	else if (m_fbxType == FBX_TYPE::MONSTER && m_eMonsterType == MONSTER_TYPE::BOSS_MONSTER)
+	{
+		strName = "Serpent Black";//_pSurface->GetName();
+		strName += ".png";
+		wstrName += wstring(strName.begin(), strName.end());
 	}
 	
 
