@@ -423,7 +423,7 @@ void CPlayerScript::op_Move()
 		{
 			temp = playerTrans->GetLocalPos() + packetDirVec * packetspeed * (DT);
 			/*cout << "아니면 본인좌표?" << endl;*/
-			cout << packetDirVec.x << ", dir , " << packetDirVec.z << endl;
+			//cout << packetDirVec.x << ", dir , " << packetDirVec.z << endl;
 			/*cout << playerTrans->GetLocalPos().x << ", pos , " << playerTrans->GetLocalPos().z << endl;
 			cout << "-----------------------------" << endl;*/
 		}
@@ -436,10 +436,10 @@ void CPlayerScript::op_Move()
 			temp.y = fHeight;
 
 		playerTrans->SetLocalPos(temp);
-		if (pacektID == 1)
+	/*	if (pacektID == 1)
 			cout <<  "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 		cout << "-----------------------------" << endl;
-		cout << "-----------------------------" << endl;
+		cout << "-----------------------------" << endl;*/
 
 	}
 	//else{

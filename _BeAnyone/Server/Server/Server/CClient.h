@@ -45,6 +45,11 @@ public:
 	void InsertViewList(const int& id) { view_list.emplace(id); }
 	void SetViewList(const unordered_set<uShort>& view) { view_list = view; }
 
+public:
+	//final
+
+	void SetIsRefresh(const bool& re) { m_bisRefreshPacket = re; }
+	bool GetIsRefresh() { return m_bisRefreshPacket; }
 private:
 	// int
 	int		m_ilevel = 1;	// ·¹º§
@@ -65,6 +70,7 @@ private:
 	unordered_set<uShort> view_list;
 	Vector3 m_v3FirstPos;
 
+	bool m_bisRefreshPacket = false;
 
 
 
