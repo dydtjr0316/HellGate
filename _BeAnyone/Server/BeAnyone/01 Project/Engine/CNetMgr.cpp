@@ -611,8 +611,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (CheckObjType(other_id) == OBJECT_TYPE::CLIENT)
 				{
+					cout << " Move 들어옴" << endl;
 					system_clock::time_point end = system_clock::now();
-					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
+					//nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
 					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(true);
 
@@ -622,7 +623,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
 					//cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
 
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, rtt.count() * 0.00000001);
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, 0.00000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 
 					

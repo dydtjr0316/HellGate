@@ -446,13 +446,13 @@ void CMonsterScript::Attack_Default()
     vector<CGameObject*> vecObj;
     CSceneMgr::GetInst()->FindGameObjectByTag(L"M_Attack Object", vecObj);
 
-    if (!vecObj.empty())
-    {
-        //cout << "¸ó½ºÅÍ ÃÑ¾Ë °´Ã¼ »ý¼º ¾È‰Î" << endl;
-        return;
-    }
-    else
-        //cout << "¸ó½ºÅÍ °ø°Ý °´Ã¼ »ý¼º" << endl << endl;
+    //if (!vecObj.empty())
+    //{
+    //    //cout << "¸ó½ºÅÍ ÃÑ¾Ë °´Ã¼ »ý¼º ¾È‰Î" << endl;
+    //    return;
+    //}
+    //else
+    //    //cout << "¸ó½ºÅÍ °ø°Ý °´Ã¼ »ý¼º" << endl << endl;
 
     CGameObject* pBullet = new CGameObject;
     pBullet->SetName(L"M_Attack Object");

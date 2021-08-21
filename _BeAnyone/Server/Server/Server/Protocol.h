@@ -144,7 +144,7 @@ struct sc_packet_move {
 	char type;
 	uShort id;
 
-	uShort move_time;
+	//uShort move_time;
 	uShort dir = MV_IDLE;		// pragma pack 사용 안할거면 다시 char로 수정
 
 	Vector3 localVec;
@@ -152,7 +152,7 @@ struct sc_packet_move {
 
 	float speed;
 	float rotateY;
-	system_clock::time_point Start;
+	//system_clock::time_point Start;
 
 	bool isMoving;
 

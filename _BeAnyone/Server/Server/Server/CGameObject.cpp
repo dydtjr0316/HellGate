@@ -5,6 +5,7 @@ CGameObject::CGameObject()
 {
     m_id = 0;
     m_v3LocalPosVector = Vector3(0.f, 0.f, 0.f);
+    m_v3RotateVector = Vector3(0.f, 0.f, 0.f);
     m_v3DirVector = Vector3(0.f, 0.f, 0.f);
     m_prev_size = 0;
     m_iclinet_time = 0;

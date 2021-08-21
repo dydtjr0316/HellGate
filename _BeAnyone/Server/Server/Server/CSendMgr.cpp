@@ -2,7 +2,7 @@
 #include "CSendMgr.h"
 int sendentercnt = 1;
 
-
+mutex sendLock;
 void CSendMgr::Send_Packet(const uShort& id, void* packet)
 {
     unsigned char* buf = reinterpret_cast<unsigned char*>(packet);
@@ -15,10 +15,11 @@ void CSendMgr::Send_Packet(const uShort& id, void* packet)
     exover->wsabuf.len = buf[0];
     ZeroMemory(&exover->over, sizeof(exover->over));
 
-    Netmgr.GetMediatorMgr()->Find(id)->GetLock().lock();
+    sendLock.lock();
     WSASend(Netmgr.GetMediatorMgr()->Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
         &exover->over, NULL);
-    Netmgr.GetMediatorMgr()->Find(id)->GetLock().unlock();
+    sendLock.unlock();
+
     string temp;
 }
 
@@ -155,14 +156,13 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
     p.isAttack = isAttack;
-   // if (p.id >= START_MONSTER && p.id < END_MONSTER)
+    if (p.id >= START_MONSTER && p.id < END_MONSTER)
     {
-        //cout << "********************" << endl;
-        //cout << "********************" << endl;
-        //cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
-        //cout << "********************" << endl;
-        //cout << "********************" << endl;
-        //Netmgr.GetMediatorMgr()->Find(other_id)->SetIsMoving(false);
+        
+        cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
+        cout << "********************" << endl;
+        cout << "********************" << endl;
+        Netmgr.GetMediatorMgr()->Find(other_id)->SetIsMoving(false);
 
     }
     Send_Packet(user_id, &p);
@@ -178,13 +178,11 @@ void CSendMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, c
 
     p.dirVec = Netmgr.GetMediatorMgr()->Find(mover_id)->GetDirVector();
     p.dir = dir;
-    p.move_time = Netmgr.GetMediatorMgr()->Find(mover_id)->GetClientTime();
+   // p.move_time = Netmgr.GetMediatorMgr()->Find(mover_id)->GetClientTime();
     p.rotateY = Netmgr.GetMediatorMgr()->Find(mover_id)->GetRotateY();
     p.speed = Netmgr.GetMediatorMgr()->Find(mover_id)->GetSpeed();
-    p.Start = Netmgr.GetMediatorMgr()->Find(mover_id)->GetHalfRTT();
+    //p.Start = Netmgr.GetMediatorMgr()->Find(mover_id)->GetHalfRTT();
     p.isMoving = Netmgr.GetMediatorMgr()->Find(mover_id)->GetIsMoving();
-
-    Netmgr.GetMediatorMgr()->Find(mover_id)->SetIsMoving(true);
 
     Send_Packet(user_id, &p);
 }

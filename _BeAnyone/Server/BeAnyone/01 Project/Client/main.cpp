@@ -152,7 +152,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     UINT wStyle = WS_OVERLAPPEDWINDOW & ~(WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
 
-    ::SetWindowLongW(g_hWnd, GWL_STYLE, wStyle);
+    //::SetWindowLongW(g_hWnd, GWL_STYLE, wStyle);
     ShowWindow(g_hWnd, false);
     UpdateWindow(g_hWnd);
     SetMenu(g_hWnd, NULL);
