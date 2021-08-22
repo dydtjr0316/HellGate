@@ -346,6 +346,7 @@ void CPlayerScript::update()
 	{
 		ReckonerMove = true;
 		system_clock::time_point start = system_clock::now();
+		cout << "dir : " << (int)dir << endl;
 		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
 
 		player->GetReckoner()->SetDirVec(worldDir);
@@ -436,17 +437,16 @@ void CPlayerScript::op_Move()
 			temp.y = fHeight;
 
 		playerTrans->SetLocalPos(temp);
-		/*	if (pacektID == 1)
+			if (pacektID == 1)
 				cout <<  "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 			cout << "-----------------------------" << endl;
-			cout << "-----------------------------" << endl;*/
 
 	}
 	else {
 		if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetisBezeir())
 		{
 			cout << "보간한다 시발~~!!!" << endl;
-
+			
 
 			CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
 			CPlayerScript* player = g_Object.find(pacektID)->second->GetScript<CPlayerScript>();
@@ -467,7 +467,7 @@ void CPlayerScript::op_Move()
 			else
 			{
 				//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-				player->Set_InterpolationCnt_Zero();
+				//player->Set_InterpolationCnt_Zero();
 				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(false);
 			}
 		}
@@ -505,15 +505,25 @@ void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, con
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
 	Vector3 tempLocalPos = g_Object.find(id)->second->Transform()->GetLocalPos();
-	if (m_movePacketTemp->dir > 10)return;
-	
-	
-	
-	Vector3 tempWorldDir;
-	Vector3 tempARR_WorldDir[3];
+	cout << "패킷받을때 클라   : \t" << tempLocalPos.x <<", " << tempLocalPos.z << endl;
+	for (int i = 0; i < 4; i++) {
 
-	Matrix matRot = DirectX::XMMatrixRotationX(0.f);
-	matRot *= DirectX::XMMatrixRotationY(m_movePacketTemp->rotateY);
+		if (packetLocalPos.x <= tempLocalPos.x)
+			tempLocalPos.x += (packetDirVec.x * packetspeed * rtt);
+		else
+			tempLocalPos.x -= (packetDirVec.x * packetspeed * rtt);
+
+		if (packetLocalPos.z <= tempLocalPos.z)
+			tempLocalPos.z += (packetDirVec.z * packetspeed * rtt);
+		else
+			tempLocalPos.z -= (packetDirVec.z * packetspeed * rtt);
+
+
+		g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
+
+	}
+	/*Matrix matRot = DirectX::XMMatrixRotationX(0.f);
+	matRot *= DirectX::XMMatrixRotationY(packetrotateY);
 	matRot *= DirectX::XMMatrixRotationZ(0.f);
 
 	static Vector3 arrDefault[(UINT)DIR_TYPE::END] = { Vector3::Right, Vector3::Up, Vector3::Front };
@@ -563,12 +573,11 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	case MV_IDLE:case 0:
 		break;
 	default:
-		cout << m_movePacketTemp->dir << endl;
 		cout << "Unknown Direction from Client move packet!\n";
 		DebugBreak();
 		exit(-1);
 		break;
-	}
+	}*/
 	
 
 	
@@ -601,7 +610,7 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 {
 	float dt;
 	int i;
-	dt = DT / 3.f;
+	dt = m_fRTT / 3.f;
 
 	CPlayerScript* player = g_Object.find(pacektID)->second->GetScript<CPlayerScript>();
 	for (i = 0; i < 4; i++)

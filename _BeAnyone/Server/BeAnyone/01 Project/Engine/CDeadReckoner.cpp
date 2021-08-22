@@ -27,7 +27,7 @@ bool CDeadReckoner::isFollowing()
   
 
 
-    return distance >= (m_fSpeed * DT*2) * (m_fSpeed * DT*2);
+    return distance >= (m_fSpeed * DT/2) * (m_fSpeed * DT/2);
 }
 //
 //void CDeadReckoner::initSpline(float x[3], float y[3], float a[2], float b[2], float c[2], float d[2])

@@ -145,10 +145,11 @@ struct sc_packet_move {
 	uShort id;
 
 	//uShort move_time;
-	uShort dir = MV_IDLE;		// pragma pack 사용 안할거면 다시 char로 수정
+	char dir;		// pragma pack 사용 안할거면 다시 char로 수정
 
 	Vector3 localVec;
 	Vector3 dirVec;	//받아올땐 삭제해도되는가?
+	Vector3 worldVec;
 
 	float speed;
 	float rotateY;
@@ -318,6 +319,7 @@ struct cs_packet_move {
 
 	Vector3 localVec;
 	Vector3 DirVec;
+	
 	float speed;
 	float deltaTime;
 

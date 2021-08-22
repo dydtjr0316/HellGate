@@ -10,6 +10,7 @@ void CSenserScript::OnCollisionEnter(CCollider* _pOther)
 }
 
 CSenserScript::CSenserScript()
+	: CScript((UINT)COMPONENT_TYPE::SCRIPT)
 {
 }
 

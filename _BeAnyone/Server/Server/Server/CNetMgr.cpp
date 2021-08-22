@@ -382,6 +382,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         tempLock.lock();
         m_pMediator->Find(user_id)->SetIsMoving(true);
         CAST_CLIENT(m_pMediator->Find(user_id))->SetIsRefresh(true);
+        CAST_CLIENT(m_pMediator->Find(user_id))->SetDir(packet->dir);
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
@@ -748,6 +749,7 @@ void CNetMgr::Processing_Thead()
             CGameObject* obj = nullptr;
             cs_packet_move* drmPacket = nullptr;
             Vector3 objPos;
+            
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
                 if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
@@ -788,7 +790,7 @@ void CNetMgr::Processing_Thead()
                                     {
                                         //cout << "새로들어온 아이디" << endl;
                                         //cout << "--------------------" << endl;
-                                        m_pSendMgr->Send_Move_Packet(ob, reckoner, MV_IDLE);  // 여기서 또 들어옴
+                                        m_pSendMgr->Send_Move_Packet(ob, reckoner, CAST_CLIENT(obj)->GetDir());  // 여기서 또 들어옴
                                     }
                                 }
                                 tempLock.unlock();
@@ -809,7 +811,7 @@ void CNetMgr::Processing_Thead()
                                     {
                                         //cout << "이전에도 있던 아이디" << endl;
                                         //cout << "--------------------" << endl;
-                                        m_pSendMgr->Send_Move_Packet(ob, reckoner, MV_IDLE);// idle 이거 필요없으면 걍 지워 버리기 
+                                        m_pSendMgr->Send_Move_Packet(ob, reckoner, CAST_CLIENT(obj)->GetDir());// idle 이거 필요없으면 걍 지워 버리기 
                                     }
                                 }
                             }

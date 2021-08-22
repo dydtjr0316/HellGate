@@ -41,6 +41,9 @@ public:
 	void SetRefreshPacketCnt_Zero() { m_frpc = 0.f; }
 	void CountRefreshPacketCnt(const float& dt) { m_frpc += dt; }
 
+	void SetDir(const char& dir) { m_cDir = dir; }
+	char GetDir() {return m_cDir; }
+
 	//view list
 	void InsertViewList(const int& id) { view_list.emplace(id); }
 	void SetViewList(const unordered_set<uShort>& view) { view_list = view; }
@@ -62,6 +65,7 @@ private:
 	int		m_iMax_exp = 100; // 최대 경험치
 							//bool
 	bool	m_bisLevelUp = false;	// 레벨업
+	char m_cDir;
 	bool m_bisDead = false;
 	float m_frpc = 0.f;// Refresh Packet Cnt
 
