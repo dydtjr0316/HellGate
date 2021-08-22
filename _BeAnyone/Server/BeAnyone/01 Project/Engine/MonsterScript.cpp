@@ -14,6 +14,7 @@ int attackcnt = 0;
 
 CMonsterScript::CMonsterScript()
     : CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT)
+    , m_eMonsterState(MONSTER_STATE::MOVE)
 {
     //----------------
     // monster hp ui
@@ -65,6 +66,16 @@ CMonsterScript::CMonsterScript()
     CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Monster")->AddGameObject(childDummy);
     m_pChildDummy = childDummy;
 
+    
+    //==========================
+    // find object(only collider)
+    //==========================
+    CGameObject* pFindCollider = new CGameObject;
+    pFindCollider->SetName(L"FindColider");
+    pFindCollider->FrustumCheck(false);
+    pFindCollider->AddComponent(new CTransform);
+    pFindCollider->AddComponent(new CCollider);
+
 
 }
 
@@ -85,13 +96,14 @@ void CMonsterScript::SetPacketMove(sc_packet_monster_automove* p)
 
 void CMonsterScript::update()
 {
-    if (m_eMobType != MOB_TYPE::BOSS)
-        Move();
+    if (m_eMobType != MOB_TYPE::BOSS) {
+        Move(); Attack();
+    }
     else
         BossMove();
     
     
-    Attack();
+   
    
     
     //------
@@ -185,7 +197,21 @@ void CMonsterScript::DecreaseHp()
 
 void CMonsterScript::BossMove()
 {
-
+    switch (m_eMonsterState) {
+    case MONSTER_STATE::MOVE:
+        Move();
+        break;
+    case MONSTER_STATE::FIND:
+        break;
+    case MONSTER_STATE::FOLLOW:
+        break;
+    case MONSTER_STATE::ATTACK:
+        break;
+    case MONSTER_STATE::DAMAGE:
+        break;
+    case MONSTER_STATE::DIE:
+        break;
+    }
 }
 
 void CMonsterScript::Move()
@@ -194,14 +220,11 @@ void CMonsterScript::Move()
     if (g_Object.count(GetID()) == 0)return;
     if (g_Object.find(GetID())->second == nullptr)return;
 
-
-    CGameObject* monster = g_Object.find(GetID())->second;
-    CTransform* monsterTrans = monster->Transform();
+    CTransform* monsterTrans = GetObj()->Transform();
     Vector3 monsterPos = monsterTrans->GetLocalPos();
     Vector3 worldDir;
-    CMonsterScript* monsterScript = monster->GetScript<CMonsterScript>();
-    CTerrain* pTerrain = monsterScript->GetTerrain();
-    const Vector3& xmf3Scale = monster->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
+    CMonsterScript* monsterScript = GetObj()->GetScript<CMonsterScript>();
+    const Vector3& xmf3Scale = GetObj()->GetScript<CMonsterScript>()->Transform()->GetLocalScale();
     string temp;
     MONSTER_AUTOMOVE_DIR monsterDir;
     GetObj()->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
@@ -214,7 +237,7 @@ void CMonsterScript::Move()
             //cout << monsterTrans->GetLocalPos().x << " , " << monsterTrans->GetLocalPos().z << endl;
         }
         monsterDir = (MONSTER_AUTOMOVE_DIR)monsterScript->GetDir();
-        if (monster->GetName() == L"GreenMonster")
+        if (GetObj()->GetName() == L"GreenMonster")
         {
             //cout << "MOnster dir : " << (int)monsterDir << endl;
         }
@@ -223,7 +246,7 @@ void CMonsterScript::Move()
             switch (monsterDir)
             {
             case MONSTER_AUTOMOVE_DIR::FRONT:
-                if (monster->GetName() == L"GreenMonster") {
+                if (GetObj()->GetName() == L"GreenMonster") {
                     monsterTrans->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
                     //tempWorldPos.z = 1.f;
                     worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
@@ -240,7 +263,7 @@ void CMonsterScript::Move()
             case MONSTER_AUTOMOVE_DIR::BACK:
                 //worlddir º¯°æ
                 // ¹Ø¿¡²¨ Ã³·³ ÁÂÇ¥ º¯°æÇÏ´Â ÄÚµå
-                if (monster->GetName() == L"GreenMonster") {
+                if (GetObj()->GetName() == L"GreenMonster") {
                     monsterTrans->SetLocalRot(Vector3(0.f, 0.f, 0.f));
                     worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
                 }
@@ -252,7 +275,7 @@ void CMonsterScript::Move()
                 }
                 break;
             case MONSTER_AUTOMOVE_DIR::LEFT:
-                if (monster->GetName() == L"GreenMonster") {
+                if (GetObj()->GetName() == L"GreenMonster") {
                     monsterTrans->SetLocalRot(Vector3(0.f, XM_PI / 2, 0.f));
                     worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
                 }
@@ -264,7 +287,7 @@ void CMonsterScript::Move()
                 }
                 break;
             case MONSTER_AUTOMOVE_DIR::RIGHT:
-                if (monster->GetName() == L"GreenMonster") {
+                if (GetObj()->GetName() == L"GreenMonster") {
                     monsterTrans->SetLocalRot(Vector3(0.f, -XM_PI / 2, 0.f));
                     worldDir = -monsterTrans->GetWorldDir(DIR_TYPE::FRONT);
                 }
@@ -298,7 +321,7 @@ void CMonsterScript::Move()
             monsterPos += worldDir * 100.f * DT;
             int z = (int)(monsterPos.z / xmf3Scale.z);
 
-            float fHeight = pTerrain->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
+            float fHeight = m_pTerrainObj->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
 
             if (monsterPos.y != fHeight)
                 monsterPos.y = fHeight;

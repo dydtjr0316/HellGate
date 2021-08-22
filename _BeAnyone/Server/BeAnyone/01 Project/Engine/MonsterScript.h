@@ -1,6 +1,16 @@
 #pragma once
 #include "Script.h"
 
+enum class MONSTER_STATE {
+    MOVE,
+    FIND,
+    FOLLOW,
+    ATTACK,
+    DAMAGE,
+    DIE,
+    END,
+};
+
 class CMonsterScript :
     public CScript
 {
@@ -40,6 +50,10 @@ private:
 
     // monster move dir
     float      m_fAngleY = 0.f;
+
+    // boss monster
+    MONSTER_STATE       m_eMonsterState;
+    CGameObject*        m_pFindCollider;
 public:
     virtual void update();
     virtual void OnCollisionEnter(CCollider* _pOther);
