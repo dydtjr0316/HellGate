@@ -501,13 +501,10 @@ void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, con
 
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
-	sc_packet_move* recvPacket = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
-	if (recvPacket == nullptr)return;
-	Vector3 tempLocalPos = g_Object.find(recvPacket->id)->second->Transform()->GetLocalPos();
+	Vector3 tempLocalPos = g_Object.find(pacektID)->second->Transform()->GetLocalPos();
 	if (m_movePacketTemp->dir > 10)return;
 	
 	
-	float tempSpeed = g_Object.find(recvPacket->id)->second->GetScript<CPlayerScript>()->GetSpeed();
 	
 	Vector3 tempWorldDir;
 	Vector3 tempARR_WorldDir[3];
@@ -527,8 +524,8 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	case MV_FRONT:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
 		for (int i = 0; i < 4; i++) {
-			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
-			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			tempLocalPos.x += (tempWorldDir.x * packetspeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * packetspeed * (float)(DT));
 			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
 
 		}
@@ -536,8 +533,8 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	case MV_LEFT:
 		tempWorldDir = tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
 		for (int i = 0; i < 4; i++) {
-			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
-			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			tempLocalPos.x += (tempWorldDir.x * packetspeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * packetspeed * (float)(DT));
 			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
 
 		}
@@ -545,8 +542,8 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	case MV_RIGHT:
 		tempWorldDir = tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
 		for (int i = 0; i < 4; i++) {
-			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
-			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			tempLocalPos.x += (tempWorldDir.x * packetspeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * packetspeed * (float)(DT));
 			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
 
 		}
@@ -554,8 +551,8 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	case MV_BACK:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::RIGHT];
 		for (int i = 0; i < 4; i++) {
-			tempLocalPos.x += (tempWorldDir.x * tempSpeed * (float)(DT));
-			tempLocalPos.z += (tempWorldDir.z * tempSpeed * (float)(DT));
+			tempLocalPos.x += (tempWorldDir.x * packetspeed * (float)(DT));
+			tempLocalPos.z += (tempWorldDir.z * packetspeed * (float)(DT));
 			g_Object.find(id)->second->GetScript<CPlayerScript>()->SetOrigin_Point(i, tempLocalPos.x, tempLocalPos.z);
 
 		}
@@ -601,6 +598,8 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 	float dt;
 	int i;
 	dt = DT / 3.f;
+	cout << "Current Pos : " << points->x << ", " << points->y << endl;
+	cout << "Destination Pos : " << dest->x << ", " << dest->y << endl;
 	sc_packet_move* recvPacket = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
 	CPlayerScript* player = g_Object.find(recvPacket->id)->second->GetScript<CPlayerScript>();
 	for (i = 0; i < 4; i++)
