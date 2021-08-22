@@ -659,6 +659,9 @@ void CPlayerScript::OnCollisionEnter(CCollider* _pOther)
 
 void CPlayerScript::OnCollision(CCollider* _pOther)
 {
+	if (_pOther->Collider()->GetColliderType() == COLLIDER_TYPE::RANGE)
+		return;
+
 	BoundingSphere myBS = Collider()->GetBoundingSphere();
 	BoundingSphere otherBS = _pOther->Collider()->GetBoundingSphere();
 

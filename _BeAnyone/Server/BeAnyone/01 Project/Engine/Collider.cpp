@@ -80,6 +80,11 @@ void CCollider::finalupdate()
 	/*m_bbx.Extents = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_bbx.Extents = (Transform()->GetLocalScale()) * m_bbx.Extents;*/
 
+	if (m_eType == COLLIDER_TYPE::RANGE) {
+		m_bSp.Center = Transform()->GetWorldPos();
+		m_bSp.Center.y = Transform()->GetWorldPos().y;// +m_bSp.Radius;
+	}
+
 	
 }
 
@@ -125,6 +130,10 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
 	}
+	else
+	{
+		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
+	}
 	/*else if (COLLIDER_TYPE::MESH == m_eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"xMesh");
@@ -155,6 +164,10 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType, wstring _str)
 	else if (COLLIDER_TYPE::MESH == m_eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(_str);
+	}
+	else
+	{
+		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
 	}
 
 }

@@ -1979,14 +1979,14 @@ void CSceneMgr::init()
 	//=============
 	// Boss Monster 
 	//=============
-	Vector3 monsterPos = Vector3(10000.f, 0.f, 5000.f);
+	Vector3 monsterPos = Vector3(8000.f, 0.f, 4000.f);
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
 	CGameObject* pMonster = new CGameObject;
 	pMonster = pMeshData->Instantiate();
 	pMonster->SetName(L"BossMonster");
 	pMonster->MeshRender()->SetDynamicShadow(true);
 	pMonster->FrustumCheck(false);
-	pMonster->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+	pMonster->Transform()->SetLocalScale(Vector3(2.f, 2.f, 2.f));//(1.0f, 1.0f, 1.0f));
 	pMonster->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 	{
 		int z = (int)(monsterPos.z / pMonster->Transform()->GetLocalScale().z);
@@ -2009,6 +2009,7 @@ void CSceneMgr::init()
 	monsterScript->SetMonsterType(MONSTER_TYPE::BOSS_MONSTER);
 	monsterScript->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	monsterScript->SetMobTYpe(MOB_TYPE::BOSS);
+	monsterScript->Init();
 	//animation
 	//idle
 	monsterScript->SetAnimationData(pMeshData->GetMesh());

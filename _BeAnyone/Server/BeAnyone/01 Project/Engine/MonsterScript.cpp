@@ -5,6 +5,7 @@
 #include "Terrain.h"
 #include "Quest.h"
 #include "BulletScript.h"
+#include "SenserScript.h"
 
 #include "MeshRender.h"
 
@@ -67,15 +68,7 @@ CMonsterScript::CMonsterScript()
     m_pChildDummy = childDummy;
 
     
-    //==========================
-    // find object(only collider)
-    //==========================
-    CGameObject* pFindCollider = new CGameObject;
-    pFindCollider->SetName(L"FindColider");
-    pFindCollider->FrustumCheck(false);
-    pFindCollider->AddComponent(new CTransform);
-    pFindCollider->AddComponent(new CCollider);
-
+    
 
 }
 
@@ -84,6 +77,32 @@ CMonsterScript::~CMonsterScript()
     DeleteObject(m_pUi);
     DeleteObject(m_pUnderUi);
     DeleteObject(m_pChildDummy);
+}
+void CMonsterScript::Init()
+{
+    //==========================
+    // find object(only collider)
+    //==========================
+    CGameObject* pFindCollider = new CGameObject;
+    pFindCollider->SetName(L"FindColider");
+    pFindCollider->FrustumCheck(false);
+    pFindCollider->AddComponent(new CTransform);
+    pFindCollider->AddComponent(new CCollider);
+    pFindCollider->AddComponent(new CMeshRender);
+    pFindCollider->AddComponent(new CSenserScript);
+
+    pFindCollider->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 0.0f));
+    pFindCollider->Transform()->SetLocalScale(Vector3(500.f, 2.f, 500.f));
+    pFindCollider->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+    pFindCollider->Collider()->SetColliderType(COLLIDER_TYPE::RANGE);
+    pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 2000.f));
+    pFindCollider->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+    Ptr<CMaterial> pMtrla = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+    pFindCollider->MeshRender()->SetMaterial(pMtrla->Clone());
+    m_pFindCollider = pFindCollider;
+
+    GetObj()->AddChild(pFindCollider);
+    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Monster")->AddGameObject(pFindCollider);
 }
 
 void CMonsterScript::SetPacketMove(sc_packet_monster_automove* p)
