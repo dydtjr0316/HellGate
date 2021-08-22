@@ -130,6 +130,10 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
 	}
+	else
+	{
+		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
+	}
 	/*else if (COLLIDER_TYPE::MESH == m_eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"xMesh");
@@ -160,6 +164,10 @@ void CCollider::SetColliderType(COLLIDER_TYPE _eType, wstring _str)
 	else if (COLLIDER_TYPE::MESH == m_eType)
 	{
 		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(_str);
+	}
+	else
+	{
+		m_pColMesh = CResMgr::GetInst()->FindRes<CMesh>(L"ColSphereMesh");
 	}
 
 }

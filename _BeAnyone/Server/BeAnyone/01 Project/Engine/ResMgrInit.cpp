@@ -562,8 +562,8 @@ void CResMgr::CreateDefaultMesh()
     AddRes<CMesh>(pMesh->GetName(), pMesh);
 
 
-    /*pMesh->SetName(L"ColSphereMesh");
-    AddRes<CMesh>(pMesh->GetName(), pMesh);*/
+    pMesh->SetName(L"ColSphereMesh");
+    AddRes<CMesh>(pMesh->GetName(), pMesh);
 
     vecVTX.clear();
     vecIdx.clear();
