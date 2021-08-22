@@ -456,6 +456,7 @@ void CPlayerScript::op_Move()
 			ObjTrans->SetLocalRot(Vector3(0.f, packetrotateY, 0.f));
 			if (player->GetInterpolationCnt() != 4)
 			{
+				cout << "cnt : " << player->GetInterpolationCnt() << endl;
 				ObjTrans->SetLocalPos(Vector3(player->GetInterpolationPoint()[player->GetInterpolationCnt()].x,
 					packetLocalPos.y,
 					player->GetInterpolationPoint()[player->GetInterpolationCnt()].y));
@@ -466,7 +467,8 @@ void CPlayerScript::op_Move()
 			else
 			{
 				//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->DeleteOherMovePaacket();
-				packetMoving = false;
+				player->Set_InterpolationCnt_Zero();
+				g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(false);
 			}
 		}
 	}
@@ -491,6 +493,7 @@ void CPlayerScript::SetOrigin_Point(const int& index, const float& x, const floa
 {
 	m_v2Origin_Point[index].x = x;
 	m_v2Origin_Point[index].y = y;
+	cout << "Set Origin Point : " << m_v2Origin_Point[index].x << ", "<< m_v2Origin_Point[index].y <<endl;
 }
 
 void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, const float& y)
@@ -501,7 +504,7 @@ void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, con
 
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
-	Vector3 tempLocalPos = g_Object.find(pacektID)->second->Transform()->GetLocalPos();
+	Vector3 tempLocalPos = g_Object.find(id)->second->Transform()->GetLocalPos();
 	if (m_movePacketTemp->dir > 10)return;
 	
 	
@@ -519,7 +522,7 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 	{
 		tempARR_WorldDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
 	}
-	switch (m_movePacketTemp->dir)
+	switch (packetDir)
 	{
 	case MV_FRONT:
 		tempWorldDir = -tempARR_WorldDir[(UINT)DIR_TYPE::FRONT];
@@ -589,6 +592,7 @@ Vector2 CPlayerScript::Search_Interpolation_Points(Vector2* points, float time)
 
 	result.x = (ax * time_Triple) + (bx * time_Double) + (cx * time) + points[0].x;
 	result.y = (ay * time_Triple) + (bx * time_Double) + (cy * time) + points[0].y;
+	cout << "Set Interpor Point : " << result.x << ", " << result.y << endl;
 
 	return result;
 }
@@ -598,18 +602,15 @@ void CPlayerScript::Compute_Bezier(Vector2* points, Vector2* dest)
 	float dt;
 	int i;
 	dt = DT / 3.f;
-	cout << "Current Pos : " << points->x << ", " << points->y << endl;
-	cout << "Destination Pos : " << dest->x << ", " << dest->y << endl;
-	sc_packet_move* recvPacket = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
-	CPlayerScript* player = g_Object.find(recvPacket->id)->second->GetScript<CPlayerScript>();
+
+	CPlayerScript* player = g_Object.find(pacektID)->second->GetScript<CPlayerScript>();
 	for (i = 0; i < 4; i++)
 	{
 
-		Vector2 inst = g_Object.find(recvPacket->id)->second->
+		Vector2 inst = g_Object.find(pacektID)->second->
 			GetScript<CPlayerScript>()->Search_Interpolation_Points(points, i * dt);
 
 		player->SetInterpolation_Point(i, inst.x, inst.y);
-
 	}
 }
 

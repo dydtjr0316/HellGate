@@ -152,7 +152,7 @@ struct sc_packet_move {
 
 	float speed;
 	float rotateY;
-	//system_clock::time_point Start;
+	system_clock::time_point Start;
 
 	bool isMoving;
 

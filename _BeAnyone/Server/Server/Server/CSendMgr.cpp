@@ -181,7 +181,7 @@ void CSendMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, c
    // p.move_time = Netmgr.GetMediatorMgr()->Find(mover_id)->GetClientTime();
     p.rotateY = Netmgr.GetMediatorMgr()->Find(mover_id)->GetRotateY();
     p.speed = Netmgr.GetMediatorMgr()->Find(mover_id)->GetSpeed();
-    //p.Start = Netmgr.GetMediatorMgr()->Find(mover_id)->GetHalfRTT();
+    p.Start = system_clock::now();
     p.isMoving = Netmgr.GetMediatorMgr()->Find(mover_id)->GetIsMoving();
 
     Send_Packet(user_id, &p);
