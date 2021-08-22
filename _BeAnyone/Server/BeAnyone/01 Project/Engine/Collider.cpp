@@ -80,6 +80,11 @@ void CCollider::finalupdate()
 	/*m_bbx.Extents = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_bbx.Extents = (Transform()->GetLocalScale()) * m_bbx.Extents;*/
 
+	if (m_eType == COLLIDER_TYPE::RANGE) {
+		m_bSp.Center = Transform()->GetWorldPos();
+		m_bSp.Center.y = Transform()->GetWorldPos().y;// +m_bSp.Radius;
+	}
+
 	
 }
 

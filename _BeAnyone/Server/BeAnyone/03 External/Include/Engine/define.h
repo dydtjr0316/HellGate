@@ -148,6 +148,7 @@ enum class COLLIDER_TYPE
 	SPHERE,
 	MESH,
 	SPHEREMESH,
+	RANGE,
 };
 
 enum class SHADER_PARAM

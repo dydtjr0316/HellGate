@@ -346,6 +346,7 @@ void CPlayerScript::update()
 	{
 		ReckonerMove = true;
 		system_clock::time_point start = system_clock::now();
+		cout << "dir : " << (int)dir << endl;
 		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
 
 		player->GetReckoner()->SetDirVec(worldDir);
@@ -650,6 +651,9 @@ void CPlayerScript::OnCollisionEnter(CCollider* _pOther)
 
 void CPlayerScript::OnCollision(CCollider* _pOther)
 {
+	if (_pOther->Collider()->GetColliderType() == COLLIDER_TYPE::RANGE)
+		return;
+
 	BoundingSphere myBS = Collider()->GetBoundingSphere();
 	BoundingSphere otherBS = _pOther->Collider()->GetBoundingSphere();
 

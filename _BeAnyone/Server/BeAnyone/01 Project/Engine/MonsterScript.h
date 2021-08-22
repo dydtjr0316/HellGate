@@ -55,6 +55,7 @@ private:
     MONSTER_STATE       m_eMonsterState;
     CGameObject*        m_pFindCollider;
 public:
+    void Init();
     virtual void update();
     virtual void OnCollisionEnter(CCollider* _pOther);
     virtual void OnCollisionExit(CCollider* _pOther);
