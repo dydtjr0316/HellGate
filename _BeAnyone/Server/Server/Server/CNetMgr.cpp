@@ -279,9 +279,7 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
     unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
-    tempLock.lock();
     m_pMediator->Find(user_id)->SetIsMoving(false);
-    tempLock.unlock();
     for (auto& ob : vSectors)
     {
         if (ob == user_id)continue;
@@ -383,18 +381,18 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
         tempLock.lock();
         m_pMediator->Find(user_id)->SetIsMoving(true);
-        tempLock.unlock();
+        CAST_CLIENT(m_pMediator->Find(user_id))->SetIsRefresh(true);
         m_pMediator->Find(user_id)->SetClientTime(packet->move_time);
         m_pMediator->Find(user_id)->SetSpeed(packet->speed);
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
         m_pMediator->Find(user_id)->SetDirV(packet->DirVec);
         m_pMediator->Find(user_id)->SetDeadReckoningPacket(packet);
-        CAST_CLIENT(m_pMediator->Find(user_id))->SetIsRefresh(true);
 
         //
         m_pMediator->ReckonerAdd(user_id);
 
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
+        tempLock.unlock();
 
     }
                 break;
@@ -403,9 +401,9 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         tempLock.lock();
         m_pMediator->Find(packet->id)->SetIsMoving(false);
-        tempLock.unlock();
         cout << packet->id << "의 stop packet 도착" << endl;
         Do_Stop(packet->id, m_pMediator->Find(packet->id)->GetIsMoving());
+        tempLock.unlock();
     }
     break;
     case CS_LOGIN: {
@@ -770,7 +768,7 @@ void CNetMgr::Processing_Thead()
 
                     if (CAST_CLIENT(obj)->GetIsRefresh())
                     {
-                        CAST_CLIENT(obj)->SetIsRefresh(false);
+                        
                         for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
                         {
                             if (ob == reckoner)continue;
@@ -842,7 +840,9 @@ void CNetMgr::Processing_Thead()
                             }
 
                         }
-
+                        tempLock.lock();
+                        CAST_CLIENT(obj)->SetIsRefresh(false);
+                        tempLock.unlock();
 
 
                         // 동기화 패킷 일시정지 
