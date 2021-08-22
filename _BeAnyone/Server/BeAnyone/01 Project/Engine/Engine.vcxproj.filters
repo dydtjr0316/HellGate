@@ -216,6 +216,9 @@
     <ClCompile Include="SnowScript.cpp">
       <Filter>04. GameObject\Script\01.Particle</Filter>
     </ClCompile>
+    <ClCompile Include="SenserScript.cpp">
+      <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h" />
@@ -416,6 +419,9 @@
     </ClInclude>
     <ClInclude Include="SnowScript.h">
       <Filter>04. GameObject\Script\01.Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="SenserScript.h">
+      <Filter>04. GameObject\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1979,7 +1979,7 @@ void CSceneMgr::init()
 	//=============
 	// Boss Monster 
 	//=============
-	Vector3 monsterPos = Vector3(1000.f, 0.f, 1000.f);
+	Vector3 monsterPos = Vector3(10000.f, 0.f, 5000.f);
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
 	CGameObject* pMonster = new CGameObject;
 	pMonster = pMeshData->Instantiate();
@@ -2009,21 +2009,21 @@ void CSceneMgr::init()
 	monsterScript->SetMonsterType(MONSTER_TYPE::BOSS_MONSTER);
 	monsterScript->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	monsterScript->SetMobTYpe(MOB_TYPE::BOSS);
-	////animation
-	////idle
-	//monsterScript->SetAnimationData(pMeshData->GetMesh());
-	////walk
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Walk Forward With Root Motion.fbx", FBX_TYPE::MONSTER);
-	//monsterScript->SetAnimationData(pMeshData->GetMesh());
-	////dead
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@die.fbx", FBX_TYPE::MONSTER);
-	//monsterScript->SetAnimationData(pMeshData->GetMesh());
-	////attack
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@meleeattack01.fbx", FBX_TYPE::MONSTER);
-	//monsterScript->SetAnimationData(pMeshData->GetMesh());
-	////damage
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
-	//monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//animation
+	//idle
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//walk
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Slither Forward Fast WO Root.fbx", FBX_TYPE::MONSTER);
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//dead
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Die.fbx", FBX_TYPE::MONSTER);
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//attack
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Bite Attack.fbx", FBX_TYPE::MONSTER);
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
+	//damage
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Defend.fbx", FBX_TYPE::MONSTER);
+	monsterScript->SetAnimationData(pMeshData->GetMesh());
 
 
 
