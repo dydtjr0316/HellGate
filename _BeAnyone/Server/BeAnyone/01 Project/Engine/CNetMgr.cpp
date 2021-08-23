@@ -17,6 +17,7 @@
 #include "SwordScript.h"
 #include "ParticleScript.h"
 #include "ParticleSystem.h"
+#include "Quest.h"
 int cnt = 0;
 bool tempbool = false;
 OBJECT_TYPE CheckObjType(const uShort& id)
@@ -404,6 +405,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
 					g_Object.find(id)->second->SetID(id);
+					cout << id << endl;
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"PlayerMale");
@@ -413,9 +415,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(0.f, my_packet->RotateY, 0.f));
 					g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
+					g_Object.find(id)->second->AddComponent(new CQuest);
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
 
+					g_Object.find(id)->second->GetScript<CPlayerScript>()->Init();
 					g_Object.find(id)->second->GetScript<CPlayerScript>()->SetTerrain(
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 					);

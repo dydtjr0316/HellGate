@@ -62,7 +62,7 @@ private:
 	float			packetspeed;
 	float			packetrotateY;
 	uShort			pacektID;
-	bool			packetMoving;
+	bool			packetMoving = false;
 
 	CTerrain*		m_pTerrainObj;
 	XMFLOAT3		m_xmf3Velocity;

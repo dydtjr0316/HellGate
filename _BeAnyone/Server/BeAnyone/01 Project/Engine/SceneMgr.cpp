@@ -1657,9 +1657,11 @@ void CSceneMgr::init()
 
 	// Script 설정
 	pPlayerObj->AddComponent(new CPlayerScript);
+	CPlayerScript* playerScript = pPlayerObj->GetScript<CPlayerScript>();
+	playerScript->Init();
+	
 	// Animaition Data 넘겨주기
 	// Idle
-	CPlayerScript* playerScript = pPlayerObj->GetScript<CPlayerScript>();
 	playerScript->SetAnimationData(pMeshData->GetMesh());
 	g_netMgr.SetAniData(pMeshData->GetMesh());
 	// walk_F
@@ -1771,112 +1773,113 @@ void CSceneMgr::init()
 	pUICam->Camera()->SetWidth(CRenderMgr::GetInst()->GetResolution().fWidth);
 	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
 	CreateTargetUI(pUICam);
+	pPlayerObj->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetCameraProj(pUICam->Camera());
 	
-	//	-----------------------
-	//	item UI, 상속되는 버튼들
-	//	-----------------------
-	pObject = new CGameObject;
-	Vector3 vScale = Vector3(600.f, 800.f, 1.f);
-	pObject->SetName(L"Item UI Object");
-	pObject->FrustumCheck(false);
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	pObject->AddComponent(new CStaticUI);
-	pObject->AddComponent(new CCollider);
-	pObject->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
-	pObject->StaticUI()->init(UI_TYPE::PRIVATE_ITEM_UI);
-	pObject->StaticUI()->CreatePickingObj();
-	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
-	pObject->StaticUI()->SetCameraProj(pUICam->Camera());
-	//	플레이어 스크립트(오브젝트)에 StaticUI 귀속
-	pPlayerObj->GetScript<CPlayerScript>()->SetUIObj(pObject);
-	// Transform 설정
-	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	pObject->Transform()->SetLocalPos(Vector3(300.f, 80.f, 1.f));
-	pObject->Transform()->SetLocalScale(vScale);
-	// MeshRender 설정	
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"UITexMtrl");
-	pObject->MeshRender()->SetMaterial(pMtrl->Clone());
-	Ptr<CTexture> itemUI = pObject->StaticUI()->m_pFrame;
-	float fUI = 0.5f;
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
-	// AddGameObject
-	m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
-	
-	//	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
-	vScale = Vector3(100.f, 100.f, 1.f);
-	Vector3 vObjectPos = pObject->Transform()->GetLocalPos();
-	Vector3 vObjectScale = pObject->Transform()->GetLocalScale(); 
-	float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;
-	float	fEmptyX = (vObjectScale.x - (vScale.x * 4.f)) / 5.f;
-	for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
-	{
-		Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
-		CGameObject* pButtonObj = new CGameObject;
-		pButtonObj->SetName(L"Button Object");
-		pButtonObj->FrustumCheck(false);// 절두체 컬링 사용하지 않음
-		pButtonObj->AddComponent(new CTransform);
-		pButtonObj->AddComponent(new CMeshRender);
-		pButtonObj->AddComponent(new CCollider);
-		pButtonObj->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
-		//	버튼 Script 설정
-		pButtonObj->AddComponent(pObject->StaticUI()->m_vecButton[i]);
-		pObject->StaticUI()->m_vecButton[i]->SetParent(pObject->StaticUI());
-		pObject->StaticUI()->m_vecButton[i]->SetUiType(UI_TYPE::PRIVATE_ITEM_UI);
-		// Transform 설정
-		tResolution res = CRenderMgr::GetInst()->GetResolution();
-		Vector3 result = Vector3(vObjectPos.x - (vObjectScale.x / 2.f) + (vScale.x / 2.f + fEmptyX) + ((vScale.x + fEmptyX) * (i % 4))
-			, vObjectPos.y + (vObjectScale.y / 2.f) - (vScale.y / 2.f + fEmptyY) - ((vScale.y + fEmptyY) * (i / 4))
-			, 1.f);
-		pButtonObj->Transform()->SetLocalPos(result);
-		pButtonObj->Transform()->SetLocalScale(vScale);
-		// MeshRender 설정
-		pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl");
-		pButtonObj->MeshRender()->SetMaterial(pMtrl->Clone());
-		pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pObject->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
-		// AddGameObject
-		m_pCurScene->FindLayer(L"UI")->AddGameObject(pButtonObj);
+	////	-----------------------
+	////	item UI, 상속되는 버튼들
+	////	-----------------------
+	//pObject = new CGameObject;
+	//Vector3 vScale = Vector3(600.f, 800.f, 1.f);
+	//pObject->SetName(L"Item UI Object");
+	//pObject->FrustumCheck(false);
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//pObject->AddComponent(new CStaticUI);
+	//pObject->AddComponent(new CCollider);
+	//pObject->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
+	//pObject->StaticUI()->init(UI_TYPE::PRIVATE_ITEM_UI);
+	//pObject->StaticUI()->CreatePickingObj();
+	//// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
+	//pObject->StaticUI()->SetCameraProj(pUICam->Camera());
+	////	플레이어 스크립트(오브젝트)에 StaticUI 귀속
+	//pPlayerObj->GetScript<CPlayerScript>()->SetUIObj(pObject);
+	//// Transform 설정
+	//tResolution res = CRenderMgr::GetInst()->GetResolution();
+	//pObject->Transform()->SetLocalPos(Vector3(300.f, 80.f, 1.f));
+	//pObject->Transform()->SetLocalScale(vScale);
+	//// MeshRender 설정	
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"UITexMtrl");
+	//pObject->MeshRender()->SetMaterial(pMtrl->Clone());
+	//Ptr<CTexture> itemUI = pObject->StaticUI()->m_pFrame;
+	//float fUI = 0.5f;
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
+	//// AddGameObject
+	//m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
+	//
+	////	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
+	//vScale = Vector3(100.f, 100.f, 1.f);
+	//Vector3 vObjectPos = pObject->Transform()->GetLocalPos();
+	//Vector3 vObjectScale = pObject->Transform()->GetLocalScale(); 
+	//float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;
+	//float	fEmptyX = (vObjectScale.x - (vScale.x * 4.f)) / 5.f;
+	//for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
+	//{
+	//	Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
+	//	CGameObject* pButtonObj = new CGameObject;
+	//	pButtonObj->SetName(L"Button Object");
+	//	pButtonObj->FrustumCheck(false);// 절두체 컬링 사용하지 않음
+	//	pButtonObj->AddComponent(new CTransform);
+	//	pButtonObj->AddComponent(new CMeshRender);
+	//	pButtonObj->AddComponent(new CCollider);
+	//	pButtonObj->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
+	//	//	버튼 Script 설정
+	//	pButtonObj->AddComponent(pObject->StaticUI()->m_vecButton[i]);
+	//	pObject->StaticUI()->m_vecButton[i]->SetParent(pObject->StaticUI());
+	//	pObject->StaticUI()->m_vecButton[i]->SetUiType(UI_TYPE::PRIVATE_ITEM_UI);
+	//	// Transform 설정
+	//	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	//	Vector3 result = Vector3(vObjectPos.x - (vObjectScale.x / 2.f) + (vScale.x / 2.f + fEmptyX) + ((vScale.x + fEmptyX) * (i % 4))
+	//		, vObjectPos.y + (vObjectScale.y / 2.f) - (vScale.y / 2.f + fEmptyY) - ((vScale.y + fEmptyY) * (i / 4))
+	//		, 1.f);
+	//	pButtonObj->Transform()->SetLocalPos(result);
+	//	pButtonObj->Transform()->SetLocalScale(vScale);
+	//	// MeshRender 설정
+	//	pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl");
+	//	pButtonObj->MeshRender()->SetMaterial(pMtrl->Clone());
+	//	pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pObject->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
+	//	// AddGameObject
+	//	m_pCurScene->FindLayer(L"UI")->AddGameObject(pButtonObj);
 
-		pObject->StaticUI()->m_vecButton[i]->init();
-	}
+	//	pObject->StaticUI()->m_vecButton[i]->init();
+	//}
 
-	for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
-		pObject->StaticUI()->m_vecButton[i]->CreateExplainBox();
+	//for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
+	//	pObject->StaticUI()->m_vecButton[i]->CreateExplainBox();
 
-	// wallet create
-	CGameObject* pWallet = new CGameObject;
-	pWallet->SetName(L"Wallet");
-	pWallet->FrustumCheck(false);
-	pWallet->AddComponent(new CTransform);
-	pWallet->AddComponent(new CMeshRender);
-	pWallet->Transform()->SetLocalPos(Vector3(vObjectPos.x, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
-	pWallet->Transform()->SetLocalScale(Vector3(120.f, 50.f, 1.f));
-	//MeshRender 설정
-	pWallet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pWallet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
-	pWallet->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"WALLET").GetPointer());
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pWallet);
-	pObject->StaticUI()->m_pWallet = pWallet;
+	//// wallet create
+	//CGameObject* pWallet = new CGameObject;
+	//pWallet->SetName(L"Wallet");
+	//pWallet->FrustumCheck(false);
+	//pWallet->AddComponent(new CTransform);
+	//pWallet->AddComponent(new CMeshRender);
+	//pWallet->Transform()->SetLocalPos(Vector3(vObjectPos.x, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
+	//pWallet->Transform()->SetLocalScale(Vector3(120.f, 50.f, 1.f));
+	////MeshRender 설정
+	//pWallet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//pWallet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
+	//pWallet->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"WALLET").GetPointer());
+	//CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pWallet);
+	//pObject->StaticUI()->m_pWallet = pWallet;
 
-	CGameObject* pMoney;
-	for (int i = 0; i < 5; ++i) {
-		pMoney = new CGameObject;
-		pWallet->SetName(L"Money");
-		pMoney->FrustumCheck(false);
-		pMoney->AddComponent(new CTransform);
-		pMoney->AddComponent(new CMeshRender);
-		pMoney->Transform()->SetLocalPos(Vector3(vObjectPos.x + (pWallet->Transform()->GetLocalScale().x / 2.f) + 30.f + (i * 30.f), vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
-		pMoney->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
-		//MeshRender 설정
-		pMoney->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		pMoney->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
-		pMoney->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pMoney);
-		pObject->StaticUI()->m_pMoneyUi.push_back(pMoney);
-	}
+	//CGameObject* pMoney;
+	//for (int i = 0; i < 5; ++i) {
+	//	pMoney = new CGameObject;
+	//	pWallet->SetName(L"Money");
+	//	pMoney->FrustumCheck(false);
+	//	pMoney->AddComponent(new CTransform);
+	//	pMoney->AddComponent(new CMeshRender);
+	//	pMoney->Transform()->SetLocalPos(Vector3(vObjectPos.x + (pWallet->Transform()->GetLocalScale().x / 2.f) + 30.f + (i * 30.f), vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
+	//	pMoney->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
+	//	//MeshRender 설정
+	//	pMoney->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//	pMoney->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+	//	pMoney->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
+	//	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pMoney);
+	//	pObject->StaticUI()->m_pMoneyUi.push_back(pMoney);
+	//}
 
 	// ====================
 	// 3D Light Object 추가

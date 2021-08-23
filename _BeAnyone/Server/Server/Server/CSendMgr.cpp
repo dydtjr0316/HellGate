@@ -16,6 +16,7 @@ void CSendMgr::Send_Packet(const uShort& id, void* packet)
     ZeroMemory(&exover->over, sizeof(exover->over));
 
     sendLock.lock();
+    cout << "ID : " << id << endl;
     WSASend(Netmgr.GetMediatorMgr()->Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
         &exover->over, NULL);
     sendLock.unlock();
