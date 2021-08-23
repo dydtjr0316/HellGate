@@ -630,6 +630,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					cout << "패킷받을때 패킷   : \t" << packet->localVec.x << ", " << packet->localVec.z << endl;
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, (float)rtt.count()*0.000000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
+					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetisBezeir(false);
 
 					
 				}
@@ -718,15 +719,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (g_Object.count(other_id) == 0)break;
 			if (g_Object.find(other_id)->second == nullptr)break;
 
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
 			/*//cout << "------------------------" << endl;
 			//cout << "Moving False setting\t\t"<<other_id << endl;
 			if (packet->isMoving)//cout << "true" << endl;
 			else //cout << "false" << endl;
 			//cout << "------------------------" << endl;*/
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetPacketMoving(false);
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
+			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetPacketMoving(false);
+			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
+			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 	}
 	break;
