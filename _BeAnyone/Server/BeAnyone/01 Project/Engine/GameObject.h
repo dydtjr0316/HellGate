@@ -96,11 +96,7 @@ public:
 	CGameObject* GetCam() { return m_pCamObj; }
 	void SetCam(CGameObject* obj) { m_pCamObj = obj; }
 
-	void SetID(const uShort id) { 
-		cout << "SetID로 들어온 인자 : " << id << endl;
-		m_iID = id;
-		cout << "SetID에서 세팅된 값 : " << m_iID << endl;
-	}
+	void SetID(const uShort id) { m_iID = id; }
 	uShort GetID() { return m_iID; }
 
 public:

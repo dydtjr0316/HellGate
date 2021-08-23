@@ -405,9 +405,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
-					cout << "받았을때 : " << id << endl;
-					cout << "받고세팅했을때 : " << g_Object.find(id)->second->GetID() << endl;
-
 					g_Object.find(id)->second = pMeshData->Instantiate();
 
 					g_Object.find(id)->second->SetID(id);
@@ -461,21 +458,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 					pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 					pSword->AddComponent(new CCollider);
 					pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
-
-
 					// Script 설정
 					pSword->AddComponent(new CSwordScript);
 					CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
 					SwordScript->SetBoneFinalMat(g_Object.find(id)->second->Animator3D()->GetSwordFinalBoneMat());
 
-
-
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pSword, false);
 					g_Object.find(id)->second->AddChild(pSword);
-					cout << "마지막에 : " << id << endl;
-					cout << "마지막에 : " << g_Object.find(id)->second->GetID() << endl;
-					cout << "------------" << endl;
-
 				}
 			}
 			else if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
@@ -651,6 +640,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
 					//cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
 					cout << "패킷받을때 패킷   : \t" << packet->localVec.x << ", " << packet->localVec.z << endl;
+					cout << "패킷받을때 클라상태   : \t" << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << ", " << 
+						g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, (float)rtt.count()*0.000000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetisBezeir(false);
@@ -683,12 +674,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 			else
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(false);
 
-			/*//cout << "-----------------------------------------------------------" << endl;
-			//cout << "-----------------------------------------------------------" << endl;
-			//cout << (int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() << endl;
-			//cout << g_Object.find(packet->id)->second->Transform()->GetLocalPos().x << " , " << g_Object.find(packet->id)->second->Transform()->GetLocalPos().z << endl;
-			//cout << "-----------------------------------------------------------" << endl;
-			//cout << "-----------------------------------------------------------" << endl;*/
 
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 
