@@ -18,6 +18,7 @@
 #include "ParticleScript.h"
 #include "ParticleSystem.h"
 #include "Quest.h"
+#include "StaticUI.h"
 int cnt = 0;
 bool tempbool = false;
 OBJECT_TYPE CheckObjType(const uShort& id)
@@ -432,7 +433,20 @@ void CNetMgr::ProcessPacket(char* ptr)
 					{
 						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimationData(data);
 					}
+					// static ui cam 설정
+					CGameObject* cam;
+					vector<CGameObject*> objects;
 
+					objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj();
+
+					vector<CGameObject*>::iterator iter = objects.begin();
+
+					for (; iter != objects.end();) {
+						if ((*iter)->GetName() == L"UiCam")
+							cam = *iter;
+						++iter;
+					}
+					g_Object.find(id)->second->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetCameraProj(cam->Camera());
 					// ----
 					// 무기
 					// ----
