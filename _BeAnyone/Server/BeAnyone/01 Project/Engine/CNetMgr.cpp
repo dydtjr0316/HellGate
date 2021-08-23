@@ -26,8 +26,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -399,7 +399,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id)/*&& (g_Object.find(id)!= g_Object.end())*/)
 				{
-
 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 
 					CGameObject* pObject = new CGameObject;
@@ -421,6 +420,12 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 					);
 					g_Object.find(id)->second->Transform()->SetLocalRot(my_packet->RotateY);
+					g_Object.find(id)->second->GetScript<CPlayerScript>()->initDeadReckoner();
+
+					for (auto& data : m_aniData)
+					{
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimationData(data);
+					}
 
 					// ----
 					// 무기
@@ -615,15 +620,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 					system_clock::time_point end = system_clock::now();
 					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(true);
+					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(true);
 
 					if (packet->isMoving)
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
+						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
 					else
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
 					//cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
 					cout << "패킷받을때 패킷   : \t" << packet->localVec.x << ", " << packet->localVec.z << endl;
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, (float)rtt.count()*0.000000001);
+					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, (float)rtt.count()*0.000000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 
 					

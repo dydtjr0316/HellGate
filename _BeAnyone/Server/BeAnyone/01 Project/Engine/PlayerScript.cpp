@@ -163,252 +163,252 @@ void CPlayerScript::update()
 	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
-	op_Move();
-	
-	if (KEY_TAB(KEY_TYPE::KEY_N))
-	{
-		for (auto& obj : g_SoundList)
-		{
-			obj.second->VolumControl(false);
-		}
-	}
-	if (KEY_TAB(KEY_TYPE::KEY_M))
-	{
-		for (auto& obj : g_SoundList)
-		{
-			obj.second->VolumControl(true);
-		}
-	}
-
-
-	// 공격 애니메이션
-	if (KEY_TAB(KEY_TYPE::KEY_R))
-	{
-		PlaySound_(Sound_Type::HIT);
-		player->AnimClipReset();
-		player->SetAttack(true);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
-		anicnt++;
-	}
-
-	if (player->GetAttack() && player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
-		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) + DT, PlAYER_ANICNT_TYPE::ATTACK_CNT);
-		player->SetAnimation(Ani_TYPE::ATTACK);
-		moveKeyInput = true;
-	}
-	else if (player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
-	{
-		Attack_Default();
-
-		player->SetAttack(false);
-		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::ATTACK_CNT);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
-
-	}
-
-	// 아이템 줍기 애니메이션 효림 0807(서버 붙일 거)
-	if (KEY_TAB(KEY_TYPE::KEY_E)) {
-		PlaySound_(Sound_Type::GET_COIN);
-		player->AnimClipReset();
-		//player->SetAnimation(Ani_TYPE::PICK_UP);
-		//CSound::GetInst()->Play(Sound_Type::GET_COIN);
-		m_bIsPick = true;
-		PickUp_Default();
-		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
-
-
-	}
-	if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
-		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) + DT, PlAYER_ANICNT_TYPE::PICKUP_CNT);
-		player->SetAnimation(Ani_TYPE::PICK_UP);
-		moveKeyInput = true;
-	}
-	else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
-	{
-
-		m_bIsPick = false;
-		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
-		g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
-
-
-	}
-
-	// 데미지 애니메이션
-	if (KEY_TAB(KEY_TYPE::KEY_Q)) {
-		player->AnimClipReset();
-		player->SetDamage(true);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
-	}
-	if (player->GetDamage() && player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
-		player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) + DT, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
-		player->SetAnimation(Ani_TYPE::DAMAGE);
-		moveKeyInput = true;
-	}
-	else if (player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
-	{
-		//Attack_Default();
-
-		player->SetDamage(false);
-		player->SetCnt(0.f, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
-		g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
-
-	}
-
-	
-
-
-	if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
-	{
-		player->SetChangeSpeed();
-		//
-		//cout << localPos.x << "\t" << localPos.z << endl;
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_W))
-	{
-		worldDir = -playerTrans->GetWorldDir(DIR_TYPE::FRONT);
-		localPos += worldDir * player->GetSpeed() * DT;
-		dir = MV_FRONT;
-		player->SetPlayerDir(worldDir * player->GetSpeed() * DT);
-		player->SetAnimation(Ani_TYPE::WALK_F);
-		moveKeyInput = true;
-		//cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
-		//cout << worldDir.z << endl;
-		//cout << DT << endl;
-
-	}
-
-	else if (KEY_HOLD(KEY_TYPE::KEY_S))
-	{
-		worldDir = playerTrans->GetWorldDir(DIR_TYPE::FRONT);
-		localPos += worldDir * player->GetSpeed() * DT;
-
-		dir = MV_BACK;
-		player->SetAnimation(Ani_TYPE::WALK_D);
-		moveKeyInput = true;
-	}
-	else if (KEY_HOLD(KEY_TYPE::KEY_A))
-	{
-		worldDir = playerTrans->GetWorldDir(DIR_TYPE::RIGHT);
-		localPos += worldDir * player->GetSpeed() * DT;
-
-		dir = MV_LEFT;
-		player->SetAnimation(Ani_TYPE::WALK_F);
-		moveKeyInput = true;
-	}
-
-	else if (KEY_HOLD(KEY_TYPE::KEY_D))
-	{
-		worldDir = -playerTrans->GetWorldDir(DIR_TYPE::RIGHT);
-		localPos += worldDir * player->GetSpeed() * DT;
-
-		dir = MV_RIGHT;
-		player->SetAnimation(Ani_TYPE::WALK_F);
-		moveKeyInput = true;
-	}
-	if (KEY_HOLD(KEY_TYPE::KEY_LBTN) )
-	{
-		vRot.y += vDrag.x * DT * ROTATE_SPEED;
-
-		if (vDrag.x > 0)m_eDrag = Drag_Type::PLUS;
-		else if (vDrag.x < 0)m_eDrag = Drag_Type::MINUS;
-		else m_eDrag = Drag_Type::IDLE;
-
-		//drag.x만 보내주면되남
-		if (vDrag.x != 0&& !moveKeyInput)
-			g_netMgr.Send_Rotate_Packet(GetObj()->GetID(), vRot);
-
-
-		//cout << "\t\t\t" << vDrag.x << endl;
-		GetObj()->Transform()->SetLocalRot(vRot);
-	}
-	if (moveKeyInput)
-	{
-		int z = (int)(localPos.z / xmf3Scale.z);
-
-		float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, ((z % 2) != 0)) * 2.f;
-
-
-		if (localPos.y != fHeight)
-			localPos.y = fHeight;
-		playerTrans->SetLocalPos(localPos);
-		//cout << "\t\t" << localPos.x << " , " << localPos.z << endl;
-	}
+	if (g_myid != GetObj()->GetID())op_Move();
 	else
 	{
-		player->SetAnimation(Ani_TYPE::IDLE);
+		if (KEY_TAB(KEY_TYPE::KEY_N))
+		{
+			for (auto& obj : g_SoundList)
+			{
+				obj.second->VolumControl(false);
+			}
+		}
+		if (KEY_TAB(KEY_TYPE::KEY_M))
+		{
+			for (auto& obj : g_SoundList)
+			{
+				obj.second->VolumControl(true);
+			}
+		}
+
+
+		// 공격 애니메이션
+		if (KEY_TAB(KEY_TYPE::KEY_R))
+		{
+			PlaySound_(Sound_Type::HIT);
+			player->AnimClipReset();
+			player->SetAttack(true);
+			g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
+			anicnt++;
+		}
+
+		if (player->GetAttack() && player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+			player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) + DT, PlAYER_ANICNT_TYPE::ATTACK_CNT);
+			player->SetAnimation(Ani_TYPE::ATTACK);
+			moveKeyInput = true;
+		}
+		else if (player->GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
+		{
+			Attack_Default();
+
+			player->SetAttack(false);
+			player->SetCnt(0.f, PlAYER_ANICNT_TYPE::ATTACK_CNT);
+			g_netMgr.Send_Player_Animation_Packet(id, player->GetAttack(), Ani_TYPE::ATTACK);
+
+		}
+
+		// 아이템 줍기 애니메이션 효림 0807(서버 붙일 거)
+		if (KEY_TAB(KEY_TYPE::KEY_E)) {
+			PlaySound_(Sound_Type::GET_COIN);
+			player->AnimClipReset();
+			//player->SetAnimation(Ani_TYPE::PICK_UP);
+			//CSound::GetInst()->Play(Sound_Type::GET_COIN);
+			m_bIsPick = true;
+			PickUp_Default();
+			g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
+
+
+		}
+		if (m_bIsPick == true && player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+			player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) + DT, PlAYER_ANICNT_TYPE::PICKUP_CNT);
+			player->SetAnimation(Ani_TYPE::PICK_UP);
+			moveKeyInput = true;
+		}
+		else if (player->GetCnt(PlAYER_ANICNT_TYPE::PICKUP_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
+		{
+
+			m_bIsPick = false;
+			player->SetCnt(0.f, PlAYER_ANICNT_TYPE::PICKUP_CNT);
+			g_netMgr.Send_Player_Animation_Packet(id, m_bIsPick, Ani_TYPE::PICK_UP);
+
+
+		}
+
+		// 데미지 애니메이션
+		if (KEY_TAB(KEY_TYPE::KEY_Q)) {
+			player->AnimClipReset();
+			player->SetDamage(true);
+			g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
+		}
+		if (player->GetDamage() && player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) < GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
+			player->SetCnt(player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) + DT, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
+			player->SetAnimation(Ani_TYPE::DAMAGE);
+			moveKeyInput = true;
+		}
+		else if (player->GetCnt(PlAYER_ANICNT_TYPE::DAMAGE_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength)
+		{
+			//Attack_Default();
+
+			player->SetDamage(false);
+			player->SetCnt(0.f, PlAYER_ANICNT_TYPE::DAMAGE_CNT);
+			g_netMgr.Send_Player_Animation_Packet(id, player->GetDamage(), Ani_TYPE::DAMAGE);
+
+		}
+
+
+
+
+		if (KEY_TAB(KEY_TYPE::KEY_SPACE) || KEY_AWAY(KEY_TYPE::KEY_SPACE))
+		{
+			player->SetChangeSpeed();
+			//
+			//cout << localPos.x << "\t" << localPos.z << endl;
+		}
+
+		if (KEY_HOLD(KEY_TYPE::KEY_W))
+		{
+			worldDir = -playerTrans->GetWorldDir(DIR_TYPE::FRONT);
+			localPos += worldDir * player->GetSpeed() * DT;
+			dir = MV_FRONT;
+			player->SetPlayerDir(worldDir * player->GetSpeed() * DT);
+			player->SetAnimation(Ani_TYPE::WALK_F);
+			moveKeyInput = true;
+			//cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
+			//cout << worldDir.z << endl;
+			//cout << DT << endl;
+
+		}
+
+		else if (KEY_HOLD(KEY_TYPE::KEY_S))
+		{
+			worldDir = playerTrans->GetWorldDir(DIR_TYPE::FRONT);
+			localPos += worldDir * player->GetSpeed() * DT;
+
+			dir = MV_BACK;
+			player->SetAnimation(Ani_TYPE::WALK_D);
+			moveKeyInput = true;
+		}
+		else if (KEY_HOLD(KEY_TYPE::KEY_A))
+		{
+			worldDir = playerTrans->GetWorldDir(DIR_TYPE::RIGHT);
+			localPos += worldDir * player->GetSpeed() * DT;
+
+			dir = MV_LEFT;
+			player->SetAnimation(Ani_TYPE::WALK_F);
+			moveKeyInput = true;
+		}
+
+		else if (KEY_HOLD(KEY_TYPE::KEY_D))
+		{
+			worldDir = -playerTrans->GetWorldDir(DIR_TYPE::RIGHT);
+			localPos += worldDir * player->GetSpeed() * DT;
+
+			dir = MV_RIGHT;
+			player->SetAnimation(Ani_TYPE::WALK_F);
+			moveKeyInput = true;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+		{
+			vRot.y += vDrag.x * DT * ROTATE_SPEED;
+
+			if (vDrag.x > 0)m_eDrag = Drag_Type::PLUS;
+			else if (vDrag.x < 0)m_eDrag = Drag_Type::MINUS;
+			else m_eDrag = Drag_Type::IDLE;
+
+			//drag.x만 보내주면되남
+			if (vDrag.x != 0 && !moveKeyInput)
+				g_netMgr.Send_Rotate_Packet(GetObj()->GetID(), vRot);
+
+
+			//cout << "\t\t\t" << vDrag.x << endl;
+			GetObj()->Transform()->SetLocalRot(vRot);
+		}
+		if (moveKeyInput)
+		{
+			int z = (int)(localPos.z / xmf3Scale.z);
+
+			float fHeight = pTerrain->GetHeight(localPos.x, localPos.z, ((z % 2) != 0)) * 2.f;
+
+
+			if (localPos.y != fHeight)
+				localPos.y = fHeight;
+			playerTrans->SetLocalPos(localPos);
+			//cout << "\t\t" << localPos.x << " , " << localPos.z << endl;
+		}
+		else
+		{
+			player->SetAnimation(Ani_TYPE::IDLE);
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
+			player->GetReckoner()->DeadReckoning(GetObj());
+
+		if (((player->GetReckoner()->isFollowing() || !ReckonerMove) &&
+			((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))))
+		{
+			ReckonerMove = true;
+			system_clock::time_point start = system_clock::now();
+			cout << "dir : " << (int)dir << endl;
+			g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
+
+			player->GetReckoner()->SetDirVec(worldDir);
+			player->GetReckoner()->SetRotateY(vRot.y);
+			player->GetReckoner()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
+			CountTime();
+		}
+
+		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
+		{
+			ReckonerMove = false;
+			g_netMgr.Send_Stop_Packet(false, g_myid);
+			SetTime_Zero();
+		}
+
+
+		if (m_ftimeCount >= m_fDelayTime)
+		{
+			system_clock::time_point start = system_clock::now();
+			g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
+
+
+			player->GetReckoner()->SetDirVec(worldDir);
+			player->GetReckoner()->SetRotateY(vRot.y);
+			player->GetReckoner()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
+			SetTime_Zero();
+		}
+
+		if (KEY_HOLD(KEY_TYPE::KEY_Z))
+		{
+			MeshRender()->SetMaterial(m_pCloneMtrl);
+		}
+		else if (KEY_AWAY(KEY_TYPE::KEY_Z))
+		{
+			MeshRender()->SetMaterial(m_pOriginMtrl);
+		}
+
+		// quest::find item
+		if (GetObj()->Quest()->GetDoQuest(QUEST_TYPE::GET_ITEM) == false)
+			FindQuestItem();
+
+		// stamina ui
+		ClickUiButton();
+		ReduceUiBar();
+		UseItem();
 	}
-	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D))
-		player->GetReckoner()->DeadReckoning(GetObj());
-
-	if (((player->GetReckoner()->isFollowing() || !ReckonerMove) &&
-		((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_D)))))
-	{
-		ReckonerMove = true;
-		system_clock::time_point start = system_clock::now();
-		cout << "dir : " << (int)dir << endl;
-		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
-
-		player->GetReckoner()->SetDirVec(worldDir);
-		player->GetReckoner()->SetRotateY(vRot.y);
-		player->GetReckoner()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
-		CountTime();
-	}
-
-	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
-	{
-		ReckonerMove = false;
-		g_netMgr.Send_Stop_Packet(false, g_myid);
-		SetTime_Zero();
-	}
-
-
-	if (m_ftimeCount >= m_fDelayTime)
-	{
-		system_clock::time_point start = system_clock::now();
-		g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
-
-
-		player->GetReckoner()->SetDirVec(worldDir);
-		player->GetReckoner()->SetRotateY(vRot.y);
-		player->GetReckoner()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
-		SetTime_Zero();
-	}
-
-	if (KEY_HOLD(KEY_TYPE::KEY_Z))
-	{
-		MeshRender()->SetMaterial(m_pCloneMtrl);
-	}
-	else if (KEY_AWAY(KEY_TYPE::KEY_Z))
-	{
-		MeshRender()->SetMaterial(m_pOriginMtrl);
-	}
-
-	// quest::find item
-	if (GetObj()->Quest()->GetDoQuest(QUEST_TYPE::GET_ITEM) == false)
-		FindQuestItem();
-
-	// stamina ui
-	ClickUiButton();
-	ReduceUiBar();
-	UseItem();
-
 }
 void CPlayerScript::op_Move()
 {
 	//sc_packet_move* p = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
 
 	//if (p == nullptr)return;
-	if (g_Object.count(pacektID) == 0)return;
-	if (GetObj()->GetID() == pacektID)return;
-	if (pacektID >= START_MONSTER)return;
+	if (g_Object.count(GetObj()->GetID()) == 0)return;
+	if (GetObj()->GetID() >= START_MONSTER)return;
 
-	CPlayerScript* player = g_Object.find(pacektID)->second->GetScript<CPlayerScript>();
-	CTransform* playerTrans = g_Object.find(pacektID)->second->Transform();
-	CTerrain* pTerrain = g_Object.find(pacektID)->second->GetScript<CPlayerScript>()->GetTerrain();
-	const Vector3& xmf3Scale = g_Object.find(pacektID)->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
+	CPlayerScript* player = g_Object.find(GetObj()->GetID())->second->GetScript<CPlayerScript>();
+	CTransform* playerTrans = g_Object.find(GetObj()->GetID())->second->Transform();
+	CTerrain* pTerrain = g_Object.find(GetObj()->GetID())->second->GetScript<CPlayerScript>()->GetTerrain();
+	const Vector3& xmf3Scale = g_Object.find(GetObj()->GetID())->second->GetScript<CPlayerScript>()->Transform()->GetLocalScale();
 	Vector3 temp;
-	if (g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetOtherMovePacket() == nullptr)return;
+	if (g_Object.find(GetObj()->GetID())->second->GetScript<CPlayerScript>()->GetOtherMovePacket() == nullptr)return;
 
 	if (packetMoving)
 	{
@@ -437,7 +437,7 @@ void CPlayerScript::op_Move()
 			temp.y = fHeight;
 
 		playerTrans->SetLocalPos(temp);
-			if (pacektID == 1)
+			if (GetObj()->GetID() == 1)
 				cout <<  "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 			cout << "-----------------------------" << endl;
 
@@ -449,10 +449,10 @@ void CPlayerScript::op_Move()
 			
 
 			CPlayerScript* pScript = g_Object.find(g_myid)->second->GetScript<CPlayerScript>();
-			CPlayerScript* player = g_Object.find(pacektID)->second->GetScript<CPlayerScript>();
-			pScript->Search_Origin_Points(pacektID, pScript->GetRTT());
+			CPlayerScript* player = g_Object.find(GetObj()->GetID())->second->GetScript<CPlayerScript>();
+			pScript->Search_Origin_Points(GetObj()->GetID(), pScript->GetRTT());
 			pScript->Compute_Bezier(player->GetOriginPoint(), player->GetInterpolationPoint());
-			CTransform* ObjTrans = g_Object.find(pacektID)->second->Transform();;
+			CTransform* ObjTrans = g_Object.find(GetObj()->GetID())->second->Transform();;
 			ObjTrans->SetLocalRot(Vector3(0.f, packetrotateY, 0.f));
 			if (player->GetInterpolationCnt() != 4)
 			{
