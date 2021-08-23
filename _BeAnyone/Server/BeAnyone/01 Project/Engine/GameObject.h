@@ -99,7 +99,6 @@ public:
 	void SetID(const uShort id) { 
 		cout << "SetID로 들어온 인자 : " << id << endl;
 		m_iID = id;
-		cout << "주소값 : " << &m_iID << endl;
 		cout << "SetID에서 세팅된 값 : " << m_iID << endl;
 	}
 	uShort GetID() { return m_iID; }

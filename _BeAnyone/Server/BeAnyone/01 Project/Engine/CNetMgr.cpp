@@ -387,7 +387,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 	{
 		////cout << "SC_PACKET_ENTER" << endl;
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
-		int id = my_packet->id;
+		uShort id = my_packet->id;
 		////cout << "enter packet" << endl;
 
 		if (id == g_myid)
@@ -405,10 +405,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
 					cout << "받았을때 : " << id << endl;
-					g_Object.find(id)->second->SetID(id);
 					cout << "받고세팅했을때 : " << g_Object.find(id)->second->GetID() << endl;
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
+
+					g_Object.find(id)->second->SetID(id);
 					g_Object.find(id)->second->SetName(L"PlayerMale");
 					g_Object.find(id)->second->FrustumCheck(false);
 					g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
