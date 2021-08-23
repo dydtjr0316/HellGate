@@ -55,6 +55,10 @@ private:
     MONSTER_STATE       m_eMonsterState;
     CGameObject*        m_pFindCollider;
     bool                m_bIsFindPlayer = false;
+
+    bool                m_bIsRoar = false;
+    bool                m_bIsAttakLeft = false;
+    bool                m_bIsAttakRight = false;
 public:
     void Init();
     virtual void update();
