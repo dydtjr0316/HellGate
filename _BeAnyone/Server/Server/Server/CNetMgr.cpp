@@ -746,12 +746,13 @@ void CNetMgr::Processing_Thead()
 
         if (m_pMediator->ReckonerSize() != 0)
         {
-            CGameObject* obj = nullptr;
-            cs_packet_move* drmPacket = nullptr;
-            Vector3 objPos;
-            
+
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
+                CGameObject* obj = nullptr;
+                cs_packet_move* drmPacket = nullptr;
+                Vector3 objPos;
+
                 if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
                 obj = m_pMediator->Find(reckoner);
                 objPos = obj->GetLocalPosVector();
@@ -764,13 +765,13 @@ void CNetMgr::Processing_Thead()
 
                     g_QuadTree.Delete(obj);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * (DeltaTime));
-                    if(reckoner == 1)cout << obj->GetLocalPosVector().x <<" -- " << obj->GetLocalPosVector().z<< endl;
+                    if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;
                     g_QuadTree.Insert(obj);
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
 
                     if (CAST_CLIENT(obj)->GetIsRefresh())
                     {
-                        
+
                         for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
                         {
                             if (ob == reckoner)continue;
@@ -867,16 +868,17 @@ void CNetMgr::Processing_Thead()
 
         if (m_pMediator->MonsterReckonerSize() != 0)
         {
-            unordered_set<uShort> old_viewList;
-            unordered_set<uShort> new_viewList;
-            CGameObject* MonsterObj = nullptr;
-            Vector3 monsterPos;
-            MONSTER_AUTOMOVE_DIR monsterDir;
-            bool ismoving = false;
-                float speed = 100.f;
 
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
+                unordered_set<uShort> old_viewList;
+                unordered_set<uShort> new_viewList;
+                CGameObject* MonsterObj = nullptr;
+                Vector3 monsterPos;
+                MONSTER_AUTOMOVE_DIR monsterDir;
+                bool ismoving = false;
+                float speed = 100.f;
+
                 if (m_pMediator->Find(monster) == nullptr)continue;
                 if (m_pMediator->MonsterReckonerCount(monster) == 0)continue;
                 if (!m_pMediator->Find(monster)->GetIsMoving())continue;
@@ -887,34 +889,11 @@ void CNetMgr::Processing_Thead()
                 ismoving = m_pMediator->Find(monster)->GetIsMoving();
 
                 old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
-                g_QuadTree.Delete(m_pMediator->Find(monster));
 
                 if (ismoving && CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
                 {
-                    // tempLock.lock();
-                    switch (monsterDir)
-                    {
-                    case MONSTER_AUTOMOVE_DIR::FRONT:
-                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
-                        //cout << m_pMediator->Find(monster)->GetDirVector().z << endl;
-                        break;
-                    case MONSTER_AUTOMOVE_DIR::BACK:
-                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
-                        break;
-                    case MONSTER_AUTOMOVE_DIR::LEFT:
-                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
-                        break;
-                    case MONSTER_AUTOMOVE_DIR::RIGHT:
-                        monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
-                        break;
-                    case MONSTER_AUTOMOVE_DIR::AUTO:
-                        break;
-                    case MONSTER_AUTOMOVE_DIR::IDLE:
-                        break;
-                    default:
-                        break;
-                    }
-
+                    g_QuadTree.Delete(m_pMediator->Find(monster));
+                    monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                     m_pMediator->Find(monster)->SetPosV(monsterPos);
                     g_QuadTree.Insert(m_pMediator->Find(monster));
                     new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));

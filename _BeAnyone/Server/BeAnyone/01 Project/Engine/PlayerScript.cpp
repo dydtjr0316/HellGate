@@ -546,8 +546,7 @@ void CPlayerScript::op_Move()
 			temp.y = fHeight;
 
 		playerTrans->SetLocalPos(temp);
-			if (id == 1)
-				cout <<  "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
+				cout << "ID : "<<GetObj()->GetID() << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
 			cout << "-----------------------------" << endl;
 
 	}

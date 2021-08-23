@@ -49,7 +49,7 @@ private:
 
 private:
 	float			m_ftimeCount = 0.f;
-	float			m_fDelayTime = 2.f;
+	float			m_fDelayTime = 1.f;
 	bool			FirstPacket = false;
 	bool			m_bisAttack = false;
 	bool			m_bisAniReset = false;
@@ -145,7 +145,6 @@ public:
 	//animation
 	void SetAnimationData(Ptr<CMesh> _meshData) { m_pAniData.push_back(_meshData); }
 	void SetAnimation(const Ani_TYPE& type);
-	void SetAnimation(const uShort& other_id, const Ani_TYPE& type);
 	Ptr<CMesh> GetAniData(const Ani_TYPE& type) { return m_pAniData[(int)type]; }
 	void SetAnimationType(const Ani_TYPE& type) { m_eAniType = type; }
 	void AnimClipReset() {
