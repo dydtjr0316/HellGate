@@ -1,5 +1,7 @@
 #pragma once
 #include "Entity.h"
+#include <iostream>
+using namespace std;
 
 class CComponent;
 class CTransform;
@@ -94,8 +96,13 @@ public:
 	CGameObject* GetCam() { return m_pCamObj; }
 	void SetCam(CGameObject* obj) { m_pCamObj = obj; }
 
-	void SetID(const uShort& id) { m_iID = id; }
-	uShort& GetID() { return m_iID; }
+	void SetID(const uShort id) { 
+		cout << "SetID로 들어온 인자 : " << id << endl;
+		m_iID = id;
+		cout << "주소값 : " << &m_iID << endl;
+		cout << "SetID에서 세팅된 값 : " << m_iID << endl;
+	}
+	uShort GetID() { return m_iID; }
 
 public:
 	CLONE(CGameObject);

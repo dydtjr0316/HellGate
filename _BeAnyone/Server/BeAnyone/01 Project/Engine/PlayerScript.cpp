@@ -267,6 +267,7 @@ void CPlayerScript::awake()
 void CPlayerScript::update()
 {	
 	uShort id = GetObj()->GetID();
+	g_Object;
 	if (id >= MAX_USER)return;
 	CTerrain* pTerrain = GetObj()->GetScript<CPlayerScript>()->GetTerrain();
 	CPlayerScript* player = GetObj()->GetScript<CPlayerScript>();

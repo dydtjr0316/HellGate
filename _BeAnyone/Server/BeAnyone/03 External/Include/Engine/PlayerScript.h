@@ -31,6 +31,7 @@ private:
 public:
 	virtual void awake();
 	virtual void update();
+	void Init();
 
 public:
 	CLONE(CPlayerScript);

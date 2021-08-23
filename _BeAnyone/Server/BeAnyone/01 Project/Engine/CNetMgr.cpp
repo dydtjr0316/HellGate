@@ -404,8 +404,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CGameObject* pObject = new CGameObject;
 					g_Object.emplace(id, pObject);
+					cout << "받았을때 : " << id << endl;
 					g_Object.find(id)->second->SetID(id);
-					cout << id << endl;
+					cout << "받고세팅했을때 : " << g_Object.find(id)->second->GetID() << endl;
 
 					g_Object.find(id)->second = pMeshData->Instantiate();
 					g_Object.find(id)->second->SetName(L"PlayerMale");
@@ -456,6 +457,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", pSword, false);
 					g_Object.find(id)->second->AddChild(pSword);
+					cout << "마지막에 : " << id << endl;
+					cout << "마지막에 : " << g_Object.find(id)->second->GetID() << endl;
+					cout << "------------" << endl;
 
 				}
 			}
