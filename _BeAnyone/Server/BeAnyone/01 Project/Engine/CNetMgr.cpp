@@ -635,9 +635,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(true);
 
 					if (packet->isMoving)
-						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::WALK_F);
+						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 					else
-						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 					//cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
 					cout << "패킷받을때 패킷   : \t" << packet->localVec.x << ", " << packet->localVec.z << endl;
 					cout << "패킷받을때 클라상태   : \t" << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << ", " << 
@@ -715,7 +715,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (g_Object.count(other_id) == 0)break;
 			if (g_Object.find(other_id)->second == nullptr)break;
 
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetPacketMoving(packet->isMoving);
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
@@ -727,7 +727,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (g_Object.count(other_id) == 0)break;
 			if (g_Object.find(other_id)->second == nullptr)break;
 
-			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(other_id, Ani_TYPE::IDLE);
+			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 			/*//cout << "------------------------" << endl;
 			//cout << "Moving False setting\t\t"<<other_id << endl;
 			if (packet->isMoving)//cout << "true" << endl;
@@ -827,14 +827,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 					switch ((Ani_TYPE)packet->anitype)
 					{
 					case Ani_TYPE::ATTACK:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::ATTACK);
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 						g_SoundList.find(Sound_Type::HIT);
 						break;
 					case Ani_TYPE::DAMAGE:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::DAMAGE);
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::DAMAGE);
 						break;
 					case Ani_TYPE::PICK_UP:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::PICK_UP);
+						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::PICK_UP);
 						g_SoundList.find(Sound_Type::GET_COIN);
 						break;
 					default:
@@ -843,7 +843,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else
 				{
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(id, Ani_TYPE::IDLE);
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 				}
 			}
 		}
