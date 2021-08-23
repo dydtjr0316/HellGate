@@ -186,9 +186,9 @@ bool CCollisionMgr::IsCollision(CCollider* _pCollider1, CCollider* _pCollider2)
 	{
 		return CollisionRect(_pCollider1, _pCollider2);
 	}
-	else if (COLLIDER_TYPE::RECT == _pCollider1->GetColliderType() && COLLIDER_TYPE::RECT == _pCollider2->GetColliderType())
+	else if (COLLIDER_TYPE::MESH == _pCollider1->GetColliderType() && COLLIDER_TYPE::RANGE == _pCollider2->GetColliderType())
 	{
-		return CollisionRect(_pCollider1, _pCollider2);
+		return CollisionSphere(_pCollider1, _pCollider2);
 	}
 	else
 	{

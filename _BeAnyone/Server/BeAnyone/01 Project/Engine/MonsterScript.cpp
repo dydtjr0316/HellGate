@@ -95,7 +95,7 @@ void CMonsterScript::Init()
     pFindCollider->Transform()->SetLocalScale(Vector3(500.f, 2.f, 500.f));
     pFindCollider->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
     pFindCollider->Collider()->SetColliderType(COLLIDER_TYPE::RANGE);
-    pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 2000.f));
+    pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 1000.f));
     pFindCollider->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
     Ptr<CMaterial> pMtrla = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
     pFindCollider->MeshRender()->SetMaterial(pMtrla->Clone());
@@ -119,7 +119,7 @@ void CMonsterScript::update()
         Move(); Attack();
     }
     else
-        BossMove();
+        BossTurn();
     
     
    
@@ -214,17 +214,29 @@ void CMonsterScript::DecreaseHp()
 
 }
 
-void CMonsterScript::BossMove()
+void CMonsterScript::BossTurn()
 {
     switch (m_eMonsterState) {
     case MONSTER_STATE::MOVE:
-        Move();
+        //Move();
+        if (m_bIsFindPlayer) {
+            m_eMonsterState = MONSTER_STATE::FIND;
+            m_bIsFindPlayer = false;
+        }
         break;
     case MONSTER_STATE::FIND:
+        cout << "찾았다" << endl;
+        TurnToPlayer(MOB_TYPE::BOSS);
+        m_eMonsterState = MONSTER_STATE::FOLLOW;
+        // 소리 한 번 지르고
+        // 바이트로 어택
         break;
     case MONSTER_STATE::FOLLOW:
+        cout << "간다" << endl;
+        // 사정거리 안에 들어오면 고개 돌리고 어택
         break;
     case MONSTER_STATE::ATTACK:
+        // 끝나면 무조건 팔로우로?
         break;
     case MONSTER_STATE::DAMAGE:
         break;
@@ -408,9 +420,9 @@ void CMonsterScript::Attack()
         SetIsPunch(true);
         //// 플레이어에게 공격
         //if (GetObj()->GetName() == L"GreenMonster")
-        //   AttackToPlayer(MOB_TYPE::GREEN);
+        //   TurnToPlayer(MOB_TYPE::GREEN);
         //else
-        //   AttackToPlayer(MOB_TYPE::YELLOW);
+        //   TurnToPlayer(MOB_TYPE::YELLOW);
     }
     GetObj()->GetID();
     // attack
@@ -438,9 +450,9 @@ void CMonsterScript::Attack()
 
         // 플레이어에게 공격
         //if (GetObj()->GetName() == L"GreenMonster")
-        //    AttackToPlayer(MOB_TYPE::GREEN);
+        //    TurnToPlayer(MOB_TYPE::GREEN);
         //else
-        //    AttackToPlayer(MOB_TYPE::YELLOW);
+        //    TurnToPlayer(MOB_TYPE::YELLOW);
 
         Attack_Default();
 
@@ -459,7 +471,7 @@ void CMonsterScript::Attack()
 
 }
 
-void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
+void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)    // turn to player로 이름 바꿔야 함
 {
     if (m_pPlayer == nullptr)return;
     //g_netMgr.Send_Monster_Animation_Packet(GetID(), MONSTER_ANI_TYPE::ATTACK);
@@ -467,10 +479,10 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
     Vector3 monsterDir{};
     Vector3 monsterRot = GetObj()->Transform()->GetLocalRot();
 
-
-
     if (_eType == MOB_TYPE::YELLOW)
         monsterDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);
+    else
+        monsterDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
     Vector3 a = m_pPlayer->Transform()->GetLocalPos() - GetObj()->Transform()->GetLocalPos();
     Vector3 b = XMVector3Cross(a, -monsterDir);
@@ -483,10 +495,10 @@ void CMonsterScript::AttackToPlayer(MOB_TYPE _eType)
     else
         angle.x = XM_PI - angle.x;// +XM_PI;
 
-    if (_eType == MOB_TYPE::YELLOW)
-    {
+   // if (_eType == MOB_TYPE::YELLOW)
+   // {
         GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
-    }
+   // }
     m_bisDirChange = true;
     m_fAngleY += angle.x;
 

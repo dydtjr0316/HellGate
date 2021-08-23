@@ -54,6 +54,7 @@ private:
     // boss monster
     MONSTER_STATE       m_eMonsterState;
     CGameObject*        m_pFindCollider;
+    bool                m_bIsFindPlayer = false;
 public:
     void Init();
     virtual void update();
@@ -94,9 +95,9 @@ public:
 
     void DecreaseHp();
     void Move();
-    void BossMove();
+    void BossTurn();
     void Attack();
-    void AttackToPlayer(MOB_TYPE _eType);
+    void TurnToPlayer(MOB_TYPE _eType);
 
     // void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
     MONSTER_AUTOMOVE_DIR& GetDir() { return m_eDir; }
@@ -116,6 +117,10 @@ public:
         m_pPlayer = p;
     };
     void SetPacketDead(const bool& dead) { m_packetDead = dead; }
+
+    // boss monster
+    void SetIsFindPlayer(bool _bool) { m_bIsFindPlayer = _bool; }
+    //void 
 public:
     void Attack_Default();
 
