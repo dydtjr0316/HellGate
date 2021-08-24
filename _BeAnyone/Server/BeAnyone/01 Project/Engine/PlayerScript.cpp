@@ -550,7 +550,7 @@ void CPlayerScript::op_Move()
 
 	}
 	else {
-		if (m_isBezier)
+		if (m_isBezier&&m_fRTT>=0.f)
 		{
 			cout << "보간한다 ~~!!!" << endl;
 
@@ -607,6 +607,7 @@ void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, con
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
 	Vector3 tempLocalPos = Transform()->GetLocalPos();
+	if (rtt < 0)return;
 	cout << "보간할때 클라   : \t" << tempLocalPos.x << ", " << tempLocalPos.z << endl;
 	cout << "보간할때 dirvec   : \t" << packetDirVec.x << ", " << packetDirVec.z << endl;
 	cout << "보간할때 speed rtt   : \t" << packetspeed <<", " << rtt << endl;

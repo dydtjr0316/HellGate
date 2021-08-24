@@ -643,11 +643,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 					cout << "패킷받을때 패킷   : \t" << packet->localVec.x << ", " << packet->localVec.z << endl;
 					cout << "패킷받을때 클라상태   : \t" << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << ", " << 
 						g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+					cout << "(float)rtt.count : " << (float)rtt.count() * 0.000000001 << endl;
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, (float)rtt.count()*0.000000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetisBezeir(false);
-
-					
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
@@ -727,6 +726,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 			if (g_Object.count(other_id) == 0)break;
 			if (g_Object.find(other_id)->second == nullptr)break;
+
+			cout << "----------------------" << endl;
+			cout << "Stop Packet 받음" << endl;
+			cout << "----------------------" << endl;
 
 			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 			/*//cout << "------------------------" << endl;
