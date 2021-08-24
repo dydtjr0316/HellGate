@@ -9,6 +9,7 @@
 
 #include "MeshRender.h"
 
+#include <random>
 
 int attackcnt = 0;
 
@@ -248,8 +249,26 @@ void CMonsterScript::BossTurn()
 
         break;
     case MONSTER_STATE::ATTACK:
+        
         // 끝나면 무조건 팔로우로?
-        cout << "친다" << endl;
+        //cout << "친다" << endl;
+        Attack();
+
+        switch(m_eAttackPattern) {
+        case BOSS_ATTACK::BITE_ATTACK:
+            if(m_bisPunch == false)
+                m_eMonsterState = MONSTER_STATE::FOLLOW;
+            break;
+        case BOSS_ATTACK::LEFT_ATTACK:
+            if (m_bIsAttakLeft == false)
+                m_eMonsterState = MONSTER_STATE::FOLLOW;
+            break;
+        case BOSS_ATTACK::RIGHT_ATTACK:
+            if (m_bIsAttakRight == false)
+                m_eMonsterState = MONSTER_STATE::FOLLOW;
+            break;
+        }
+
         break;
     case MONSTER_STATE::DAMAGE:
         break;
@@ -544,12 +563,31 @@ void CMonsterScript::Attack()
 
 }
 
+void CMonsterScript::ChooseAttackPattern()
+{
+    int randNum{};
+    randNum = rand() % 3 + 1;
+
+    switch (randNum) {
+    case (UINT)BOSS_ATTACK::BITE_ATTACK:
+        m_bisPunch = true; m_eAttackPattern = BOSS_ATTACK::BITE_ATTACK;
+        break;
+    case (UINT)BOSS_ATTACK::LEFT_ATTACK:
+        m_bIsAttakLeft = true; m_eAttackPattern = BOSS_ATTACK::LEFT_ATTACK;
+        break;
+    case (UINT)BOSS_ATTACK::RIGHT_ATTACK:
+        m_bIsAttakRight = true; m_eAttackPattern = BOSS_ATTACK::RIGHT_ATTACK;
+        break;
+    }
+}
+
 void CMonsterScript::ChecktoAttack()
 {
     if (m_bIsNearPlayer) {
         TurnToPlayer(MOB_TYPE::BOSS);
         m_eMonsterState = MONSTER_STATE::ATTACK;
         m_bIsNearPlayer = false;
+        ChooseAttackPattern();  // 공격 패턴 고르기
     }
 }
 

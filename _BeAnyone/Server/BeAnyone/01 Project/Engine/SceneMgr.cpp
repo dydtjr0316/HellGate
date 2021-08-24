@@ -1510,12 +1510,12 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
 
 	// Idle
-	CNpcScript* pNpcScript2 = pNpcObject->GetScript<CNpcScript>();
-	pNpcScript2->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript = pNpcObject->GetScript<CNpcScript>();
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
 
 	// Talk
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_1@Talking.fbx", FBX_TYPE::NPC);
-	pNpcScript2->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
 
 	//--------------------------
 	// Npc_3(store)
@@ -1538,13 +1538,13 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false); 
 
 	// Idle
-	CNpcScript* pNpcScript3 = pNpcObject->GetScript<CNpcScript>();
-	pNpcScript3->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript = pNpcObject->GetScript<CNpcScript>();
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
 
 	// Talk
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_3@Talking.fbx", FBX_TYPE::NPC);
-	pNpcScript3->SetAnimationData(pMeshData->GetMesh());
-	pNpcScript3->init();
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript->init();
 }
 
 void CSceneMgr::LoadSound()
