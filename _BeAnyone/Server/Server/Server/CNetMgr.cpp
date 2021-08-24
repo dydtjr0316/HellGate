@@ -771,7 +771,6 @@ void CNetMgr::Processing_Thead()
 
                     if (CAST_CLIENT(obj)->GetIsRefresh())
                     {
-
                         for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
                         {
                             if (ob == reckoner)continue;

@@ -463,7 +463,6 @@ void CPlayerScript::update()
 		{
 			ReckonerMove = true;
 			system_clock::time_point start = system_clock::now();
-			cout << "dir : " << (int)dir << endl;
 			g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
 
 			GetReckoner()->SetDirVec(worldDir);
@@ -608,7 +607,9 @@ void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, con
 void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
 	Vector3 tempLocalPos = Transform()->GetLocalPos();
-	cout << "보간할때 클라   : \t" << tempLocalPos.x <<", " << tempLocalPos.z << endl;
+	cout << "보간할때 클라   : \t" << tempLocalPos.x << ", " << tempLocalPos.z << endl;
+	cout << "보간할때 dirvec   : \t" << packetDirVec.x << ", " << packetDirVec.z << endl;
+	cout << "보간할때 speed rtt   : \t" << packetspeed <<", " << rtt << endl;
 	for (int i = 0; i < 4; i++) {
 
 		if (packetLocalPos.x <= tempLocalPos.x)

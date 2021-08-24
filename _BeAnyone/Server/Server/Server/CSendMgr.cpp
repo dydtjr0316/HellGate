@@ -15,12 +15,11 @@ void CSendMgr::Send_Packet(const uShort& id, void* packet)
     exover->wsabuf.len = buf[0];
     ZeroMemory(&exover->over, sizeof(exover->over));
 
-    sendLock.lock();
+    Netmgr.GetMediatorMgr()->Find(id)->GetLock().lock();
     WSASend(Netmgr.GetMediatorMgr()->Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
         &exover->over, NULL);
-    sendLock.unlock();
+    Netmgr.GetMediatorMgr()->Find(id)->GetLock().unlock();
 
-    string temp;
 }
 
 void CSendMgr::Send_LevelUP_Packet(const uShort& id)
