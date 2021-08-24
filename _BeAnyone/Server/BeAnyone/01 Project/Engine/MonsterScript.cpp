@@ -223,10 +223,12 @@ void CMonsterScript::BossTurn()
             m_eMonsterState = MONSTER_STATE::FIND;
             m_bIsFindPlayer = false;
             m_bIsRoar = true;   // 소리지르기 세팅
+
+            // 범위 줄이기
+            m_pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 200.f));
         }
         break;
     case MONSTER_STATE::FIND:
-        //cout << "찾았다" << endl;
         TurnToPlayer(MOB_TYPE::BOSS);
         if(m_bIsRoar) // 소리 한 번 지르고
             Attack();
@@ -236,17 +238,18 @@ void CMonsterScript::BossTurn()
             m_eMonsterState = MONSTER_STATE::FOLLOW;
         break;
     case MONSTER_STATE::FOLLOW:
-        // cout << "간다" << endl;
         FollowToPlayer();   // 따라가기
-        if (m_fFollowTime > 1.f) {
+        if (m_fFollowTime > 2.f) {
             TurnToPlayer(MOB_TYPE::BOSS);
             m_fFollowTime = 0.f;
         }
-        // 사정거리 안에 들어오면 고개 돌리고 어택
+
+        ChecktoAttack(); // 사정거리 안에 들어오면 고개 돌리고 어택
 
         break;
     case MONSTER_STATE::ATTACK:
         // 끝나면 무조건 팔로우로?
+        cout << "친다" << endl;
         break;
     case MONSTER_STATE::DAMAGE:
         break;
@@ -539,6 +542,15 @@ void CMonsterScript::Attack()
         // g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
     }
 
+}
+
+void CMonsterScript::ChecktoAttack()
+{
+    if (m_bIsNearPlayer) {
+        TurnToPlayer(MOB_TYPE::BOSS);
+        m_eMonsterState = MONSTER_STATE::ATTACK;
+        m_bIsNearPlayer = false;
+    }
 }
 
 void CMonsterScript::FollowToPlayer()

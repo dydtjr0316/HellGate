@@ -55,6 +55,7 @@ private:
     MONSTER_STATE       m_eMonsterState;
     CGameObject*        m_pFindCollider;
     bool                m_bIsFindPlayer = false;
+    bool                m_bIsNearPlayer = false;
     float               m_fFollowTime = 0.f;
 
     bool                m_bIsRoar = false;
@@ -126,7 +127,10 @@ public:
 
     // boss monster
     void SetIsFindPlayer(bool _bool) { m_bIsFindPlayer = _bool; }
+    void SetIsNearPlayer(bool _bool) { m_bIsNearPlayer = _bool; }
     void FollowToPlayer();
+    void ChecktoAttack();   // 사정거리 안에 들어오는지 확인
+    MONSTER_STATE GetMonsterState() { return m_eMonsterState; }
 public:
     void Attack_Default();
 
