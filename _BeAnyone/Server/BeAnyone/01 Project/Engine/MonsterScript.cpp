@@ -226,7 +226,7 @@ void CMonsterScript::BossTurn()
             m_bIsRoar = true;   // 소리지르기 세팅
 
             // 범위 줄이기
-            m_pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 200.f));
+            m_pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 500.f));
         }
         break;
     case MONSTER_STATE::FIND:
@@ -566,7 +566,7 @@ void CMonsterScript::Attack()
 void CMonsterScript::ChooseAttackPattern()
 {
     int randNum{};
-    randNum = rand() % 3 + 1;
+    randNum = rand() % 3;
 
     switch (randNum) {
     case (UINT)BOSS_ATTACK::BITE_ATTACK:

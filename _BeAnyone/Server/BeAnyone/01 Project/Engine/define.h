@@ -412,6 +412,8 @@ enum class UI_TYPE
 {
 	PRIVATE_ITEM_UI,
 	PUBLIC_SHOP_UI,
+	ALCHEMY_SHOP_UI,
+	END,
 };
 
 

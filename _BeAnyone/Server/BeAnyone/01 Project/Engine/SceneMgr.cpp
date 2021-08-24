@@ -1544,7 +1544,36 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	// Talk
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_3@Talking.fbx", FBX_TYPE::NPC);
 	pNpcScript->SetAnimationData(pMeshData->GetMesh());
-	pNpcScript->init();
+	pNpcScript->init(UI_TYPE::PUBLIC_SHOP_UI);
+
+	//--------------------------
+	// Npc_4(alchemy)
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_2@Idle.fbx", FBX_TYPE::NPC);
+	//Ptr<CMeshData> pAniData = CResMgr::GetInst()->LoadFBX(L"FBX\\Animation\\itempack@spraying.fbx", FBX_TYPE::ANI);
+
+	pNpcObject = new CGameObject;
+	pNpcObject = pMeshData->Instantiate();
+	pNpcObject->SetName(L"Npc_4");
+	pNpcObject->FrustumCheck(false);
+	pNpcObject->Transform()->SetLocalPos(Vector3(2300.f, _terrain->GetHeight(2300.f, 4200.f, true) * 2 /*240.f*/, 4200.f));
+	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
+	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
+	pNpcObject->AddComponent(new CCollider);
+	pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Npc_4");
+	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	pNpcObject->MeshRender()->SetDynamicShadow(true);
+	pNpcObject->AddComponent(new CNpcScript);
+	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
+
+	// Idle
+	pNpcScript = pNpcObject->GetScript<CNpcScript>();
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
+
+	// Talk
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_2@Talking.fbx", FBX_TYPE::NPC);
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript->init(UI_TYPE::ALCHEMY_SHOP_UI);
 }
 
 void CSceneMgr::LoadSound()

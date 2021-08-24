@@ -132,13 +132,25 @@ void CStaticUI::init(UI_TYPE _eType)
 	m_eType = _eType;
 	m_pFrame = CResMgr::GetInst()->Load<CTexture>(L"ButtonFrame", L"Texture\\ItemButton\\StaticUiBase.png");
 
-	for (int i = 0; i < 16; ++i)
-	{
-		m_vecButton.push_back(new CButton);
-	}
+	switch (_eType) {
+	case UI_TYPE::PUBLIC_SHOP_UI:
+	case UI_TYPE::PRIVATE_ITEM_UI:
+		for (int i = 0; i < 16; ++i)
+		{
+			m_vecButton.push_back(new CButton);
+		}
 
-	for (int i = 0; i < (UINT)ITEM_ID::END; ++i)
-		m_bUseItem.push_back(false);
+		for (int i = 0; i < (UINT)ITEM_ID::END; ++i)
+			m_bUseItem.push_back(false);
+		break;
+
+	case UI_TYPE::ALCHEMY_SHOP_UI:
+		for (int i = 0; i < 2; ++i) 
+		{
+			m_vecButton.push_back(new CButton);
+		}
+		break;
+	}
 }
 
 void CStaticUI::update()
