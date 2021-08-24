@@ -750,21 +750,19 @@ void CNetMgr::Processing_Thead()
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
                 CGameObject* obj = nullptr;
-                cs_packet_move* drmPacket = nullptr;
                 Vector3 objPos;
 
                 if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
                 obj = m_pMediator->Find(reckoner);
                 objPos = obj->GetLocalPosVector();
-                drmPacket = obj->GetDeadReckoningPacket();
                 obj->GetLock().lock();
                 if (obj->GetIsMoving())
                 {
                     unordered_set<uShort> old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
-                    obj->SetRotateY(drmPacket->rotateY);// 안해도되는가?
+                    obj->SetRotateY(obj->GetPacketRotateY());// 안해도되는가?
 
                     g_QuadTree.Delete(obj);
-                    obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * (DeltaTime));
+                    obj->SetPosV(obj->GetLocalPosVector() + obj->GetPacketDirVec() * obj->GetSpeed() * (DeltaTime));
                     if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;
                     g_QuadTree.Insert(obj);
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
