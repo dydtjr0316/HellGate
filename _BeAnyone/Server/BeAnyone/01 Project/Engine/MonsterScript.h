@@ -55,10 +55,12 @@ private:
     MONSTER_STATE       m_eMonsterState;
     CGameObject*        m_pFindCollider;
     bool                m_bIsFindPlayer = false;
+    float               m_fFollowTime = 0.f;
 
     bool                m_bIsRoar = false;
     bool                m_bIsAttakLeft = false;
     bool                m_bIsAttakRight = false;
+  
 public:
     void Init();
     virtual void update();
@@ -124,7 +126,7 @@ public:
 
     // boss monster
     void SetIsFindPlayer(bool _bool) { m_bIsFindPlayer = _bool; }
-    //void 
+    void FollowToPlayer();
 public:
     void Attack_Default();
 

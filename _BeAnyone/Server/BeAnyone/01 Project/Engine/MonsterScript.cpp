@@ -228,18 +228,22 @@ void CMonsterScript::BossTurn()
     case MONSTER_STATE::FIND:
         //cout << "찾았다" << endl;
         TurnToPlayer(MOB_TYPE::BOSS);
-        // 소리 한 번 지르고
-        if(m_bIsRoar)
+        if(m_bIsRoar) // 소리 한 번 지르고
             Attack();
-        // 바이트로 어택
-        if (m_bisPunch && m_bIsRoar == false)
+        if (m_bisPunch && m_bIsRoar == false) // 바이트로 어택
             Attack();
         if(m_bisPunch == false && m_bIsRoar == false)
             m_eMonsterState = MONSTER_STATE::FOLLOW;
         break;
     case MONSTER_STATE::FOLLOW:
-       // cout << "간다" << endl;
+        // cout << "간다" << endl;
+        FollowToPlayer();   // 따라가기
+        if (m_fFollowTime > 1.f) {
+            TurnToPlayer(MOB_TYPE::BOSS);
+            m_fFollowTime = 0.f;
+        }
         // 사정거리 안에 들어오면 고개 돌리고 어택
+
         break;
     case MONSTER_STATE::ATTACK:
         // 끝나면 무조건 팔로우로?
@@ -534,6 +538,21 @@ void CMonsterScript::Attack()
        // m_bisPunch = true; // 소리지르고 공격 ㄱㄱ
         // g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
     }
+
+}
+
+void CMonsterScript::FollowToPlayer()
+{
+    //Vector3 playerPos = m_pPlayer->Transform()->GetLocalPos();
+    Vector3 monsterPos = GetObj()->Transform()->GetLocalPos();
+    CTransform* mosnterTrans = GetObj()->Transform();
+    Vector3 worldDir{};
+
+    worldDir = -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT);
+    monsterPos += worldDir * DT * 100.f;
+
+    mosnterTrans->SetLocalPos(monsterPos);
+    m_fFollowTime += DT;
 
 }
 
