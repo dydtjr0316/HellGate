@@ -15,10 +15,10 @@ void CSendMgr::Send_Packet(const uShort& id, void* packet)
     exover->wsabuf.len = buf[0];
     ZeroMemory(&exover->over, sizeof(exover->over));
 
-    Netmgr.GetMediatorMgr()->Find(id)->GetLock().lock();
+    sendLock.lock();
     WSASend(Netmgr.GetMediatorMgr()->Find(id)->GetSocket(), &exover->wsabuf, 1, NULL, 0,
         &exover->over, NULL);
-    Netmgr.GetMediatorMgr()->Find(id)->GetLock().unlock();
+    sendLock.unlock();
 
 }
 
@@ -182,7 +182,7 @@ void CSendMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, c
     p.speed = Netmgr.GetMediatorMgr()->Find(mover_id)->GetSpeed();
     p.Start = system_clock::now();
     p.isMoving = Netmgr.GetMediatorMgr()->Find(mover_id)->GetIsMoving();
-    cout << "서버에서 보낼타이밍 \t" << p.localVec.x << " , " << p.localVec.z << endl;
+   // cout << "서버에서 보낼타이밍 \t" << p.localVec.x << " , " << p.localVec.z << endl;
 
     Send_Packet(user_id, &p);
 }
@@ -238,10 +238,10 @@ void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, c
     p.size = sizeof(p);
     p.type = SC_PACKET_STOP;
     p.id = mover_id;
-    //cout << "스톱패킷 안주지?? 시1발러마" << endl;
     p.isMoving = isMoving;
     Netmgr.GetMediatorMgr()->Find(mover_id)->SetIsMoving(false);
-
+    cout << user_id << "에게 " << mover_id << "의 STop packet 전송" << endl;
+    cout << "--------------------------" << endl;
     Send_Packet(user_id, &p);
 }
 

@@ -629,7 +629,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (CheckObjType(other_id) == OBJECT_TYPE::CLIENT)
 				{
-					cout << " Move 들어옴    \t"<<(int)packet->dir << endl;
+					//cout << " Move 들어옴    \t"<<(int)packet->dir << endl;
 					system_clock::time_point end = system_clock::now();
 					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
@@ -639,15 +639,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 					else
 						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
-					cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
+					/*cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
 					cout << "패킷받을때 패킷   : \t" << packet->localVec.x << ", " << packet->localVec.z << endl;
 					cout << "패킷받을때 클라상태   : \t" << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << ", " << 
 						g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
+					cout << "(float)rtt.count : " << (float)rtt.count() * 0.000000001 << endl;*/
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, (float)rtt.count()*0.000000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetisBezeir(false);
-
-					
 				}
 				else if (CheckObjType(other_id) == OBJECT_TYPE::MONSTER)
 				{
@@ -709,7 +708,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		////cout << "SC_PACKET_STOP" << endl;
 		sc_packet_stop* packet = reinterpret_cast<sc_packet_stop*>(ptr);
 		int other_id = packet->id;
-
+		
 		if (other_id == g_myid)
 		{
 
@@ -719,7 +718,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetPacketMoving(packet->isMoving);
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+			//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
@@ -728,6 +727,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (g_Object.count(other_id) == 0)break;
 			if (g_Object.find(other_id)->second == nullptr)break;
 
+			cout << "----------------------" << endl;
+			cout << "Stop Packet 받음" << endl;
+			cout << "----------------------" << endl;
+
 			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 			/*//cout << "------------------------" << endl;
 			//cout << "Moving False setting\t\t"<<other_id << endl;
@@ -735,7 +738,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			else //cout << "false" << endl;
 			//cout << "------------------------" << endl;*/
 			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetPacketMoving(false);
-			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
+			//g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
 			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 	}
@@ -978,6 +981,10 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 		if (0 == in_packet_size) in_packet_size = ptr[0];
 		if (io_byte + saved_packet_size >= in_packet_size) {
 			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
+			if (packet_buffer[1] == SC_PACKET_STOP)
+			{
+				cout << "Stop packet size : " << (int)packet_buffer[0] << endl;
+			}
 			ProcessPacket(packet_buffer);
 			ptr += in_packet_size - saved_packet_size;
 			io_byte -= in_packet_size - saved_packet_size;

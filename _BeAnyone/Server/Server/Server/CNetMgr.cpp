@@ -277,31 +277,34 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
     if (pClient == nullptr)return;
 
-    unordered_set<uShort> old_viewList = pClient->GetViewList();
-    unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
     m_pMediator->Find(user_id)->SetIsMoving(false);
-    for (auto& ob : vSectors)
+    for (auto& obj : m_pMediator->GetReckonerList())
     {
-        if (ob == user_id)continue;
-        if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
-        {
+        if (obj == user_id)continue;
+        m_pSendMgr->Send_Stop_Packet(obj, user_id, false);
 
-            m_pSendMgr->Send_Stop_Packet(ob, user_id, false);
-        }
     }
+    //for (auto& ob : g_QuadTree.search(CBoundary(m_pMediator->Find(user_id))))
+    //{
+    //    if (ob == user_id)continue;
+    //    if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
+    //    {
+    //        m_pSendMgr->Send_Stop_Packet(ob, user_id, false);
+    //    }
+    //}
 }
 
 void CNetMgr::Disconnect(const uShort& user_id)
 {
     CGameObject* pUser = m_pMediator->Find( user_id);
+    pUser->GetLock().lock();
     pUser->SetStatus(OBJSTATUS::ST_ALLOC);
-
+    cout << user_id << "가 퇴장했다 시팔" << endl;
     m_pMediator->Delete_Reckoner(user_id);
 
     Netmgr.GetMediatorMgr()->Find(user_id)->SetIsMoving(false);
     m_pSendMgr->Send_Leave_Packet( user_id, user_id);
 
-    pUser->GetLock().lock();
     for (int i = 0; i < MAX_USER; ++i)
     {
         if (m_pMediator->Find( i)->GetStatus() == OBJSTATUS::ST_ACTIVE)
@@ -707,6 +710,7 @@ void CNetMgr::Worker_Thread()
                     if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_ACTIVE)
                     {
                         keep_alive = true;
+                        cout << "MonsterMove 실행" << endl;
                         char temp = (char)(rand() % 4);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetIsMoving(true);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetDir((MONSTER_AUTOMOVE_DIR)temp);
@@ -765,12 +769,18 @@ void CNetMgr::Processing_Thead()
 
                     g_QuadTree.Delete(obj);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * (DeltaTime));
-                    if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;
+                   /* if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;*/
                     g_QuadTree.Insert(obj);
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
 
                     if (CAST_CLIENT(obj)->GetIsRefresh())
                     {
+                        if(m_pMediator->ReckonerSize() == 1)
+                            cout << "reckoner size : " << m_pMediator->ReckonerSize() << endl;
+                        if (old_viewList.size() == 1)
+                            cout << "old_viewList size : " << m_pMediator->ReckonerSize() << endl;
+                        if (new_viewList.size() == 1)
+                            cout << "new_viewList size : " << m_pMediator->ReckonerSize() << endl;
                         for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
                         {
                             if (ob == reckoner)continue;
