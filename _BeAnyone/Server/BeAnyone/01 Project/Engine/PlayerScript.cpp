@@ -481,6 +481,7 @@ void CPlayerScript::update()
 
 		if (m_ftimeCount >= m_fDelayTime)
 		{
+			ReckonerMove = true;
 			system_clock::time_point start = system_clock::now();
 			g_netMgr.Send_Move_Packet(dir, localPos, worldDir, vRot.y, start, DT, ReckonerMove);
 

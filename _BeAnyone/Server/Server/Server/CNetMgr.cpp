@@ -765,7 +765,7 @@ void CNetMgr::Processing_Thead()
 
                     g_QuadTree.Delete(obj);
                     obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * (DeltaTime));
-                    if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;
+                   /* if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;*/
                     g_QuadTree.Insert(obj);
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
 
