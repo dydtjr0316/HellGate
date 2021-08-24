@@ -20,7 +20,7 @@ public:		// 실제 객체 업데이트부
 	void Random_Move_Monster(const uShort& Monster_id);
 	void Do_Attack(const uShort& attacker, const uShort& victim);
 	void Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY);
-	void Do_Stop(const uShort& user_id, const bool& isMoving);
+	void Do_Stop(const uShort& user_id, const bool isMoving);
 	void Kill_Monster(const uShort& monster_id);
 	void Disconnect(const uShort& user_id);
 	void Enter_Game(const uShort& user_id, char name[]);

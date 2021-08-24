@@ -49,6 +49,7 @@ bool CQuadTree::Insert(CGameObject* p)
 		else
 		{
 			Sub_Divide();
+
 			for (auto& obj : m_pChild)
 				if (obj->Insert(p))return true;
 		}
@@ -58,10 +59,6 @@ bool CQuadTree::Insert(CGameObject* p)
 		for (auto& obj : m_pChild)
 			if (obj->Insert(p))return true;
 	}
-	////cout << endl;
-	////cout << "Insert**********************" << endl;
-	//PrintQuadTree();
-	//return true;// 여기서 true 반환하는거 괜찮은지 보기
 }
 
 void CQuadTree::Delete(CGameObject* p)
@@ -81,9 +78,7 @@ void CQuadTree::Delete(CGameObject* p)
 		{
 			if (IsSameObject(playerID, p->GetID()))
 			{
-				quadlock.lock();
 				m_vpPlayers.erase(playerID);
-				quadlock.unlock();
 				break;
 			}
 		}
@@ -102,9 +97,7 @@ void CQuadTree::Delete(CGameObject* p)
 				{
 					for (auto& sub : obj->GetPoint())	//0629 이근처 부분 뒤죽박죽임 m_vplayer를쓸거면 그거만 쓰는걸로 정리하기 존나 헷갈리네 ㅅㅂ
 					{
-						quadlock.lock();
 						m_pParent->GetPoint().emplace(sub);
-						quadlock.unlock();
 						if (m_pParent->m_bisDivide)
 							m_pParent->m_bisDivide = false;
 					}
@@ -129,6 +122,7 @@ bool CQuadTree::IsSameObject(const uShort& p1, const uShort& p2)
 }
 void CQuadTree::Sub_Divide()
 {
+
 	CBoundary childRect[CHILD_NODE_SIZE];//용석
 	childRect[0] = CBoundary(m_boundary.GetX() + m_boundary.GetW() / 2, m_boundary.GetZ() - m_boundary.GetH() / 2,
 		m_boundary.GetW() / 2, m_boundary.GetH() / 2);
@@ -162,15 +156,13 @@ void CQuadTree::SubDivideToChild()
 			if (childNode->m_boundary.contains(Netmgr.GetMediatorMgr()->Find(player)))
 			{
 				/*m_vpPlayers.erase(player);*/
-				quadlock.lock();
 				childNode->m_vpPlayers.emplace(player);
-				quadlock.unlock();
 				break;
 			}
 		}
 	}
-		m_vpPlayers.clear();
-		m_icapacity = 0;
+	m_vpPlayers.clear();
+	m_icapacity = 0;
 }
 
 
@@ -179,25 +171,13 @@ void CQuadTree::SubDivideToChild()
 unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 {
 	//  쿼드트리 부모 자식 구조 바꾸면서 이부분 안바꿔도 되는지 확인해 볼 것
-	
+	mutex searchlock;
+	searchlock.lock();
 	unordered_set<uShort> found;
-	{
-		/*if (!m_boundary.intersects(range))
-		return found;
-	else
-	{
-		for (auto& p : m_vpPlayers)
-		{
-			if (range.contains(p))
-				found.push_back(p);
-		}
-	}*/
-	}
 	CBoundary temp = range;
 	if (m_boundary.intersects(temp))
 	{
 		////cout << "search 시작" << endl;
-			quadlock.lock();
 		for (auto& p : m_vpPlayers)
 		{
 			if (Netmgr.GetMediatorMgr()->Count(p) == 0)continue;
@@ -206,7 +186,6 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 				found.emplace(p);
 
 		}
-			quadlock.unlock();
 		////cout << "-*---------------" << endl;
 	}
 	if (m_bisDivide)
@@ -216,11 +195,12 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 			for (auto player : obj->search(range))
 			{
 				found.emplace(player);
-				
+
 			}
 		}
 	}
-	
+
+	searchlock.unlock();
 	return found;
 
 }

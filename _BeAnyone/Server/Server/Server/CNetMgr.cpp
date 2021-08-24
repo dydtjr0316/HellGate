@@ -272,18 +272,23 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
     //}
 }
 
-void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
+void CNetMgr::Do_Stop(const uShort& user_id, const bool isMoving)
 {
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
     if (pClient == nullptr)return;
 
     m_pMediator->Find(user_id)->SetIsMoving(false);
-    for (auto& obj : m_pMediator->GetReckonerList())
+    cout << "QuadTree의 사이즈-------------------------->" << g_QuadTree.search(CBoundary(m_pMediator->Find(user_id))).size() << endl;
+    for (auto& obj : g_QuadTree.search(CBoundary(m_pMediator->Find(user_id))))
     {
         if (obj == user_id)continue;
+        cout << obj << endl;
         m_pSendMgr->Send_Stop_Packet(obj, user_id, false);
-
     }
+    cout << "*/********************" << endl;
+    
+
+
     //for (auto& ob : g_QuadTree.search(CBoundary(m_pMediator->Find(user_id))))
     //{
     //    if (ob == user_id)continue;
@@ -406,7 +411,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         tempLock.lock();
         m_pMediator->Find(packet->id)->SetIsMoving(false);
         cout << packet->id << "의 stop packet 도착" << endl;
-        Do_Stop(packet->id, m_pMediator->Find(packet->id)->GetIsMoving());
+        Do_Stop(packet->id, false);
         tempLock.unlock();
     }
     break;
@@ -656,7 +661,9 @@ void CNetMgr::Worker_Thread()
                 pClient->GetExover().wsabuf.len = MAX_BUF_SIZE;
                 pClient->SetSocket(c_socket);
                 // 0623용석
+                tempLock.lock();
                 g_QuadTree.Insert(pClient);
+                tempLock.unlock();
 
                 ////////////////////////////////////////////////////////
                 pClient->SetPosV(
@@ -754,23 +761,24 @@ void CNetMgr::Processing_Thead()
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
                 CGameObject* obj = nullptr;
-                cs_packet_move* drmPacket = nullptr;
-                Vector3 objPos;
-
-                if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
+               // cs_packet_move* drmPacket = nullptr;
+               // if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
                 obj = m_pMediator->Find(reckoner);
-                objPos = obj->GetLocalPosVector();
-                drmPacket = obj->GetDeadReckoningPacket();
+                //drmPacket = obj->GetDeadReckoningPacket();
                 obj->GetLock().lock();
                 if (obj->GetIsMoving())
                 {
                     unordered_set<uShort> old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
-                    obj->SetRotateY(drmPacket->rotateY);// 안해도되는가?
+                    obj->SetRotateY(obj->GetPacketRotateY());// 안해도되는가?
 
                     g_QuadTree.Delete(obj);
-                    obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * (DeltaTime));
-                   /* if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;*/
+                    if (reckoner == 1) {
+                        cout << obj->GetPacketDirVec().x << " <> " << obj->GetPacketDirVec().z << endl;
+                        cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;
+                        cout << "--------------------------------------" << endl;
+                    }
                     g_QuadTree.Insert(obj);
+                    obj->SetPosV(obj->GetLocalPosVector() + obj->GetPacketDirVec() * obj->GetSpeed() * (DeltaTime));
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
 
                     if (CAST_CLIENT(obj)->GetIsRefresh())
@@ -835,9 +843,9 @@ void CNetMgr::Processing_Thead()
                                 CAST_CLIENT(obj)->GetViewList().erase(ob);
 
                                 m_pMediator->Find(ob)->SetIsMoving(false);// 용석 필요한가?
-                                cout << "********************" << endl;
-                                cout << "********************" << endl;
-                                cout << "Reckoner Move" << endl;
+                              //  cout << "********************" << endl;
+                              //  cout << "********************" << endl;
+                              //  cout << "Reckoner Move" << endl;
                                 m_pSendMgr->Send_Leave_Packet(reckoner, ob);
                                 if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
                                 {
@@ -899,6 +907,7 @@ void CNetMgr::Processing_Thead()
 
                 old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
 
+                    tempLock.lock();
                 if (ismoving && CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
                 {
                     g_QuadTree.Delete(m_pMediator->Find(monster));
@@ -949,20 +958,22 @@ void CNetMgr::Processing_Thead()
                                 CAST_MONSTER(m_pMediator->Find(monster))->SetIsMoving(false);
                                 tempLock.lock();
                                 CAST_CLIENT(m_pMediator->Find(id))->GetViewList().erase(monster);
-                                tempLock.unlock();
+                                m_pSendMgr->Send_Leave_Packet(id, monster);
 
 
                                 m_pMediator->Delete_MonsterReckoner(monster);
                                 m_pMediator->Delete_Obj(monster);
+                                tempLock.unlock();
 
                                 cout << "********************" << endl;
                                 cout << "********************" << endl;
                                 cout << "Monster Reckoner Move" << endl;
-                                m_pSendMgr->Send_Leave_Packet(id, monster);
                             }
                         }
                     }
                 }
+                tempLock.unlock();
+
             }
         }
     }

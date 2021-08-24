@@ -232,7 +232,7 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
 }
 
 
-void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool& isMoving)
+void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool isMoving)
 {
     sc_packet_stop p;
     p.size = sizeof(p);

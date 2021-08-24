@@ -168,6 +168,7 @@ void CMediatorMgr::Delete_Reckoner(const uShort& id)
     if (m_ReckonerList.count(id) != 0)
     {
         m_ReckonerList.erase(id);
+        cout << "Reckoner Delete" << endl;
     }
 }
 

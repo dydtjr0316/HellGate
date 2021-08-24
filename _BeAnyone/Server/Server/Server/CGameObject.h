@@ -29,6 +29,9 @@ public: // 상속 ,, 함수
 	cs_packet_move* GetDeadReckoningPacket() { return m_deadReckoning_Packet; }
 	OBJECT_TYPE GetType() { return m_Type; }
 
+	float GetPacketRotateY() { return packetRotateY; }
+	Vector3 GetPacketDirVec() { return packetDirVector; }
+
 
 	// set
 	void SetID(const uShort& id) { m_id = id; }
@@ -82,6 +85,9 @@ protected:
 	char  m_packet_buf[MAX_PACKET_SIZE]{};
 	int	  m_iclinet_time;
 	float m_fspeed = 200.f;
+
+	float packetRotateY;
+	Vector3 packetDirVector;
 
 	// 구조체
 	OBJSTATUS m_status;

@@ -10,7 +10,7 @@ public:		//player
 	void Send_Enter_Packet(const uShort& user_id, const uShort& other_id);
 	void Send_Leave_Packet(const uShort& user_id, const uShort& other_id, const bool& isAttack = false);
 	void Send_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
-	void Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool& isMoving);
+	void Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool isMoving);
 	void Send_Rotate_Packet(const uShort& moverid, const uShort& userid, const Vector3& rotate);
 
 	//°¡¶ó

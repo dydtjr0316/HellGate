@@ -19,6 +19,8 @@ CGameObject::CGameObject()
 void CGameObject::SetDeadReckoningPacket(cs_packet_move* p)
 {
     m_deadReckoning_Packet = p;
+    packetDirVector = p->DirVec;
+    packetRotateY = p->rotateY;
 }
 
 void CGameObject::SetPosV(const float& x, const float& y, const float& z)
@@ -50,8 +52,11 @@ void CGameObject::SetIsMoving(const bool& isMoving)
 void CGameObject::Insert_Sector()
 {
     //SetSector((int)m_v3LocalPosVector.x / SECTOR_ROW_Length, (int)m_v3LocalPosVector.z / SECTOR_COL_Length);
+    mutex l;
+    l.lock();
     g_QuadTree.Insert(this);
-    
+    l.unlock();
+
    // CSectorMgr::GetInst()->Emplace(m_tSector.x, m_tSector.z, m_id);
 }
 
@@ -78,7 +83,10 @@ void CGameObject::Change_Sector(const _tSector& old_sector)
 
 void CGameObject::Change_Sector()
 {
+    mutex l;
+    l.lock();
     g_QuadTree.Delete(this);
     g_QuadTree.Insert(this);
+    l.unlock();
 }
 

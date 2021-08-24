@@ -470,15 +470,6 @@ void CPlayerScript::update()
 			GetReckoner()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
 			CountTime();
 		}
-
-		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
-		{
-			ReckonerMove = false;
-			g_netMgr.Send_Stop_Packet(false, g_myid);
-			SetTime_Zero();
-		}
-
-
 		if (m_ftimeCount >= m_fDelayTime)
 		{
 			ReckonerMove = true;
@@ -491,6 +482,15 @@ void CPlayerScript::update()
 			GetReckoner()->SetLocalPos(Transform()->GetLocalPos());
 			SetTime_Zero();
 		}
+		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_D)))
+		{
+			ReckonerMove = false;
+			g_netMgr.Send_Stop_Packet(false, g_myid);
+			SetTime_Zero();
+		}
+
+
+		
 
 		if (KEY_HOLD(KEY_TYPE::KEY_Z))
 		{
@@ -550,7 +550,7 @@ void CPlayerScript::op_Move()
 			//cout << "-----------------------------" << endl;
 
 	}
-	/*else {
+	else {
 		if (m_isBezier&&m_fRTT>=0.f)
 		{
 			cout << "보간한다 ~~!!!" << endl;
@@ -574,7 +574,7 @@ void CPlayerScript::op_Move()
 				SetisBezeir(false);
 			}
 		}
-	}*/
+	}
 }
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 {
