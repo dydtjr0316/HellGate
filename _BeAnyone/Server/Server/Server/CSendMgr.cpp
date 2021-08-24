@@ -182,7 +182,7 @@ void CSendMgr::Send_Move_Packet(const uShort& user_id, const uShort& mover_id, c
     p.speed = Netmgr.GetMediatorMgr()->Find(mover_id)->GetSpeed();
     p.Start = system_clock::now();
     p.isMoving = Netmgr.GetMediatorMgr()->Find(mover_id)->GetIsMoving();
-    cout << "서버에서 보낼타이밍 \t" << p.localVec.x << " , " << p.localVec.z << endl;
+   // cout << "서버에서 보낼타이밍 \t" << p.localVec.x << " , " << p.localVec.z << endl;
 
     Send_Packet(user_id, &p);
 }
