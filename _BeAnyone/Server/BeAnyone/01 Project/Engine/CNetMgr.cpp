@@ -629,7 +629,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (CheckObjType(other_id) == OBJECT_TYPE::CLIENT)
 				{
-					//cout << " Move 들어옴    \t"<<(int)packet->dir << endl;
+					cout << " Move 들어옴    \t"<<(int)packet->dir << endl;
 					system_clock::time_point end = system_clock::now();
 					nanoseconds rtt = duration_cast<nanoseconds>(end - packet->Start);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetBisFrist(true);
@@ -639,11 +639,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
 					else
 						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
-					/*cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
+					cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
 					cout << "패킷받을때 패킷   : \t" << packet->localVec.x << ", " << packet->localVec.z << endl;
 					cout << "패킷받을때 클라상태   : \t" << g_Object.find(other_id)->second->Transform()->GetLocalPos().x << ", " << 
 						g_Object.find(other_id)->second->Transform()->GetLocalPos().z << endl;
-					cout << "(float)rtt.count : " << (float)rtt.count() * 0.000000001 << endl;*/
+					cout << "(float)rtt.count : " << (float)rtt.count() * 0.000000001 << endl;
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket(packet, (float)rtt.count()*0.000000001);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->Set_InterpolationCnt_Zero();
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetisBezeir(false);

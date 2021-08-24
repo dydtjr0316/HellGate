@@ -546,8 +546,8 @@ void CPlayerScript::op_Move()
 			temp.y = fHeight;
 
 		playerTrans->SetLocalPos(temp);
-			//	cout << "ID : "<<GetObj()->GetID() << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
-			//cout << "-----------------------------" << endl;
+				cout << "ID : "<<GetObj()->GetID() << "\t\t" << playerTrans->GetLocalPos().x << " , " << playerTrans->GetLocalPos().z << endl;
+			cout << "-----------------------------" << endl;
 
 	}
 	else {
@@ -596,7 +596,7 @@ void CPlayerScript::SetOrigin_Point(const int& index, const float& x, const floa
 {
 	m_v2Origin_Point[index].x = x;
 	m_v2Origin_Point[index].y = y;
-	//cout << "Set Origin Point : " << m_v2Origin_Point[index].x << ", "<< m_v2Origin_Point[index].y <<endl;
+	cout << "Set Origin Point : " << m_v2Origin_Point[index].x << ", "<< m_v2Origin_Point[index].y <<endl;
 }
 
 void CPlayerScript::SetInterpolation_Point(const int& index, const float& x, const float& y)
@@ -609,9 +609,9 @@ void CPlayerScript::Search_Origin_Points(const int& id, const float& rtt)
 {
 	Vector3 tempLocalPos = Transform()->GetLocalPos();
 	if (rtt < 0)return;
-	/*cout << "보간할때 클라   : \t" << tempLocalPos.x << ", " << tempLocalPos.z << endl;
+	cout << "보간할때 클라   : \t" << tempLocalPos.x << ", " << tempLocalPos.z << endl;
 	cout << "보간할때 dirvec   : \t" << packetDirVec.x << ", " << packetDirVec.z << endl;
-	cout << "보간할때 speed rtt   : \t" << packetspeed <<", " << rtt << endl;*/
+	cout << "보간할때 speed rtt   : \t" << packetspeed <<", " << rtt << endl;
 	for (int i = 0; i < 4; i++) {
 
 		if (packetLocalPos.x <= tempLocalPos.x)
