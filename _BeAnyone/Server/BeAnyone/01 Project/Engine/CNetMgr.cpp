@@ -708,7 +708,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		////cout << "SC_PACKET_STOP" << endl;
 		sc_packet_stop* packet = reinterpret_cast<sc_packet_stop*>(ptr);
 		int other_id = packet->id;
-
+		
 		if (other_id == g_myid)
 		{
 
@@ -718,7 +718,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetPacketMoving(packet->isMoving);
-			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
+			//g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(packet->isMoving);
 			g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 		else // 여기 브로드캐스팅하려면 다시수정
@@ -738,7 +738,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			else //cout << "false" << endl;
 			//cout << "------------------------" << endl;*/
 			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetPacketMoving(false);
-			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
+			//g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(false);
 			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetisBezeir(true);
 		}
 	}
@@ -981,6 +981,10 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 		if (0 == in_packet_size) in_packet_size = ptr[0];
 		if (io_byte + saved_packet_size >= in_packet_size) {
 			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
+			if (packet_buffer[1] == SC_PACKET_STOP)
+			{
+				cout << "Stop packet size : " << (int)packet_buffer[0] << endl;
+			}
 			ProcessPacket(packet_buffer);
 			ptr += in_packet_size - saved_packet_size;
 			io_byte -= in_packet_size - saved_packet_size;
