@@ -20,6 +20,7 @@
 #include "Quest.h"
 #include "StaticUI.h"
 int cnt = 0;
+int stopcnt = 0;
 bool tempbool = false;
 OBJECT_TYPE CheckObjType(const uShort& id)
 {
@@ -215,7 +216,8 @@ void CNetMgr::Send_Stop_Packet(const bool& isMoving, const uShort& id)
 	p.size = sizeof(p);
 	p.id = id;
 	p.isMoving = isMoving;
-	p.id = id;
+	cout << p.id << "가 스톱패킷 서버로 보냄" << endl;
+	cout << "*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
 	Send_Packet(&p);
 }
 
@@ -361,6 +363,10 @@ void CNetMgr::Recevie_Data()
 	}
 	else
 	{
+		if (recvbuf[1] == SC_PACKET_STOP)
+		{
+			int i = 0;
+		}
 		Process_Data(recvbuf, retbytesize);
 	}
 
@@ -728,7 +734,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (g_Object.find(other_id)->second == nullptr)break;
 
 			cout << "----------------------" << endl;
-			cout << "Stop Packet 받음" << endl;
+			stopcnt++;
+			cout << other_id<<"번 플레이어의 Stop Packet 받음\t"<< stopcnt << endl;
 			cout << "----------------------" << endl;
 
 			g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
@@ -756,6 +763,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (CheckObjType(other_id) == OBJECT_TYPE::CLIENT)
 				{
+					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetPacketMoving(false);
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->DeleteObject(g_Object.find(other_id)->second);
 					CEventMgr::GetInst()->update();
 					g_Object.erase(other_id);

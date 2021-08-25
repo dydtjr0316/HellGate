@@ -280,6 +280,12 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
     unordered_set<uShort> old_viewList = pClient->GetViewList();
     unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
     m_pMediator->Find(user_id)->SetIsMoving(false);
+    cout << user_id << "의 stop packet 도착" << endl;
+    cout << "-*---------------*-*-*-*-" << endl;
+    if (vSectors.size() == 0)
+    {
+        int i = 0;
+    }
     for (auto& ob : vSectors)
     {
         if (ob == user_id)continue;
@@ -402,7 +408,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         tempLock.lock();
         m_pMediator->Find(packet->id)->SetIsMoving(false);
-        cout << packet->id << "의 stop packet 도착" << endl;
+   
         Do_Stop(packet->id, m_pMediator->Find(packet->id)->GetIsMoving());
         tempLock.unlock();
     }
@@ -764,9 +770,16 @@ void CNetMgr::Processing_Thead()
                     g_QuadTree.Delete(obj);
                     obj->SetPosV(obj->GetLocalPosVector() + obj->GetPacketDirVec() * obj->GetSpeed() * (DeltaTime));
                     if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;
+                    
                     g_QuadTree.Insert(obj);
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
-
+                    if (obj->GetLocalPosVector().x < 0 || objPos.z < 0 || objPos.x>10000 || objPos.z>10000)
+                    {
+                        objPos;
+                        old_viewList;
+                        new_viewList;
+                        float tempf = obj->GetPacketRotateY();
+                    }
                     if (CAST_CLIENT(obj)->GetIsRefresh())
                     {
                         for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
@@ -885,15 +898,17 @@ void CNetMgr::Processing_Thead()
                 monsterDir = CAST_MONSTER(m_pMediator->Find(monster))->GetDir();
                 ismoving = m_pMediator->Find(monster)->GetIsMoving();
 
-                old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
 
                 if (ismoving && CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
                 {
+                    tempLock.lock();
+                    old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                     g_QuadTree.Delete(m_pMediator->Find(monster));
                     monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                     m_pMediator->Find(monster)->SetPosV(monsterPos);
                     g_QuadTree.Insert(m_pMediator->Find(monster));
                     new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
+                    tempLock.unlock();
 
 
                     // 동기화 부분 일시정지
