@@ -183,6 +183,10 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
     if (pClient == nullptr)return;
 
     unordered_set<uShort> old_viewList = pClient->GetViewList();
+    if (pClient->GetLocalPosVector().x < 0 || pClient->GetLocalPosVector().z < 0 || pClient->GetLocalPosVector().x>15000 || pClient->GetLocalPosVector().z>15000)
+    {
+       int i = 0;
+    }
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
 
@@ -199,77 +203,6 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
             }
         }
     }
-    
-
-
-    //for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
-    //{
-    //    if (ob == user_id)continue;
-    //    if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
-    //    {
-    //        tempLock.lock();
-    //        pClient->GetViewList().insert(ob);
-    //        m_pSendMgr->Send_Enter_Packet(user_id, ob); // user에게 ob enter 
-    //        if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
-    //        {
-    //            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
-    //            {
-    //                CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-    //                m_pSendMgr->Send_Enter_Packet(ob, user_id);
-    //            }
-    //            else
-    //            {
-    //                //cout << "새로들어온 아이디" << endl;
-    //                //cout << "--------------------" << endl;
-    //                m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
-    //            }
-    //        }
-    //        tempLock.unlock();
-
-    //    }
-    //    else // new, old 둘다 있을때 
-    //    {
-    //        if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
-    //        {
-    //            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
-    //            {
-    //                tempLock.lock();
-    //                    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-    //                tempLock.unlock();
-    //                m_pSendMgr->Send_Enter_Packet(ob, user_id);
-    //            }
-    //            else
-    //            {
-    //                //cout << "이전에도 있던 아이디" << endl;
-    //                //cout << "--------------------" << endl;
-    //                m_pSendMgr->Send_Move_Packet(ob, user_id, dir);
-    //            }
-    //        }
-    //    }
-    //}
-    //for (auto& ob : old_viewList)
-    //{
-    //    if (ob == user_id)continue;
-    //    if (new_viewList.count(ob) == 0)
-    //    {
-    //        tempLock.lock();
-    //        pClient->GetViewList().erase(ob);
-    //        
-    //        m_pMediator->Find(ob)->SetIsMoving(false);// 용석 필요한가?
-    //        m_pSendMgr->Send_Leave_Packet(user_id, ob);
-    //        if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
-    //        {
-    //            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) != 0)
-    //            {
-    //                CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().erase(user_id);
-    //                Netmgr.GetMediatorMgr()->Find(user_id)->SetIsMoving(false);// 용석 필요한가?
-    //                m_pSendMgr->Send_Leave_Packet(ob, user_id);
-    //            }
-    //        }
-    //        tempLock.unlock();
-    //    }
-
-    //}
 }
 
 void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
@@ -394,9 +327,8 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
         m_pMediator->Find(user_id)->SetDirV(packet->DirVec);
         m_pMediator->Find(user_id)->SetDeadReckoningPacket(packet);
-
-        //
-        m_pMediator->ReckonerAdd(user_id);
+        //cout << "\t\t\t패킷으로 받은 localvec : " << packet->localVec.x << ", " << packet->localVec.z << endl;
+        ////
 
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
         tempLock.unlock();
@@ -417,6 +349,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf) ;
         ////cout << "send loginok packet" << endl;
         m_pSendMgr->Send_LoginOK_Packet(user_id);
+        m_pMediator->ReckonerAdd(user_id);
 
         Enter_Game(user_id, packet->name);
     }
@@ -596,7 +529,6 @@ void CNetMgr::Add_Timer(const uShort& obj_id, const int& status, system_clock::t
 void CNetMgr::Worker_Thread()
 {
     while (true) {
-        CTimeMgr::GetInst()->update();
         DWORD io_byte;
         ULONG_PTR key;
         WSAOVERLAPPED* over;
@@ -746,13 +678,16 @@ void CNetMgr::Worker_Thread()
 
 void CNetMgr::Processing_Thead()
 {
-
     while (true)
     {
+        CTimeMgr::GetInst()->update();
 
         if (m_pMediator->ReckonerSize() != 0)
         {
-
+            if (m_pMediator->ReckonerSize() == 1)
+            {
+                int i = 0;
+            }
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
                 CGameObject* obj = nullptr;
@@ -766,14 +701,22 @@ void CNetMgr::Processing_Thead()
                 {
                     unordered_set<uShort> old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
                     obj->SetRotateY(obj->GetPacketRotateY());// 안해도되는가?
+                    if (obj->GetLocalPosVector().x < 0 || objPos.z < 0 || objPos.x>15000 || objPos.z>15000)
+                    {
+                        objPos;
+                        old_viewList;
+                        
+                        float tempf = obj->GetPacketRotateY();
+                    }
 
                     g_QuadTree.Delete(obj);
                     obj->SetPosV(obj->GetLocalPosVector() + obj->GetPacketDirVec() * obj->GetSpeed() * (DeltaTime));
-                    if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;
+                    cout << reckoner<<"의 로컬 Pos : : " << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z  <<"\t DT:  "<<DeltaTime << endl;
                     
                     g_QuadTree.Insert(obj);
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
-                    if (obj->GetLocalPosVector().x < 0 || objPos.z < 0 || objPos.x>10000 || objPos.z>10000)
+
+                    if (obj->GetLocalPosVector().x < 0 || objPos.z < 0 || objPos.x>15000 || objPos.z>15000)
                     {
                         objPos;
                         old_viewList;

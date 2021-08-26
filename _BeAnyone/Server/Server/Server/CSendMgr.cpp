@@ -136,11 +136,11 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
         //cout << "********************" << endl << endl;*/
     }
     {
-        //cout << "********************" << endl;
-        //cout << "********************" << endl;
-        //cout << other_id << "가 " << user_id << "에게 Enter Packet 전송" << endl;
-        //cout << "********************" << endl;
-        //cout << "********************" << endl;
+        cout << "********************" << endl;
+        cout << "********************" << endl;
+        cout << other_id << "가 " << user_id << "에게 Enter Packet 전송" << endl;
+        cout << "********************" << endl;
+        cout << "********************" << endl;
     }
     Send_Packet(user_id, &p);
 }
