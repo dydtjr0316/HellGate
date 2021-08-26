@@ -407,6 +407,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id)/*&& (g_Object.find(id)!= g_Object.end())*/)
 				{
+
 					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 
 					CGameObject* pObject = new CGameObject;
@@ -672,15 +673,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (g_Object.find(packet->id)->second == nullptr)break;
 
 		if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER) {
-
-			if ((int)g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() != (int)packet->eDir)
-			{
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
-			}
-			else
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(false);
-
-
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 
 
@@ -688,6 +680,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
 			}
+			else
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(false);
 
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
