@@ -188,12 +188,12 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local,
 	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
 	p.deltaTime = delta;
 	p.isMoving = isMoving;
-	/*//cout << "-------------------------------" << endl;
-	//cout << "-------------------------------" << endl;
-	//cout << "Send_Move_Packet" << endl;
-	//cout << local.x << " , " << local.z << endl;
-	//cout << "-------------------------------" << endl;
-	//cout << "-------------------------------" << endl;*/
+	cout << "-------------------------------" << endl;
+	cout << "-------------------------------" << endl;
+	cout << "Send_Move_Packet" << endl;
+	cout << local.x << " , " << local.z << endl;
+	cout << "-------------------------------" << endl;
+	cout << "-------------------------------" << endl;
 
 
 	Send_Packet(&p);
