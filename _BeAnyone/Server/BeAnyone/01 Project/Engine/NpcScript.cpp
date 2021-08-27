@@ -314,7 +314,7 @@ void CNpcScript::update()
 
 		// alchemy store
 		if (GetObj()->GetName() == L"Npc_4" && (m_bIsTalk == true)) {
-			
+			ItemAlchemy();
 		}
 
 	}
@@ -342,6 +342,21 @@ void CNpcScript::SetStaticUiRender(bool _bool)
 	m_pPlayerUi->StaticUI()->m_bStoreTime = _bool;
 }
 
+void CNpcScript::CheckAlchemy(ITEM_ID _firstId, ITEM_ID _SecondId)
+{
+	switch (_firstId) {
+	case ITEM_ID::CARROT:
+		if (_SecondId == ITEM_ID::BOTTLE_EMPTY)
+			m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_CARROT);
+		break;
+	case ITEM_ID::EMPTY:
+		m_bCanAlchemy = false;
+		break;
+	default:
+		m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::TRASH);
+	}
+}
+
 void CNpcScript::ItemAlchemy()
 {
 	int playerMoney = m_pPlayerUi->StaticUI()->m_iMoney;
@@ -349,9 +364,51 @@ void CNpcScript::ItemAlchemy()
 	CStaticUI* storeUi = m_pStoreUi->StaticUI();
 	CStaticUI* playerUi = m_pPlayerUi->StaticUI();
 
+	// player
 	if (ComputeMousePos((Vector3)m_pPlayerUi->Transform()->GetLocalPos(), (Vector3)m_pPlayerUi->Transform()->GetLocalScale())) {
+		for (int i = 0; i < playerUi->m_vecButton.size(); ++i) {
+			if (playerUi->m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
+				Vector3 ButtonPos = playerUi->m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
+				Vector3 ButtonScale = playerUi->m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
+
+				if (ComputeMousePos(ButtonPos, ButtonScale)) {
+					if (playerMoney >= 300) {
+						if (playerUi->m_vecButton[i]->GetItemCount() > 1) {
+							storeUi->SetButton(playerUi->m_vecButton[i]->GetItemID());
+							playerUi->m_vecButton[i]->SubItemCount();
+						}
+						else if (playerUi->m_vecButton[i]->GetItemCount() == 1) {
+							storeUi->SetButton(playerUi->m_vecButton[i]->GetItemID());
+							playerUi->m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
+							playerUi->m_vecButton[i]->SubItemCount();
+
+						}
+					}
+				}
+			}
+		}
 	
+	}
+	// store
+	else {
 	
+		Vector3 pos = storeUi->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->Transform()->GetLocalPos();
+		Vector3 scale = storeUi->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->Transform()->GetLocalScale();
+			
+		if (ComputeMousePos(pos, scale)) {
+			CheckAlchemy(storeUi->m_vecButton[0]->GetItemID(), storeUi->m_vecButton[1]->GetItemID());
+			if (m_bCanAlchemy) {
+				playerUi->m_iMoney -= 300;
+				playerUi->SetWalletMoney();
+				m_bCanAlchemy = true;
+
+				for (int i = 0; i < storeUi->m_vecButton.size(); ++i)
+					storeUi->m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
+			}
+		}
+
+
+		
 	}
 
 }

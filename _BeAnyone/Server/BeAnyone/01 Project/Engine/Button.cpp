@@ -195,6 +195,27 @@ void CButton::ChangeButtonTexture()
 		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainCarrot").GetPointer());
 		break;
 
+	case ITEM_ID::BOTTLE_EMPTY:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_EMPTY");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainCarrot").GetPointer());
+		break;
+
+	case ITEM_ID::BOTTLE_CARROT:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_CARROT");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainCarrot").GetPointer());
+		break;
+
+	case ITEM_ID::BOTTLE_STRAWBERRY:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_STRAWBERRY");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainCarrot").GetPointer());
+		break;
+
+	case ITEM_ID::TRASH:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"TRASH");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainCarrot").GetPointer());
+		break;
+
+
 	case ITEM_ID::END:
 		return;
 	}

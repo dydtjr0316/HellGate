@@ -65,6 +65,9 @@ private:
 	// questbox
 	bool				m_bQuestBox = true;
 
+	// alchemy store
+	bool				m_bCanAlchemy = true;
+
 public:
 	virtual void update();
 	void init(UI_TYPE _eType);
@@ -102,6 +105,7 @@ public:
 	void SellAndBuy();
 	void ItemAlchemy();
 	bool ComputeMousePos(Vector3& _pos, Vector3& _scale);
+	void CheckAlchemy(ITEM_ID _firstId, ITEM_ID _SecondId);
 
 	CLONE(CNpcScript);
 
