@@ -211,8 +211,8 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
 
     unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
     m_pMediator->Find(user_id)->SetIsMoving(false);
-    cout << user_id << "의 stop packet 도착" << endl;
-    cout << "-*---------------*-*-*-*-" << endl;
+    /*cout << user_id << "의 stop packet 도착" << endl;
+    cout << "-*---------------*-*-*-*-" << endl;*/
     if (vSectors.size() == 0)
     {
         int i = 0;
@@ -705,7 +705,7 @@ void CNetMgr::Processing_Thead()
 
                     g_QuadTree.Delete(obj);
                     obj->SetPosV(obj->GetLocalPosVector() + obj->GetPacketDirVec() * obj->GetSpeed() * (DeltaTime));
-                    cout << reckoner << "의 로컬 Pos : : " << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << "\t DT:  " << DeltaTime << endl;
+                    //cout << reckoner << "의 로컬 Pos : : " << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << "\t DT:  " << DeltaTime << endl;
 
                     g_QuadTree.Insert(obj);
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
@@ -744,7 +744,7 @@ void CNetMgr::Processing_Thead()
                                     //cout << "이전에도 있던 아이디" << endl;
                                     //cout << "--------------------" << endl;
                                     if (CAST_CLIENT(obj)->GetIsRefresh())
-                                    m_pSendMgr->Send_Move_Packet(ob, reckoner, CAST_CLIENT(obj)->GetDir());// idle 이거 필요없으면 걍 지워 버리기 
+                                        m_pSendMgr->Send_Move_Packet(ob, reckoner, CAST_CLIENT(obj)->GetDir());// idle 이거 필요없으면 걍 지워 버리기 
 
                                 }
                             }
@@ -816,37 +816,48 @@ void CNetMgr::Processing_Thead()
                 monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();
                 monsterDir = CAST_MONSTER(m_pMediator->Find(monster))->GetDir();
                 ismoving = m_pMediator->Find(monster)->GetIsMoving();
-
-
                 if (ismoving && CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
                 {
                     tempLock.lock();
                     old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                     g_QuadTree.Delete(m_pMediator->Find(monster));
                     monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
+                    if (monster == 1000)
+                    {
+                        cout << monsterPos.x << ", " << monsterPos.z << endl;
+                    }
                     m_pMediator->Find(monster)->SetPosV(monsterPos);
                     g_QuadTree.Insert(m_pMediator->Find(monster));
                     new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                     tempLock.unlock();
+                }
 
 
-                    // 동기화 부분 일시정지
-                    CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);
-                    if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() > 2.f)
-                        for (auto& user : old_viewList) {
-                            if (new_viewList.count(user) != 0)
+               
+                if (ismoving && CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
+                {
+
+                    for (auto& user : old_viewList) {
+                        if (new_viewList.count(user) != 0)
+                        {
+                            if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
                             {
-                                if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
-                                {
-                                    ////cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
 
-                                    m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
-
-                                    CAST_MONSTER(m_pMediator->Find(monster))->SetRefreshPacketCnt_Zero();
-                                }
+                                m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
                             }
                         }
 
+                        // 동기화 부분 일시정지
+                      /*  CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);
+                        if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() > 1.f)
+
+                                        CAST_MONSTER(m_pMediator->Find(monster))->SetRefreshPacketCnt_Zero();
+                                    }
+                                }
+                            }*/
+
+
+                    }
                     for (auto& id : new_viewList)
                     {
                         if (old_viewList.count(id) != 0)
@@ -862,7 +873,7 @@ void CNetMgr::Processing_Thead()
                             m_pSendMgr->Send_Enter_Packet(id, monster);
 
                         }
-                            
+
                     }
                     for (auto& id : old_viewList)
                     {
@@ -871,16 +882,10 @@ void CNetMgr::Processing_Thead()
                             if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
                             {
                                 CAST_MONSTER(m_pMediator->Find(monster))->SetIsMoving(false);
-                                tempLock.lock();
-                                tempLock.unlock();
 
-
-                                m_pMediator->Delete_MonsterReckoner(monster);
-                                m_pMediator->Delete_Obj(monster);
-
-                                cout << "********************" << endl;
-                                cout << "********************" << endl;
-                                cout << "Monster Reckoner Move" << endl;
+                                /*        cout << "********************" << endl;
+                                        cout << "********************" << endl;
+                                        cout << "Monster Reckoner Move" << endl;*/
                                 m_pSendMgr->Send_Leave_Packet(id, monster);
                             }
                         }

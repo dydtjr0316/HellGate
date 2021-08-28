@@ -501,6 +501,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 								my_packet->localVec.y = fHeight;
 						}
 						g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
+						cout << "패킷 받을때 Position    " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
 
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
