@@ -19,6 +19,8 @@ CGameObject::CGameObject()
 void CGameObject::SetDeadReckoningPacket(cs_packet_move* p)
 {
     m_deadReckoning_Packet = p;
+    packetRotateY = p->rotateY;
+    packetDirVec = p->DirVec;
 }
 
 void CGameObject::SetPosV(const float& x, const float& y, const float& z)

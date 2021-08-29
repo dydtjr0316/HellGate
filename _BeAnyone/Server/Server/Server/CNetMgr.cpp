@@ -169,7 +169,7 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
         for (auto& clientID : m_pMediator->GetReckonerList())
         {
             Netmgr.GetMediatorMgr()->Find(clientID)->SetIsMoving(false);
-            CAST_CLIENT(m_pMediator->Find(clientID))->GetViewList().erase(monster_id);
+            cout << "\t\t\tKillMonster" << endl;
             m_pSendMgr->Send_Leave_Packet(clientID, monster_id, false);
         }
         m_pMediator->Delete_Obj(monster_id);
@@ -182,7 +182,10 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
     if (pClient == nullptr)return;
 
-    unordered_set<uShort> old_viewList = pClient->GetViewList();
+    if (pClient->GetLocalPosVector().x < 0 || pClient->GetLocalPosVector().z < 0 || pClient->GetLocalPosVector().x>15000 || pClient->GetLocalPosVector().z>15000)
+    {
+       int i = 0;
+    }
     pClient->SetPosV(localVec);
     pClient->SetRotateY(rotateY);
 
@@ -199,77 +202,6 @@ void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec,
             }
         }
     }
-    
-
-
-    //for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
-    //{
-    //    if (ob == user_id)continue;
-    //    if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
-    //    {
-    //        tempLock.lock();
-    //        pClient->GetViewList().insert(ob);
-    //        m_pSendMgr->Send_Enter_Packet(user_id, ob); // user에게 ob enter 
-    //        if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
-    //        {
-    //            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
-    //            {
-    //                CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-    //                m_pSendMgr->Send_Enter_Packet(ob, user_id);
-    //            }
-    //            else
-    //            {
-    //                //cout << "새로들어온 아이디" << endl;
-    //                //cout << "--------------------" << endl;
-    //                m_pSendMgr->Send_Move_Packet(ob, user_id, dir);  // 여기서 또 들어옴
-    //            }
-    //        }
-    //        tempLock.unlock();
-
-    //    }
-    //    else // new, old 둘다 있을때 
-    //    {
-    //        if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
-    //        {
-    //            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) == 0)
-    //            {
-    //                tempLock.lock();
-    //                    CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(user_id);
-    //                tempLock.unlock();
-    //                m_pSendMgr->Send_Enter_Packet(ob, user_id);
-    //            }
-    //            else
-    //            {
-    //                //cout << "이전에도 있던 아이디" << endl;
-    //                //cout << "--------------------" << endl;
-    //                m_pSendMgr->Send_Move_Packet(ob, user_id, dir);
-    //            }
-    //        }
-    //    }
-    //}
-    //for (auto& ob : old_viewList)
-    //{
-    //    if (ob == user_id)continue;
-    //    if (new_viewList.count(ob) == 0)
-    //    {
-    //        tempLock.lock();
-    //        pClient->GetViewList().erase(ob);
-    //        
-    //        m_pMediator->Find(ob)->SetIsMoving(false);// 용석 필요한가?
-    //        m_pSendMgr->Send_Leave_Packet(user_id, ob);
-    //        if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
-    //        {
-    //            if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(user_id) != 0)
-    //            {
-    //                CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().erase(user_id);
-    //                Netmgr.GetMediatorMgr()->Find(user_id)->SetIsMoving(false);// 용석 필요한가?
-    //                m_pSendMgr->Send_Leave_Packet(ob, user_id);
-    //            }
-    //        }
-    //        tempLock.unlock();
-    //    }
-
-    //}
 }
 
 void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
@@ -277,11 +209,16 @@ void CNetMgr::Do_Stop(const uShort& user_id, const bool& isMoving)
     CClient* pClient = CAST_CLIENT(m_pMediator->Find(user_id));
     if (pClient == nullptr)return;
 
+
+    unordered_set<uShort>vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(user_id)));
     m_pMediator->Find(user_id)->SetIsMoving(false);
-    for (auto& obj : m_pMediator->GetReckonerList())
+    /*cout << user_id << "의 stop packet 도착" << endl;
+    cout << "-*---------------*-*-*-*-" << endl;*/
+
+    for (auto& ob : vSectors)
     {
-        if (obj == user_id)continue;
-        m_pSendMgr->Send_Stop_Packet(obj, user_id, false);
+        if (ob == user_id)continue;
+        m_pSendMgr->Send_Stop_Packet(ob, user_id, false);
 
     }
     //for (auto& ob : g_QuadTree.search(CBoundary(m_pMediator->Find(user_id))))
@@ -312,12 +249,10 @@ void CNetMgr::Disconnect(const uShort& user_id)
             if (m_pMediator->IsType(i, OBJECT_TYPE::CLIENT)) {
                 if (i != user_id)
                 {
-                    if (CAST_CLIENT(m_pMediator->Find(i))->GetViewList().count(user_id))
-                    {
-                        CAST_CLIENT(m_pMediator->Find(i))->GetViewList().erase(user_id);
                         Netmgr.GetMediatorMgr()->Find(user_id)->SetIsMoving(false);
+                        cout << "\t\t\Disconnect" << endl;
                         m_pSendMgr->Send_Leave_Packet(i, user_id);
-                    }
+                    
                 }
             }
         }
@@ -360,17 +295,13 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
          tempLock.lock();
         if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
         {
-            if (CAST_CLIENT(m_pMediator->Find(id))->GetViewList().count(user_id) == 0)
-            {
-                CAST_CLIENT(m_pMediator->Find(id))->GetViewList().insert(user_id);
+
                 m_pSendMgr->Send_Enter_Packet(id, user_id);
-            }
+            
         }
-        if (pUser->GetViewList().count(id) == 0)
-        {
-            pUser->GetViewList().insert(id);
+
             m_pSendMgr->Send_Enter_Packet(user_id, id);
-        }
+        
         tempLock.unlock();
     }
 
@@ -391,9 +322,8 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         m_pMediator->Find(user_id)->SetHalfRTT(packet->Start);
         m_pMediator->Find(user_id)->SetDirV(packet->DirVec);
         m_pMediator->Find(user_id)->SetDeadReckoningPacket(packet);
-
-        //
-        m_pMediator->ReckonerAdd(user_id);
+        //cout << "\t\t\t패킷으로 받은 localvec : " << packet->localVec.x << ", " << packet->localVec.z << endl;
+        ////
 
         Do_Move(user_id, packet->dir, packet->localVec, packet->rotateY);
         tempLock.unlock();
@@ -405,7 +335,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_packet_stop* packet = reinterpret_cast<cs_packet_stop*>(buf);
         tempLock.lock();
         m_pMediator->Find(packet->id)->SetIsMoving(false);
-        cout << packet->id << "의 stop packet 도착" << endl;
+   
         Do_Stop(packet->id, m_pMediator->Find(packet->id)->GetIsMoving());
         tempLock.unlock();
     }
@@ -414,6 +344,7 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf) ;
         ////cout << "send loginok packet" << endl;
         m_pSendMgr->Send_LoginOK_Packet(user_id);
+        m_pMediator->ReckonerAdd(user_id);
 
         Enter_Game(user_id, packet->name);
     }
@@ -516,14 +447,12 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_pcaket_MonsterDir* packet = reinterpret_cast<cs_pcaket_MonsterDir*>(buf);
         Vector3 temp = packet->dir;
         m_pMediator->Find(packet->id)->SetDirV(temp);
-        //cout << "///////////////////" << endl;
-
-        //cout << packet->dir.z << endl;
-        //cout << "///////////////////" << endl;
+        tempLock.lock();
         if (!CAST_MONSTER(m_pMediator->Find(packet->id))->GetIsDir())
         {
             CAST_MONSTER(m_pMediator->Find(packet->id))->SetIsDir(true);
         }
+        tempLock.unlock();
     }
     break;
 
@@ -593,7 +522,6 @@ void CNetMgr::Add_Timer(const uShort& obj_id, const int& status, system_clock::t
 void CNetMgr::Worker_Thread()
 {
     while (true) {
-        CTimeMgr::GetInst()->update();
         DWORD io_byte;
         ULONG_PTR key;
         WSAOVERLAPPED* over;
@@ -714,6 +642,9 @@ void CNetMgr::Worker_Thread()
                         char temp = (char)(rand() % 4);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetIsMoving(true);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetDir((MONSTER_AUTOMOVE_DIR)temp);
+                        CAST_MONSTER(m_pMediator->Find(user_id))->SetIsDir(true);
+                        m_pSendMgr->Send_Monster_Move_Packet(id, user_id, (char)CAST_MONSTER(m_pMediator->Find(user_id))->GetDir());
+
                         break;
                     }
             }
@@ -730,6 +661,7 @@ void CNetMgr::Worker_Thread()
                 CAST_MONSTER(m_pMediator->Find(user_id))->SetDir(MONSTER_AUTOMOVE_DIR::AUTO);
                 m_pMediator->Delete_MonsterReckoner(user_id);
                 CAST_MONSTER(m_pMediator->Find(user_id))->SetIsMoving(false);
+                CAST_MONSTER(m_pMediator->Find(user_id))->SetIsDir(false);
                 //for auto viewand send packet;
             }
             //주위에 이제 아무도 없으면 SLEEP으로 멈춰두기 
@@ -744,36 +676,51 @@ void CNetMgr::Worker_Thread()
 
 void CNetMgr::Processing_Thead()
 {
-
     while (true)
     {
+        CTimeMgr::GetInst()->update();
 
         if (m_pMediator->ReckonerSize() != 0)
         {
-
+            if (m_pMediator->ReckonerSize() == 1)
+            {
+                int i = 0;
+            }
             for (auto& reckoner : m_pMediator->GetReckonerList())
             {
                 CGameObject* obj = nullptr;
-                cs_packet_move* drmPacket = nullptr;
                 Vector3 objPos;
 
                 if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
                 obj = m_pMediator->Find(reckoner);
                 objPos = obj->GetLocalPosVector();
-                drmPacket = obj->GetDeadReckoningPacket();
                 obj->GetLock().lock();
                 if (obj->GetIsMoving())
                 {
                     unordered_set<uShort> old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
-                    obj->SetRotateY(drmPacket->rotateY);// 안해도되는가?
+                    obj->SetRotateY(obj->GetPacketRotateY());// 안해도되는가?
+                    if (obj->GetLocalPosVector().x < 0 || objPos.z < 0 || objPos.x>15000 || objPos.z>15000)
+                    {
+                        objPos;
+                        old_viewList;
+
+                        float tempf = obj->GetPacketRotateY();
+                    }
 
                     g_QuadTree.Delete(obj);
-                    obj->SetPosV(obj->GetLocalPosVector() + drmPacket->DirVec * obj->GetSpeed() * (DeltaTime));
-                   /* if (reckoner == 0)cout << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << endl;*/
+                    obj->SetPosV(obj->GetLocalPosVector() + obj->GetPacketDirVec() * obj->GetSpeed() * (DeltaTime));
+                    //cout << reckoner << "의 로컬 Pos : : " << obj->GetLocalPosVector().x << " -- " << obj->GetLocalPosVector().z << "\t DT:  " << DeltaTime << endl;
+
                     g_QuadTree.Insert(obj);
                     unordered_set<uShort> new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
 
-                    if (CAST_CLIENT(obj)->GetIsRefresh())
+                    if (obj->GetLocalPosVector().x < 0 || objPos.z < 0 || objPos.x>15000 || objPos.z>15000)
+                    {
+                        objPos;
+                        old_viewList;
+                        new_viewList;
+                        float tempf = obj->GetPacketRotateY();
+                    }
                     {
                         if(m_pMediator->ReckonerSize() == 1)
                             cout << "reckoner size : " << m_pMediator->ReckonerSize() << endl;
@@ -787,21 +734,14 @@ void CNetMgr::Processing_Thead()
                             if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
                             {
                                 tempLock.lock();
-                                CAST_CLIENT(obj)->GetViewList().insert(ob);
+
                                 m_pSendMgr->Send_Enter_Packet(reckoner, ob); // user에게 ob enter 
                                 if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
                                 {
-                                    if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(reckoner) == 0)
-                                    {
-                                        CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(reckoner);
-                                        m_pSendMgr->Send_Enter_Packet(ob, reckoner);
-                                    }
-                                    else
-                                    {
-                                        //cout << "새로들어온 아이디" << endl;
-                                        //cout << "--------------------" << endl;
-                                        m_pSendMgr->Send_Move_Packet(ob, reckoner, CAST_CLIENT(obj)->GetDir());  // 여기서 또 들어옴
-                                    }
+
+                                    //Netmgr.GetMediatorMgr()->Find(reckoner)->SetIsMoving(false);// 용석 필요한가?
+                                    m_pSendMgr->Send_Enter_Packet(ob, reckoner);
+
                                 }
                                 tempLock.unlock();
 
@@ -810,19 +750,12 @@ void CNetMgr::Processing_Thead()
                             {
                                 if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
                                 {
-                                    if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(reckoner) == 0)
-                                    {
-                                        tempLock.lock();
-                                        CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().insert(reckoner);
-                                        tempLock.unlock();
-                                        m_pSendMgr->Send_Enter_Packet(ob, reckoner);
-                                    }
-                                    else
-                                    {
-                                        //cout << "이전에도 있던 아이디" << endl;
-                                        //cout << "--------------------" << endl;
+
+                                    //cout << "이전에도 있던 아이디" << endl;
+                                    //cout << "--------------------" << endl;
+                                    if (CAST_CLIENT(obj)->GetIsRefresh())
                                         m_pSendMgr->Send_Move_Packet(ob, reckoner, CAST_CLIENT(obj)->GetDir());// idle 이거 필요없으면 걍 지워 버리기 
-                                    }
+
                                 }
                             }
                         }
@@ -832,7 +765,6 @@ void CNetMgr::Processing_Thead()
                             if (new_viewList.count(ob) == 0)
                             {
                                 tempLock.lock();
-                                CAST_CLIENT(obj)->GetViewList().erase(ob);
 
                                 m_pMediator->Find(ob)->SetIsMoving(false);// 용석 필요한가?
                                 cout << "********************" << endl;
@@ -841,12 +773,10 @@ void CNetMgr::Processing_Thead()
                                 m_pSendMgr->Send_Leave_Packet(reckoner, ob);
                                 if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
                                 {
-                                    if (CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().count(reckoner) != 0)
-                                    {
-                                        CAST_CLIENT(m_pMediator->Find(ob))->GetViewList().erase(reckoner);
-                                        Netmgr.GetMediatorMgr()->Find(reckoner)->SetIsMoving(false);// 용석 필요한가?
-                                        m_pSendMgr->Send_Leave_Packet(ob, reckoner);
-                                    }
+
+                                    Netmgr.GetMediatorMgr()->Find(reckoner)->SetIsMoving(false);// 용석 필요한가?
+                                    m_pSendMgr->Send_Leave_Packet(ob, reckoner);
+
                                 }
                                 tempLock.unlock();
                             }
@@ -858,16 +788,16 @@ void CNetMgr::Processing_Thead()
 
 
                         // 동기화 패킷 일시정지 
-                        /*CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                        if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 10.f)
+                        CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
+                        if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 5.f)
                         {
                             for (auto& id : g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner))))
                                 if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
                                 {
-                                    m_pSendMgr->Send_Move_Packet(id, reckoner, drmPacket->dir);
+                                    m_pSendMgr->Send_Move_Packet(id, reckoner, CAST_CLIENT(obj)->GetDir());
                                 }
                             CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
-                        }*/
+                        }
                     }
                 }
                 obj->GetLock().unlock();
@@ -896,74 +826,80 @@ void CNetMgr::Processing_Thead()
                 monsterPos = m_pMediator->Find(monster)->GetLocalPosVector();
                 monsterDir = CAST_MONSTER(m_pMediator->Find(monster))->GetDir();
                 ismoving = m_pMediator->Find(monster)->GetIsMoving();
-
-                old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
-
-                if (ismoving && CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
+                if (ismoving)
                 {
+                    tempLock.lock();
+                    old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                     g_QuadTree.Delete(m_pMediator->Find(monster));
                     monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
+                    if (monster == 1003)
+                    {
+                        cout << "DT : " << DT << "    **    " << m_pMediator->Find(monster)->GetDirVector().x << ", " << m_pMediator->Find(monster)->GetDirVector().z << endl;
+                        cout << monsterPos.x << ", " << monsterPos.z << endl;
+                    }
                     m_pMediator->Find(monster)->SetPosV(monsterPos);
                     g_QuadTree.Insert(m_pMediator->Find(monster));
                     new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
+                    tempLock.unlock();
+                }
 
 
-                    // 동기화 부분 일시정지
-                    //CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);
-                    //if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() > 2.f)
-                    //    for (auto& user : old_viewList) {
-                    //        if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
-                    //        {
-                    //            ////cout << reckoner << "번 플레이어의 데드레커닝 동기화 패킷 전송" << endl;
 
-                    //            m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
+                if (ismoving && CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
+                {
 
-                    //            CAST_MONSTER(m_pMediator->Find(monster))->SetRefreshPacketCnt_Zero();
-                    //        }
-                    //    }
-
-                    for (auto& id : new_viewList)
-                    {
-                        if (old_viewList.count(id) == 0)
+                    for (auto& user : old_viewList) {
+                        if (new_viewList.count(user) != 0)
                         {
-                            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+                            if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
                             {
-                                CAST_CLIENT(m_pMediator->Find(id))->GetViewList().emplace(monster);
-                                m_pSendMgr->Send_Enter_Packet(id, monster);
+
+                                m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
                             }
                         }
-                        else
+
+                        // 동기화 부분 일시정지
+                        CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);
+                        if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() > 1.f)
                         {
-                            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-                            {
-                                m_pSendMgr->Send_Move_Packet(id, monster, (char)monsterDir);
-                            }
+                            m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
+                            CAST_MONSTER(m_pMediator->Find(monster))->SetRefreshPacketCnt_Zero();
                         }
+
+
                     }
-                    for (auto& id : old_viewList)
+                    CAST_MONSTER(m_pMediator->Find(monster))->SetIsDir(false);
+                }
+                for (auto& id : new_viewList)
+                {
+                    if (old_viewList.count(id) != 0)
                     {
-                        if (new_viewList.count(id) == 0)
+
+                    }
+                    else
+                    {
+                        m_pSendMgr->Send_Enter_Packet(id, monster);
+
+                    }
+
+                }
+                for (auto& id : old_viewList)
+                {
+                    if (new_viewList.count(id) == 0)
+                    {
+                        if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
                         {
-                            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-                            {
-                                CAST_MONSTER(m_pMediator->Find(monster))->SetIsMoving(false);
-                                tempLock.lock();
-                                CAST_CLIENT(m_pMediator->Find(id))->GetViewList().erase(monster);
-                                tempLock.unlock();
+                            CAST_MONSTER(m_pMediator->Find(monster))->SetIsMoving(false);
 
-
-                                m_pMediator->Delete_MonsterReckoner(monster);
-                                m_pMediator->Delete_Obj(monster);
-
-                                cout << "********************" << endl;
-                                cout << "********************" << endl;
-                                cout << "Monster Reckoner Move" << endl;
-                                m_pSendMgr->Send_Leave_Packet(id, monster);
-                            }
+                            /*        cout << "********************" << endl;
+                                    cout << "********************" << endl;
+                                    cout << "Monster Reckoner Move" << endl;*/
+                            m_pSendMgr->Send_Leave_Packet(id, monster);
                         }
                     }
                 }
             }
+
         }
     }
 }

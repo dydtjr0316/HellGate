@@ -2016,61 +2016,7 @@ void CSceneMgr::init()
 	// Boss Monster 
 	//=============
 	{
-		Vector3 monsterPos = Vector3(8000.f, 0.f, 4000.f);
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
-		CGameObject* pMonster = new CGameObject;
-		pMonster = pMeshData->Instantiate();
-		pMonster->SetName(L"BossMonster");
-		pMonster->MeshRender()->SetDynamicShadow(true);
-		pMonster->FrustumCheck(false);
-		pMonster->Transform()->SetLocalScale(Vector3(2.f, 2.f, 2.f));//(1.0f, 1.0f, 1.0f));
-		pMonster->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-		{
-			int z = (int)(monsterPos.z / pMonster->Transform()->GetLocalScale().z);
-
-			float fHeight = pPlayerObj->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
-
-			if (monsterPos.y != fHeight)
-				monsterPos.y = fHeight;
-		}
-		pMonster->Transform()->SetLocalPos(monsterPos);
-		pMonster->AddComponent(new CCollider);
-		pMonster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"BossMonster");
-		pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-		pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-
-		// Script ¼³Á¤
-		pMonster->AddComponent(new CMonsterScript);
-		CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", pMonster, false);
-		CMonsterScript* monsterScript = pMonster->GetScript<CMonsterScript>();
-		monsterScript->SetMonsterType(MONSTER_TYPE::BOSS_MONSTER);
-		monsterScript->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
-		monsterScript->SetMobTYpe(MOB_TYPE::BOSS);
-		monsterScript->Init();
-		//animation
-		//idle
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//walk
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Slither Forward Fast WO Root.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//dead
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Die.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//attack
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Bite Attack.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//damage
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Defend.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//roar
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Roar.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//left
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Claw Attack Left.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//right
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Claw Attack Right.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
+		
 	}
 
 

@@ -22,7 +22,7 @@ public:
 private:
 	FMOD::Sound* m_pSound;
 	list<FMOD::Channel*>	m_listChannel;
-	float m_fvolum = 0.5f;
+	float m_fvolum = 0.0f;
 
 
 
