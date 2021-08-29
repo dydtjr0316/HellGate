@@ -26,6 +26,7 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 {
 	if (id >= 0 && id < MAX_USER)return OBJECT_TYPE::CLIENT;
 	else if (id >= START_MONSTER && id < END_MONSTER)return OBJECT_TYPE::MONSTER;
+	else if (id == BOSS_ID)return OBJECT_TYPE::MONSTER;
 }
 
 //const char ip[] = "192.168.0.11";
@@ -309,24 +310,6 @@ void CNetMgr::Send_MonsterDir_Packet(const uShort& monser_id, const Vector3& dir
 	p.size = sizeof(p);
 	p.id = monser_id;
 	p.dir = dir;
-
-	{/*
- 		//cout << "**********" << endl;
-		//cout << "**********" << endl;
-		//cout << "**********" << endl;
-		//cout << p.dir.z << endl;
-		//cout << "**********" << endl;
-		//cout << "**********" << endl;
-		//cout << "**********" << endl;*/
-	}
-	if (p.dir.z == -1)
-	{
-		cs_pcaket_MonsterDir p;
-		p.type = CS_MONSTERDIR;
-		p.size = sizeof(p);
-		p.id = monser_id;
-		p.dir = dir;
-	}
 	Send_Packet(&p);
 }
 
@@ -775,7 +758,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		}
 			
+		if (monster_id == BOSS_ID)
+		{
+			
 
+		}
 
 	}
 	break;

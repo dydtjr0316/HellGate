@@ -606,6 +606,7 @@ void CMonsterScript::FollowToPlayer()
     Vector3 worldDir{};
 
     worldDir = -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT);
+    g_netMgr.Send_MonsterDir_Packet(GetID(), worldDir);
     monsterPos += worldDir * DT * 100.f;
 
     mosnterTrans->SetLocalPos(monsterPos);

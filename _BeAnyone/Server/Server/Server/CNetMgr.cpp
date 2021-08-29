@@ -868,6 +868,35 @@ void CNetMgr::Processing_Thead()
                     g_QuadTree.Insert(m_pMediator->Find(monster));
                     new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                     tempLock.unlock();
+
+                    for (auto& id : new_viewList)
+                    {
+                        if (old_viewList.count(id) != 0)
+                        {
+
+                        }
+                        else
+                        {
+                            m_pSendMgr->Send_Enter_Packet(id, monster);
+
+                        }
+
+                    }
+                    for (auto& id : old_viewList)
+                    {
+                        if (new_viewList.count(id) == 0)
+                        {
+                            if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+                            {
+                                CAST_MONSTER(m_pMediator->Find(monster))->SetIsMoving(false);
+
+                                /*        cout << "********************" << endl;
+                                        cout << "********************" << endl;
+                                        cout << "Monster Reckoner Move" << endl;*/
+                                m_pSendMgr->Send_Leave_Packet(id, monster);
+                            }
+                        }
+                    }
                 }
 
 
@@ -880,51 +909,29 @@ void CNetMgr::Processing_Thead()
                         {
                             if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
                             {
+                                if (m_pMediator->IsType(monster, OBJECT_TYPE::BOSS))
+                                {
+                                    m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
 
-                                m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
+                                }
+                                else
+                                    m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
                             }
                         }
 
                         // 동기화 부분 일시정지
-                        CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);
+                        /*CAST_MONSTER(m_pMediator->Find(monster))->CountRefreshPacketCnt(DeltaTime);
                         if (CAST_MONSTER(m_pMediator->Find(monster))->GetRefreshPacketCnt() > 1.f)
                         {
                             m_pSendMgr->Send_Monster_Move_Packet(user, monster, (char)CAST_MONSTER(m_pMediator->Find(monster))->GetDir());
                             CAST_MONSTER(m_pMediator->Find(monster))->SetRefreshPacketCnt_Zero();
-                        }
+                        }*/
 
 
                     }
                     CAST_MONSTER(m_pMediator->Find(monster))->SetIsDir(false);
                 }
-                for (auto& id : new_viewList)
-                {
-                    if (old_viewList.count(id) != 0)
-                    {
-
-                    }
-                    else
-                    {
-                        m_pSendMgr->Send_Enter_Packet(id, monster);
-
-                    }
-
-                }
-                for (auto& id : old_viewList)
-                {
-                    if (new_viewList.count(id) == 0)
-                    {
-                        if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-                        {
-                            CAST_MONSTER(m_pMediator->Find(monster))->SetIsMoving(false);
-
-                            /*        cout << "********************" << endl;
-                                    cout << "********************" << endl;
-                                    cout << "Monster Reckoner Move" << endl;*/
-                            m_pSendMgr->Send_Leave_Packet(id, monster);
-                        }
-                    }
-                }
+               
             }
 
         }

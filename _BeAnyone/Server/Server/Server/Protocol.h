@@ -254,6 +254,8 @@ struct sc_packet_monster_automove
 	Vector3 pos;
 	char eDir;
 
+	Vector3 worldDir;
+
 
 };
 

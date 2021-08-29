@@ -217,8 +217,9 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
     p.eDir = dir;
     p.pos = Netmgr.GetMediatorMgr()->Find(p.id)->GetLocalPosVector();
 
-    if (p.id == 1000)
+    if (p.id == BOSS_ID)
     {
+       p.worldDir =  Netmgr.GetMediatorMgr()->Find(BOSS_ID)->GetDirVector();
         //cout << "-----------------------------------------------------------" << endl;
         //cout << "-----------------------------------------------------------" << endl;
          //cout << "id : " << mover_id << "  Dir :  " << (int)p.eDir << endl;
