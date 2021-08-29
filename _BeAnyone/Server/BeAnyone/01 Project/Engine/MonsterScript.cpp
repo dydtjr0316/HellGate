@@ -275,7 +275,7 @@ void CMonsterScript::Move()
     Vector3 tempWorldPos(0.f, 0.f, 0.f);
     if (monsterScript->GetPacketMove() != nullptr && m_bisMoving)
     {
-        if (GetID() == 1000)
+        if (GetID() == 1003)
         {
             cout << "dir : " << (int)m_eDir << endl;
             cout << monsterTrans->GetLocalPos().x << " , " << monsterTrans->GetLocalPos().z << endl;
@@ -356,7 +356,7 @@ void CMonsterScript::Move()
 
             if (m_bisDirChange)
             {
-                GetObj()->Transform()->finalupdate();
+             
                 g_netMgr.Send_MonsterDir_Packet(m_sId, worldDir);
                 m_bisDirChange = false;
             }

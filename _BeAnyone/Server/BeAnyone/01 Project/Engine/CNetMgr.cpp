@@ -544,7 +544,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 
-						g_netMgr.Send_MonsterDir_Packet(id, Vector3(0.f,0.f,1.f)/*g_Object.find(id)->second->Transform()->GetWorldDir(DIR_TYPE::UP)*/);
+						//g_netMgr.Send_MonsterDir_Packet(id, Vector3(0.f,0.f,1.f)/*g_Object.find(id)->second->Transform()->GetWorldDir(DIR_TYPE::UP)*/);
 						//g_Object.find(id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
 
 
@@ -677,12 +677,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 
 
-			if (g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetDir() != (MONSTER_AUTOMOVE_DIR)packet->eDir)
-			{
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
-			}
-			else
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(false);
+
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
+
 
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
@@ -769,6 +766,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					{
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetPacketMove(nullptr);
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->DeleteObject(g_Object.find(other_id)->second);
+						//g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetPacketMoving(false);
 						CEventMgr::GetInst()->update();
 						g_Object.erase(other_id);
 
@@ -777,6 +775,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					{
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetPacketMove(nullptr);
 						g_Object.find(other_id)->second->GetScript<CMonsterScript>()->SetBisAttack(my_packet->isAttack);
+						//g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetPacketMoving(false);
 					}
 					
 				}
