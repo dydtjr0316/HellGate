@@ -18,6 +18,8 @@ public:		//player
 	void Send_Monster_Animation_Packet(const uShort& monster_id, const uShort& user_id, const MONSTER_ANI_TYPE& aniType, const uShort& id = -1);
 public:		// monster
 	void Send_Monster_Move_Packet(const uShort& user_id, const uShort& mover_id, const char& dir);
+	void Send_Boss_State_Packet(const uShort& user_id, const uShort& boss, const MONSTER_STATE& state, const BOSS_ATTACK& attackpattern = BOSS_ATTACK::END);
+	void Send_Boss_Turn_Packet(const uShort& user_id, const uShort& boss, const Vector3 rotate);
 	
 
 public:

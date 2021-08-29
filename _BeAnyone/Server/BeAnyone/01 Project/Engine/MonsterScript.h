@@ -1,23 +1,6 @@
 #pragma once
 #include "Script.h"
 
-enum class MONSTER_STATE {
-    MOVE,
-    FIND,
-    FOLLOW,
-    ATTACK,
-    DAMAGE,
-    DIE,
-    END,
-};
-
-enum class BOSS_ATTACK {
-    BITE_ATTACK,
-    LEFT_ATTACK,
-    RIGHT_ATTACK,
-    END,
-};
-
 class CMonsterScript :
     public CScript
 {
@@ -59,18 +42,23 @@ private:
     float      m_fAngleY = 0.f;
 
     // boss monster
-    MONSTER_STATE       m_eMonsterState;
-    BOSS_ATTACK         m_eAttackPattern;
+
     CGameObject*        m_pFindCollider;
     bool                m_bIsFindPlayer = false;
     bool                m_bIsNearPlayer = false;
     float               m_fFollowTime = 0.f;
 
+    MONSTER_STATE       m_eMonsterState;
+    BOSS_ATTACK         m_eAttackPattern;
     bool                m_bIsRoar = false;
     bool                m_bIsAttakLeft = false;
     bool                m_bIsAttakRight = false;
 public:
-
+    void SetBossState(const MONSTER_STATE& state) { m_eMonsterState = state; }
+    void SetAttackPattern(const BOSS_ATTACK& pattern) { m_eAttackPattern = pattern; }
+    
+    BOSS_ATTACK GetAttackPattern() { return m_eAttackPattern; }
+    
   
 public:
     void Init();

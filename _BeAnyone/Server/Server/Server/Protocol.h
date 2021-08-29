@@ -83,6 +83,8 @@ constexpr char SC_ITEMCREATE = 15;
 constexpr char SC_ITEMDELETE = 16;
 constexpr char SC_ATTACKEFFECT = 17;
 constexpr char SC_ROTATE = 18;
+constexpr char SC_PACKET_BOSS_STATE = 19;
+constexpr char SC_PACKET_BOSS_TURN = 20;
 
 //가라
 constexpr char SC_PACKET_ATTACKANI = 13;
@@ -103,6 +105,8 @@ constexpr char CS_ITEMDELETE = 11;
 constexpr char CS_MONSTERDIR = 12;
 constexpr char CS_ATTACKEFFECT = 13;
 constexpr char CS_ROTATE = 14;
+constexpr char CS_BOSS_STATE = 15;
+constexpr char CS_BOSS_TURN = 16;
 
 
 
@@ -139,6 +143,8 @@ struct sc_packet_login_ok {
 	uShort Attack_Damage;
 	// 패딩비트
 };
+
+
 
 struct sc_packet_move {
 	char size;
@@ -183,6 +189,22 @@ struct sc_packet_stop {
 	char type;
 	uShort id;
 	bool isMoving;
+};
+
+struct sc_packet_boss_state {
+	char	size;
+	char	type;
+	uShort  id;
+
+	MONSTER_STATE aniState;
+	BOSS_ATTACK attackstate;
+};
+
+struct sc_packet_boss_turn {
+	char	size;
+	char	type;
+	uShort  id;
+	Vector3 rotate;
 };
 
 struct sc_packet_rotate {
@@ -396,6 +418,22 @@ struct cs_pcaket_Monster_Animation {
 
 	MONSTER_ANI_TYPE aniType;
 	bool isMoving;
+};
+
+struct cs_pcaket_Boss_State {
+	char	size;
+	char	type;
+	uShort  id;
+
+	MONSTER_STATE aniState;
+	BOSS_ATTACK attackstate;
+};
+
+struct cs_pcaket_Boss_Turn {
+	char	size;
+	char	type;
+	uShort  id;
+	Vector3 rotate;
 };
 
 struct cs_pcaket_MonsterDir{

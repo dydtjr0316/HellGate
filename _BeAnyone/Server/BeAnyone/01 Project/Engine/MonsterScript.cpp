@@ -221,7 +221,8 @@ void CMonsterScript::BossTurn()
     case MONSTER_STATE::MOVE:
         //Move();
         if (m_bIsFindPlayer) {
-            m_eMonsterState = MONSTER_STATE::FIND;
+            //m_eMonsterState = MONSTER_STATE::FIND;
+            g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::FIND);
             m_bIsFindPlayer = false;
             m_bIsRoar = true;   // 소리지르기 세팅
 
@@ -235,8 +236,12 @@ void CMonsterScript::BossTurn()
             Attack();
         if (m_bisPunch && m_bIsRoar == false) // 바이트로 어택
             Attack();
-        if(m_bisPunch == false && m_bIsRoar == false)
-            m_eMonsterState = MONSTER_STATE::FOLLOW;
+        if (m_bisPunch == false && m_bIsRoar == false)
+        {
+            g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::FOLLOW);
+
+         //   m_eMonsterState = MONSTER_STATE::FOLLOW;
+        }
         break;
     case MONSTER_STATE::FOLLOW:
         FollowToPlayer();   // 따라가기
@@ -514,7 +519,7 @@ void CMonsterScript::Attack()
         Setcnt(0.f, MONSTER_ANICNT_TYPE::ROAR_CNT);
         SetAnimation(MONSTER_ANI_TYPE::IDLE);
         m_bisMoving = true;
-        
+        m_bisPunch = true;
 
         cout << "소리 다 질럿음" << endl;
         g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
@@ -567,6 +572,8 @@ void CMonsterScript::ChooseAttackPattern()
 {
     int randNum{};
     randNum = rand() % 3;
+    g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::ATTACK, (BOSS_ATTACK)randNum);
+
 
     switch (randNum) {
     case (UINT)BOSS_ATTACK::BITE_ATTACK:
@@ -632,7 +639,8 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
 
    // if (_eType == MOB_TYPE::YELLOW)
    // {
-        GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
+        //GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
+        g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
    // }
     m_bisDirChange = true;
     m_fAngleY += angle.x;

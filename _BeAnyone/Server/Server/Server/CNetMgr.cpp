@@ -472,6 +472,33 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
 
     }
     break;
+    case CS_BOSS_STATE:
+    {
+        cs_pcaket_Boss_State* packet = reinterpret_cast<cs_pcaket_Boss_State*>(buf);
+        unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(packet->id));
+        for (auto& obj : new_viewList)
+        {
+            if (m_pMediator->IsType(obj, OBJECT_TYPE::CLIENT))
+            {
+                m_pSendMgr->Send_Boss_State_Packet(obj, packet->id, packet->aniState, packet->attackstate);
+            }
+        }
+
+    }
+    break;
+    case CS_BOSS_TURN:
+    {
+        cs_pcaket_Boss_Turn* packet = reinterpret_cast<cs_pcaket_Boss_Turn*>(buf);
+        unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(packet->id));
+        for (auto& obj : new_viewList)
+        {
+            if (m_pMediator->IsType(obj, OBJECT_TYPE::CLIENT))
+            {
+                m_pSendMgr->Send_Boss_Turn_Packet(obj, packet->id,packet->rotate);
+            }
+        }
+    }
+    break;
     default:
         //cout << "Unknown Packet Type Error!\n";
         //cout << (int)buf[1] << endl;

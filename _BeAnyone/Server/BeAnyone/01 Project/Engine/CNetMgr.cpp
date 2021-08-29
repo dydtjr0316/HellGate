@@ -330,6 +330,29 @@ void CNetMgr::Send_MonsterDir_Packet(const uShort& monser_id, const Vector3& dir
 	Send_Packet(&p);
 }
 
+void CNetMgr::Send_Boss_State_Packet(const uShort& boss, const MONSTER_STATE& state, const BOSS_ATTACK& attackpattern)
+{
+	cs_pcaket_Boss_State p;
+	p.type = CS_BOSS_STATE;
+	p.size = sizeof(p);
+	p.id = boss;
+	p.aniState = state;
+	p.attackstate = attackpattern;
+
+	Send_Packet(&p);
+}
+
+void CNetMgr::Send_Boss_Turn(const uShort& boss, const Vector3& rotate)
+{
+	cs_pcaket_Boss_Turn p;
+	p.type = CS_BOSS_TURN;
+	p.size = sizeof(p);
+	p.id = boss;
+	p.rotate = rotate;
+
+	Send_Packet(&p);
+}
+
 void CNetMgr::SetAnimation(int id, const Ani_TYPE& type)
 {
 	////cout << "------Setani -> " << (int)type << endl;
@@ -1052,7 +1075,23 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 	}
 	break;
+	case SC_PACKET_BOSS_STATE:
+	{
+		sc_packet_boss_state* packet = reinterpret_cast<sc_packet_boss_state*>(ptr);//effect  积己 困摹 
+		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetBossState(packet->aniState);
+		if (packet->attackstate != BOSS_ATTACK::END)
+		{
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAttackPattern(packet->attackstate);
+		}
+	}
+	break;
+	case SC_PACKET_BOSS_TURN:
+	{
+		sc_packet_boss_turn* packet = reinterpret_cast<sc_packet_boss_turn*>(ptr);//effect  积己 困摹 
 
+		g_Object.find(packet->id)->second->Transform()->SetLocalRot(packet->rotate);
+	}
+	break;
 
 
 

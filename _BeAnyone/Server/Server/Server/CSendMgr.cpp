@@ -229,6 +229,29 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
     Send_Packet(user_id, &p);
 }
 
+void CSendMgr::Send_Boss_State_Packet(const uShort& user_id, const uShort& boss, const MONSTER_STATE& state, const BOSS_ATTACK& attackpattern)
+{
+    sc_packet_boss_state p;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_BOSS_STATE;
+    p.id = boss;
+    p.aniState = state;
+    p.attackstate = attackpattern;
+    
+    Send_Packet(user_id, &p);
+}
+
+void CSendMgr::Send_Boss_Turn_Packet(const uShort& user_id, const uShort& boss, const Vector3 rotate)
+{
+    sc_packet_boss_turn p;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_BOSS_TURN;
+    p.id = boss;
+    p.rotate = rotate;
+
+    Send_Packet(user_id, &p);
+}
+
 
 void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool& isMoving)
 {
