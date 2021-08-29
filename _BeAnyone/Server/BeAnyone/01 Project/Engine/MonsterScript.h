@@ -61,6 +61,8 @@ private:
     bool                m_bIsRoar = false;
     bool                m_bIsAttakLeft = false;
     bool                m_bIsAttakRight = false;
+public:
+
   
 public:
     void Init();

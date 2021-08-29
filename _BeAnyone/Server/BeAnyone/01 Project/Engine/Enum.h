@@ -1,7 +1,7 @@
 #pragma once
 
 // È®Á¤
-enum class OBJECT_TYPE { CLIENT, MONSTER, NPC };
+enum class OBJECT_TYPE { CLIENT, MONSTER, NPC, BOSS };
 
 enum class MONSTER_TYPE { MONSTER1, MONSTER2, MONSTER3, MONSTER4, BOSS_MONSTER, DEFAULT };
 

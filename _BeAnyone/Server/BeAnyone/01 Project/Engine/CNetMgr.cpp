@@ -476,11 +476,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 			}
 			else if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
 			{
-
-
 				if (0 == g_Object.count(id))
 				{
-					if (id%2 == 0)
+					if (id % 2 == 0)
 					{
 						Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@walking.fbx", FBX_TYPE::MONSTER);
 						Ptr<CMeshData> pIdleMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\monster3@idle.fbx", FBX_TYPE::MONSTER);
@@ -563,7 +561,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						{
 							int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
 
-							float fHeight = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(my_packet->localVec.x, my_packet->localVec.z, ((z % 2) != 0)) * 2.f ;
+							float fHeight = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(my_packet->localVec.x, my_packet->localVec.z, ((z % 2) != 0)) * 2.f;
 
 							if (my_packet->localVec.y != fHeight)
 								my_packet->localVec.y = fHeight;
@@ -614,7 +612,72 @@ void CNetMgr::ProcessPacket(char* ptr)
 					}
 				}
 			}
+			else if (CheckObjType(id) == OBJECT_TYPE::BOSS)
+			{
+				Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
+				CGameObject* pMonster = new CGameObject;
+				pMonster = pMeshData->Instantiate();
+				pMonster->SetName(L"BossMonster");
+				pMonster->MeshRender()->SetDynamicShadow(true);
+				pMonster->FrustumCheck(false);
+				pMonster->Transform()->SetLocalScale(Vector3(2.f, 2.f, 2.f));//(1.0f, 1.0f, 1.0f));
+				pMonster->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
+				{
+					int z = (int)(my_packet->localVec.z / g_Object.find(id)->second->Transform()->GetLocalScale().z);
+
+					float fHeight = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(my_packet->localVec.x, my_packet->localVec.z, ((z % 2) != 0)) * 2.f;
+
+					if (my_packet->localVec.y != fHeight)
+						my_packet->localVec.y = fHeight;
+				}
+				pMonster->Transform()->SetLocalPos(my_packet->localVec);
+				pMonster->AddComponent(new CCollider);
+				pMonster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"BossMonster");
+				pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+				pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+
+				// Script 설정
+				pMonster->AddComponent(new CMonsterScript);
+				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", pMonster, false);
+				CMonsterScript* monsterScript = pMonster->GetScript<CMonsterScript>();
+				monsterScript->SetMonsterType(MONSTER_TYPE::BOSS_MONSTER);
+				monsterScript->SetTerrain(g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain());
+				monsterScript->SetMobTYpe(MOB_TYPE::BOSS);
+				monsterScript->Init();
+				//animation
+				//idle
+				monsterScript->SetAnimationData(pMeshData->GetMesh());
+				//walk
+				pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Slither Forward Fast WO Root.fbx", FBX_TYPE::MONSTER);
+				monsterScript->SetAnimationData(pMeshData->GetMesh());
+				//dead
+				pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Die.fbx", FBX_TYPE::MONSTER);
+				monsterScript->SetAnimationData(pMeshData->GetMesh());
+				//attack
+				pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Bite Attack.fbx", FBX_TYPE::MONSTER);
+				monsterScript->SetAnimationData(pMeshData->GetMesh());
+				//damage
+				pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Defend.fbx", FBX_TYPE::MONSTER);
+				monsterScript->SetAnimationData(pMeshData->GetMesh());
+				//roar
+				pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Roar.fbx", FBX_TYPE::MONSTER);
+				monsterScript->SetAnimationData(pMeshData->GetMesh());
+				//left
+				pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Claw Attack Left.fbx", FBX_TYPE::MONSTER);
+				monsterScript->SetAnimationData(pMeshData->GetMesh());
+				//right
+				pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Claw Attack Right.fbx", FBX_TYPE::MONSTER);
+				monsterScript->SetAnimationData(pMeshData->GetMesh());
+
+				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
+					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
+				);
+				g_Object.find(id)->second->SetID(id);
+				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
+				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
+			}
 		}
+
 	}
 	break;
 	case SC_PACKET_MOVE:
@@ -872,19 +935,48 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 
+		if (packet->id == BOSS_ID)
+		{
+			if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
+			{
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
+
+			}
+			if (packet->aniType == MONSTER_ANI_TYPE::ATTACK_LEFT)
+			{
+
+			}
+			if (packet->aniType == MONSTER_ANI_TYPE::ATTACK_RIGHT)
+			{
+
+			}
+			if (packet->aniType == MONSTER_ANI_TYPE::ROAR)
+			{
+				// isroar
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
+
+			}
+
+		}
+		else
+		{
+			if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
+			{
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
+				////cout << "\t\t\t 강제로 넣은 userid == " << packet->otherid << endl;
+				//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPlayer(g_Object.find(packet->otherid)->second);
+
+				//if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
+				//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->TurnToPlayer(MOB_TYPE::GREEN);
+				//else
+				//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->TurnToPlayer(MOB_TYPE::YELLOW);
+			}
+
+		}
+
 		// 플레이어에게 공격
 
-		if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
-		{
-			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
-			////cout << "\t\t\t 강제로 넣은 userid == " << packet->otherid << endl;
-			//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPlayer(g_Object.find(packet->otherid)->second);
-
-			//if (g_Object.find(packet->id)->second->GetName() == L"GreenMonster")
-			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->TurnToPlayer(MOB_TYPE::GREEN);
-			//else
-			//	g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->TurnToPlayer(MOB_TYPE::YELLOW);
-		}
+		
 
 		if (MONSTER_ANI_TYPE::DEAD == packet->aniType)
 		{
