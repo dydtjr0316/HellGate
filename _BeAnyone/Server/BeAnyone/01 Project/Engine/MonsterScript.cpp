@@ -602,13 +602,14 @@ void CMonsterScript::ChecktoAttack()
 void CMonsterScript::FollowToPlayer()
 {
     //Vector3 playerPos = m_pPlayer->Transform()->GetLocalPos();
+    if (!isPacketWorldDir)return;
     Vector3 monsterPos = GetObj()->Transform()->GetLocalPos();
     CTransform* mosnterTrans = GetObj()->Transform();
     Vector3 worldDir{};
 
     worldDir = -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT);
     g_netMgr.Send_MonsterDir_Packet(GetID(), worldDir);
-    monsterPos += worldDir * DT * 100.f;
+    monsterPos += packetWorldDir * DT * 100.f;
 
     cout << monsterPos.x << ", " << monsterPos.z << endl;
 

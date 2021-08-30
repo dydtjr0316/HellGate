@@ -8,7 +8,8 @@ private:
     MONSTER_TYPE m_eMonsterType;    // server에서 어떻게 쓰이고 있는지 모르겠음 없애도 되나
     MOB_TYPE     m_eMobType;
     float m_fSpeed = 2.0f;
-
+    Vector3 packetWorldDir;
+    bool isPacketWorldDir = false;
     // ui
     CGameObject* m_pUi;
     CGameObject* m_pUnderUi;
@@ -58,7 +59,12 @@ public:
     void SetAttackPattern(const BOSS_ATTACK& pattern) { m_eAttackPattern = pattern; }
     
     BOSS_ATTACK GetAttackPattern() { return m_eAttackPattern; }
-    
+
+public:
+    void SetPacketWorldDir(const Vector3& packetwdir) { packetWorldDir = packetwdir; }
+    void SetIsPacketWorldDir(const bool& is) { isPacketWorldDir = is; }
+    Vector3 GetPacketWorldDir() { return packetWorldDir; }
+    bool GetIsPacketWorldDir() { return isPacketWorldDir; }
   
 public:
     void Init();

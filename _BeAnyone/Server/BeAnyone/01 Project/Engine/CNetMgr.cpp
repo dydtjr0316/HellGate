@@ -778,7 +778,20 @@ void CNetMgr::ProcessPacket(char* ptr)
 			
 		if (monster_id == BOSS_ID)
 		{
-			
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
+
+
+
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
+
+
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
+
+
+			g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPacketWorldDir(true);
+			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketWorldDir(packet->worldDir);
 
 		}
 
