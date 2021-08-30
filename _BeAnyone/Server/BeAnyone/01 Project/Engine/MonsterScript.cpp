@@ -518,7 +518,7 @@ void CMonsterScript::Attack()
         m_bIsRoar = false; //m_bisDamaged = false;
         m_bisAniReset = false; //m_bisAniReset = false;
         Setcnt(0.f, MONSTER_ANICNT_TYPE::ROAR_CNT);
-        SetAnimation(MONSTER_ANI_TYPE::IDLE);
+        SetAnimation(MONSTER_ANI_TYPE::ATTACK);
         m_bisMoving = true;
         m_bisPunch = true;
 
@@ -606,7 +606,6 @@ void CMonsterScript::FollowToPlayer()
     Vector3 monsterPos = GetObj()->Transform()->GetLocalPos();
     CTransform* mosnterTrans = GetObj()->Transform();
 
-    cout << "Boss가 보내는 패킷 : " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).x << ", " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).z << endl;
     monsterPos += packetWorldDir * DT * 100.f;
 
    // cout << monsterPos.x << ", " << monsterPos.z << endl;
@@ -647,6 +646,9 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
    // {
         GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
         g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
+
+
+        cout << "Boss가 보내는 패킷 : " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).x << ", " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).z << endl;
         g_netMgr.Send_MonsterDir_Packet(GetID(), -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT));
 
    // }
