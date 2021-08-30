@@ -1,16 +1,6 @@
 #pragma once
 #include "Script.h"
 
-enum class MONSTER_STATE {
-    MOVE,
-    FIND,
-    FOLLOW,
-    ATTACK,
-    DAMAGE,
-    DIE,
-    END,
-};
-
 class CMonsterScript :
     public CScript
 {
@@ -18,7 +8,8 @@ private:
     MONSTER_TYPE m_eMonsterType;    // server에서 어떻게 쓰이고 있는지 모르겠음 없애도 되나
     MOB_TYPE     m_eMobType;
     float m_fSpeed = 2.0f;
-
+    Vector3 packetWorldDir;
+    bool isPacketWorldDir = false;
     // ui
     CGameObject* m_pUi;
     CGameObject* m_pUnderUi;
@@ -52,15 +43,28 @@ private:
     float      m_fAngleY = 0.f;
 
     // boss monster
-    MONSTER_STATE       m_eMonsterState;
+
     CGameObject*        m_pFindCollider;
     bool                m_bIsFindPlayer = false;
     bool                m_bIsNearPlayer = false;
     float               m_fFollowTime = 0.f;
 
+    MONSTER_STATE       m_eMonsterState;
+    BOSS_ATTACK         m_eAttackPattern;
     bool                m_bIsRoar = false;
     bool                m_bIsAttakLeft = false;
     bool                m_bIsAttakRight = false;
+public:
+    void SetBossState(const MONSTER_STATE& state) { m_eMonsterState = state; }
+    void SetAttackPattern(const BOSS_ATTACK& pattern) { m_eAttackPattern = pattern; }
+    
+    BOSS_ATTACK GetAttackPattern() { return m_eAttackPattern; }
+
+public:
+    void SetPacketWorldDir(const Vector3& packetwdir) { packetWorldDir = packetwdir; }
+    void SetIsPacketWorldDir(const bool& is) { isPacketWorldDir = is; }
+    Vector3 GetPacketWorldDir() { return packetWorldDir; }
+    bool GetIsPacketWorldDir() { return isPacketWorldDir; }
   
 public:
     void Init();
@@ -123,6 +127,7 @@ public:
     void  SetPlayer(CGameObject* p) {
         m_pPlayer = p;
     };
+    CGameObject* GetPlayer() { return m_pPlayer; }
     void SetPacketDead(const bool& dead) { m_packetDead = dead; }
 
     // boss monster
@@ -130,6 +135,7 @@ public:
     void SetIsNearPlayer(bool _bool) { m_bIsNearPlayer = _bool; }
     void FollowToPlayer();
     void ChecktoAttack();   // 사정거리 안에 들어오는지 확인
+    void ChooseAttackPattern();    // 공격 패턴 고르기
     MONSTER_STATE GetMonsterState() { return m_eMonsterState; }
 public:
     void Attack_Default();

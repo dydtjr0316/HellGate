@@ -18,6 +18,7 @@ enum class NPC_QUEST {
 	WHY,
 	DONE,
 	STORE,
+	ALCHEMY_STORE,
 	END,
 };
 
@@ -64,9 +65,12 @@ private:
 	// questbox
 	bool				m_bQuestBox = true;
 
+	// alchemy store
+	bool				m_bCanAlchemy = true;
+
 public:
 	virtual void update();
-	void init();
+	void init(UI_TYPE _eType);
 
 	void Move();
 
@@ -99,7 +103,9 @@ public:
 	// static ui
 	void SetStaticUiRender(bool _bool);
 	void SellAndBuy();
+	void ItemAlchemy();
 	bool ComputeMousePos(Vector3& _pos, Vector3& _scale);
+	void CheckAlchemy(ITEM_ID _firstId, ITEM_ID _SecondId);
 
 	CLONE(CNpcScript);
 

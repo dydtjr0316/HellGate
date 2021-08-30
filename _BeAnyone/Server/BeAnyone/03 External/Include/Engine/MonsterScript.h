@@ -1,16 +1,6 @@
 #pragma once
 #include "Script.h"
 
-enum class MONSTER_STATE {
-    MOVE,
-    FIND,
-    FOLLOW,
-    ATTACK,
-    DAMAGE,
-    DIE,
-    END,
-};
-
 class CMonsterScript :
     public CScript
 {
@@ -52,15 +42,29 @@ private:
     float      m_fAngleY = 0.f;
 
     // boss monster
-    MONSTER_STATE       m_eMonsterState;
+
     CGameObject*        m_pFindCollider;
     bool                m_bIsFindPlayer = false;
     bool                m_bIsNearPlayer = false;
     float               m_fFollowTime = 0.f;
 
+<<<<<<< HEAD
     bool                m_bIsRoar = false;
     bool                m_bIsAttakLeft = false;
     bool                m_bIsAttakRight = false;
+=======
+    MONSTER_STATE       m_eMonsterState;
+    BOSS_ATTACK         m_eAttackPattern;
+    bool                m_bIsRoar = false;
+    bool                m_bIsAttakLeft = false;
+    bool                m_bIsAttakRight = false;
+public:
+    void SetBossState(const MONSTER_STATE& state) { m_eMonsterState = state; }
+    void SetAttackPattern(const BOSS_ATTACK& pattern) { m_eAttackPattern = pattern; }
+    
+    BOSS_ATTACK GetAttackPattern() { return m_eAttackPattern; }
+    
+>>>>>>> d43ad0cfe541e2e2b7801c52f24bdcffacf776e4
   
 public:
     void Init();
@@ -130,6 +134,10 @@ public:
     void SetIsNearPlayer(bool _bool) { m_bIsNearPlayer = _bool; }
     void FollowToPlayer();
     void ChecktoAttack();   // 사정거리 안에 들어오는지 확인
+<<<<<<< HEAD
+=======
+    void ChooseAttackPattern();    // 공격 패턴 고르기
+>>>>>>> d43ad0cfe541e2e2b7801c52f24bdcffacf776e4
     MONSTER_STATE GetMonsterState() { return m_eMonsterState; }
 public:
     void Attack_Default();

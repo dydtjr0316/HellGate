@@ -29,6 +29,9 @@ public: // 상속 ,, 함수
 	cs_packet_move* GetDeadReckoningPacket() { return m_deadReckoning_Packet; }
 	OBJECT_TYPE GetType() { return m_Type; }
 
+	float GetPacketRotateY() { return packetRotateY; }
+	Vector3 GetPacketDirVec() { return packetDirVec; }
+
 
 	// set
 	void SetID(const uShort& id) { m_id = id; }
@@ -77,6 +80,8 @@ protected:
 	int   m_prev_size;
 
 	bool m_bisMoving;
+	float packetRotateY;
+	Vector3 packetDirVec;
 	// CHAR
 	char  m_name[MAX_ID_LEN + 1]{"",};
 	char  m_packet_buf[MAX_PACKET_SIZE]{};

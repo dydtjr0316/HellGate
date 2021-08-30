@@ -20,6 +20,7 @@
 #include "Light.h"
 #include "Button.h"
 #include "Quest.h"
+#include "ParticleSystem.h"
 
 #include "TimeMgr.h"
 #include "KeyMgr.h"
@@ -1429,6 +1430,10 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"WALLET", L"Texture\\ItemButton\\WalletTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EXIT", L"Texture\\ItemButton\\ExitStoreTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"LACK_MONEY", L"Texture\\ItemButton\\LackMoneyTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_EMPTY", L"Texture\\ItemButton\\BottleEmptyTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_CARROT", L"Texture\\ItemButton\\BottleCarrotTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_STRAWBERRY", L"Texture\\ItemButton\\BottleStrawberryTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"TRASH", L"Texture\\ItemButton\\TrashTex.png");
 
 	//===========================
 	// QuestBox texture
@@ -1510,12 +1515,12 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
 
 	// Idle
-	CNpcScript* pNpcScript2 = pNpcObject->GetScript<CNpcScript>();
-	pNpcScript2->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript = pNpcObject->GetScript<CNpcScript>();
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
 
 	// Talk
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_1@Talking.fbx", FBX_TYPE::NPC);
-	pNpcScript2->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
 
 	//--------------------------
 	// Npc_3(store)
@@ -1538,13 +1543,42 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false); 
 
 	// Idle
-	CNpcScript* pNpcScript3 = pNpcObject->GetScript<CNpcScript>();
-	pNpcScript3->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript = pNpcObject->GetScript<CNpcScript>();
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
 
 	// Talk
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_3@Talking.fbx", FBX_TYPE::NPC);
-	pNpcScript3->SetAnimationData(pMeshData->GetMesh());
-	pNpcScript3->init();
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript->init(UI_TYPE::PUBLIC_SHOP_UI);
+
+	//--------------------------
+	// Npc_4(alchemy)
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_2@Idle.fbx", FBX_TYPE::NPC);
+	//Ptr<CMeshData> pAniData = CResMgr::GetInst()->LoadFBX(L"FBX\\Animation\\itempack@spraying.fbx", FBX_TYPE::ANI);
+
+	pNpcObject = new CGameObject;
+	pNpcObject = pMeshData->Instantiate();
+	pNpcObject->SetName(L"Npc_4");
+	pNpcObject->FrustumCheck(false);
+	pNpcObject->Transform()->SetLocalPos(Vector3(2300.f, _terrain->GetHeight(2300.f, 4200.f, true) * 2 /*240.f*/, 4200.f));
+	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
+	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
+	pNpcObject->AddComponent(new CCollider);
+	pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Npc_4");
+	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+	pNpcObject->MeshRender()->SetDynamicShadow(true);
+	pNpcObject->AddComponent(new CNpcScript);
+	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
+
+	// Idle
+	pNpcScript = pNpcObject->GetScript<CNpcScript>();
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
+
+	// Talk
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_2@Talking.fbx", FBX_TYPE::NPC);
+	pNpcScript->SetAnimationData(pMeshData->GetMesh());
+	pNpcScript->init(UI_TYPE::ALCHEMY_SHOP_UI);
 }
 
 void CSceneMgr::LoadSound()
@@ -1775,110 +1809,6 @@ void CSceneMgr::init()
 	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
 	CreateTargetUI(pUICam);
 	pPlayerObj->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetCameraProj(pUICam->Camera());
-	
-	////	-----------------------
-	////	item UI, 상속되는 버튼들
-	////	-----------------------
-	//pObject = new CGameObject;
-	//Vector3 vScale = Vector3(600.f, 800.f, 1.f);
-	//pObject->SetName(L"Item UI Object");
-	//pObject->FrustumCheck(false);
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CMeshRender);
-	//pObject->AddComponent(new CStaticUI);
-	//pObject->AddComponent(new CCollider);
-	//pObject->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
-	//pObject->StaticUI()->init(UI_TYPE::PRIVATE_ITEM_UI);
-	//pObject->StaticUI()->CreatePickingObj();
-	//// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
-	//pObject->StaticUI()->SetCameraProj(pUICam->Camera());
-	////	플레이어 스크립트(오브젝트)에 StaticUI 귀속
-	//pPlayerObj->GetScript<CPlayerScript>()->SetUIObj(pObject);
-	//// Transform 설정
-	//tResolution res = CRenderMgr::GetInst()->GetResolution();
-	//pObject->Transform()->SetLocalPos(Vector3(300.f, 80.f, 1.f));
-	//pObject->Transform()->SetLocalScale(vScale);
-	//// MeshRender 설정	
-	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"UITexMtrl");
-	//pObject->MeshRender()->SetMaterial(pMtrl->Clone());
-	//Ptr<CTexture> itemUI = pObject->StaticUI()->m_pFrame;
-	//float fUI = 0.5f;
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
-	//// AddGameObject
-	//m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
-	//
-	////	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
-	//vScale = Vector3(100.f, 100.f, 1.f);
-	//Vector3 vObjectPos = pObject->Transform()->GetLocalPos();
-	//Vector3 vObjectScale = pObject->Transform()->GetLocalScale(); 
-	//float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;
-	//float	fEmptyX = (vObjectScale.x - (vScale.x * 4.f)) / 5.f;
-	//for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
-	//{
-	//	Ptr<CTexture> itemUI = CResMgr::GetInst()->FindRes<CTexture>(L"ItemUiTex");
-	//	CGameObject* pButtonObj = new CGameObject;
-	//	pButtonObj->SetName(L"Button Object");
-	//	pButtonObj->FrustumCheck(false);// 절두체 컬링 사용하지 않음
-	//	pButtonObj->AddComponent(new CTransform);
-	//	pButtonObj->AddComponent(new CMeshRender);
-	//	pButtonObj->AddComponent(new CCollider);
-	//	pButtonObj->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
-	//	//	버튼 Script 설정
-	//	pButtonObj->AddComponent(pObject->StaticUI()->m_vecButton[i]);
-	//	pObject->StaticUI()->m_vecButton[i]->SetParent(pObject->StaticUI());
-	//	pObject->StaticUI()->m_vecButton[i]->SetUiType(UI_TYPE::PRIVATE_ITEM_UI);
-	//	// Transform 설정
-	//	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	//	Vector3 result = Vector3(vObjectPos.x - (vObjectScale.x / 2.f) + (vScale.x / 2.f + fEmptyX) + ((vScale.x + fEmptyX) * (i % 4))
-	//		, vObjectPos.y + (vObjectScale.y / 2.f) - (vScale.y / 2.f + fEmptyY) - ((vScale.y + fEmptyY) * (i / 4))
-	//		, 1.f);
-	//	pButtonObj->Transform()->SetLocalPos(result);
-	//	pButtonObj->Transform()->SetLocalScale(vScale);
-	//	// MeshRender 설정
-	//	pButtonObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl");
-	//	pButtonObj->MeshRender()->SetMaterial(pMtrl->Clone());
-	//	pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pObject->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
-	//	// AddGameObject
-	//	m_pCurScene->FindLayer(L"UI")->AddGameObject(pButtonObj);
-
-	//	pObject->StaticUI()->m_vecButton[i]->init();
-	//}
-	//for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
-	//	pObject->StaticUI()->m_vecButton[i]->CreateExplainBox();
-	//// wallet create
-	//CGameObject* pWallet = new CGameObject;
-	//pWallet->SetName(L"Wallet");
-	//pWallet->FrustumCheck(false);
-	//pWallet->AddComponent(new CTransform);
-	//pWallet->AddComponent(new CMeshRender);
-	//pWallet->Transform()->SetLocalPos(Vector3(vObjectPos.x, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
-	//pWallet->Transform()->SetLocalScale(Vector3(120.f, 50.f, 1.f));
-	////MeshRender 설정
-	//pWallet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//pWallet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
-	//pWallet->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"WALLET").GetPointer());
-	//CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pWallet);
-	//pObject->StaticUI()->m_pWallet = pWallet;
-
-	//CGameObject* pMoney;
-	//for (int i = 0; i < 5; ++i) {
-	//	pMoney = new CGameObject;
-	//	pWallet->SetName(L"Money");
-	//	pMoney->FrustumCheck(false);
-	//	pMoney->AddComponent(new CTransform);
-	//	pMoney->AddComponent(new CMeshRender);
-	//	pMoney->Transform()->SetLocalPos(Vector3(vObjectPos.x + (pWallet->Transform()->GetLocalScale().x / 2.f) + 30.f + (i * 30.f), vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
-	//	pMoney->Transform()->SetLocalScale(Vector3(30.f, 30.f, 1.f));
-	//	//MeshRender 설정
-	//	pMoney->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//	pMoney->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
-	//	pMoney->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
-	//	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pMoney);
-	//	pObject->StaticUI()->m_pMoneyUi.push_back(pMoney);
-	//}
 
 	// ====================
 	// 3D Light Object 추가
@@ -1982,88 +1912,55 @@ void CSceneMgr::init()
 	// Boss Monster 
 	//=============
 	{
-		Vector3 monsterPos = Vector3(8000.f, 0.f, 4000.f);
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
-		CGameObject* pMonster = new CGameObject;
-		pMonster = pMeshData->Instantiate();
-		pMonster->SetName(L"BossMonster");
-		pMonster->MeshRender()->SetDynamicShadow(true);
-		pMonster->FrustumCheck(false);
-		pMonster->Transform()->SetLocalScale(Vector3(2.f, 2.f, 2.f));//(1.0f, 1.0f, 1.0f));
-		pMonster->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
-		{
-			int z = (int)(monsterPos.z / pMonster->Transform()->GetLocalScale().z);
-
-			float fHeight = pPlayerObj->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
-
-			if (monsterPos.y != fHeight)
-				monsterPos.y = fHeight;
-		}
-		pMonster->Transform()->SetLocalPos(monsterPos);
-		pMonster->AddComponent(new CCollider);
-		pMonster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"BossMonster");
-		pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-		pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-
-		// Script 설정
-		pMonster->AddComponent(new CMonsterScript);
-		CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", pMonster, false);
-		CMonsterScript* monsterScript = pMonster->GetScript<CMonsterScript>();
-		monsterScript->SetMonsterType(MONSTER_TYPE::BOSS_MONSTER);
-		monsterScript->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
-		monsterScript->SetMobTYpe(MOB_TYPE::BOSS);
-		monsterScript->Init();
-		//animation
-		//idle
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//walk
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Slither Forward Fast WO Root.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//dead
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Die.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//attack
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Bite Attack.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//damage
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Defend.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//roar
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Roar.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//left
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Claw Attack Left.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
-		//right
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Claw Attack Right.fbx", FBX_TYPE::MONSTER);
-		monsterScript->SetAnimationData(pMeshData->GetMesh());
+		
 	}
 
-	// Distortion Object 만들기
-	// ==========================
+//	// ====================
+//// Particle Object 생성
+//// ====================
+//	pObject = new CGameObject;
+//	pObject->SetName(L"Particle");
+//	pObject->AddComponent(new CTransform);
+//	pObject->AddComponent(new CParticleSystem);
+//
+//	pObject->FrustumCheck(false);
+//	pObject->Transform()->SetLocalPos(Vec3(500.f, 0.f, 0.f));
+//
+//	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
+	// ===============
+	// particle
+	// ===============
 	pObject = new CGameObject;
-	pObject->SetName(L"PostEffect");
+	pObject->SetName(L"Rain");
 	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	// Material 값 셋팅
-	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl");
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(pMtrl, 0);
-	pObject->Transform()->SetLocalScale(Vector3(500.f, 500.f, 500.f));
-	pObject->Transform()->SetLocalPos(Vector3(9000.f, 3500.f, 4000.f));
+	pObject->AddComponent(new CParticleSystem);
+	pObject->FrustumCheck(false);
+	//pObject->Particlesystem()->SetFrequency(2.f);
+	pObject->Particlesystem()->SetType(true);
+	//pObject->Particlesystem()->SetMaxParticle(512);
+	//pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
+	
+	Vector3 particlePos = Vector3(3000.f, 0.f, 200.f);
+	{
+		int z = (int)(particlePos.z / pObject->Transform()->GetLocalScale().z);
 
-	m_pCurScene->AddGameObject(L"Default", pObject, false);
+		float fHeight = pPlayerObj->GetScript<CPlayerScript>()->GetTerrain()->GetHeight(particlePos.x, particlePos.z, ((z % 2) != 0)) * 2.f;
 
+		if (particlePos.y != fHeight)
+			particlePos.y = fHeight + 2000.f;
+	}
+	pObject->Transform()->SetLocalPos(particlePos);
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-
-	// ====================
-	// Compute Shader Test
-	// ====================
-	int i = 0;
-	Ptr<CMaterial> pCSMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"CSTestMtrl");
-	pCSMtrl->SetData(SHADER_PARAM::INT_0, &i);
-	CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
-	pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
+	//// ====================
+	//// Compute Shader Test
+	//// ====================
+	//int i = 1;
+	//Ptr<CMaterial> pCSMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"CSTestMtrl");
+	//pCSMtrl->SetData(SHADER_PARAM::INT_0, &i);
+	//CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
+	//pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
 
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");

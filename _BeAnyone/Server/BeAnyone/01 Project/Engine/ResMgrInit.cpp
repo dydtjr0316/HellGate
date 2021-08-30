@@ -762,6 +762,27 @@ void CResMgr::CreateDefaultShader()
     pShader->AddShaderParam(tShaderParam{ L"Particle Texture", SHADER_PARAM::TEX_0 });
     AddRes(L"ParticleShader", pShader);
 
+    // ===============
+    // Rain Shader
+    // ===============
+    pShader = new CShader;
+    pShader->CreateVertexShader(L"Shader\\Rain.fx", "VS_Rain", "vs_5_0");
+    pShader->CreateGeometryShader(L"Shader\\Rain.fx", "GS_Rain", "gs_5_0");
+    pShader->CreatePixelShader(L"Shader\\Rain.fx", "PS_Rain", "ps_5_0");
+
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND); // 알파 블랜드 사용
+    pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
+
+    pShader->Create(SHADER_POV::PARTICLE, D3D_PRIMITIVE_TOPOLOGY_POINTLIST); // TOPOLOGY 가 점 형태(정점 1개)
+
+    pShader->AddShaderParam(tShaderParam{ L"Start Scale", SHADER_PARAM::FLOAT_0 });
+    pShader->AddShaderParam(tShaderParam{ L"End Scale", SHADER_PARAM::FLOAT_1 });
+    pShader->AddShaderParam(tShaderParam{ L"Start Color", SHADER_PARAM::VEC4_0 });
+    pShader->AddShaderParam(tShaderParam{ L"End Color", SHADER_PARAM::VEC4_1 });
+    pShader->AddShaderParam(tShaderParam{ L"Particle Texture", SHADER_PARAM::TEX_0 });
+
+    AddRes(L"RainShader", pShader);
+
     // ======================
     // Particle Update Shader
     // ======================
@@ -788,6 +809,13 @@ void CResMgr::CreateDefaultShader()
     pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
     pShader->Create(SHADER_POV::POSTEFFECT);
     AddRes(L"DistortionCharacterShader", pShader);
+
+    // ======================
+    // Rain Update Shader
+    // ======================
+    pShader = new CShader;
+    pShader->CreateComputeShader(L"Shader\\rain.fx", "CS_RainUpdate", "cs_5_0");
+    AddRes(L"RainUpdateShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -936,6 +964,12 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->SetShader(FindRes<CShader>(L"ParticleShader"));
     AddRes(L"ParticleMtrl", pMtrl);
 
+    // Rain Mtrl
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"RainShader"));
+    AddRes(L"RainMtrl", pMtrl);
+
     // Particle Update
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
@@ -944,4 +978,15 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
     pMtrl->SetData(SHADER_PARAM::VEC2_0, &Vector2(pNoiseTex->Width(), pNoiseTex->Height()));
     AddRes(L"ParticleUpdateMtrl", pMtrl);
+
+    // Particle Update
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"RainUpdateShader"));
+
+    //Ptr<CTexture> pNoiseTex = Load<CTexture>(L"Texture\\noise.png", L"Texture\\noise.png");
+    pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+    pMtrl->SetData(SHADER_PARAM::VEC2_0, &Vector2(pNoiseTex->Width(), pNoiseTex->Height()));
+
+    AddRes(L"RainUpdateMtrl", pMtrl);
 }

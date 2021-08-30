@@ -67,7 +67,7 @@ CNpcScript::~CNpcScript()
 {
 }
 
-void CNpcScript::init()
+void CNpcScript::init(UI_TYPE _eType)
 {
 	// ui 만들기
 	CGameObject* storeUi = new CGameObject;
@@ -76,7 +76,7 @@ void CNpcScript::init()
 	storeUi->AddComponent(new CTransform);
 	storeUi->AddComponent(new CMeshRender);
 	storeUi->AddComponent(new CStaticUI);
-	storeUi->StaticUI()->init(UI_TYPE::PUBLIC_SHOP_UI);
+	storeUi->StaticUI()->init(_eType);
 	//storeUi->StaticUI()->CreatePickingObj();
 	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
 	m_pCam = FindCam(L"UiCam", L"Default");
@@ -100,7 +100,7 @@ void CNpcScript::init()
 	m_pStoreUi = storeUi;
 
 	//	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
-	Vector3 vScale = Vector3(80.f, 120.f, 1.f);
+	Vector3 vScale = Vector3(100.f, 100.f, 1.f);
 	Vector3 vObjectPos = storeUi->Transform()->GetLocalPos();
 	Vector3 vObjectScale = storeUi->Transform()->GetLocalScale();
 	float	fEmptyY = (vObjectScale.y - 100.f - (vScale.y * 4.f)) / 5.f;
@@ -127,6 +127,13 @@ void CNpcScript::init()
 		Vector3 result = Vector3(vObjectPos.x - (vObjectScale.x / 2.f) + (vScale.x / 2.f + fEmptyX) + ((vScale.x + fEmptyX) * (i % 4))
 			, vObjectPos.y + (vObjectScale.y / 2.f) - (vScale.y / 2.f + fEmptyY) - ((vScale.y + fEmptyY) * (i / 4))
 			, 1.f);
+
+		if (_eType == UI_TYPE::ALCHEMY_SHOP_UI) {
+			result = Vector3((vObjectPos.x - vScale.x) + (i * vScale.x * 2)
+				, vObjectPos.y
+				, 1.f);
+		}
+
 		pButtonObj->Transform()->SetLocalPos(result);
 		pButtonObj->Transform()->SetLocalScale(vScale);
 		// MeshRender 설정
@@ -141,19 +148,29 @@ void CNpcScript::init()
 	CGameObject* vecTemp = FindCam(L"MousePoint", L"PUI");
 	storeUi->StaticUI()->m_pMousePoint = vecTemp;
 
-	// 팔 item 설정
-	storeUi->StaticUI()->SetButton(ITEM_ID::NEW_SWORD);
-	storeUi->StaticUI()->SetButton(ITEM_ID::AX);
-	storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_STAMINA);
-	storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_DASH);
-	storeUi->StaticUI()->SetButton(ITEM_ID::STEAK);
 
-	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
-		storeUi->StaticUI()->m_vecButton[i]->init();
+	switch (_eType) {
+	case UI_TYPE::PUBLIC_SHOP_UI:
+		// 팔 item 설정
+		storeUi->StaticUI()->SetButton(ITEM_ID::NEW_SWORD);
+		storeUi->StaticUI()->SetButton(ITEM_ID::AX);
+		storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_STAMINA);
+		storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_DASH);
+		storeUi->StaticUI()->SetButton(ITEM_ID::STEAK);
+
+		for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
+			storeUi->StaticUI()->m_vecButton[i]->init();
+		break;
+
+	case UI_TYPE::ALCHEMY_SHOP_UI:
+		storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->SetLocalPos(Vector3(vObjectPos.x + 150.f, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
+		storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->Transform()->SetLocalPos(Vector3(vObjectPos.x - 150.f, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
+		storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"EXIT").GetPointer());
+		break;
+	}
 
 	for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
 		storeUi->StaticUI()->m_vecButton[i]->CreateExplainBox();
-
 }
 
 void CNpcScript::update()
@@ -182,7 +199,7 @@ void CNpcScript::update()
 		if (m_bIsTalk == true) { // 필요없을 것 같은데
 			++m_iClickNum;
 
-			if ((m_eQuestType != NPC_QUEST::DONE || m_eQuestType != NPC_QUEST::WHY) && m_iClickNum == 3 && (GetObj()->GetName() != L"Npc_3")) {	// 3번 누르면 나가는 걸로 가정
+			if ((m_eQuestType != NPC_QUEST::DONE || m_eQuestType != NPC_QUEST::WHY) && m_iClickNum == 3 && (GetObj()->GetName() != L"Npc_3") && (GetObj()->GetName() != L"Npc_4")) {	// 3번 누르면 나가는 걸로 가정
 				SetCameraState(CAMERA_STATE::FIXED_CAMERA);
 				SetAnimation(NPC_ANI_TYPE::IDLE);
 				m_bisAniReset = false;
@@ -234,6 +251,29 @@ void CNpcScript::update()
 				}
 				
 			}
+
+			else if (m_eQuestType == NPC_QUEST::ALCHEMY_STORE) {
+				if (m_iClickNum == 1) {
+					SetStaticUiRender(true);
+					m_pConversationBox->SetUiRenderCheck(false);
+					m_pPlayerUi->StaticUI()->SetWalletMoney();
+				}
+
+				Vector3 pos = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalPos();
+				Vector3 scale = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalScale();
+				if (ComputeMousePos(pos, scale)) {
+					SetCameraState(CAMERA_STATE::FIXED_CAMERA);
+					SetAnimation(NPC_ANI_TYPE::IDLE);
+					m_bisAniReset = false;
+					m_pConversationBox->SetUiRenderCheck(false);
+					m_bIsTalk = false;
+					m_bIsCollision = false;
+					m_iClickNum = 0;
+					m_bQuestBox = true;
+					SetStaticUiRender(false);
+				}
+
+			}
 		}
 
 		if (m_bIsCollision == true && m_bIsTalk == false) { // && 위치 값 같게 하기 (여기선 굳이 안 해도 ㄱㅊ을 것 같기도)
@@ -260,13 +300,23 @@ void CNpcScript::update()
 		if (m_bIsCollision == true)
 			ChangeBoxTexture();
 
-		/*if ((m_vIsQuest[0] == REQUEST_STATE::COMPLETE || m_vIsQuest[1] == REQUEST_STATE::COMPLETE)
-			&& m_iClickNum == 1)
-			m_pPlayer->StaticUI()->m_iMoney += 300;*/
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_RBTN) && GetObj()->GetName() == L"Npc_3" && (m_bIsTalk == true)) {
+	/*if (KEY_TAB(KEY_TYPE::KEY_RBTN) && GetObj()->GetName() == L"Npc_3" && (m_bIsTalk == true)) {
 		SellAndBuy();
+	}*/
+
+	if (KEY_TAB(KEY_TYPE::KEY_RBTN)){
+		// basic store
+		if (GetObj()->GetName() == L"Npc_3" && (m_bIsTalk == true)) {
+			SellAndBuy();
+		}
+
+		// alchemy store
+		if (GetObj()->GetName() == L"Npc_4" && (m_bIsTalk == true)) {
+			ItemAlchemy();
+		}
+
 	}
 }
 
@@ -276,16 +326,91 @@ void CNpcScript::SetStaticUiRender(bool _bool)
 	m_pPlayerUi = m_pPlayer->GetScript<CPlayerScript>()->GetUIObj();
 	m_pPlayerUi->StaticUI()->m_bActive = _bool;
 
-	for (int i = 0; i < 16; ++i) {
-		m_pStoreUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
+	for (int i = 0; i < m_pPlayerUi->StaticUI()->m_vecButton.size(); ++i) {
 		m_pPlayerUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
 	}
 
+	for (int i = 0; i < m_pStoreUi->StaticUI()->m_vecButton.size(); ++i) {
+		m_pStoreUi->StaticUI()->m_vecButton[i]->SetActive(_bool);
+	}
+
 	m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->SetUiRenderCheck(_bool);
+	m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->SetUiRenderCheck(_bool);
 
 	// store time인지 명시
 	m_pStoreUi->StaticUI()->m_bStoreTime = _bool;
 	m_pPlayerUi->StaticUI()->m_bStoreTime = _bool;
+}
+
+void CNpcScript::CheckAlchemy(ITEM_ID _firstId, ITEM_ID _SecondId)
+{
+	switch (_firstId) {
+	case ITEM_ID::CARROT:
+		if (_SecondId == ITEM_ID::BOTTLE_EMPTY)
+			m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_CARROT);
+		break;
+	case ITEM_ID::EMPTY:
+		m_bCanAlchemy = false;
+		break;
+	default:
+		m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::TRASH);
+	}
+}
+
+void CNpcScript::ItemAlchemy()
+{
+	int playerMoney = m_pPlayerUi->StaticUI()->m_iMoney;
+
+	CStaticUI* storeUi = m_pStoreUi->StaticUI();
+	CStaticUI* playerUi = m_pPlayerUi->StaticUI();
+
+	// player
+	if (ComputeMousePos((Vector3)m_pPlayerUi->Transform()->GetLocalPos(), (Vector3)m_pPlayerUi->Transform()->GetLocalScale())) {
+		for (int i = 0; i < playerUi->m_vecButton.size(); ++i) {
+			if (playerUi->m_vecButton[i]->GetItemID() != ITEM_ID::EMPTY) {
+				Vector3 ButtonPos = playerUi->m_vecButton[i]->GetObj()->Transform()->GetLocalPos();
+				Vector3 ButtonScale = playerUi->m_vecButton[i]->GetObj()->Transform()->GetLocalScale();
+
+				if (ComputeMousePos(ButtonPos, ButtonScale)) {
+					if (playerMoney >= 300) {
+						if (playerUi->m_vecButton[i]->GetItemCount() > 1) {
+							storeUi->SetButton(playerUi->m_vecButton[i]->GetItemID());
+							playerUi->m_vecButton[i]->SubItemCount();
+						}
+						else if (playerUi->m_vecButton[i]->GetItemCount() == 1) {
+							storeUi->SetButton(playerUi->m_vecButton[i]->GetItemID());
+							playerUi->m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
+							playerUi->m_vecButton[i]->SubItemCount();
+
+						}
+					}
+				}
+			}
+		}
+	
+	}
+	// store
+	else {
+	
+		Vector3 pos = storeUi->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->Transform()->GetLocalPos();
+		Vector3 scale = storeUi->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->Transform()->GetLocalScale();
+			
+		if (ComputeMousePos(pos, scale)) {
+			CheckAlchemy(storeUi->m_vecButton[0]->GetItemID(), storeUi->m_vecButton[1]->GetItemID());
+			if (m_bCanAlchemy) {
+				playerUi->m_iMoney -= 300;
+				playerUi->SetWalletMoney();
+				m_bCanAlchemy = true;
+
+				for (int i = 0; i < storeUi->m_vecButton.size(); ++i)
+					storeUi->m_vecButton[i]->SetItemID(ITEM_ID::EMPTY);
+			}
+		}
+
+
+		
+	}
+
 }
 
 void CNpcScript::SellAndBuy()
@@ -545,6 +670,12 @@ void CNpcScript::ChangeBoxTexture()
 	else if (GetObj()->GetName() == L"Npc_3") {
 		m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc3_start").GetPointer());
 		m_eQuestType = NPC_QUEST::STORE;
+	}
+
+	//NPC_3
+	else if (GetObj()->GetName() == L"Npc_4") {
+		m_pConversationBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"npc3_start").GetPointer());
+		m_eQuestType = NPC_QUEST::ALCHEMY_STORE;
 	}
 }
 

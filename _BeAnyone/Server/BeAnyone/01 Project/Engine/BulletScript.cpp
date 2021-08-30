@@ -42,6 +42,7 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 	switch ((UINT)m_bType)
 	{
 	case (UINT)BULLET_TYPE::DEFAULT:
+		
 		g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, true);
 
 			m_fTime = 3.0f;

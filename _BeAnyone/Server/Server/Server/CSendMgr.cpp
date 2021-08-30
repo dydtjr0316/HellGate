@@ -125,23 +125,19 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
     p.RotateY = Netmgr.GetMediatorMgr()->Find(other_id)->GetRoatateVector().y;
     strcpy_s(p.name, Netmgr.GetMediatorMgr()->Find(other_id)->GetName());    // data race???
     p.o_type = O_PLAYER;
+    if(p.id<START_MONSTER)
+        CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(p.id))->SetIsMoving(true);
     if (p.id >= START_MONSTER && p.id < END_MONSTER)
     {
         p.hp = dynamic_cast<CMonster*>(Netmgr.GetMediatorMgr()->Find(other_id))->GetHP();
-
-     /*   //cout << "********************" << endl;
-        //cout << other_id << "가 " << user_id << "에게  Enter Packet 전송" << endl;
-        //cout << "Monster POS ->   <" << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().x << ", "
-            << Netmgr.GetMediatorMgr()->Find(other_id)->GetLocalPosVector().z << ">" << endl;
-        //cout << "********************" << endl << endl;*/
     }
-    {
-        //cout << "********************" << endl;
-        //cout << "********************" << endl;
-        //cout << other_id << "가 " << user_id << "에게 Enter Packet 전송" << endl;
-        //cout << "********************" << endl;
-        //cout << "********************" << endl;
-    }
+    
+        cout << "\t\t\t\t\t ********************" << endl;
+        cout << "\t\t\t\t\t********************" << endl;
+        cout << "\t\t\t\t\t"<<other_id << "가 " << user_id << "에게 Enter Packet 전송" << endl;
+        cout << "\t\t\t\t\t********************" << endl;
+        cout << "\t\t\t\t\t********************" << endl;
+    
     Send_Packet(user_id, &p);
 }
 
@@ -155,15 +151,17 @@ void CSendMgr::Send_Leave_Packet(const uShort& user_id, const uShort& other_id, 
     p.size = sizeof(p);
     p.type = SC_PACKET_LEAVE;
     p.isAttack = isAttack;
-    if (p.id >= START_MONSTER && p.id < END_MONSTER)
-    {
-        
-        cout << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
-        cout << "********************" << endl;
-        cout << "********************" << endl;
-        Netmgr.GetMediatorMgr()->Find(other_id)->SetIsMoving(false);
 
+    if (other_id == 1 || user_id == 1)
+    {
+        int i = 0;
     }
+    cout << "\t\t\t\t\t********************" << endl;
+    cout << "\t\t\t\t\t" << other_id << "가 " << user_id << "에게 Leave Packet 전송" << endl;
+    cout << "\t\t\t\t\t ********************" << endl;
+    Netmgr.GetMediatorMgr()->Find(other_id)->SetIsMoving(false);
+
+
     Send_Packet(user_id, &p);
 }
 
@@ -219,8 +217,9 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
     p.eDir = dir;
     p.pos = Netmgr.GetMediatorMgr()->Find(p.id)->GetLocalPosVector();
 
-    if (p.id == 1000)
+    if (p.id == BOSS_ID)
     {
+       p.worldDir =  Netmgr.GetMediatorMgr()->Find(BOSS_ID)->GetDirVector();
         //cout << "-----------------------------------------------------------" << endl;
         //cout << "-----------------------------------------------------------" << endl;
          //cout << "id : " << mover_id << "  Dir :  " << (int)p.eDir << endl;
@@ -231,6 +230,29 @@ void CSendMgr::Send_Monster_Move_Packet(const uShort& user_id, const uShort& mov
     Send_Packet(user_id, &p);
 }
 
+void CSendMgr::Send_Boss_State_Packet(const uShort& user_id, const uShort& boss, const MONSTER_STATE& state, const BOSS_ATTACK& attackpattern)
+{
+    sc_packet_boss_state p;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_BOSS_STATE;
+    p.id = boss;
+    p.aniState = state;
+    p.attackstate = attackpattern;
+    
+    Send_Packet(user_id, &p);
+}
+
+void CSendMgr::Send_Boss_Turn_Packet(const uShort& user_id, const uShort& boss, const Vector3 rotate)
+{
+    sc_packet_boss_turn p;
+    p.size = sizeof(p);
+    p.type = SC_PACKET_BOSS_TURN;
+    p.id = boss;
+    p.rotate = rotate;
+
+    Send_Packet(user_id, &p);
+}
+
 
 void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, const bool& isMoving)
 {
@@ -238,10 +260,11 @@ void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, c
     p.size = sizeof(p);
     p.type = SC_PACKET_STOP;
     p.id = mover_id;
-    //cout << "스톱패킷 안주지?? 시1발러마" << endl;
+
     p.isMoving = isMoving;
     Netmgr.GetMediatorMgr()->Find(mover_id)->SetIsMoving(false);
-
+    cout << user_id << "에게 " << mover_id << "의 STop packet 전송" << endl;
+    cout << "--------------------------" << endl;
     Send_Packet(user_id, &p);
 }
 

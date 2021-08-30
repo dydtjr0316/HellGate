@@ -31,6 +31,9 @@
     <FxCompile Include="posteffect.fx">
       <Filter>10. ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="rain.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="desc.cpp">

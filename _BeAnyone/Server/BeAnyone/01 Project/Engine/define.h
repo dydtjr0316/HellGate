@@ -405,6 +405,10 @@ enum class ITEM_ID
 	AX,
 	BASIC_SWORD,
 	EMPTY,
+	BOTTLE_EMPTY,
+	BOTTLE_CARROT,
+	BOTTLE_STRAWBERRY,
+	TRASH,
 	END,
 };
 
@@ -412,6 +416,8 @@ enum class UI_TYPE
 {
 	PRIVATE_ITEM_UI,
 	PUBLIC_SHOP_UI,
+	ALCHEMY_SHOP_UI,
+	END,
 };
 
 
@@ -461,5 +467,22 @@ enum class MOB_TYPE
 	YELLOW,
 	GREEN,
 	BOSS,
+	END,
+};
+
+enum class MONSTER_STATE {
+	MOVE,
+	FIND,
+	FOLLOW,
+	ATTACK,
+	DAMAGE,
+	DIE,
+	END,
+};
+
+enum class BOSS_ATTACK {
+	BITE_ATTACK,
+	LEFT_ATTACK,
+	RIGHT_ATTACK,
 	END,
 };
