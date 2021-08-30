@@ -609,9 +609,10 @@ void CMonsterScript::FollowToPlayer()
 
     worldDir = -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT);
     g_netMgr.Send_MonsterDir_Packet(GetID(), worldDir);
+    cout << "Boss가 보내는 패킷 : " << worldDir.x << ", " << worldDir.z << endl;
     monsterPos += packetWorldDir * DT * 100.f;
 
-    cout << monsterPos.x << ", " << monsterPos.z << endl;
+   // cout << monsterPos.x << ", " << monsterPos.z << endl;
 
     mosnterTrans->SetLocalPos(monsterPos);
     m_fFollowTime += DT;

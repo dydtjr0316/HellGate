@@ -48,7 +48,6 @@ bool CQuadTree::Insert(CGameObject* p)
 		}
 		else
 		{
-			m_iDepth++;
 			Sub_Divide();
 			for (auto& obj : m_pChild)
 				if (obj->Insert(p))return true;

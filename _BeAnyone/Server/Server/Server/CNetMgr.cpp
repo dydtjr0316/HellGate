@@ -405,7 +405,9 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
 
         //if (m_pMediator->Count(packet->id) == 0)break;
         CMonster* monster = CAST_MONSTER(m_pMediator->Find(packet->id));
+        tempLock.lock();
         unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(packet->id));
+        tempLock.unlock();
         for (auto& user : new_viewList)
         {
             if (m_pMediator->IsType(user, OBJECT_TYPE::CLIENT))
@@ -452,8 +454,8 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     {
         cs_pcaket_MonsterDir* packet = reinterpret_cast<cs_pcaket_MonsterDir*>(buf);
         Vector3 temp = packet->dir;
-        m_pMediator->Find(packet->id)->SetDirV(temp);
         tempLock.lock();
+        m_pMediator->Find(packet->id)->SetDirV(temp);
         if (!CAST_MONSTER(m_pMediator->Find(packet->id))->GetIsDir())
         {
             CAST_MONSTER(m_pMediator->Find(packet->id))->SetIsDir(true);
@@ -471,7 +473,9 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         {
             if (m_pMediator->IsType(obj, OBJECT_TYPE::CLIENT))
             {
+                tempLock.lock();
                 m_pSendMgr->Send_Attack_Effect(obj, packet->pos);
+                tempLock.unlock();
             }
         }
 
@@ -486,7 +490,9 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         {
             if (m_pMediator->IsType(obj, OBJECT_TYPE::CLIENT))
             {
+                tempLock.lock();
                 m_pSendMgr->Send_Boss_State_Packet(obj, packet->id, packet->aniState, packet->attackstate);
+                tempLock.unlock();
             }
         }
 
@@ -500,7 +506,9 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         {
             if (m_pMediator->IsType(obj, OBJECT_TYPE::CLIENT))
             {
+                tempLock.lock();
                 m_pSendMgr->Send_Boss_Turn_Packet(obj, packet->id,packet->rotate);
+                tempLock.unlock();
             }
         }
     }
@@ -951,7 +959,7 @@ void CNetMgr::Processing_Thead()
                         old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
-                        cout << monsterPos.x << ", " << monsterPos.z << endl;
+                        //cout << monsterPos.x << ", " << monsterPos.z << endl;
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
                         g_QuadTree.Insert(m_pMediator->Find(monster));
                         new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
