@@ -1582,8 +1582,6 @@ void CSceneMgr::init()
 	// =================
 	// Texture 로드
 	
-
-
 	LoadRes();
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
@@ -1653,7 +1651,10 @@ void CSceneMgr::init()
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	pPlayerObj->MeshRender()->SetDynamicShadow(true);
-	
+	//'pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
+	//pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 1);
+	//pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 2);
+	//pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 3);
 
 	// Script 설정
 	pPlayerObj->AddComponent(new CPlayerScript);
@@ -1845,10 +1846,8 @@ void CSceneMgr::init()
 
 	//	pObject->StaticUI()->m_vecButton[i]->init();
 	//}
-
 	//for (int i = 0; i < pObject->StaticUI()->m_vecButton.size(); ++i)
 	//	pObject->StaticUI()->m_vecButton[i]->CreateExplainBox();
-
 	//// wallet create
 	//CGameObject* pWallet = new CGameObject;
 	//pWallet->SetName(L"Wallet");
@@ -2040,11 +2039,27 @@ void CSceneMgr::init()
 		monsterScript->SetAnimationData(pMeshData->GetMesh());
 	}
 
+	// Distortion Object 만들기
+	// ==========================
+	pObject = new CGameObject;
+	pObject->SetName(L"PostEffect");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	// Material 값 셋팅
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl");
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(pMtrl, 0);
+	pObject->Transform()->SetLocalScale(Vector3(500.f, 500.f, 500.f));
+	pObject->Transform()->SetLocalPos(Vector3(9000.f, 3500.f, 4000.f));
+
+	m_pCurScene->AddGameObject(L"Default", pObject, false);
+
+
 
 	// ====================
 	// Compute Shader Test
 	// ====================
-	int i = 1;
+	int i = 0;
 	Ptr<CMaterial> pCSMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"CSTestMtrl");
 	pCSMtrl->SetData(SHADER_PARAM::INT_0, &i);
 	CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
@@ -2070,7 +2085,6 @@ void CSceneMgr::init()
 
 void CSceneMgr::update() 
 {
-
 	m_pCurScene->update();
 	g_SoundList.find(Sound_Type::BGM)->second->Play(0);
 	m_pCurScene->lateupdate();

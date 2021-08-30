@@ -10,9 +10,6 @@
 //
 int GetSizeofFormat(DXGI_FORMAT _eFormat);
 
-
-
-
 template<typename T1, typename T2>
 void Safe_Delete_Map(map<T1, T2>& _map)
 {

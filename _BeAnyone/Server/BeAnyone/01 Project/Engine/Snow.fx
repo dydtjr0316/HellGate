@@ -1,4 +1,4 @@
-#ifndef _PARTICLE
+  #ifndef _PARTICLE
 #define _PARTICLE
 
 #include "value.fx"

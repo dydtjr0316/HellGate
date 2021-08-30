@@ -14,3 +14,4 @@ D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\particl
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso
 D:\GitHube\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso
+C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\posteffect.cso
