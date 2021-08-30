@@ -610,6 +610,8 @@ void CMonsterScript::FollowToPlayer()
     g_netMgr.Send_MonsterDir_Packet(GetID(), worldDir);
     monsterPos += worldDir * DT * 100.f;
 
+    cout << monsterPos.x << ", " << monsterPos.z << endl;
+
     mosnterTrans->SetLocalPos(monsterPos);
     m_fFollowTime += DT;
 

@@ -951,6 +951,7 @@ void CNetMgr::Processing_Thead()
                         old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
+                        cout << monsterPos.x << ", " << monsterPos.z << endl;
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
                         g_QuadTree.Insert(m_pMediator->Find(monster));
                         new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
