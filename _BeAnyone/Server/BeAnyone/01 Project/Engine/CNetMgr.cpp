@@ -760,27 +760,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 		if (g_Object.find(packet->id)->second == nullptr)break;
 
 		if (CheckObjType(monster_id) == OBJECT_TYPE::MONSTER) {
-			
-			if (monster_id == BOSS_ID)
-			{
-
-				g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPacketWorldDir(true);
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketWorldDir(packet->worldDir);
-				cout << "Boss가 받는패킷 : " << packet->worldDir.x << ", " << packet->worldDir.z << endl;
-
-			}
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
-
-
-
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
-
-
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
-
-
 			g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);
 
 		}
@@ -788,20 +771,13 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPacketWorldDir(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketWorldDir(packet->worldDir);
+
 			cout << "Boss가 받는패킷 : " << packet->worldDir.x << ", " << packet->worldDir.z << endl;
-
-
+			cout << "----------------------" << endl;
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
-
-
-
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
-
-
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetDir((MONSTER_AUTOMOVE_DIR)packet->eDir);
-
-
 			g_Object.find(packet->id)->second->Transform()->SetLocalPos(packet->pos);
 
 		}

@@ -521,6 +521,8 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
     }                       
 }
 
+
+
 void CNetMgr::Recv_Packet_Construct(const uShort& user_id, const int& io_byte)
 {
     CGameObject* pObj = dynamic_cast<CGameObject*>(m_pMediator->Find( user_id));

@@ -229,10 +229,10 @@ void CMonsterScript::BossTurn()
 
             // 범위 줄이기
             m_pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 500.f));
+        TurnToPlayer(MOB_TYPE::BOSS);
         }
         break;
     case MONSTER_STATE::FIND:
-        TurnToPlayer(MOB_TYPE::BOSS);
         if(m_bIsRoar) // 소리 한 번 지르고
             Attack();
         if (m_bisPunch && m_bIsRoar == false) // 바이트로 어택
@@ -605,11 +605,8 @@ void CMonsterScript::FollowToPlayer()
     if (!isPacketWorldDir)return;
     Vector3 monsterPos = GetObj()->Transform()->GetLocalPos();
     CTransform* mosnterTrans = GetObj()->Transform();
-    Vector3 worldDir{};
 
-    worldDir = -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT);
-    g_netMgr.Send_MonsterDir_Packet(GetID(), worldDir);
-    cout << "Boss가 보내는 패킷 : " << worldDir.x << ", " << worldDir.z << endl;
+    cout << "Boss가 보내는 패킷 : " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).x << ", " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).z << endl;
     monsterPos += packetWorldDir * DT * 100.f;
 
    // cout << monsterPos.x << ", " << monsterPos.z << endl;
@@ -628,6 +625,7 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
     Vector3 playerDir = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
     Vector3 monsterDir{};
     Vector3 monsterRot = GetObj()->Transform()->GetLocalRot();
+    CTransform* mosnterTrans = GetObj()->Transform();
 
     if (_eType == MOB_TYPE::YELLOW)
         monsterDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);
@@ -649,6 +647,8 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
    // {
         GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
         g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
+        g_netMgr.Send_MonsterDir_Packet(GetID(), -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT));
+
    // }
     m_bisDirChange = true;
     m_fAngleY += angle.x;
