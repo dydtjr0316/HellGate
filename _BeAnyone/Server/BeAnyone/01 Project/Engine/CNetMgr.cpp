@@ -26,11 +26,11 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 {
 	if (id >= 0 && id < MAX_USER)return OBJECT_TYPE::CLIENT;
 	else if (id >= START_MONSTER && id < END_MONSTER)return OBJECT_TYPE::MONSTER;
-	else if (id == BOSS_ID)return OBJECT_TYPE::MONSTER;
+	else if (id == BOSS_ID)return OBJECT_TYPE::BOSS;
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
@@ -493,6 +493,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.emplace(id, pObject);
 						//
 						g_Object.find(id)->second = pMeshData->Instantiate();
+						g_Object.find(id)->second->SetID(id);
+						
 						g_Object.find(id)->second->SetName(L"FireMonster");
 						g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 						g_Object.find(id)->second->FrustumCheck(false);
@@ -524,6 +526,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
 
 						CMonsterScript* monsterScript = g_Object.find(id)->second->GetScript<CMonsterScript>();
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 						monsterScript->SetMonsterType(MONSTER_TYPE::MONSTER1);
 						//animation
 						//idle
@@ -544,9 +548,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetTerrain(
 							g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetTerrain()
 						);
-						g_Object.find(id)->second->SetID(id);
-						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
-						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
+						
 
 						//g_netMgr.Send_MonsterDir_Packet(id, Vector3(0.f,0.f,1.f)/*g_Object.find(id)->second->Transform()->GetWorldDir(DIR_TYPE::UP)*/);
 						//g_Object.find(id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
@@ -560,6 +562,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						g_Object.emplace(id, pObject);
 						//
 						g_Object.find(id)->second = pMeshData->Instantiate();
+						g_Object.find(id)->second->SetID(id);
+		
 						g_Object.find(id)->second->SetName(L"GreenMonster");
 						g_Object.find(id)->second->FrustumCheck(false);
 						g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
@@ -590,6 +594,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 						CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", g_Object.find(id)->second, false);
 
 						CMonsterScript* monsterScript = g_Object.find(id)->second->GetScript<CMonsterScript>();
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
+						g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 						monsterScript->SetMonsterType(MONSTER_TYPE::MONSTER2);
 						//animation
 						//idle
@@ -623,6 +629,10 @@ void CNetMgr::ProcessPacket(char* ptr)
 				Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
 				CGameObject* pMonster = new CGameObject;
 				pMonster = pMeshData->Instantiate();
+				g_Object.emplace(id, pMonster);
+
+				g_Object.find(id)->second->SetID(id);
+				
 				pMonster->SetName(L"BossMonster");
 				pMonster->MeshRender()->SetDynamicShadow(true);
 				pMonster->FrustumCheck(false);
@@ -644,6 +654,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 				// Script ¼³Á¤
 				pMonster->AddComponent(new CMonsterScript);
+				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
+				g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
 				CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Monster", pMonster, false);
 				CMonsterScript* monsterScript = pMonster->GetScript<CMonsterScript>();
 				monsterScript->SetMonsterType(MONSTER_TYPE::BOSS_MONSTER);

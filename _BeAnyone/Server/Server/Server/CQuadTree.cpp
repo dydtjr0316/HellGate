@@ -44,10 +44,11 @@ bool CQuadTree::Insert(CGameObject* p)
 		if (m_vpPlayers.size() < m_icapacity)	// leaf node ÀÏ¶§
 		{
 			m_vpPlayers.emplace(p->GetID());
-			m_icapacity++;
+			//m_icapacity++;
 		}
 		else
 		{
+			m_iDepth++;
 			Sub_Divide();
 			for (auto& obj : m_pChild)
 				if (obj->Insert(p))return true;
