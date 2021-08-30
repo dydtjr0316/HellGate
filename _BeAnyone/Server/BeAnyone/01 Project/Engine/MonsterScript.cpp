@@ -221,8 +221,9 @@ void CMonsterScript::BossTurn()
     case MONSTER_STATE::MOVE:
         //Move();
         if (m_bIsFindPlayer) {
-            //m_eMonsterState = MONSTER_STATE::FIND;
+            m_eMonsterState = MONSTER_STATE::FIND;
             g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::FIND);
+
             m_bIsFindPlayer = false;
             m_bIsRoar = true;   // 소리지르기 세팅
 
@@ -240,7 +241,7 @@ void CMonsterScript::BossTurn()
         {
             g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::FOLLOW);
 
-         //   m_eMonsterState = MONSTER_STATE::FOLLOW;
+          m_eMonsterState = MONSTER_STATE::FOLLOW;
         }
         break;
     case MONSTER_STATE::FOLLOW:
@@ -617,6 +618,8 @@ void CMonsterScript::FollowToPlayer()
 void CMonsterScript::TurnToPlayer(MOB_TYPE _eType) 
 {
     if (m_pPlayer == nullptr)return;
+    cout << "Turn to Player" << endl;
+    cout << "플레이어 주소값 : " << &m_pPlayer << endl;
     //g_netMgr.Send_Monster_Animation_Packet(GetID(), MONSTER_ANI_TYPE::ATTACK);
     Vector3 playerDir = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
     Vector3 monsterDir{};
@@ -640,7 +643,7 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
 
    // if (_eType == MOB_TYPE::YELLOW)
    // {
-        //GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
+        GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
         g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
    // }
     m_bisDirChange = true;

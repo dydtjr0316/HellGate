@@ -53,11 +53,6 @@ void CGameObject::Insert_Sector()
 {
     //SetSector((int)m_v3LocalPosVector.x / SECTOR_ROW_Length, (int)m_v3LocalPosVector.z / SECTOR_COL_Length);
     g_QuadTree.Insert(this);
-    if (this->GetID() == BOSS_ID)
-    {
-        g_QuadTree.Insert(this);
-
-    }
    // CSectorMgr::GetInst()->Emplace(m_tSector.x, m_tSector.z, m_id);
 }
 
