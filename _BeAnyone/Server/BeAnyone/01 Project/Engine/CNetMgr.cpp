@@ -429,6 +429,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
 					g_Object.find(id)->second->AddComponent(new CQuest);
+					g_Object.find(id)->second->AddComponent(new CCollider);
+					g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
+					g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos(), g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+					g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere(g_Object.find(id)->second->Transform()->GetLocalPos(), g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
+
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
 
@@ -925,14 +930,14 @@ void CNetMgr::ProcessPacket(char* ptr)
 					switch ((Ani_TYPE)packet->anitype)
 					{
 					case Ani_TYPE::ATTACK:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 						g_SoundList.find(Sound_Type::HIT);
 						break;
 					case Ani_TYPE::DAMAGE:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::DAMAGE);
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::DAMAGE);
 						break;
 					case Ani_TYPE::PICK_UP:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::PICK_UP);
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::PICK_UP);
 						g_SoundList.find(Sound_Type::GET_COIN);
 						break;
 					default:
@@ -941,7 +946,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else
 				{
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
+					g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 				}
 			}
 		}

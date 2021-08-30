@@ -1713,12 +1713,15 @@ void CSceneMgr::init()
 	// ATTACK
 	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@Attack1.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 	// Damage
 	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@Damage_Strong.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 	// PIck_UP
 	pMeshDataKey = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@PickUp.fbx", FBX_TYPE::PLAYER);
 	playerScript->SetAnimationData(pMeshDataKey->GetMesh());
+	g_netMgr.SetAniData(pMeshDataKey->GetMesh());
 	m_pCurScene->AddGameObject(L"Player", pPlayerObj, false);
 
 

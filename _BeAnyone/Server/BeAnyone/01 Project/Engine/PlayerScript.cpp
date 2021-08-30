@@ -307,7 +307,7 @@ void CPlayerScript::update()
 			g_netMgr.Send_Player_Animation_Packet(id, GetAttack(), Ani_TYPE::ATTACK);
 			anicnt++;
 		}
-
+		 
 		if (GetAttack() && GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) < Animator3D()->GetAnimClip(0).dTimeLength) {
 			SetCnt(GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) + DT, PlAYER_ANICNT_TYPE::ATTACK_CNT);
 			SetAnimation(Ani_TYPE::ATTACK);
