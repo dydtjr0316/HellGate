@@ -32,6 +32,8 @@ public:		// thread 包府何
 	void Worker_Thread();
 	void Processing_Thead();// 单靛饭目醋 + monster ani cnt
 	void Timer_Worker();
+
+public:
 	void WakeUp_NPC(const uShort& id);
 	void WakeUp_Monster(const uShort& id);
 	void Add_Timer(const uShort& obj_id, const int& status, system_clock::time_point t);

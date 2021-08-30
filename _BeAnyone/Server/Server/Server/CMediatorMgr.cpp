@@ -31,13 +31,17 @@ void CMediatorMgr::InitObject()
         pObj->SetStatus(OBJSTATUS::ST_SLEEP);
         Add(pObj, i);
         pObj->Insert_Sector();
-        
-        
-        
-        
-        //cout<< "ID : " << i << "  HP : " << dynamic_cast<CMonster*>(pObj)->GetHP()<<"         "<<
-         //   pObj->GetLocalPosVector().x<<", "<<pObj->GetLocalPosVector().z << endl;
     }
+    pObj = new CMonster;
+    pObj->SetPosV((8000.f), 2750.f, 4000.f);
+    pObj->SetID(BOSS_ID);
+    dynamic_cast<CMonster*>(pObj)->SetHP(100);
+
+
+    pObj->SetType(OBJECT_TYPE::MONSTER);
+    pObj->SetStatus(OBJSTATUS::ST_SLEEP);
+    Add(pObj, BOSS_ID);
+    pObj->Insert_Sector();
 
     // NPC init
     /*for (int i = START_NPC; i < END_NPC; ++i)

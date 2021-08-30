@@ -48,6 +48,8 @@ public:		// 패킷 전송부
 	void Send_Monster_Animation_Packet(const uShort& monster_id, const MONSTER_ANI_TYPE& aniType);
 
 	void Send_MonsterDir_Packet(const uShort& monser_id, const Vector3& dir);
+	void Send_Boss_State_Packet(const uShort& boss, const MONSTER_STATE& state, const BOSS_ATTACK& attackpattern = BOSS_ATTACK::END);
+	void Send_Boss_Turn(const uShort& boss, const Vector3& rotate);
 	//void Send_MonsterAttack_Packet(const uShort& monser_id, const Vector3& dir);
 public:		// animation
 	void SetAnimation(int id, const Ani_TYPE& type);

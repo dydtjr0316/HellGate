@@ -469,3 +469,20 @@ enum class MOB_TYPE
 	BOSS,
 	END,
 };
+
+enum class MONSTER_STATE {
+	MOVE,
+	FIND,
+	FOLLOW,
+	ATTACK,
+	DAMAGE,
+	DIE,
+	END,
+};
+
+enum class BOSS_ATTACK {
+	BITE_ATTACK,
+	LEFT_ATTACK,
+	RIGHT_ATTACK,
+	END,
+};
