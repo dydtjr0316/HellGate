@@ -65,6 +65,9 @@ private:
 	// questbox
 	bool				m_bQuestBox = true;
 
+	// alchemy store
+	bool				m_bCanAlchemy = true;
+
 public:
 	virtual void update();
 	void init(UI_TYPE _eType);
