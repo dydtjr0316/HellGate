@@ -127,6 +127,7 @@ public:
     void  SetPlayer(CGameObject* p) {
         m_pPlayer = p;
     };
+    CGameObject* GetPlayer() { return m_pPlayer; }
     void SetPacketDead(const bool& dead) { m_packetDead = dead; }
 
     // boss monster

@@ -968,7 +968,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		{
 			if (MONSTER_ANI_TYPE::ATTACK == packet->aniType)
 			{
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
+				//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
 
 			}
 			if (packet->aniType == MONSTER_ANI_TYPE::ATTACK_LEFT)
@@ -982,7 +982,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 			if (packet->aniType == MONSTER_ANI_TYPE::ROAR)
 			{
 				// isroar
-				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
+				//g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPunch(true);
 
 			}
 
