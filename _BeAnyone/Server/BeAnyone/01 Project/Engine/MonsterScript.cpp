@@ -603,6 +603,7 @@ void CMonsterScript::FollowToPlayer()
 {
     //Vector3 playerPos = m_pPlayer->Transform()->GetLocalPos();
     if (!isPacketWorldDir)return;
+    if (!m_bisMoving)return;
     Vector3 monsterPos = GetObj()->Transform()->GetLocalPos();
     CTransform* mosnterTrans = GetObj()->Transform();
 
@@ -619,7 +620,7 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
 {
     if (m_pPlayer == nullptr)return;
     cout << "Turn to Player" << endl;
-    cout << "플레이어 주소값 : " << &m_pPlayer << endl;
+    cout << "플레이어 ID : " << m_pPlayer->GetID() << endl;
     //g_netMgr.Send_Monster_Animation_Packet(GetID(), MONSTER_ANI_TYPE::ATTACK);
     Vector3 playerDir = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
     Vector3 monsterDir{};
@@ -644,7 +645,7 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
 
    // if (_eType == MOB_TYPE::YELLOW)
    // {
-        GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
+        //GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
         g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
 
 
