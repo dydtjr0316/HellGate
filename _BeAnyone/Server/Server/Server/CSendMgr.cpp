@@ -204,6 +204,7 @@ void CSendMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const uSh
     p.type = SC_PACKET_MONSTER_ANIMATION;
     p.aniType = aniType;
     p.otherid = user_id;
+    cout << user_id << "에게 몬스터 패킷 전송   " << (int)aniType << endl << endl;
     Send_Packet(user_id, &p);
 
 }
@@ -263,8 +264,8 @@ void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, c
 
     p.isMoving = isMoving;
     Netmgr.GetMediatorMgr()->Find(mover_id)->SetIsMoving(false);
-    cout << user_id << "에게 " << mover_id << "의 STop packet 전송" << endl;
-    cout << "--------------------------" << endl;
+    //cout << user_id << "에게 " << mover_id << "의 STop packet 전송" << endl;
+    //cout << "--------------------------" << endl;
     Send_Packet(user_id, &p);
 }
 
