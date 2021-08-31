@@ -932,6 +932,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					switch ((Ani_TYPE)packet->anitype)
 					{
 					case Ani_TYPE::ATTACK:
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->Attack_Default();
 						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 						g_SoundList.find(Sound_Type::HIT);
 						break;

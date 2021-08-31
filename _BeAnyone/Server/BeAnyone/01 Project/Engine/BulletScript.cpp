@@ -25,10 +25,12 @@ void CBulletScript::update()
 	//cout << "ÃÑ¾Ë À§Ä¡\t" << "x : " << Transform()->GetLocalPos().x << "\t" << Transform()->GetLocalPos().y << "\t" << Transform()->GetLocalPos().z << endl;
 
 	m_fTime += DT;
+	//cout << "ÃÑ¾Ë ½Ã°£: " << m_fTime << endl;
 
 	if (m_fTime > 2.0f)
 	{
 		m_bDead = true;
+		//cout << "-=========ÃÑ¾Ë °´Ã¼ »èÁ¦=========" << endl;
 		DeleteObject(GetObj());
 	}
 }
@@ -42,10 +44,8 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 	switch ((UINT)m_bType)
 	{
 	case (UINT)BULLET_TYPE::DEFAULT:
-		
+		m_fTime = 3.0f;
 		g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, true);
-
-			m_fTime = 3.0f;
 
 		break;
 	case (UINT)BULLET_TYPE::PICKUP:

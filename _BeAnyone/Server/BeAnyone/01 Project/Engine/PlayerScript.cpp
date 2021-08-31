@@ -646,7 +646,7 @@ Vector2 CPlayerScript::Search_Interpolation_Points(Vector2* points, float time)
 
 	result.x = (ax * time_Triple) + (bx * time_Double) + (cx * time) + points[0].x;
 	result.y = (ay * time_Triple) + (bx * time_Double) + (cy * time) + points[0].y;
-	cout << "Set Interpor Point : " << result.x << ", " << result.y << endl;
+	//cout << "Set Interpor Point : " << result.x << ", " << result.y << endl;
 
 	return result;
 }
@@ -719,7 +719,7 @@ void CPlayerScript::Attack_Default()
 
 	if (!vecObj.empty())
 	{
-		//cout << "醚舅 按眉 积己 救壩" << endl;
+		cout << "醚舅 按眉 积己 救壩" << endl;
 		return;
 	}
 	else
@@ -738,7 +738,8 @@ void CPlayerScript::Attack_Default()
 	CBulletScript* bulletScript = pBullet->GetScript<CBulletScript>();
 	bulletScript->SetPlayer(GetObj());
 
-	CreateObject(pBullet, L"Bullet");
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Bullet")->AddGameObject(pBullet);
+	//CreateObject(pBullet, L"Bullet");
 }
 
 void CPlayerScript::PickUp_Default()

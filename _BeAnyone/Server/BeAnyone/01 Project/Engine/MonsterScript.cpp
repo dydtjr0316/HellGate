@@ -21,7 +21,7 @@ CMonsterScript::CMonsterScript()
     //----------------
     // monster hp ui
     //----------------
-    Vector3 vScale(350.f, 10.f, 1.f);
+    Vector3 vScale(360.f, 10.f, 1.f);
 
     for (int i = 0; i < 2; ++i) {
         CGameObject* pMonsterUi = new CGameObject;
@@ -31,8 +31,8 @@ CMonsterScript::CMonsterScript()
         pMonsterUi->AddComponent(new CMeshRender);
         tResolution res = CRenderMgr::GetInst()->GetResolution();
 
-        if (i == 1)
-            vScale = Vector3(360.f, 2.f, 1.f);
+        if (m_eMobType == MOB_TYPE::BOSS)
+            vScale = Vector3(150.f, 2.f, 1.f);
 
         pMonsterUi->Transform()->SetLocalScale(vScale);
         pMonsterUi->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
@@ -121,10 +121,6 @@ void CMonsterScript::update()
     }
     else
         BossTurn();
-    
-    
-   
-   
     
     //------
     // ui
@@ -481,7 +477,8 @@ void CMonsterScript::Attack()
         if (m_isfirst)
         {
            g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
-            m_isfirst = false;
+           cout << "!!!!!!!!!! 보스 공격" << endl;
+           m_isfirst = false;
         }
 
         // 플레이어에게 공격
@@ -494,7 +491,7 @@ void CMonsterScript::Attack()
 
         // packet
 
-        cout << "!!!!!!!!!! 보스 공격" << endl;
+        
     }
     if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::ATTACK_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
         monsterScript->SetIsPunch(false); // m_bisPunch = false;
@@ -523,11 +520,12 @@ void CMonsterScript::Attack()
         if (m_isfirst)
         {
             g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ROAR);
+            cout << "!!!!!!!!!!!!!보스 소리 지름" << endl;
             m_isfirst = false;
         }
        
     
-        cout << "!!!!!!!!!!!!!보스 소리 지름" << endl;
+        
     }
     if (Getcnt(MONSTER_ANICNT_TYPE::ROAR_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
         m_bIsRoar = false; //m_bisDamaged = false;
@@ -549,12 +547,10 @@ void CMonsterScript::Attack()
         //SetAnimation(MONSTER_ANI_TYPE::ATTACK_LEFT);
 
         m_bisMoving = false;
-
-        cout << "!!!!!!!!!!!!!보스 왼쪽 공격" << endl;
-
         if (m_isfirst)
         {
             g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK_LEFT);
+            cout << "!!!!!!!!!!!!!보스 왼쪽 공격" << endl;
             m_isfirst = false;
         }
          
@@ -578,12 +574,11 @@ void CMonsterScript::Attack()
         //SetAnimation(MONSTER_ANI_TYPE::ATTACK_RIGHT);
 
         m_bisMoving = false;
-
-        cout << "!!!!!!!!!!!!!보스 오른쪽 공격" << endl;
         
         if (m_isfirst)
         {
             g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK_RIGHT);
+            cout << "!!!!!!!!!!!!!보스 오른쪽 공격" << endl;
             m_isfirst = false;
         }  
     }
