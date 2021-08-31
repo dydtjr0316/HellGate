@@ -299,6 +299,8 @@ void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONS
 	{
 		p.isMoving = false;
 	}
+
+	cout << "서버로 보내는 ani 패킷: " << (UINT)aniType << endl;
 	Send_Packet(&p);
 
 }

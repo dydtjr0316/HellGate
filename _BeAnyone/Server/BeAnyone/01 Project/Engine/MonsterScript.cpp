@@ -443,8 +443,10 @@ void CMonsterScript::Attack()
 
         if (m_isfirst)
         {
-            g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
-            m_isfirst = false;
+            if (g_myid == m_pPlayer->GetID()) {
+                g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
+                m_isfirst = false;
+            }
         }
         
     }
@@ -455,7 +457,9 @@ void CMonsterScript::Attack()
         SetAnimation(MONSTER_ANI_TYPE::IDLE);
         m_bisMoving = true;
         m_isfirst = true;
-        g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        if (g_myid == m_pPlayer->GetID()) {
+            g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        }
         // 서버에 패킷 보내야 함
         SetIsPunch(true);
         //// 플레이어에게 공격
@@ -476,9 +480,11 @@ void CMonsterScript::Attack()
 
         if (m_isfirst)
         {
-           g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
-           cout << "!!!!!!!!!! 보스 공격" << endl;
-           m_isfirst = false;
+            if (g_myid == m_pPlayer->GetID()) {
+                g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
+                cout << "!!!!!!!!!! 보스 공격" << endl;
+                m_isfirst = false;
+            }
         }
 
         // 플레이어에게 공격
@@ -500,7 +506,9 @@ void CMonsterScript::Attack()
         //SetAnimation(MONSTER_ANI_TYPE::IDLE);
         m_bisMoving = true;
         cout << "보스 공격 끝남" << endl;
-        g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        if (g_myid == m_pPlayer->GetID()) {
+            g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        }
         m_isfirst = true;
         // packet
     }
@@ -519,9 +527,11 @@ void CMonsterScript::Attack()
 
         if (m_isfirst)
         {
-            g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ROAR);
-            cout << "!!!!!!!!!!!!!보스 소리 지름" << endl;
-            m_isfirst = false;
+            if (g_myid == m_pPlayer->GetID()) {
+                g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ROAR);
+                cout << "!!!!!!!!!!!!!보스 소리 지름" << endl;
+                m_isfirst = false;
+            }
         }
        
     
@@ -537,7 +547,9 @@ void CMonsterScript::Attack()
         m_isfirst = true;
 
         cout << "보스 소리 다 질럿음" << endl;
-        g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        if (g_myid == m_pPlayer->GetID()) {
+            g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        }
     }
 
     // attack_left
@@ -549,22 +561,26 @@ void CMonsterScript::Attack()
         m_bisMoving = false;
         if (m_isfirst)
         {
-            g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK_LEFT);
-            cout << "!!!!!!!!!!!!!보스 왼쪽 공격" << endl;
-            m_isfirst = false;
+            if (g_myid == m_pPlayer->GetID()) {
+                g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK_LEFT);
+                cout << "!!!!!!!!!!!!!보스 왼쪽 공격" << endl;
+                m_isfirst = false;
+            }
         }
          
     }
     if (Getcnt(MONSTER_ANICNT_TYPE::ATTACK_LEFT_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
         m_bIsAttakLeft = false;
-        m_bisAniReset = false; 
+        m_bisAniReset = false;
         Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_LEFT_CNT);
         //SetAnimation(MONSTER_ANI_TYPE::IDLE);
         m_bisMoving = true;
         m_isfirst = true;
 
         cout << "보스 왼쪽 공격 끝" << endl;
-         g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        if (g_myid == m_pPlayer->GetID()) {
+            g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        }
     }
 
     // attack_right
@@ -577,20 +593,24 @@ void CMonsterScript::Attack()
         
         if (m_isfirst)
         {
-            g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK_RIGHT);
-            cout << "!!!!!!!!!!!!!보스 오른쪽 공격" << endl;
-            m_isfirst = false;
+            if (g_myid == m_pPlayer->GetID()) {
+                g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK_RIGHT);
+                cout << "!!!!!!!!!!!!!보스 오른쪽 공격" << endl;
+                m_isfirst = false;
+            }
         }  
     }
     if (Getcnt(MONSTER_ANICNT_TYPE::ATTACK_RIGHT_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength) {
         m_bIsAttakRight = false;
-        m_bisAniReset = false; 
+        m_bisAniReset = false;
         Setcnt(0.f, MONSTER_ANICNT_TYPE::ATTACK_RIGHT_CNT);
         //SetAnimation(MONSTER_ANI_TYPE::IDLE);
         m_bisMoving = true;
         m_isfirst = true;
         cout << "보스 오른쪽 공격 끝" << endl;
-         g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        if (g_myid == m_pPlayer->GetID()) {
+            g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
+        }
     }
 
 }
