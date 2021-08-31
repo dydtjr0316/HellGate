@@ -54,6 +54,8 @@ private:
     bool                m_bIsRoar = false;
     bool                m_bIsAttakLeft = false;
     bool                m_bIsAttakRight = false;
+
+    bool                m_bBossStateFirst = true;
 public:
     void SetBossState(const MONSTER_STATE& state) { m_eMonsterState = state; }
     void SetAttackPattern(const BOSS_ATTACK& pattern) { m_eAttackPattern = pattern; }

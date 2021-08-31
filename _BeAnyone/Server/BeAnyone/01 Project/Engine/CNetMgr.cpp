@@ -189,12 +189,12 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local,
 	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
 	p.deltaTime = delta;
 	p.isMoving = isMoving;
-	cout << "-------------------------------" << endl;
-	cout << "-------------------------------" << endl;
-	cout << "Send_Move_Packet" << endl;
-	cout << local.x << " , " << local.z << endl;
-	cout << "-------------------------------" << endl;
-	cout << "-------------------------------" << endl;
+	//cout << "-------------------------------" << endl;
+	//cout << "-------------------------------" << endl;
+	//cout << "Send_Move_Packet" << endl;
+	//cout << local.x << " , " << local.z << endl;
+	//cout << "-------------------------------" << endl;
+	//cout << "-------------------------------" << endl;
 
 
 	Send_Packet(&p);
@@ -217,8 +217,8 @@ void CNetMgr::Send_Stop_Packet(const bool& isMoving, const uShort& id)
 	p.size = sizeof(p);
 	p.id = id;
 	p.isMoving = isMoving;
-	cout << p.id << "가 스톱패킷 서버로 보냄" << endl;
-	cout << "*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
+	//cout << p.id << "가 스톱패킷 서버로 보냄" << endl;
+	//cout << "*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
 	Send_Packet(&p);
 }
 
@@ -321,6 +321,8 @@ void CNetMgr::Send_Boss_State_Packet(const uShort& boss, const MONSTER_STATE& st
 	p.id = boss;
 	p.aniState = state;
 	p.attackstate = attackpattern;
+
+	cout << "보내는 boss state packet: " << (UINT)state << endl;
 
 	Send_Packet(&p);
 }
@@ -512,7 +514,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 								my_packet->localVec.y = fHeight;
 						}
 						g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
-						cout << "패킷 받을때 Position    " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
+						//cout << "패킷 받을때 Position    " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
 
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
@@ -777,8 +779,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPacketWorldDir(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketWorldDir(packet->worldDir);
 
-			cout << "Boss가 받는패킷 : " << packet->worldDir.x << ", " << packet->worldDir.z << endl;
-			cout << "----------------------" << endl;
+			//cout << "Boss가 받는패킷 : " << packet->worldDir.x << ", " << packet->worldDir.z << endl;
+			//cout << "----------------------" << endl;
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
@@ -964,6 +966,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 		
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
 
+			if (packet->id == BOSS_ID)
+				cout << "패킷에서 세팅: " << (UINT)packet->aniType << endl;
+
 		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(false);
 		else
@@ -1127,7 +1132,7 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
 			if (packet_buffer[1] == SC_PACKET_STOP)
 			{
-				cout << "Stop packet size : " << (int)packet_buffer[0] << endl;
+				//cout << "Stop packet size : " << (int)packet_buffer[0] << endl;
 			}
 			ProcessPacket(packet_buffer);
 			ptr += in_packet_size - saved_packet_size;
