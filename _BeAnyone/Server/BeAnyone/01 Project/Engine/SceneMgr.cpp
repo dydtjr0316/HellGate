@@ -1927,12 +1927,7 @@ void CSceneMgr::init()
 	CreateNewMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CItemMgr::GetInst()->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 
-	//=============
-	// Boss Monster 
-	//=============
-	{
-		
-	}
+	
 
 //	// ====================
 //// Particle Object 생성
@@ -1973,6 +1968,52 @@ void CSceneMgr::init()
 	pObject->Transform()->SetLocalPos(particlePos);
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
+	//=============
+	// Line Mesh
+	//=============
+
+	//VTX v;
+	//vector<VTX> vecVTX;
+	//vector<UINT> vecIdx;
+	//Ptr<CMesh> pMesh = nullptr;
+	//pMesh = new CMesh;
+
+	//v.vPos = Vector3(-0.5f, 0.5f, 0.f);
+	//v.vColor = Vector4(0.8f, 0.7f, 0.6f, 1.f);
+	//v.vUV = Vector2(0.f, 0.f);
+	//v.vNormal = Vector3(0.f, 0.f, -1.f);
+	//v.vTangent = Vector3(1.f, 0.f, 0.f);
+	//v.vBinormal = Vector3(0.f, 1.f, 0.f);
+	//vecVTX.push_back(v);
+
+	//v.vPos = Vector3(0.5f, 0.5f, 0.f);
+	//vecVTX.push_back(v);
+
+	//v.vPos = Vector3(0.5f, -0.5f, 0.f);
+	//vecVTX.push_back(v);
+
+	//v.vPos = Vector3(-0.5f, -0.5f, 0.f);
+	//vecVTX.push_back(v);
+
+	//vecIdx.push_back(0); vecIdx.push_back(1); vecIdx.push_back(2);
+	//vecIdx.push_back(0); vecIdx.push_back(2); vecIdx.push_back(3);
+
+	//pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
+	//	, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
+
+	//CGameObject* pLineMesh = new CGameObject;
+	//pLineMesh->SetName(L"Line");
+	//pLineMesh->AddComponent(new CTransform);
+	//pLineMesh->AddComponent(new CMeshRender);
+	//pLineMesh->FrustumCheck(false);
+	//pLineMesh->Transform()->SetLocalPos(particlePos);
+	//pLineMesh->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f)); // 2배함
+
+	//// MeshRender 설정
+	//pLineMesh->MeshRender()->SetMesh(pMesh);
+	//pLineMesh->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+	////pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTestUAVTexture.GetPointer());
+	//m_pCurScene->FindLayer(L"Default")->AddGameObject(pLineMesh);
 	//// ====================
 	//// Compute Shader Test
 	//// ====================
