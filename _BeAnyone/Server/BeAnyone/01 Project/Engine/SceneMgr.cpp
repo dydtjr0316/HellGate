@@ -1692,7 +1692,7 @@ void CSceneMgr::init()
 	// Script 설정
 	pPlayerObj->AddComponent(new CPlayerScript);
 	CPlayerScript* playerScript = pPlayerObj->GetScript<CPlayerScript>();
-	playerScript->Init();
+	//playerScript->Init();
 	
 	// Animaition Data 넘겨주기
 	// Idle
@@ -1810,7 +1810,7 @@ void CSceneMgr::init()
 	pUICam->Camera()->SetWidth(CRenderMgr::GetInst()->GetResolution().fWidth);
 	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
 	CreateTargetUI(pUICam);
-	pPlayerObj->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetCameraProj(pUICam->Camera());
+	//pPlayerObj->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetCameraProj(pUICam->Camera());
 
 
 	// ====================

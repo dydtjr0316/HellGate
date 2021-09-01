@@ -77,8 +77,10 @@ void CNpcScript::init(UI_TYPE _eType)
 	storeUi->AddComponent(new CTransform);
 	storeUi->AddComponent(new CMeshRender);
 	storeUi->AddComponent(new CStaticUI);
+	storeUi->AddComponent(new CCollider);
+	storeUi->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
+	storeUi->StaticUI()->CreatePickingObj();
 	storeUi->StaticUI()->init(_eType);
-	//storeUi->StaticUI()->CreatePickingObj();
 	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
 	m_pCam = FindCam(L"UiCam", L"Default");
 	storeUi->StaticUI()->SetCameraProj(m_pCam->Camera());
