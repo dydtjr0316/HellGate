@@ -201,9 +201,11 @@ void CNetMgr::Enter_Game(const uShort& user_id, char name[])
         if (m_pMediator->Find(id)->GetStatus() != OBJSTATUS::ST_ACTIVE)continue;
          if (m_pMediator->Find(id)->GetStatus() == OBJSTATUS::ST_SLEEP)
          {
-             if(m_pMediator->IsType(id, OBJECT_TYPE::MONSTER))
+             if (m_pMediator->IsType(id, OBJECT_TYPE::MONSTER))
+             {
+                 cout << "enter game" << endl;
                  WakeUp_Monster(id);
-             /*else if (IsNpc(id))
+             }/*else if (IsNpc(id))
                  WakeUp_NPC(id);*/
          }
          tempLock.lock();
@@ -606,6 +608,7 @@ void CNetMgr::Worker_Thread()
 
                         break;
                     }
+                        cout << "00000000000000000" << endl;
             }
             
             if (true == keep_alive) {
@@ -746,6 +749,7 @@ void CNetMgr::Processing_Thead()
                         CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
                         if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 5.f)
                         {
+                            cout << "\t\t\t동기화 패킷" << endl;
                             for (auto& id : g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner))))
                                 if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
                                 {
@@ -861,11 +865,12 @@ void CNetMgr::Processing_Thead()
                 }
                 else
                 {
-                    if (m_pMediator->Find(monster) == nullptr)continue;
                     if (ismoving)
                     {
                         tempLock.lock();
+                        if (m_pMediator->Find(monster) == nullptr)continue;
                         old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
+                        if (m_pMediator->Find(monster) == nullptr)continue;
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         //cout << monsterPos.x << ", " << monsterPos.z << endl;

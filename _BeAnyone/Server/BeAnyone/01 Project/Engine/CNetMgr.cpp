@@ -1119,7 +1119,18 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_BOSS_STATE:
 	{
 		sc_packet_boss_state* packet = reinterpret_cast<sc_packet_boss_state*>(ptr);//effect  생성 위치 
+		if (packet->aniState == MONSTER_STATE::FOLLOW)
+		{
+			if(!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsPunch() &&
+				!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsRoar())
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetBossState(packet->aniState);
+
+		}
+		else
+		{
+
 		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetBossState(packet->aniState);
+		}
 		if (packet->attackstate != BOSS_ATTACK::END)
 		{
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAttackPattern(packet->attackstate);

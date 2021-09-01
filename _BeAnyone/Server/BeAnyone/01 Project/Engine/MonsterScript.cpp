@@ -229,13 +229,13 @@ void CMonsterScript::BossTurn()
         //Move();
         if (m_bIsFindPlayer) {
             //m_eMonsterState = MONSTER_STATE::FIND;
-            m_bIsFindPlayer = false;
             m_bIsRoar = true;   // 소리지르기 세팅
 
             // 범위 줄이기
             m_pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 500.f));
             TurnToPlayer(MOB_TYPE::BOSS);
             g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::FIND);
+            m_bIsFindPlayer = false;
         }
         break;
     case MONSTER_STATE::FIND:
@@ -699,11 +699,9 @@ void CMonsterScript::FollowToPlayer()
 
 }
 
-void CMonsterScript::TurnToPlayer(MOB_TYPE _eType) 
+void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
 {
     if (m_pPlayer == nullptr)return;
-    cout << "Turn to Player" << endl;
-    cout << "플레이어 ID : " << m_pPlayer->GetID() << endl;
     //g_netMgr.Send_Monster_Animation_Packet(GetID(), MONSTER_ANI_TYPE::ATTACK);
     Vector3 playerDir = m_pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
     Vector3 monsterDir{};
@@ -729,13 +727,13 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
    // if (_eType == MOB_TYPE::YELLOW)
    // {
         //GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
-        g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
+    g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
 
 
-       // cout << "Boss가 보내는 패킷 : " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).x << ", " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).z << endl;
-        g_netMgr.Send_MonsterDir_Packet(GetID(), -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT));
+    // cout << "Boss가 보내는 패킷 : " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).x << ", " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).z << endl;
+    g_netMgr.Send_MonsterDir_Packet(GetID(), -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT));
 
-   // }
+    // }
     m_bisDirChange = true;
     m_fAngleY += angle.x;
 
