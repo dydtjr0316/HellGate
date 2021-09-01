@@ -173,7 +173,13 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
     if (L"Attack Object" == _pOther->GetObj()->GetName())
     {
         // 여기 두번들어감 // 용석
-        g_netMgr.Send_Attack_Packet(m_sId);
+        if (m_pPlayer->GetID() == g_myid) {
+            g_netMgr.Send_Attack_Packet(m_sId);
+
+            if (m_eMobType == MOB_TYPE::BOSS)
+                g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::DAMAGE);
+        }
+
         m_bisMoving = false;
         m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
        // g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
@@ -182,9 +188,6 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
             m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
 
         m_bisDamaged = true;
-
-        if(m_eMobType == MOB_TYPE::BOSS)
-            g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::DAMAGE);
     }
 }
 
@@ -444,8 +447,10 @@ void CMonsterScript::Attack()
         monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
         monsterScript->SetAniReset(false); // m_bisAniReset = false;
         
-        g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
-        g_netMgr.Send_MonsterDead_Packet(m_sId);
+        if (m_pPlayer != nullptr && m_pPlayer->GetID() == g_myid) {
+            g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
+            g_netMgr.Send_MonsterDead_Packet(m_sId);
+        }
 
         m_bisMoving = false;
         m_packetDead = false;
@@ -681,8 +686,15 @@ void CMonsterScript::FollowToPlayer()
     CTransform* mosnterTrans = GetObj()->Transform();
 
     monsterPos += packetWorldDir * DT * 100.f;
+    
+    {
+        int z = (int)(monsterPos.z / GetObj()->Transform()->GetLocalScale().z);
 
-   // cout << monsterPos.x << ", " << monsterPos.z << endl;
+        float fHeight = m_pTerrainObj->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
+
+        if (monsterPos.y != fHeight)
+            monsterPos.y = fHeight;
+    }
 
     mosnterTrans->SetLocalPos(monsterPos);
     m_fFollowTime += DT;
