@@ -444,8 +444,11 @@ void CMonsterScript::Attack()
         monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
         monsterScript->SetAniReset(false); // m_bisAniReset = false;
         
-        g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
-        g_netMgr.Send_MonsterDead_Packet(m_sId);
+        if (m_pPlayer != nullptr && m_pPlayer->GetID() == g_myid)
+        {
+            g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
+            g_netMgr.Send_MonsterDead_Packet(m_sId);
+        }
 
         m_bisMoving = false;
         m_packetDead = false;
@@ -681,6 +684,15 @@ void CMonsterScript::FollowToPlayer()
     CTransform* mosnterTrans = GetObj()->Transform();
 
     monsterPos += packetWorldDir * DT * 100.f;
+
+    {
+        int z = (int)(monsterPos.z / GetObj()->Transform()->GetLocalScale().z);
+
+        float fHeight = m_pTerrainObj->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
+
+        if (monsterPos.y != fHeight)
+            monsterPos.y = fHeight;
+    }
 
    // cout << monsterPos.x << ", " << monsterPos.z << endl;
 

@@ -247,6 +247,7 @@ void CNetMgr::Send_ItemCreate_Paket(const Vector3& itemPos)
 	cs_packet_ItemCreate_Packet p;
 	p.type = CS_ITEMCREATE;
 	p.size = sizeof(p);
+	cout << "Item Create Packet send" << endl;
 	
 	p.vPos = itemPos;
 	Send_Packet(&p);

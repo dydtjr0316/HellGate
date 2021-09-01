@@ -150,32 +150,32 @@ void CItemMgr::MakeItem()
 
             vItem1Pos.y -= 30.f;
             vItem2Pos.y -= 30.f;
-vItem3Pos.y -= 30.f;
+            vItem3Pos.y -= 30.f;
 
-// 회전
-vItem1Rot.y = XM_PI / 2;
-vItem2Rot.y = XM_PI / 8;
-vItem3Rot.y = XM_PI;
+            // 회전
+            vItem1Rot.y = XM_PI / 2;
+            vItem2Rot.y = XM_PI / 8;
+            vItem3Rot.y = XM_PI;
 
-/*vItem1Rot.x = XM_PI / 2;
-vItem2Rot.x = XM_PI / 2;
-vItem3Rot.x = XM_PI / 2;*/
+            /*vItem1Rot.x = XM_PI / 2;
+            vItem2Rot.x = XM_PI / 2;
+            vItem3Rot.x = XM_PI / 2;*/
 
-m_vItem[0 + (i * 3)]->Transform()->SetLocalRot(vItem1Rot);
-m_vItem[1 + (i * 3)]->Transform()->SetLocalRot(vItem2Rot);
-m_vItem[2 + (i * 3)]->Transform()->SetLocalRot(vItem3Rot);
+            m_vItem[0 + (i * 3)]->Transform()->SetLocalRot(vItem1Rot);
+            m_vItem[1 + (i * 3)]->Transform()->SetLocalRot(vItem2Rot);
+            m_vItem[2 + (i * 3)]->Transform()->SetLocalRot(vItem3Rot);
 
-for (int j = m_iOldPosNum * 3; j < m_vItem.size(); ++j) {
-    int randNum = uidMonsterItem(dreMonsterItem);
-    m_vItem[j]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
-    m_vItem[j]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
-    wstring wstr = m_pItemMeshData[randNum]->GetMesh()->GetName();
-    // SetItemID();
-}
+            for (int j = m_iOldPosNum * 3; j < m_vItem.size(); ++j) {
+                int randNum = uidMonsterItem(dreMonsterItem);
+                m_vItem[j]->MeshRender()->SetMesh(m_pItemMeshData[randNum]->GetMesh());
+                m_vItem[j]->MeshRender()->SetMaterial(m_pItemMeshData[randNum]->GetMtrl());
+                wstring wstr = m_pItemMeshData[randNum]->GetMesh()->GetName();
+                // SetItemID();
+            }
 
 
-m_bMakeFirst[i] = false;
-m_bisUp[i] = true;
+            m_bMakeFirst[i] = false;
+            m_bisUp[i] = true;
         }
 
         // up

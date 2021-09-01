@@ -34,7 +34,7 @@ void CNetMgr::Do_Attack(const uShort& attacker, const uShort& victim)
 
     //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(attacker));// search sector 인자 확인
 
-    unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(attacker)));
+    unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(victim)));
     //client 인가 monster인가 
 
     if (monster->GetHP() - 12 >= 0)
@@ -861,6 +861,7 @@ void CNetMgr::Processing_Thead()
                 }
                 else
                 {
+                    if (m_pMediator->Find(monster) == nullptr)continue;
                     if (ismoving)
                     {
                         tempLock.lock();
