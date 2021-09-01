@@ -10,6 +10,7 @@
 CNpcScript::CNpcScript()
 	: CScript((UINT)COMPONENT_TYPE::SCRIPT) //CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT),
 	, m_eReqState{ REQUEST_STATE::NOT_RECIEVE }
+	, m_pPlayer{ nullptr }
 	, m_vPlayerQuest{}
 	, m_pStoreUi{ NULL }
 {
@@ -193,7 +194,10 @@ void CNpcScript::update()
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-
+		if (m_pPlayer != nullptr) {
+			if (m_pPlayer->GetID() != g_myid)
+				return;
+		}
 		POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
 
 		if (m_bIsTalk == true) { // 필요없을 것 같은데

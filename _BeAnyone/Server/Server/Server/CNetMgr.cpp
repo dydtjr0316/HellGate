@@ -638,6 +638,7 @@ void CNetMgr::Processing_Thead()
     while (true)
     {
         CTimeMgr::GetInst()->update();
+          tempLock.lock();
 
         if (m_pMediator->ReckonerSize() != 0)
         {
@@ -677,18 +678,18 @@ void CNetMgr::Processing_Thead()
                         float tempf = obj->GetPacketRotateY();
                     }
                     {
-            /*            if(m_pMediator->ReckonerSize() == 1)
-                            cout << "reckoner size : " << m_pMediator->ReckonerSize() << endl;
-                        if (old_viewList.size() == 1)
-                            cout << "old_viewList size : " << m_pMediator->ReckonerSize() << endl;
-                        if (new_viewList.size() == 1)
-                            cout << "new_viewList size : " << m_pMediator->ReckonerSize() << endl;*/
+                        /*            if(m_pMediator->ReckonerSize() == 1)
+                                        cout << "reckoner size : " << m_pMediator->ReckonerSize() << endl;
+                                    if (old_viewList.size() == 1)
+                                        cout << "old_viewList size : " << m_pMediator->ReckonerSize() << endl;
+                                    if (new_viewList.size() == 1)
+                                        cout << "new_viewList size : " << m_pMediator->ReckonerSize() << endl;*/
                         for (auto& ob : new_viewList) //시야에 새로 들어온 객체 구분
                         {
                             if (ob == reckoner)continue;
                             if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
                             {
-                                tempLock.lock();
+                              //  tempLock.lock();
 
                                 m_pSendMgr->Send_Enter_Packet(reckoner, ob); // user에게 ob enter 
                                 if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
@@ -698,7 +699,7 @@ void CNetMgr::Processing_Thead()
                                     m_pSendMgr->Send_Enter_Packet(ob, reckoner);
 
                                 }
-                                tempLock.unlock();
+                               // tempLock.unlock();
 
                             }
                             else // new, old 둘다 있을때 
@@ -737,14 +738,14 @@ void CNetMgr::Processing_Thead()
                             }
 
                         }
-                        tempLock.lock();
+                       // tempLock.lock();
                         CAST_CLIENT(obj)->SetIsRefresh(false);
-                        tempLock.unlock();
+                       // tempLock.unlock();
 
 
                         // 동기화 패킷 일시정지 
                         CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                        if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 5.f)
+                        if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 3.f)
                         {
                             for (auto& id : g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner))))
                                 if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
@@ -762,6 +763,7 @@ void CNetMgr::Processing_Thead()
 
         if (m_pMediator->MonsterReckonerSize() != 0)
         {
+            //tempLock.lock();
 
             for (auto& monster : m_pMediator->GetMonsterReckonerList())
             {
@@ -785,7 +787,7 @@ void CNetMgr::Processing_Thead()
                 {
                     if (ismoving)
                     {
-                        tempLock.lock();
+                        //tempLock.lock();
                         old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
@@ -797,7 +799,7 @@ void CNetMgr::Processing_Thead()
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
                         g_QuadTree.Insert(m_pMediator->Find(monster));
                         new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
-                        tempLock.unlock();
+                        //tempLock.unlock();
 
                         for (auto& id : new_viewList)
                         {
@@ -864,7 +866,6 @@ void CNetMgr::Processing_Thead()
                     if (m_pMediator->Find(monster) == nullptr)continue;
                     if (ismoving)
                     {
-                        tempLock.lock();
                         old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
@@ -872,8 +873,8 @@ void CNetMgr::Processing_Thead()
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
                         g_QuadTree.Insert(m_pMediator->Find(monster));
                         new_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
-                        tempLock.unlock();
                     }
+
                     for (auto& id : new_viewList)
                     {
                         if (old_viewList.count(id) != 0)
@@ -940,6 +941,8 @@ void CNetMgr::Processing_Thead()
             }
 
         }
+        tempLock.unlock();
+
     }
 }
 
