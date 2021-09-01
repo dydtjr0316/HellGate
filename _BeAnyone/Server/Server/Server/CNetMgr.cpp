@@ -313,13 +313,18 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         //if (m_pMediator->Count(packet->id) == 0)break;
         CMonster* monster = CAST_MONSTER(m_pMediator->Find(packet->id));
         tempLock.lock();
+        if ((int)packet->aniType == 7)
+        {
+            int i = 0;
+        }
+        cout << m_pMediator->Find(packet->id)->GetLocalPosVector().x << ", "
+            << m_pMediator->Find(packet->id)->GetLocalPosVector().z << endl;
         unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(packet->id));
         tempLock.unlock();
         cout << "-------------" << endl;
         cout << user_id << "에게 패킷 받음   " << (int)packet->aniType << endl;
         cout << "View List Size = " << new_viewList.size() << endl;
-        cout << m_pMediator->Find(packet->id)->GetLocalPosVector().x << ", "
-            << m_pMediator->Find(packet->id)->GetLocalPosVector().z << endl;
+       
         cout << "-------------" << endl;
         for (auto& user : new_viewList)
         {

@@ -300,7 +300,14 @@ void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONS
 		p.isMoving = false;
 	}
 
+	
+
 	cout << "서버로 보내는 ani 패킷: " << (UINT)aniType << endl;
+	if (monster_id == 3333)
+	{
+		cout << g_Object.find(3333)->second->Transform()->GetLocalPos().x <<
+			g_Object.find(3333)->second->Transform()->GetLocalPos().z << endl;
+	}
 	Send_Packet(&p);
 
 }
