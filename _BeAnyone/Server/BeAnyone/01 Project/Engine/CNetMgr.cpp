@@ -30,7 +30,7 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.13";
+const char ip[] = "192.168.0.07";
 //const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
@@ -644,7 +644,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
-					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
+					
+					Ptr<CMeshData> pIdleMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Slither Forward Fast WO Root.fbx", FBX_TYPE::MONSTER);
 					CGameObject* pMonster = new CGameObject;
 					pMonster = pMeshData->Instantiate();
 					g_Object.emplace(id, pMonster);
@@ -669,8 +671,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 					pMonster->Transform()->SetLocalPos(my_packet->localVec);
 					pMonster->AddComponent(new CCollider);
 					pMonster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"BossMonster");
-					pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-					pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+					pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pIdleMeshData->GetMesh()->GetBoundingBoxExtents()));
+					pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(), pIdleMeshData->GetMesh()->GetBoundingSphereRadius()));
 
 					// Script ¼³Á¤
 					pMonster->AddComponent(new CMonsterScript);
@@ -713,6 +715,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->SetID(id);
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
+
 				}
 			}
 		}

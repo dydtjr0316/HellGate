@@ -31,9 +31,6 @@ CMonsterScript::CMonsterScript()
         pMonsterUi->AddComponent(new CMeshRender);
         tResolution res = CRenderMgr::GetInst()->GetResolution();
 
-        if (m_eMobType == MOB_TYPE::BOSS)
-            vScale = Vector3(150.f, 2.f, 1.f);
-
         pMonsterUi->Transform()->SetLocalScale(vScale);
         pMonsterUi->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
 
@@ -89,7 +86,7 @@ void CMonsterScript::Init()
     pFindCollider->FrustumCheck(false);
     pFindCollider->AddComponent(new CTransform);
     pFindCollider->AddComponent(new CCollider);
-    pFindCollider->AddComponent(new CMeshRender);
+    //pFindCollider->AddComponent(new CMeshRender);
     pFindCollider->AddComponent(new CSenserScript);
 
     pFindCollider->Transform()->SetLocalPos(Vector3(0.0f, 0.0f, 0.0f));
@@ -97,9 +94,9 @@ void CMonsterScript::Init()
     pFindCollider->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
     pFindCollider->Collider()->SetColliderType(COLLIDER_TYPE::RANGE);
     pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 1000.f));
-    pFindCollider->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+    /*pFindCollider->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
     Ptr<CMaterial> pMtrla = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-    pFindCollider->MeshRender()->SetMaterial(pMtrla->Clone());
+    pFindCollider->MeshRender()->SetMaterial(pMtrla->Clone());*/
     m_pFindCollider = pFindCollider;
 
     GetObj()->AddChild(pFindCollider);
@@ -137,6 +134,7 @@ void CMonsterScript::update()
     Vector3 UiUnderPos = m_pUnderUi->Transform()->GetLocalPos();
     Vector3 PlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
     Vector3 UIscale = m_pUi->Transform()->GetLocalScale();
+    //Vector3 UiScale = Vector3(360.f, 10.f, 1.f);
 
     DummyPos = MonsterPos;
     m_pChildDummy->Transform()->SetLocalRot(Vector3(PlayerRot + Vector3(0.f, XM_PI, 0.f)));
@@ -150,13 +148,18 @@ void CMonsterScript::update()
     // Ui Bar
     // 체력 줄이는
     m_pUi->Transform()->SetLocalScale(Vector3(static_cast<float>(m_sHp * 3.5f), UIscale.y, UIscale.z));
+    
     UiPos = Vector3(0.0f, 300.f, 0.f);
+   
+
     float decresedHp = 350.f - static_cast<float>(m_sHp * 3.5f);
     UiPos.x -= decresedHp / 2;
     UiPos.y = 300.f;
+
+    if (m_eMobType == MOB_TYPE::BOSS)
+        UiPos.y = 700.f;
+
     m_pUi->Transform()->SetLocalPos(UiPos);
-
-
 }
 
 void CMonsterScript::OnCollisionEnter(CCollider* _pOther)

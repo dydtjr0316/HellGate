@@ -127,7 +127,7 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
     p.o_type = O_PLAYER;
     if(p.id<START_MONSTER)
         CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(p.id))->SetIsMoving(true);
-    if (p.id >= START_MONSTER && p.id < END_MONSTER)
+    if ((p.id >= START_MONSTER && p.id < END_MONSTER) || p.id == BOSS_ID)
     {
         p.hp = dynamic_cast<CMonster*>(Netmgr.GetMediatorMgr()->Find(other_id))->GetHP();
     }
