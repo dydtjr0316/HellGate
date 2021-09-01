@@ -51,6 +51,7 @@ CBoundary::CBoundary(CClient* player, const float& searchsize)
 
 bool CBoundary::contains(CGameObject* p)
 {
+	
 	return (p->GetLocalPosVector().x >= m_fx - m_fw &&
 		p->GetLocalPosVector().x <= m_fx + m_fw &&
 		p->GetLocalPosVector().z >= m_fz - m_fh &&

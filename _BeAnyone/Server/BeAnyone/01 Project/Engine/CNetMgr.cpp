@@ -30,8 +30,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
-//const char ip[] = "192.168.0.13";
+//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -303,11 +303,7 @@ void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONS
 	
 
 	cout << "서버로 보내는 ani 패킷: " << (UINT)aniType << endl;
-	if (monster_id == 3333)
-	{
-		cout << g_Object.find(3333)->second->Transform()->GetLocalPos().x <<
-			g_Object.find(3333)->second->Transform()->GetLocalPos().z << endl;
-	}
+
 	Send_Packet(&p);
 
 }

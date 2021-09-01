@@ -67,23 +67,24 @@ void CNetMgr::Kill_Monster(const uShort& monster_id)
     if (m_pMediator->Find(monster_id) == nullptr)return;
 
     //vector<unordered_set<uShort>> vSectors = CSectorMgr::GetInst()->Search_Sector(m_pMediator->Find(monster_id));
-    if (m_pMediator->Count(monster_id) != 0)
-    {
-        unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
 
-        // g_QuadTree.Delete(m_pMediator->Find(monster_id));
-        tempLock.lock();
-        //cout << "Do_Attack : " << monster_id << endl;
-        for (auto& clientID : m_pMediator->GetReckonerList())
+    tempLock.lock();
+    g_QuadTree.Delete(m_pMediator->Find(monster_id));
+    unordered_set<uShort> vSectors = g_QuadTree.search(CBoundary(m_pMediator->Find(monster_id)));
+    Netmgr.GetMediatorMgr()->Find(monster_id)->SetIsMoving(false);
+    //cout << "Do_Attack : " << monster_id << endl;
+    for (auto& clientID : vSectors)
+    {
+        if (m_pMediator->IsType(clientID, OBJECT_TYPE::CLIENT))
         {
-            Netmgr.GetMediatorMgr()->Find(clientID)->SetIsMoving(false);
             cout << "\t\t\tKillMonster" << endl;
             m_pSendMgr->Send_Leave_Packet(clientID, monster_id, false);
         }
-        m_pMediator->Delete_Obj(monster_id);
-        m_pMediator->Delete_MonsterReckoner(monster_id);
-        tempLock.unlock();
     }
+    m_pMediator->Delete_Obj(monster_id);
+    m_pMediator->Delete_MonsterReckoner(monster_id);
+    tempLock.unlock();
+
 }
 void CNetMgr::Do_Move(const uShort& user_id, const char& dir, Vector3& localVec, const float& rotateY)
 {
@@ -313,10 +314,6 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         //if (m_pMediator->Count(packet->id) == 0)break;
         CMonster* monster = CAST_MONSTER(m_pMediator->Find(packet->id));
         tempLock.lock();
-        if ((int)packet->aniType == 7)
-        {
-            int i = 0;
-        }
         cout << m_pMediator->Find(packet->id)->GetLocalPosVector().x << ", "
             << m_pMediator->Find(packet->id)->GetLocalPosVector().z << endl;
         unordered_set<uShort> new_viewList = g_QuadTree.search(m_pMediator->Find(packet->id));
@@ -324,7 +321,10 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cout << "-------------" << endl;
         cout << user_id << "에게 패킷 받음   " << (int)packet->aniType << endl;
         cout << "View List Size = " << new_viewList.size() << endl;
-       
+        if (packet->aniType == MONSTER_ANI_TYPE::DEAD)
+        {
+            int i = 0;
+       }
         cout << "-------------" << endl;
         for (auto& user : new_viewList)
         {
