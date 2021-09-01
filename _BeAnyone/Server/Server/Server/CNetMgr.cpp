@@ -638,7 +638,7 @@ void CNetMgr::Processing_Thead()
     while (true)
     {
         CTimeMgr::GetInst()->update();
-          tempLock.lock();
+        tempLock.lock();
 
         if (m_pMediator->ReckonerSize() != 0)
         {
@@ -650,7 +650,7 @@ void CNetMgr::Processing_Thead()
                 if (m_pMediator->Find(reckoner)->GetDeadReckoningPacket() == nullptr)continue;
                 obj = m_pMediator->Find(reckoner);
                 objPos = obj->GetLocalPosVector();
-                obj->GetLock().lock();
+                // obj->GetLock().lock();
                 if (obj->GetIsMoving())
                 {
                     unordered_set<uShort> old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner)));
@@ -689,7 +689,7 @@ void CNetMgr::Processing_Thead()
                             if (ob == reckoner)continue;
                             if (0 == old_viewList.count(ob)) // 새로 들어온 아이디
                             {
-                              //  tempLock.lock();
+                                //  tempLock.lock();
 
                                 m_pSendMgr->Send_Enter_Packet(reckoner, ob); // user에게 ob enter 
                                 if (m_pMediator->IsType(ob, OBJECT_TYPE::CLIENT))
@@ -699,7 +699,7 @@ void CNetMgr::Processing_Thead()
                                     m_pSendMgr->Send_Enter_Packet(ob, reckoner);
 
                                 }
-                               // tempLock.unlock();
+                                // tempLock.unlock();
 
                             }
                             else // new, old 둘다 있을때 
@@ -720,7 +720,7 @@ void CNetMgr::Processing_Thead()
                             if (ob == reckoner)continue;
                             if (new_viewList.count(ob) == 0)
                             {
-                                tempLock.lock();
+                                // tempLock.lock();
 
                                 m_pMediator->Find(ob)->SetIsMoving(false);// 용석 필요한가?
                                 cout << "********************" << endl;
@@ -734,29 +734,29 @@ void CNetMgr::Processing_Thead()
                                     m_pSendMgr->Send_Leave_Packet(ob, reckoner);
 
                                 }
-                                tempLock.unlock();
+                                // tempLock.unlock();
                             }
 
                         }
-                       // tempLock.lock();
+                        // tempLock.lock();
                         CAST_CLIENT(obj)->SetIsRefresh(false);
-                       // tempLock.unlock();
+                        // tempLock.unlock();
 
 
-                        // 동기화 패킷 일시정지 
-                        CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
-                        if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 3.f)
-                        {
-                            for (auto& id : g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner))))
-                                if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
-                                {
-                                    m_pSendMgr->Send_Move_Packet(id, reckoner, CAST_CLIENT(obj)->GetDir());
-                                }
-                            CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
-                        }
+                         // 동기화 패킷 일시정지 
+                        /* CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
+                         if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 3.f)
+                         {
+                             for (auto& id : g_QuadTree.search(CBoundary(m_pMediator->Find(reckoner))))
+                                 if (m_pMediator->IsType(id, OBJECT_TYPE::CLIENT))
+                                 {
+                                     m_pSendMgr->Send_Move_Packet(id, reckoner, CAST_CLIENT(obj)->GetDir());
+                                 }
+                             CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
+                         }*/
                     }
                 }
-                obj->GetLock().unlock();
+                //obj->GetLock().unlock();
 
             }
         }

@@ -557,7 +557,7 @@ void CPlayerScript::op_Move()
 
 	}
 	else {
-		if (m_isBezier&&m_fRTT>=0.f)
+		/*if (m_isBezier&&m_fRTT>=0.f)
 		{
 			cout << "보간한다 ~~!!!" << endl;
 
@@ -579,7 +579,7 @@ void CPlayerScript::op_Move()
 			{
 				SetisBezeir(false);
 			}
-		}
+		}*/
 	}
 }
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
