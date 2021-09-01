@@ -912,7 +912,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else
 		{
 
-			if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
+			if (CheckObjType(id) == OBJECT_TYPE::MONSTER || CheckObjType(id) == OBJECT_TYPE::BOSS)
 			{
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
 			}
@@ -1027,8 +1027,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 
 		// 플레이어에게 공격
-
-		
 
 		if (MONSTER_ANI_TYPE::DEAD == packet->aniType)
 		{

@@ -21,7 +21,7 @@ CMonsterScript::CMonsterScript()
     //----------------
     // monster hp ui
     //----------------
-    Vector3 vScale(360.f, 10.f, 1.f);
+    Vector3 vScale(350.f, 10.f, 1.f);
 
     for (int i = 0; i < 2; ++i) {
         CGameObject* pMonsterUi = new CGameObject;
@@ -30,6 +30,9 @@ CMonsterScript::CMonsterScript()
         pMonsterUi->AddComponent(new CTransform);
         pMonsterUi->AddComponent(new CMeshRender);
         tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+        if (i == 1)
+            vScale = Vector3(350.f, 3.f, 1.f);
 
         pMonsterUi->Transform()->SetLocalScale(vScale);
         pMonsterUi->Transform()->SetLocalRot(Vector3(0.f, 0.f, 0.f));
@@ -140,11 +143,6 @@ void CMonsterScript::update()
     m_pChildDummy->Transform()->SetLocalRot(Vector3(PlayerRot + Vector3(0.f, XM_PI, 0.f)));
     m_pChildDummy->Transform()->SetLocalPos(DummyPos);
 
-    // Ui Under Bar
-    UiUnderPos = Vector3(MonsterPos.x, MonsterPos.y + 300.f, MonsterPos.z);
-    m_pUnderUi->Transform()->SetLocalPos(UiUnderPos);
-    m_pUnderUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
-
     // Ui Bar
     // 체력 줄이는
     m_pUi->Transform()->SetLocalScale(Vector3(static_cast<float>(m_sHp * 3.5f), UIscale.y, UIscale.z));
@@ -157,9 +155,14 @@ void CMonsterScript::update()
     UiPos.y = 300.f;
 
     if (m_eMobType == MOB_TYPE::BOSS)
-        UiPos.y = 700.f;
+        UiPos.y = 400.f;
 
     m_pUi->Transform()->SetLocalPos(UiPos);
+
+    // Ui Under Bar
+    UiUnderPos = Vector3(MonsterPos.x, MonsterPos.y + UiPos.y, MonsterPos.z);
+    m_pUnderUi->Transform()->SetLocalPos(UiUnderPos);
+    m_pUnderUi->Transform()->SetLocalRot(PlayerRot + Vector3(0.f, XM_PI, 0.f));
 }
 
 void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
@@ -179,9 +182,10 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
             m_pPlayer->Quest()->AddQuestcount(QUEST_TYPE::KILL_MONSTER);
 
         m_bisDamaged = true;
-    }
 
-    cout << "총알 맞은 후   "<< m_pPlayer->GetID() << endl;
+        if(m_eMobType == MOB_TYPE::BOSS)
+            g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::DAMAGE);
+    }
 }
 
 void CMonsterScript::OnCollisionExit(CCollider* _pOther)
@@ -276,8 +280,19 @@ void CMonsterScript::BossTurn()
 
         break;
     case MONSTER_STATE::DAMAGE:
+        if (m_packetDead) {
+            g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::DIE);
+        }
+
+        Attack();
+        
+        if (m_bisDamaged == false) {
+            g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::FOLLOW);
+        }
+
         break;
     case MONSTER_STATE::DIE:
+        Attack();
         break;
     }
 }
@@ -413,7 +428,7 @@ void CMonsterScript::Attack()
     {
         monsterScript->AnimClipReset();
         monsterScript->Setcnt(monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) + DT, MONSTER_ANICNT_TYPE::DEATH_CNT);
-        SetAnimation(MONSTER_ANI_TYPE::DEAD);
+        //SetAnimation(MONSTER_ANI_TYPE::DEAD);
         m_bisMoving = false;
     }
     if (monsterScript->Getcnt(MONSTER_ANICNT_TYPE::DEATH_CNT) > GetObj()->Animator3D()->GetAnimClip(0).dTimeLength && m_packetDead)
@@ -421,8 +436,6 @@ void CMonsterScript::Attack()
         monsterScript->SetBisAttack(false);
         monsterScript->Setcnt(0.f, MONSTER_ANICNT_TYPE::DEATH_CNT);
         monsterScript->SetAniReset(false); // m_bisAniReset = false;
-        //g_netMgr.Send_MonsterDead_Packet(monsterid);
-        //m_Packet_autoMove->eDir = (char)MONSTER_AUTOMOVE_DIR::AUTO;
         
         g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
         g_netMgr.Send_MonsterDead_Packet(m_sId);
@@ -464,7 +477,10 @@ void CMonsterScript::Attack()
             g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::IDLE);
         }
         // 서버에 패킷 보내야 함
-        SetIsPunch(true);
+
+        if(m_eMobType != MOB_TYPE::BOSS)
+            SetIsPunch(true);
+
         //// 플레이어에게 공격
         //if (GetObj()->GetName() == L"GreenMonster")
         //   TurnToPlayer(MOB_TYPE::GREEN);
