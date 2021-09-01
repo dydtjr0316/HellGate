@@ -43,6 +43,7 @@ void CSendMgr::Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos)
     p.size = sizeof(sc_packet_ItemCreate_Packet);
     p.type = SC_ITEMCREATE;
     p.vPos = pos;
+    cout << user_id << "에게 Create 패킷 send" << endl;
     Send_Packet(user_id, &p);
 }
 

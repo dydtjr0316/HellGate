@@ -689,13 +689,11 @@ void CMonsterScript::FollowToPlayer()
     
     {
         int z = (int)(monsterPos.z / GetObj()->Transform()->GetLocalScale().z);
-
         float fHeight = m_pTerrainObj->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
 
         if (monsterPos.y != fHeight)
             monsterPos.y = fHeight;
     }
-
     mosnterTrans->SetLocalPos(monsterPos);
     m_fFollowTime += DT;
 

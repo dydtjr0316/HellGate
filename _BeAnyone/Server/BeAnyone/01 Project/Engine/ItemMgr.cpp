@@ -156,7 +156,7 @@ void CItemMgr::MakeItem()
             vItem1Rot.y = XM_PI / 2;
             vItem2Rot.y = XM_PI / 8;
             vItem3Rot.y = XM_PI;
-            
+      
             /*vItem1Rot.x = XM_PI / 2;
             vItem2Rot.x = XM_PI / 2;
             vItem3Rot.x = XM_PI / 2;*/
@@ -172,8 +172,7 @@ void CItemMgr::MakeItem()
                 wstring wstr = m_pItemMeshData[randNum]->GetMesh()->GetName();
                 // SetItemID();
             }
-            
-            
+
             m_bMakeFirst[i] = false;
             m_bisUp[i] = true;
         }

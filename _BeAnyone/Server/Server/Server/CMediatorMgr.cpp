@@ -33,7 +33,7 @@ void CMediatorMgr::InitObject()
         pObj->Insert_Sector();
     }
     pObj = new CMonster;
-    pObj->SetPosV((8000.f), 2900.f, 4000.f);
+    pObj->SetPosV((8000.f), 2950.f, 4000.f);
     pObj->SetID(BOSS_ID);
     dynamic_cast<CMonster*>(pObj)->SetHP(100);
 
