@@ -532,7 +532,7 @@ void CSceneMgr::init()
 	pMainCam->AddComponent(new CToolCamScript);
 
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-	pMainCam->Camera()->SetFar(100000.f);
+	pMainCam->Camera()->SetFar(50000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 	pMainCam->Camera()->SetLayerCheck(30, false);
 	//pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));

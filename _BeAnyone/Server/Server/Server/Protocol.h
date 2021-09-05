@@ -151,7 +151,7 @@ struct sc_packet_move {
 	char type;
 	uShort id;
 
-	//uShort move_time;
+	int move_time;
 	char dir;		// pragma pack 사용 안할거면 다시 char로 수정
 
 	Vector3 localVec;
@@ -163,7 +163,6 @@ struct sc_packet_move {
 	system_clock::time_point Start;
 
 	bool isMoving;
-
 };
 
 //가라

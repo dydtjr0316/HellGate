@@ -286,7 +286,6 @@ void CPlayerScript::update()
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
 
-	cout << localPos.x << "\t" << localPos.z << endl;
 	if (g_myid != GetObj()->GetID())
 		op_Move();
 	else
@@ -543,6 +542,11 @@ void CPlayerScript::op_Move()
 
 	if (packetMoving)
 	{
+		cout << playerTrans->GetLocalPos().x << "\t" << playerTrans->GetLocalPos().z << endl;
+		cout << "PACKETPOS : " << packetLocalPos.x << ", " << packetLocalPos.z << endl;
+		cout << "DIRVEC : " << packetDirVec.x << ", " << packetDirVec.z << endl;
+		cout << DT << endl;
+		cout << "-------------------------" << endl;
 		if (FirstPacket)
 		{
 			temp = packetLocalPos + packetDirVec * packetspeed * (DT);
