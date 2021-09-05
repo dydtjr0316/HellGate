@@ -9,6 +9,7 @@
 #include "ConstantBuffer.h"
 
 #include "Script.h"
+#include "PlayerScript.h"
 
 UINT CCollider::g_iColID = 0;
 
@@ -76,9 +77,9 @@ void CCollider::finalupdate()
 
 	m_bSp.Center = Transform()->GetWorldPos();
 	m_bSp.Center.y = Transform()->GetWorldPos().y + m_bSp.Radius;
-
-	/*m_bbx.Extents = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	m_bbx.Extents = (Transform()->GetLocalScale()) * m_bbx.Extents;*/
+	
+	if (GetObj()->GetScript<CPlayerScript>() != nullptr && GetObj()->GetScript<CPlayerScript>()->GetIsHide())
+		m_bSp.Center.y += 2000.f;
 
 	if (m_eType == COLLIDER_TYPE::RANGE) {
 		m_bSp.Center = Transform()->GetWorldPos();

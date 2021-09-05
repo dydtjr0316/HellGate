@@ -500,6 +500,29 @@ void CPlayerScript::update()
 			SetTime_Zero();
 		}
 
+		if (KEY_HOLD(KEY_TYPE::KEY_X))
+		{
+			Skill_Hide();
+		}
+
+		if (KEY_AWAY(KEY_TYPE::KEY_X))
+		{
+			auto vecChild = GetObj()->GetChild();
+			MeshRender()->SetMaterial(m_vecHideMtrl[0], 0);
+			MeshRender()->SetMaterial(m_vecHideMtrl[1], 1);
+			for (int i = 0; i < vecChild.size(); ++i)
+			{
+				if (vecChild[i]->GetName() == L"sword")
+				{
+					vecChild[i]->MeshRender()->SetMaterial(m_vecHideMtrl[2], 0);
+					//vecChild[i]->MeshRender()->SetDynamicShadow(true);
+					break;
+				}
+			}
+			MeshRender()->SetDynamicShadow(true);
+			m_bIsHide = false;
+		}
+
 
 		if (m_ftimeCount >= m_fDelayTime)
 		{
@@ -782,6 +805,31 @@ void CPlayerScript::PickUp_Default()
 
 
 	CreateObject(pBullet, L"Player");
+}
+
+void CPlayerScript::Skill_Hide()
+{
+	m_vecHideMtrl.push_back(MeshRender()->GetCloneMaterial(0));
+	m_vecHideMtrl.push_back(MeshRender()->GetCloneMaterial(1));
+
+	MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
+	MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 1);
+
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
+	for (int i = 0; i < vecChild.size(); ++i)
+	{
+		auto a = vecChild[i]->MeshRender()->GetMesh()->GetName();
+		auto b = vecChild[i]->GetName();
+
+		if (vecChild[i]->GetName() == L"sword") 
+		{
+			m_vecHideMtrl.push_back(vecChild[i]->MeshRender()->GetCloneMaterial(0));
+			vecChild[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
+			vecChild[i]->MeshRender()->SetDynamicShadow(false);
+		}
+	}	
+	MeshRender()->SetDynamicShadow(false);
+	m_bIsHide = true;
 }
 
 void CPlayerScript::ClickUiButton()

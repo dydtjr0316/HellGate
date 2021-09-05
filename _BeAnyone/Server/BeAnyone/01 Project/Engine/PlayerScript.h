@@ -47,6 +47,11 @@ private:
 	Drag_Type			m_eDrag;
 	float				m_fBeforeDragX = 0.f;
 
+	float				m_fHidetime = 0.f;
+	vector<Ptr<CMaterial>>	m_vecHideMtrl;
+	bool				m_bIsHide = false;
+
+
 private:
 	float			m_ftimeCount = 0.f;
 	float			m_fDelayTime = 2.f;
@@ -126,6 +131,10 @@ public:
 	CGameObject* GetUIObj() { return m_pItemUIObj; }
 	void SetUIObj(CGameObject* _obj) { m_pItemUIObj = _obj; }
 	void PickUp_Default();
+
+	// hide
+	void Skill_Hide();
+	bool GetIsHide() { return m_bIsHide; }
 
 	// ui
 	void ClickUiButton();

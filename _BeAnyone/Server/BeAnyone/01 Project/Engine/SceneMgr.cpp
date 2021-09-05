@@ -491,7 +491,7 @@ void CSceneMgr::init()
 	pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
 	//pSword->Collider()->SetBoundingBox(BoundingBox(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	//pSword->Collider()->SetBoundingSphere(BoundingSphere(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-	pSword->MeshRender()->SetDynamicShadow(true);
+	pSword->MeshRender()->SetDynamicShadow(false);
 	// Script ¼³Á¤
 	pSword->AddComponent(new CSwordScript);
 	CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
