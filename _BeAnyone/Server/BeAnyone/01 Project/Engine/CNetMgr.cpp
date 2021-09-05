@@ -30,8 +30,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
-//const char ip[] = "192.168.0.07";
-const char ip[] = "192.168.0.13";
+const char ip[] = "192.168.0.07";
+//const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
 const char KPUIP[] = "192.168.140.245";
@@ -741,8 +741,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		////cout << "SC_PACKET_MOVE" << endl;
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
-		cout << "½ÃÆÈ" << endl;
-		cout << packet->localVec.x << endl;
+	/*	cout << "½ÃÆÈ" << endl;
+		cout << packet->localVec.x << endl;*/
 		if (other_id == g_myid)
 		{
 
@@ -764,7 +764,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(true);
 
 					if (packet->isMoving)
-						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
+						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::RUN);
 					else
 						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 					/*cout << "\t\t\t\t¼¼ÆÃÇÏ´Â dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;

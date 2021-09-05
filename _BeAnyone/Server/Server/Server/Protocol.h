@@ -28,7 +28,7 @@ constexpr int START_MONSTER = MAX_USER;
 constexpr int MAX_MONSTER =100;
 constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
 constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
-constexpr int BOSS_ID = 3333;
+constexpr int BOSS_ID = 30000;
 
 constexpr int START_NPC = END_MONSTER;
 constexpr int MAX_NPC = 2000;
