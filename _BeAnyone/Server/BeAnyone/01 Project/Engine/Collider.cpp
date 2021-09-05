@@ -72,10 +72,10 @@ void CCollider::finalupdate()
 	m_matColWorld *= Transform()->GetWorldMat();
 
 
-	m_bbx.Center = Transform()->GetLocalPos();
+	m_bbx.Center = Transform()->GetWorldPos();
 
-	m_bSp.Center = Transform()->GetLocalPos();
-	m_bSp.Center.y = Transform()->GetLocalPos().y + m_bSp.Radius;
+	m_bSp.Center = Transform()->GetWorldPos();
+	m_bSp.Center.y = Transform()->GetWorldPos().y + m_bSp.Radius;
 
 	/*m_bbx.Extents = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_bbx.Extents = (Transform()->GetLocalScale()) * m_bbx.Extents;*/

@@ -272,6 +272,7 @@ void CPlayerScript::awake()
 
 void CPlayerScript::update()
 {	
+	
 	uShort id = GetObj()->GetID();
 	if (id >= MAX_USER)return;
 	CTerrain* pTerrain = GetTerrain();
@@ -284,6 +285,8 @@ void CPlayerScript::update()
 	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
+
+	cout << localPos.x << "\t" << localPos.z << endl;
 	if (g_myid != GetObj()->GetID())
 		op_Move();
 	else
@@ -445,6 +448,21 @@ void CPlayerScript::update()
 			//cout << "\t\t\t" << vDrag.x << endl;
 			Transform()->SetLocalRot(vRot);
 		}
+		if (KEY_TAB(KEY_TYPE::KEY_Z))
+		{
+			// Boss Monster·Î ÀÌµ¿
+			Vector3 vPos = Vector3(68000.f, 0.f, 65000.f);
+			int z = (int)(vPos.z / xmf3Scale.z);
+
+			float fHeight = pTerrain->GetHeight(vPos.x, vPos.z, ((z % 2) != 0)) * 2.f;
+
+
+			if (vPos.y != fHeight)
+				vPos.y = fHeight;
+
+			playerTrans->SetLocalPos(vPos);
+		}
+
 		if (moveKeyInput)
 		{
 			int z = (int)(localPos.z / xmf3Scale.z);
@@ -496,15 +514,6 @@ void CPlayerScript::update()
 			GetReckoner()->SetRotateY(vRot.y);
 			GetReckoner()->SetLocalPos(Transform()->GetLocalPos());
 			SetTime_Zero();
-		}
-
-		if (KEY_HOLD(KEY_TYPE::KEY_Z))
-		{
-			MeshRender()->SetMaterial(m_pCloneMtrl);
-		}
-		else if (KEY_AWAY(KEY_TYPE::KEY_Z))
-		{
-			MeshRender()->SetMaterial(m_pOriginMtrl);
 		}
 
 		// quest::find item

@@ -24,6 +24,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CDeadReckoner.h" />
+    <ClInclude Include="FenceScript.h" />
     <ClInclude Include="CNetMgr.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionMgr.h" />
@@ -94,6 +95,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CDeadReckoner.cpp" />
+    <ClCompile Include="FenceScript.cpp" />
     <ClCompile Include="CNetMgr.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CollisionMgr.cpp" />

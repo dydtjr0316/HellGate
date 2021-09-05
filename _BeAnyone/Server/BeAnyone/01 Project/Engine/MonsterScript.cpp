@@ -169,9 +169,13 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
 {
     // 충돌이 발생하고, 상대 물체가 총일이면 스스로를 삭제
 
+  
+
     _pOther->GetObj()->GetLayerIdx();
     if (L"Attack Object" == _pOther->GetObj()->GetName())
     {
+        m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
+
         // 여기 두번들어감 // 용석
         if (m_pPlayer->GetID() == g_myid) {
             g_netMgr.Send_Attack_Packet(m_sId);
@@ -181,7 +185,7 @@ void CMonsterScript::OnCollisionEnter(CCollider* _pOther)
         }
 
         m_bisMoving = false;
-        m_pPlayer = _pOther->GetObj()->GetScript<CBulletScript>()->GetPlayer();
+       
        // g_netMgr.Send_ItemCreate_Paket(GetObj()->Transform()->GetLocalPos());
 
         if (m_pPlayer->Quest()->GetDoQuest(QUEST_TYPE::KILL_MONSTER) == false)

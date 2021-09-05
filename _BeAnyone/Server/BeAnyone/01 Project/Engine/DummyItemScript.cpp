@@ -20,7 +20,7 @@ void CDummyItemScript::update()
 	/*cout << "---------------------------------------" << endl;
 	cout << "아이템 위치\t" << "x : " << Transform()->GetLocalPos().x << "\t" << "y : " << Transform()->GetLocalPos().y << "\t" << "z : " << Transform()->GetLocalPos().z << endl;
 	cout << "총알 위치\t" << "x : " << Collider()->GetBoundingSphere().Center.x << "\t"
-		<< "y : " << Collider()->GetBoundingSphere().Center.y << "\t" 
+		<< "y : " << Collider()->GetBoundingSphere().Center.y << "\t"
 		<< "z : " << Collider()->GetBoundingSphere().Center.z << endl;*/
 }
 
@@ -37,6 +37,12 @@ void CDummyItemScript::OnCollisionEnter(CCollider* _pOther)
 		CheckItemMesh(strName, obj);
 		Vector3 a = GetObj()->Transform()->GetLocalPos();
 		cout << "보낼때 item pos: " << a.x << "\t" << a.y << "\t" << a.z << endl;
+
+		if (GetObj()->MeshRender()->GetMesh()->GetName() == L"Mesh\\Branch.mesh" ||
+			GetObj()->MeshRender()->GetMesh()->GetName() == L"Mesh\\Apple.mesh") {
+			DeleteObject(GetObj());
+			return;
+		}
 
 		// 용석 아이템 없어지는 부분 
 		g_netMgr.Send_ItemDelete_Paket(GetObj()->Transform( )->GetLocalPos());
