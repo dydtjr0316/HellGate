@@ -79,6 +79,7 @@ CMonsterScript::~CMonsterScript()
     DeleteObject(m_pUnderUi);
     DeleteObject(m_pChildDummy);
 }
+
 void CMonsterScript::Init()
 {
     //==========================

@@ -266,6 +266,9 @@ void CPlayerScript::awake()
 
 void CPlayerScript::update()
 {	
+	MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
+	MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 1);
+
 	uShort id = GetObj()->GetID();
 	if (id >= MAX_USER)return;
 	CTerrain* pTerrain = GetTerrain();
@@ -511,6 +514,7 @@ void CPlayerScript::update()
 		UseItem();
 	}
 }
+
 void CPlayerScript::op_Move()
 {
 	//sc_packet_move* p = GetObj()->GetScript<CPlayerScript>()->GetOtherMovePacket();
@@ -576,6 +580,7 @@ void CPlayerScript::op_Move()
 		}
 	}*/
 }
+
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
 {
 	m_movePacketTemp = new sc_packet_move;

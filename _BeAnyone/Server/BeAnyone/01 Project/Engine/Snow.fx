@@ -162,7 +162,8 @@ float4 PS_Snow(GS_OUT _in) : SV_Target
 // g_tex_0 : Noise Texture
 // g_vec2_0 : NoiseTexture Resolution
 
-// g_int_0 : Particle Max Count
+// 
+    : Particle Max Count
 // g_int_1 : AddCount
 
 // g_float_0 : Min LifeTime

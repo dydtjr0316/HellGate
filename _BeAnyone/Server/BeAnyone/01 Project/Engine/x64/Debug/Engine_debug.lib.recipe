@@ -1,46 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
-<<<<<<< HEAD
   <ProjectOutputs></ProjectOutputs>
-  <ContentFiles>C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\particle.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\posteffect.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso</ContentFiles>
+  <ContentFiles>C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\particle.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\posteffect.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\rain.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso;C:\Users\Chae Young Mun\Desktop\Work\GitHub\HellGate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\Fire.cso</ContentFiles>
   <SatelliteDlls></SatelliteDlls>
   <NonRecipeFileRefs></NonRecipeFileRefs>
-=======
-  <ProjectOutputs />
-  <ContentFiles>
-    <ContentFile>
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\animation.cso</FullPath>
-    </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\compute.cso</FullPath>
-    </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\func.cso</FullPath>
-    </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\light.cso</FullPath>
-    </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\particle.cso</FullPath>
-    </ContentFile>
-    <ContentFile>
-<<<<<<< HEAD
-      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\rain.cso</FullPath>
-    </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\HyoRim\Desktop\graduation project Hellgate\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso</FullPath>
-=======
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\std.cso</FullPath>
->>>>>>> f3e42c4b1d4064fe7d5ded585736e0993d3cd42f
-    </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\terrain.cso</FullPath>
-    </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\emtm9\Documents\GitHub\HellGate\_BeAnyone\Server\BeAnyone\03 External\Library\Engine\value.cso</FullPath>
-    </ContentFile>
-  </ContentFiles>
-  <SatelliteDlls />
-  <NonRecipeFileRefs />
->>>>>>> d43ad0cfe541e2e2b7801c52f24bdcffacf776e4
 </Project>

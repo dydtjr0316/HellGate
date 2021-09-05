@@ -78,7 +78,7 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _in)
         {
             float fShadowDepth = g_tex_3.Sample(g_sam_0, vShadowUV).r;
 
-            fFactor = g_tex_3.SampleCmpLevelZero(g_sam_3, vShadowUV, fDepth).r;
+            fFactor = g_tex_3.SampleCmpLevelZero(g_sam_2, vShadowUV, fDepth).r;
 
             // 그림자인 경우 빛을 약화시킨다.
             if (fShadowDepth != 0.f && (fDepth > fShadowDepth + 0.00001f))
@@ -87,13 +87,6 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _in)
                 tCurCol.vSpec = (float4) 0.f;
             }
         }
-    }
-    //tCurCol.vDiff.xyz *= fFactor;
-
-    if (fFactor <= 0.1f)
-    {
-        //tCurCol.vDiff *= (float4)0.09f;
-        //tCurCol.vSpec = (float4) 1.f;
     }
 
     output.vDiffuse = tCurCol.vDiff + tCurCol.vAmb;

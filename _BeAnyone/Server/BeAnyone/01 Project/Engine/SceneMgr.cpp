@@ -41,6 +41,7 @@
 #include "MonsterScript.h"
 #include "NpcScript.h"
 #include "TreeScript.h"
+#include "Fire.h"
 
 // UI
 #include "StaticUI.h"
@@ -1631,7 +1632,10 @@ void CSceneMgr::init()
 	Ptr<CTexture> pDiffuseTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex");
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
-
+	//	fire
+	Ptr<CTexture> pfAlpha01 = CResMgr::GetInst()->Load<CTexture>(L"Alpha01", L"Texture\\Explosion\\alpha01.dds");
+	Ptr<CTexture> pfFire01 = CResMgr::GetInst()->Load<CTexture>(L"Fire01", L"Texture\\Explosion\\fire01.dds");
+	Ptr<CTexture> pfNoise01 = CResMgr::GetInst()->Load<CTexture>(L"Noise01", L"Texture\\Explosion\\noise01.dds");
 
 
 	//==========================
@@ -1685,8 +1689,8 @@ void CSceneMgr::init()
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	pPlayerObj->MeshRender()->SetDynamicShadow(true);
-	//'pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
-	//pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 1);
+	pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
+	pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 1);
 	//pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 2);
 	//pPlayerObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 3);
 
@@ -1750,9 +1754,10 @@ void CSceneMgr::init()
 	// 2번째 무기
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\sword_2.fbx", FBX_TYPE::PLAYER);
 	SwordScript->SetWeaponeData(pMeshData);
-	// 도끼
+	// 도끼1
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\Ax.fbx", FBX_TYPE::PLAYER);
 	SwordScript->SetWeaponeData(pMeshData);
+	pSword->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
 
 	m_pCurScene->AddGameObject(L"Player", pSword, false);
 	pPlayerObj->AddChild(pSword);
@@ -1888,7 +1893,6 @@ void CSceneMgr::init()
 	// AddGameObject
 	//m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-
 	// Terrain
 	CGameObject* pTerrainObject = new CGameObject;
 	pTerrainObject->SetName(L"Terrain");
@@ -1962,6 +1966,29 @@ void CSceneMgr::init()
 	//CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
 	//pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
 
+
+	// ====================
+	// Fire 오브젝트 생성
+	// ====================
+	pObject = new CGameObject;
+	pObject->SetName(L"FireTest");
+	pObject->FrustumCheck(false);
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CFireScript);
+
+	pObject->Transform()->SetLocalPos(Vector3(5000.f, 3500.f, 5900.f));
+	pObject->Transform()->SetLocalScale(Vector3(1000.f, 1000.f, 1000.f));
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FireMtrl"));
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pfFire01.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pfNoise01.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_2, pfAlpha01.GetPointer());
+	pObject->GetScript<CFireScript>()->init();
+	// AddGameObject
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+	
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");

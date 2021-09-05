@@ -816,6 +816,17 @@ void CResMgr::CreateDefaultShader()
     pShader = new CShader;
     pShader->CreateComputeShader(L"Shader\\rain.fx", "CS_RainUpdate", "cs_5_0");
     AddRes(L"RainUpdateShader", pShader);
+
+    // ======================
+    // Fire Shader
+    // ======================
+    pShader = new CShader;
+    pShader->CreateVertexShader(L"Shader\\Fire.fx", "VS_Fire", "vs_5_0");
+    pShader->CreatePixelShader(L"Shader\\Fire.fx", "PS_Fire", "ps_5_0");
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+    pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
+    pShader->Create(SHADER_POV::FORWARD);
+    AddRes(L"FireShader", pShader);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -983,10 +994,14 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"RainUpdateShader"));
-
     //Ptr<CTexture> pNoiseTex = Load<CTexture>(L"Texture\\noise.png", L"Texture\\noise.png");
     pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
     pMtrl->SetData(SHADER_PARAM::VEC2_0, &Vector2(pNoiseTex->Width(), pNoiseTex->Height()));
-
     AddRes(L"RainUpdateMtrl", pMtrl);
+
+    // fire
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"FireShader"));
+    AddRes(L"FireMtrl", pMtrl);
 }
