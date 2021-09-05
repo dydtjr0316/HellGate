@@ -20,6 +20,7 @@ public:
 public:
 	float GetDeltaTime() { return m_fDeltaTime; }
 	float GetFPS() { return m_fFPS; }
+	float GetAccTime() { return m_fAccTime; }
 	void DTFreeze() { m_bFreeze = true; }
 	SINGLE(CTimeMgr);
 };

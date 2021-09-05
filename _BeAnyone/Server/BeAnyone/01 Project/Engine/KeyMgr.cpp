@@ -28,6 +28,7 @@ int arrVK[(UINT)KEY_TYPE::KEY_END] =
 	'E',
 	'R',
 	'Z',
+	'X',
 	'I',
 	'P',
 	'M',

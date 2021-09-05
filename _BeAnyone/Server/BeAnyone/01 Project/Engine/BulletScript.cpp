@@ -46,11 +46,12 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 	case (UINT)BULLET_TYPE::DEFAULT:
 		m_fTime = 3.0f;
 		g_netMgr.Send_Attack_Effect(_pOther->GetObj()->GetID(), vecYPos, true);
-
 		break;
+
 	case (UINT)BULLET_TYPE::PICKUP:
 		//	여기다가 픽업 불릿 분기문 설정
 		break;
+
 	case (UINT)BULLET_TYPE::MONSTER_ATTACK:	
 		if (L"PlayerMale" == _pOther->GetObj()->GetName())
 		{
@@ -64,9 +65,7 @@ void CBulletScript::OnCollisionEnter(CCollider* _pOther)
 			cout << "+++++++++++++불림++++++++++" << endl;
 			cout << "++++++++++++++++++++++++++" << endl;*/
 
-			//---------------------------------------------------------------------------
-			
-			
+			//--------------------------------------------------------------------------
 			m_fTime = 3.0f;
 		}
 		//	몬스터의 공격

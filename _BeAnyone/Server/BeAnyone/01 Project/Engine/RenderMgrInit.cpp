@@ -119,4 +119,12 @@ void CRenderMgr::CreateMRT()
 		m_arrMRT[(UINT)MRT_TYPE::SHADOWMAP] = new CMRT;
 		m_arrMRT[(UINT)MRT_TYPE::SHADOWMAP]->Create(1, arrRT, pDSTex); // º°µµÀÇ ±íÀÌ¹öÆÛ ¸¦ °¡Áü
 	}
+
+	// =================
+	// PostEffectTexture
+	// =================
+	CResMgr::GetInst()->CreateTexture(L"PosteffectTargetTex"
+		, (UINT)m_tResolution.fWidth, (UINT)m_tResolution.fHeight
+		, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
+		, D3D12_RESOURCE_FLAG_NONE, Vector4(0.f, 0.f, 0.f, 0.f));
 }

@@ -76,6 +76,9 @@ void CRenderMgr::render()
 	//m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet(1, iIdx);
 	m_vecCam[m_MainCamNum]->render_forward();
 
+	// PostEffectRender
+	m_vecCam[m_MainCamNum]->render_posteffect();
+
 	for (size_t i = 0; i < m_vecCam.size(); ++i)
 	{
 		if (m_vecCam[i]->GetObj()->GetName() != L"MainCam") {
@@ -170,6 +173,27 @@ void CRenderMgr::render_shadowmap()
 	}
 
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SHADOWMAP)->TargetToResBarrier();
+}
+
+void CRenderMgr::CopySwapToPosteffect()
+{
+	static CTexture* pPostEffectTex = CResMgr::GetInst()->FindRes<CTexture>(L"PosteffectTargetTex").GetPointer();
+
+	UINT iIdx = CDevice::GetInst()->GetSwapchainIdx();
+
+	// SwapChain Target Texture 를 RenderTarget -> CopySource 상태로 변경
+	CMDLIST->ResourceBarrier(1
+		, &CD3DX12_RESOURCE_BARRIER::Transition(m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->GetRTTex(iIdx)->GetTex2D().Get()
+			, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+	// SwapChainTex -> PostEfectTex 로 복사
+	CMDLIST->CopyResource(pPostEffectTex->GetTex2D().Get()
+		, m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->GetRTTex(iIdx)->GetTex2D().Get());
+
+	// SwapChain Target Texture 를 CopySource -> RenderTarget 상태로 변경
+	CMDLIST->ResourceBarrier(1
+		, &CD3DX12_RESOURCE_BARRIER::Transition(m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->GetRTTex(iIdx)->GetTex2D().Get()
+			, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET));
 }
 
 void CRenderMgr::render_snow()

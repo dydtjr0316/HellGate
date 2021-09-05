@@ -28,7 +28,13 @@
     <FxCompile Include="Snow.fx">
       <Filter>10. ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="posteffect.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
     <FxCompile Include="rain.fx">
+      <Filter>10. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="Fire.fx">
       <Filter>10. ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>
@@ -221,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="SenserScript.cpp">
       <Filter>04. GameObject\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Fire.cpp">
+      <Filter>04. GameObject\Script\01.Particle</Filter>
     </ClCompile>
     <ClCompile Include="FenceScript.cpp">
       <Filter>04. GameObject\Script</Filter>
@@ -428,6 +437,9 @@
     </ClInclude>
     <ClInclude Include="SenserScript.h">
       <Filter>04. GameObject\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Fire.h">
+      <Filter>04. GameObject\Script\01.Particle</Filter>
     </ClInclude>
     <ClInclude Include="FenceScript.h">
       <Filter>04. GameObject\Script</Filter>

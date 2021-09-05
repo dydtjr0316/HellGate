@@ -107,8 +107,6 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 			// 충돌했다.
 			if (IsCollision(pCollider1, pCollider2))
 			{
-
-				
 				
 				// 충돌 중이다
 				if (m_mapCol.end() != iter && iter->second == true)

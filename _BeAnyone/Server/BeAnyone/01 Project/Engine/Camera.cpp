@@ -77,11 +77,10 @@ void CCamera::finalupdate()
 
 void CCamera::SortGameObject()
 {
-	//	 여기 들어오기 전에 이미 터져있음
-	//	vecDeferred 벡터안에 Terrain 게임 오브젝트 안에 MeshRender 컴포넌트의 vertexData값이 쓰레기값이 됌.
 	m_vecDeferred.clear();
 	m_vecForward.clear();
 	m_vecParticle.clear();
+	m_vecPostEffect.clear();
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
@@ -105,6 +104,11 @@ void CCamera::SortGameObject()
 							m_vecDeferred.push_back(vecObj[i]);
 						else if (SHADER_POV::FORWARD == vecObj[i]->MeshRender()->GetSharedMaterial()->GetShader()->GetShaderPOV())
 							m_vecForward.push_back(vecObj[i]);
+						else if (SHADER_POV::POSTEFFECT == vecObj[i]->MeshRender()->GetSharedMaterial()->GetShader()->GetShaderPOV())
+						{
+							int bca = 0;
+							m_vecPostEffect.push_back(vecObj[i]);
+						}
 					}
 					else if (vecObj[i]->Particlesystem())
 					{
@@ -114,9 +118,6 @@ void CCamera::SortGameObject()
 			}
 		}
 	}
-	auto a = m_vecDeferred;
-	auto b = m_vecForward;
-	auto c = m_vecParticle;
 }
 
 void CCamera::render_deferred()
@@ -134,8 +135,9 @@ void CCamera::render_deferred()
 			m_vecDeferred[i]->MeshRender()->render();
 		}
 
-		if (m_vecDeferred[i]->Collider() && COLLIDER_RENDERER)
-			m_vecDeferred[i]->Collider()->render();
+		//	충돌체 메쉬는 전방 렌더
+		/*if (m_vecDeferred[i]->Collider() && COLLIDER_RENDERER)
+			m_vecDeferred[i]->Collider()->render();*/
 	}
 }
 
@@ -163,6 +165,22 @@ void CCamera::render_forward()
 		m_vecParticle[i]->Particlesystem()->render();
 	}
 
+}
+
+void CCamera::render_posteffect()
+{
+	g_transform.matView = GetViewMat();
+	g_transform.matProj = GetProjMat();
+	g_transform.matViewInv = m_matViewInv;
+	g_transform.matProjInv = m_matProjInv;
+
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+
+	for (size_t i = 0; i < m_vecPostEffect.size(); ++i)
+	{
+		CRenderMgr::GetInst()->CopySwapToPosteffect();
+		m_vecPostEffect[i]->MeshRender()->render();
+	}
 }
 
 void CCamera::SortShadowObject()
@@ -232,6 +250,11 @@ void CCamera::render()
 					if (vecObj[i]->MeshRender())
 					{
 						vecObj[i]->MeshRender()->render();
+					}
+
+					if (vecObj[i]->Collider())
+					{
+						vecObj[i]->Collider()->render();
 					}
 				 }
 			}

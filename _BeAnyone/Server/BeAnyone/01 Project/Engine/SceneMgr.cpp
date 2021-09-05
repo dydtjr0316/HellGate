@@ -41,12 +41,12 @@
 #include "MonsterScript.h"
 #include "NpcScript.h"
 #include "TreeScript.h"
+#include "Fire.h"
 #include "FenceScript.h"
-
-// UI
+	// UI
 #include "StaticUI.h"
 
-unordered_map<Sound_Type, SoundMgr*> g_SoundList;
+	unordered_map<Sound_Type, SoundMgr*> g_SoundList;
 using namespace std;
 
 default_random_engine dre;
@@ -77,13 +77,13 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 {
 #ifdef _DEBUG
 	Vector3 vScale(150.f, 150.f, 1.f);
-	
+
 	Ptr<CTexture> arrTex[5] = { CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex")
 		, CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex")
 		, CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex")
 		, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseLightTargetTex")
 		, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularLightTargetTex") };
-	
+
 	for (UINT i = 0; i < 5; ++i)
 	{
 		CGameObject* pObject = new CGameObject;
@@ -91,22 +91,22 @@ void CSceneMgr::CreateTargetUI(CGameObject* _camObj)
 		pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CMeshRender);
-	
+
 		// Transform 설정
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
-	
+
 		pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + (i * vScale.x)
 			, (res.fHeight / 2.f) - (vScale.y / 2.f)
 			, 1.f));
-	
+
 		pObject->Transform()->SetLocalScale(vScale);
-	
+
 		// MeshRender 설정
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
 		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
 		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, arrTex[i].GetPointer());
-	
+
 		// AddGameObject
 		m_pCurScene->FindLayer(L"UI")->AddGameObject(pObject);
 	}
@@ -197,7 +197,7 @@ void CSceneMgr::LoadRes()
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyPotion_Complete", L"Texture\\Quest\\BuyPotion_Complete.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone", L"Texture\\Quest\\BuyWeapone.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"BuyWeapone_Complete", L"Texture\\Quest\\BuyWeapone_Complete.png");
-	
+
 	//===========================
 	// ExplainBox texture
 	//==========================
@@ -232,7 +232,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
 	pNpcObject->MeshRender()->SetDynamicShadow(true);
- 	pNpcObject->AddComponent(new CNpcScript);
+	pNpcObject->AddComponent(new CNpcScript);
 	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
 
 	// Idle
@@ -242,7 +242,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	// Talk
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_female_4@Talking.fbx", FBX_TYPE::NPC);
 	pNpcScript->SetAnimationData(pMeshData->GetMesh());
-	
+
 	//--------------------------
 	// Npc_2
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\NPC\\common_people_male_1@Dance.fbx", FBX_TYPE::NPC);
@@ -289,7 +289,7 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject->Collider()->SetBoundingSphere(BoundingSphere(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
 	pNpcObject->MeshRender()->SetDynamicShadow(true);
 	pNpcObject->AddComponent(new CNpcScript);
-	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false); 
+	m_pCurScene->AddGameObject(L"Npc", pNpcObject, false);
 
 	// Idle
 	pNpcScript = pNpcObject->GetScript<CNpcScript>();
@@ -364,7 +364,7 @@ void CSceneMgr::init()
 	// 필요한 리소스 로딩
 	// =================
 	// Texture 로드
-	
+
 
 
 	LoadRes();
@@ -382,8 +382,9 @@ void CSceneMgr::init()
 	Ptr<CTexture> pDiffuseTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex");
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
-
-
+	Ptr<CTexture> pfFire01 = CResMgr::GetInst()->Load<CTexture>(L"Fire01", L"Texture\\Explosion\\fire01.dds");
+	Ptr<CTexture> pfNoise01 = CResMgr::GetInst()->Load<CTexture>(L"Noise01", L"Texture\\Explosion\\noise01.dds");
+	Ptr<CTexture> pfAlpha01 = CResMgr::GetInst()->Load<CTexture>(L"Alpha01", L"Texture\\Explosion\\alpha01.dds");
 
 	//==========================
 	// UAV 용 Texture 생성
@@ -418,8 +419,8 @@ void CSceneMgr::init()
 
 	CGameObject* pObject = nullptr;
 	// =============
-    // FBX 파일 로드
-    // =============
+	// FBX 파일 로드
+	// =============
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Player\\PlayerMale@nIdle1.fbx", FBX_TYPE::PLAYER);
 	pMeshData->Save(pMeshData->GetPath());
 
@@ -437,13 +438,13 @@ void CSceneMgr::init()
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
 	pPlayerObj->MeshRender()->SetDynamicShadow(true);
-	
+
 
 	// Script 설정
 	pPlayerObj->AddComponent(new CPlayerScript);
 	CPlayerScript* playerScript = pPlayerObj->GetScript<CPlayerScript>();
 	//playerScript->Init();
-	
+
 	// Animaition Data 넘겨주기
 	// Idle
 	playerScript->SetAnimationData(pMeshData->GetMesh());
@@ -486,9 +487,11 @@ void CSceneMgr::init()
 	pSword->SetName(L"sword");
 	pSword->FrustumCheck(false);
 	pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
+
 	//pSword->AddComponent(new CCollider);
 	//pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
 	pSword->MeshRender()->SetDynamicShadow(true);
+
 	// Script 설정
 	pSword->AddComponent(new CSwordScript);
 	CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
@@ -506,7 +509,7 @@ void CSceneMgr::init()
 	m_pCurScene->AddGameObject(L"Player", pSword, false);
 	pPlayerObj->AddChild(pSword);
 
-	
+
 	// ==================
 	//	item 객체 생성
 	// ==================
@@ -518,7 +521,7 @@ void CSceneMgr::init()
 	CItemMgr::GetInst()->SetItemData(CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Steak_02.fbx", FBX_TYPE::ITEM));	// 고기
 	CItemMgr::GetInst()->SetItemData(CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\MoneyBag.fbx", FBX_TYPE::ITEM));	// 돈
 	CItemMgr::GetInst()->SetItemData(CResMgr::GetInst()->LoadFBX(L"FBX\\Item\\Carrot.fbx", FBX_TYPE::ITEM));	// 당근
-	
+
 	// ==================
 	// Camera Object 생성
 	// ==================
@@ -598,7 +601,7 @@ void CSceneMgr::init()
 	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@meleeattack01.fbx", FBX_TYPE::MONSTER);
 	//damage
 	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\TreantGuard@Damage.fbx", FBX_TYPE::MONSTER);
-	
+
 	// boss
 	//idle
 	pMonsterMadt = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
@@ -663,35 +666,17 @@ void CSceneMgr::init()
 	pTerrainObject->AddComponent(new CTerrain);
 	pTerrainObject->FrustumCheck(false);
 	pTerrainObject->Transform()->SetLocalPos(Vector3(0.f, 470.f, 0.f));
-	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f , 6000.f, 300.f)); // 2배함
+	pTerrainObject->Transform()->SetLocalScale(Vector3(300.f, 6000.f, 300.f)); // 2배함
 	pTerrainObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
 	pTerrainObject->Terrain()->init();
 	m_pCurScene->FindLayer(L"Terrain")->AddGameObject(pTerrainObject);
 	pPlayerObj->GetScript<CPlayerScript>()->SetTerrain(pTerrainObject->Terrain());
 	g_netMgr.SetObj(pPlayerObj);
-	
+
 	CreateNpc(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CreateNewMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CItemMgr::GetInst()->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 
-	
-
-//	// ====================
-//// Particle Object 생성
-//// ====================
-//	pObject = new CGameObject;
-//	pObject->SetName(L"Particle");
-//	pObject->AddComponent(new CTransform);
-//	pObject->AddComponent(new CParticleSystem);
-//
-//	pObject->FrustumCheck(false);
-//	pObject->Transform()->SetLocalPos(Vec3(500.f, 0.f, 0.f));
-//
-//	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
-
-	// ===============
-	// particle
-	// ===============
 	pObject = new CGameObject;
 	pObject->SetName(L"Rain");
 	pObject->AddComponent(new CTransform);
@@ -702,7 +687,7 @@ void CSceneMgr::init()
 	pObject->Particlesystem()->SetType(true);
 	//pObject->Particlesystem()->SetMaxParticle(512);
 	//pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
-	
+
 	Vector3 particlePos = Vector3(3000.f, 0.f, 200.f);
 	{
 		int z = (int)(particlePos.z / pObject->Transform()->GetLocalScale().z);
@@ -718,13 +703,11 @@ void CSceneMgr::init()
 	//=============
 	// Line Mesh
 	//=============
-
 	//VTX v;
 	//vector<VTX> vecVTX;
 	//vector<UINT> vecIdx;
 	//Ptr<CMesh> pMesh = nullptr;
 	//pMesh = new CMesh;
-
 	//v.vPos = Vector3(-0.5f, 0.5f, 0.f);
 	//v.vColor = Vector4(0.8f, 0.7f, 0.6f, 1.f);
 	//v.vUV = Vector2(0.f, 0.f);
@@ -732,22 +715,16 @@ void CSceneMgr::init()
 	//v.vTangent = Vector3(1.f, 0.f, 0.f);
 	//v.vBinormal = Vector3(0.f, 1.f, 0.f);
 	//vecVTX.push_back(v);
-
 	//v.vPos = Vector3(0.5f, 0.5f, 0.f);
 	//vecVTX.push_back(v);
-
 	//v.vPos = Vector3(0.5f, -0.5f, 0.f);
 	//vecVTX.push_back(v);
-
 	//v.vPos = Vector3(-0.5f, -0.5f, 0.f);
 	//vecVTX.push_back(v);
-
 	//vecIdx.push_back(0); vecIdx.push_back(1); vecIdx.push_back(2);
 	//vecIdx.push_back(0); vecIdx.push_back(2); vecIdx.push_back(3);
-
 	//pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
 	//	, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
-
 	//CGameObject* pLineMesh = new CGameObject;
 	//pLineMesh->SetName(L"Line");
 	//pLineMesh->AddComponent(new CTransform);
@@ -755,7 +732,6 @@ void CSceneMgr::init()
 	//pLineMesh->FrustumCheck(false);
 	//pLineMesh->Transform()->SetLocalPos(particlePos);
 	//pLineMesh->Transform()->SetLocalScale(Vector3(100.f, 100.f, 100.f)); // 2배함
-
 	//// MeshRender 설정
 	//pLineMesh->MeshRender()->SetMesh(pMesh);
 	//pLineMesh->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
@@ -770,6 +746,27 @@ void CSceneMgr::init()
 	//CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
 	//pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
 
+	// ====================
+	// Fire 오브젝트 생성
+	// ====================
+	pObject = new CGameObject;
+	pObject->SetName(L"FireTest");
+	pObject->FrustumCheck(false);
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CFireScript);
+
+	pObject->Transform()->SetLocalPos(Vector3(5000.f, 3500.f, 5900.f));
+	pObject->Transform()->SetLocalScale(Vector3(1000.f, 1000.f, 1000.f));
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FireMtrl"));
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pfFire01.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pfNoise01.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_2, pfAlpha01.GetPointer());
+	pObject->GetScript<CFireScript>()->init();
+	// AddGameObject
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Map");
@@ -788,7 +785,7 @@ void CSceneMgr::init()
 
 }
 
-void CSceneMgr::update() 
+void CSceneMgr::update()
 {
 
 	m_pCurScene->update();
@@ -1965,7 +1962,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
 	}
-	
+
 	//위
 	// 교회
 	{
@@ -1990,7 +1987,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 		pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));
 		pMapObject->MeshRender()->SetDynamicShadow(true);
 		m_pCurScene->AddGameObject(L"Map", pMapObject, false);
-		
+
 		// 교회 옆 작은 정원
 		{
 			// 나무1
@@ -2106,7 +2103,7 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 				mapY = _terrain->GetHeight(1600.f + (700.f * i), 7300.f, bReverseQuad);
 				pMapObject->Transform()->SetLocalPos(Vector3(1600.f + (700.f * i), mapY * 2, 7300.f));
 				pMapObject->Transform()->SetLocalScale(Vector3(160.f, 130.f, 160.f));//(1.0f, 1.0f, 1.0f));
-				pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2,  0.0f + ((XM_PI / 2) * i) , 0.f));
+				pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.0f + ((XM_PI / 2) * i), 0.f));
 				pMapObject->AddComponent(new CCollider);
 				pMapObject->MeshRender()->SetDynamicShadow(true);
 				pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Tree");
@@ -2251,12 +2248,8 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 
 		}
 	}
-
-	{
-	}
-
 	// 마을 펜스
-	{	
+	{
 		for (int i = 0; i < 21; ++i) {
 			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\FenceBig_02.fbx", FBX_TYPE::NEW_DESERT_MAP);
 			//pMeshData->Save(pMeshData->GetPath());
@@ -2285,7 +2278,6 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 				pFenceScript->Init();
 			}
 		}
-
 		for (int i = 0; i < 29; ++i) {
 			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\DesertMap\\FenceBig_02.fbx", FBX_TYPE::NEW_DESERT_MAP);
 			//pMeshData->Save(pMeshData->GetPath());
@@ -2322,26 +2314,25 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 
 			pMapObject = new CGameObject;
 
-pMapObject = pMeshData->Instantiate();
-pMapObject->SetName(L"Wall");
-pMapObject->FrustumCheck(false);
+			pMapObject = pMeshData->Instantiate();
+			pMapObject->SetName(L"Wall");
+			pMapObject->FrustumCheck(false);
 
 
-z = (int)(30.f / 60.f);
-bReverseQuad = ((z % 2) != 0);
-mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
+			z = (int)(30.f / 60.f);
+			bReverseQuad = ((z % 2) != 0);
+			mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
 
-pMapObject->Transform()->SetLocalPos(Vector3(250.f, mapY * 2 - 50.f, (wallX* i) + wallX / 2));
-pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
-pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
-/*pMapObject->AddComponent(new CCollider);
-pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
-pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
-pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
-pMapObject->MeshRender()->SetDynamicShadow(true);
-m_pCurScene->AddGameObject(L"Map", pMapObject, false);
+			pMapObject->Transform()->SetLocalPos(Vector3(250.f, mapY * 2 - 50.f, (wallX * i) + wallX / 2));
+			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
+			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
+			/*pMapObject->AddComponent(new CCollider);
+			pMapObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Wall");
+			pMapObject->Collider()->SetBoundingBox(BoundingBox(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingBoxExtents() * pMapObject->Transform()->GetLocalScale()));
+			pMapObject->Collider()->SetBoundingSphere(BoundingSphere(pMapObject->Transform()->GetLocalPos(), pMapObject->MeshRender()->GetMesh()->GetBoundingSphereRadius() * 60.f));*/
+			pMapObject->MeshRender()->SetDynamicShadow(true);
+			m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		}
-
 		//오른쪽
 		for (int i = 0; i < 55; ++i) {
 			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
@@ -2372,12 +2363,12 @@ m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 		for (int i = 0; i < 55; ++i) {
 			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Desert\\Wall.fbx", FBX_TYPE::DESERT_MAP);
 
+
 			pMapObject = new CGameObject;
 
 			pMapObject = pMeshData->Instantiate();
 			pMapObject->SetName(L"Wall");
 			pMapObject->FrustumCheck(false);
-
 
 			z = (int)(30.f / 60.f);
 			bReverseQuad = ((z % 2) != 0);
@@ -2404,7 +2395,6 @@ m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 			pMapObject->SetName(L"Wall");
 			pMapObject->FrustumCheck(false);
 
-
 			z = (int)(30.f / 60.f);
 			bReverseQuad = ((z % 2) != 0);
 			mapY = _terrain->GetHeight((wallX * i) + wallX / 2, 300.f, true);
@@ -2422,7 +2412,7 @@ m_pCurScene->AddGameObject(L"Map", pMapObject, false);
 	}
 
 	// Boss Monster
-	
+
 	{
 	}
 

@@ -29,8 +29,10 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 	else if (id == BOSS_ID)return OBJECT_TYPE::BOSS;
 }
 
-//const char ip[] = "192.168.0.11";
-const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.11";
+
+//const char ip[] = "192.168.0.07";
+//const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
 const char office[] = "192.168.102.43";
@@ -1108,7 +1110,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		pObject->AddComponent(new CParticleSystem);
 		pObject->Particlesystem()->SetFrequency(2.f);
 		pObject->Particlesystem()->SetType(false);
-		pObject->Particlesystem()->SetMaxParticle(3);
+		pObject->Particlesystem()->SetMaxParticle(10);
 		pObject->AddComponent(new CParticleScript);
 		pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
 		pObject->FrustumCheck(false);
