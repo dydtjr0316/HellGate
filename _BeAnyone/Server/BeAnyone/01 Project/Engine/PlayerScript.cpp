@@ -395,7 +395,7 @@ void CPlayerScript::update()
 			localPos += worldDir * GetSpeed() * DT;
 			dir = MV_FRONT;
 			SetPlayerDir(worldDir * GetSpeed() * DT);
-			SetAnimation(Ani_TYPE::WALK_F);
+			SetAnimation(Ani_TYPE::RUN);
 			moveKeyInput = true;
 			//cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
 			//cout << worldDir.z << endl;
@@ -409,7 +409,7 @@ void CPlayerScript::update()
 			localPos += worldDir * GetSpeed() * DT;
 
 			dir = MV_BACK;
-			SetAnimation(Ani_TYPE::WALK_D);
+			SetAnimation(Ani_TYPE::RUN);
 			moveKeyInput = true;
 		}
 		else if (KEY_HOLD(KEY_TYPE::KEY_A))
@@ -418,7 +418,7 @@ void CPlayerScript::update()
 			localPos += worldDir * GetSpeed() * DT;
 
 			dir = MV_LEFT;
-			SetAnimation(Ani_TYPE::WALK_F);
+			SetAnimation(Ani_TYPE::RUN);
 			moveKeyInput = true;
 		}
 
@@ -428,7 +428,7 @@ void CPlayerScript::update()
 			localPos += worldDir * GetSpeed() * DT;
 
 			dir = MV_RIGHT;
-			SetAnimation(Ani_TYPE::WALK_F);
+			SetAnimation(Ani_TYPE::RUN);
 			moveKeyInput = true;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
