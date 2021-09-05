@@ -43,6 +43,7 @@ void CSendMgr::Send_ItemCreate_Packet(const uShort& user_id, const Vector3& pos)
     p.size = sizeof(sc_packet_ItemCreate_Packet);
     p.type = SC_ITEMCREATE;
     p.vPos = pos;
+    cout << user_id << "에게 Create 패킷 send" << endl;
     Send_Packet(user_id, &p);
 }
 
@@ -127,7 +128,7 @@ void CSendMgr::Send_Enter_Packet(const uShort& user_id, const uShort& other_id)
     p.o_type = O_PLAYER;
     if(p.id<START_MONSTER)
         CAST_CLIENT(Netmgr.GetMediatorMgr()->Find(p.id))->SetIsMoving(true);
-    if (p.id >= START_MONSTER && p.id < END_MONSTER)
+    if ((p.id >= START_MONSTER && p.id < END_MONSTER) || p.id == BOSS_ID)
     {
         p.hp = dynamic_cast<CMonster*>(Netmgr.GetMediatorMgr()->Find(other_id))->GetHP();
     }
@@ -204,6 +205,7 @@ void CSendMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const uSh
     p.type = SC_PACKET_MONSTER_ANIMATION;
     p.aniType = aniType;
     p.otherid = user_id;
+    cout << user_id << "에게 몬스터 패킷 전송   " << (int)aniType << endl << endl;
     Send_Packet(user_id, &p);
 
 }
@@ -263,8 +265,8 @@ void CSendMgr::Send_Stop_Packet(const uShort& user_id, const uShort& mover_id, c
 
     p.isMoving = isMoving;
     Netmgr.GetMediatorMgr()->Find(mover_id)->SetIsMoving(false);
-    cout << user_id << "에게 " << mover_id << "의 STop packet 전송" << endl;
-    cout << "--------------------------" << endl;
+    //cout << user_id << "에게 " << mover_id << "의 STop packet 전송" << endl;
+    //cout << "--------------------------" << endl;
     Send_Packet(user_id, &p);
 }
 

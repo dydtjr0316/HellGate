@@ -39,29 +39,25 @@ bool CQuadTree::Insert(CGameObject* p)
 	if (!m_boundary.contains(p))
 		return false;
 
-	if (!m_bisDivide)
+	if (!m_bisDivide) // 자식이 없다면
 	{
-		if (m_vpPlayers.size() < m_icapacity)	// leaf node 일때
+		if (m_vpPlayers.size() < m_icapacity)	//자식이 없고 수용갯수를 초과하지 않음
 		{
 			m_vpPlayers.emplace(p->GetID());
 			//m_icapacity++;
 		}
-		else
+		else                                    ////자식이 없고 수용갯수를 초과함
 		{
 			Sub_Divide();
 			for (auto& obj : m_pChild)
 				if (obj->Insert(p))return true;
 		}
 	}
-	else
+	else                                         // 자식이 있는 노드라면 자식검사
 	{
 		for (auto& obj : m_pChild)
 			if (obj->Insert(p))return true;
 	}
-	////cout << endl;
-	////cout << "Insert**********************" << endl;
-	//PrintQuadTree();
-	//return true;// 여기서 true 반환하는거 괜찮은지 보기
 }
 
 void CQuadTree::Delete(CGameObject* p)
@@ -69,14 +65,8 @@ void CQuadTree::Delete(CGameObject* p)
 	// 해당 플레이어 id로 현재위치한 노드를 찾는다 
 	// // 자식노드가 없는 노드중 플레이어 좌표를 취하는곳
 	int cnt = 0;
-	this;
-
-	if (!m_bisDivide && m_boundary.contains(p))		// player p를 포함하는 리프 노드인가?
+	if (!m_bisDivide && m_boundary.contains(p))		// 자식이 없는 노드이면서 p의 좌표를 포함하는가?
 	{
-		////cout << "Test 출력" << endl;
-		////cout << m_boundary.GetX() << " - " << m_boundary.GetZ() << " - "
-		//	<< m_boundary.GetW() << " - " << m_boundary.GetH() << endl;
-		// 노드에서 해당 플레이어를 뺀다
 		for (auto& playerID : m_vpPlayers)
 		{
 			if (IsSameObject(playerID, p->GetID()))
@@ -96,7 +86,7 @@ void CQuadTree::Delete(CGameObject* p)
 			{
 				cnt += obj->GetPoint().size();
 			}
-			if (cnt <= 4)
+			if (cnt < m_icapacity)
 			{
 				for (auto& obj : m_pParent->GetChild())
 				{
@@ -118,7 +108,6 @@ void CQuadTree::Delete(CGameObject* p)
 		{
 			childNode->Delete(p);
 		}
-
 	}
 
 }
@@ -169,45 +158,36 @@ void CQuadTree::SubDivideToChild()
 			}
 		}
 	}
-		m_vpPlayers.clear();
-		m_icapacity = 0;
+	m_vpPlayers.clear();
+	//m_icapacity = 0;
 }
-
 
 
 
 unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 {
 	//  쿼드트리 부모 자식 구조 바꾸면서 이부분 안바꿔도 되는지 확인해 볼 것
-	
 	unordered_set<uShort> found;
-	{
-		/*if (!m_boundary.intersects(range))
-		return found;
-	else
-	{
-		for (auto& p : m_vpPlayers)
-		{
-			if (range.contains(p))
-				found.push_back(p);
-		}
-	}*/
-	}
 	CBoundary temp = range;
+	// search 알고리즘 다시보기 뭔가 다른노드 검사 제대로 못하는거 같기도 하고 
 	if (m_boundary.intersects(temp))
 	{
 		////cout << "search 시작" << endl;
-			quadlock.lock();
+		quadlock.lock();
 		for (auto& p : m_vpPlayers)
 		{
-			if (Netmgr.GetMediatorMgr()->Count(p) == 0)continue;
-			// 이부분 확실하지 않음
+			//if (Netmgr.GetMediatorMgr()->Count(p) == 0)continue;
+			//// 이부분 확실하지 않음
+			if (p == 0)
+			{
+				int i = 0;
+			}
 			if (temp.contains(Netmgr.GetMediatorMgr()->Find(p)))
+			{
 				found.emplace(p);
-
+			}
 		}
-			quadlock.unlock();
-		////cout << "-*---------------" << endl;
+		quadlock.unlock();
 	}
 	if (m_bisDivide)
 	{
@@ -220,8 +200,7 @@ unordered_set<uShort> CQuadTree::search(const CBoundary& range)
 			}
 		}
 	}
-	
-	return found;
 
+	return found;
 }
 

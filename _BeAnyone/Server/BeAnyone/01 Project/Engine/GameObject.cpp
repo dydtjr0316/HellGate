@@ -143,7 +143,7 @@ void CGameObject::SetDead()
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
-		m_vecChild[i]->SetDead();
+        		m_vecChild[i]->SetDead();
 	}
 }
 

@@ -30,6 +30,8 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 }
 
 //const char ip[] = "192.168.0.11";
+
+//const char ip[] = "192.168.0.07";
 //const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.0.13";
 const char ip[] = "221.151.160.142";
@@ -189,12 +191,12 @@ void CNetMgr::Send_Move_Packet(unsigned const char& dir, const Vector3& local,
 	p.speed = g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetSpeed();
 	p.deltaTime = delta;
 	p.isMoving = isMoving;
-	cout << "-------------------------------" << endl;
-	cout << "-------------------------------" << endl;
-	cout << "Send_Move_Packet" << endl;
-	cout << local.x << " , " << local.z << endl;
-	cout << "-------------------------------" << endl;
-	cout << "-------------------------------" << endl;
+	//cout << "-------------------------------" << endl;
+	//cout << "-------------------------------" << endl;
+	//cout << "Send_Move_Packet" << endl;
+	//cout << local.x << " , " << local.z << endl;
+	//cout << "-------------------------------" << endl;
+	//cout << "-------------------------------" << endl;
 
 
 	Send_Packet(&p);
@@ -217,8 +219,8 @@ void CNetMgr::Send_Stop_Packet(const bool& isMoving, const uShort& id)
 	p.size = sizeof(p);
 	p.id = id;
 	p.isMoving = isMoving;
-	cout << p.id << "가 스톱패킷 서버로 보냄" << endl;
-	cout << "*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
+	//cout << p.id << "가 스톱패킷 서버로 보냄" << endl;
+	//cout << "*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
 	Send_Packet(&p);
 }
 
@@ -247,6 +249,7 @@ void CNetMgr::Send_ItemCreate_Paket(const Vector3& itemPos)
 	cs_packet_ItemCreate_Packet p;
 	p.type = CS_ITEMCREATE;
 	p.size = sizeof(p);
+	cout << "Item Create Packet send" << endl;
 	
 	p.vPos = itemPos;
 	Send_Packet(&p);
@@ -299,6 +302,11 @@ void CNetMgr::Send_Monster_Animation_Packet(const uShort& monster_id, const MONS
 	{
 		p.isMoving = false;
 	}
+
+	
+
+	cout << "서버로 보내는 ani 패킷: " << (UINT)aniType << endl;
+
 	Send_Packet(&p);
 
 }
@@ -321,6 +329,8 @@ void CNetMgr::Send_Boss_State_Packet(const uShort& boss, const MONSTER_STATE& st
 	p.id = boss;
 	p.aniState = state;
 	p.attackstate = attackpattern;
+
+	cout << "보내는 boss state packet: " << (UINT)state << endl;
 
 	Send_Packet(&p);
 }
@@ -394,6 +404,23 @@ void CNetMgr::ProcessPacket(char* ptr)
 		g_Object.emplace(g_myid, m_pObj);
 		g_Object.find(g_myid)->second->SetID(g_myid);
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->initDeadReckoner();
+		
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Init();
+		
+		// static ui cam 설정
+		CGameObject* cam;
+		vector<CGameObject*> objects;
+
+		objects = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj();
+
+		vector<CGameObject*>::iterator iter = objects.begin();
+
+		for (; iter != objects.end();) {
+			if ((*iter)->GetName() == L"UiCam")
+				cam = *iter;
+			++iter;
+		}
+		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->GetUIObj()->StaticUI()->SetCameraProj(cam->Camera());
 	}
 	break;
 	case SC_PACKET_ENTER:
@@ -429,6 +456,11 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
 					g_Object.find(id)->second->AddComponent(new CQuest);
+					g_Object.find(id)->second->AddComponent(new CCollider);
+					g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
+					g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos(), g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
+					g_Object.find(id)->second->Collider()->SetBoundingSphere(BoundingSphere(g_Object.find(id)->second->Transform()->GetLocalPos(), g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
+
 
 					CSceneMgr::GetInst()->GetCurScene()->AddGameObject(L"Player", g_Object.find(id)->second, false);
 
@@ -507,7 +539,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 								my_packet->localVec.y = fHeight;
 						}
 						g_Object.find(id)->second->Transform()->SetLocalPos(my_packet->localVec);
-						cout << "패킷 받을때 Position    " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
+						//cout << "패킷 받을때 Position    " << my_packet->localVec.x << ", " << my_packet->localVec.z << endl;
 
 						g_Object.find(id)->second->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
 						g_Object.find(id)->second->Transform()->SetLocalRot(Vector3(XM_PI / 2, 0.f, 0.f));
@@ -628,7 +660,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 			{
 				if (0 == g_Object.count(id))
 				{
-					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
+					
+					Ptr<CMeshData> pIdleMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Idle.fbx", FBX_TYPE::MONSTER);
+					Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Monster\\Polygonal Alien Serpent@Slither Forward Fast WO Root.fbx", FBX_TYPE::MONSTER);
 					CGameObject* pMonster = new CGameObject;
 					pMonster = pMeshData->Instantiate();
 					g_Object.emplace(id, pMonster);
@@ -653,8 +687,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 					pMonster->Transform()->SetLocalPos(my_packet->localVec);
 					pMonster->AddComponent(new CCollider);
 					pMonster->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"BossMonster");
-					pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-					pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(), pMonster->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
+					pMonster->Collider()->SetBoundingBox(BoundingBox(pMonster->Transform()->GetLocalPos(), pIdleMeshData->GetMesh()->GetBoundingBoxExtents()));
+					pMonster->Collider()->SetBoundingSphere(BoundingSphere(pMonster->Transform()->GetLocalPos(), pIdleMeshData->GetMesh()->GetBoundingSphereRadius()));
 
 					// Script 설정
 					pMonster->AddComponent(new CMonsterScript);
@@ -697,6 +731,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->SetID(id);
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetID(id);
 					g_Object.find(id)->second->GetScript<CMonsterScript>()->SetHP(my_packet->hp);
+
 				}
 			}
 		}
@@ -708,7 +743,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 		////cout << "SC_PACKET_MOVE" << endl;
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = packet->id;
-
+	/*	cout << "시팔" << endl;
+		cout << packet->localVec.x << endl;*/
 		if (other_id == g_myid)
 		{
 
@@ -730,7 +766,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetOtherMovePacket__IsMoving(true);
 
 					if (packet->isMoving)
-						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::WALK_F);
+						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::RUN);
 					else
 						g_Object.find(other_id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 					/*cout << "\t\t\t\t세팅하는 dirvec" << packet->dirVec.x << " - " << packet->dirVec.z << endl;
@@ -772,8 +808,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetIsPacketWorldDir(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketWorldDir(packet->worldDir);
 
-			cout << "Boss가 받는패킷 : " << packet->worldDir.x << ", " << packet->worldDir.z << endl;
-			cout << "----------------------" << endl;
+			//cout << "Boss가 받는패킷 : " << packet->worldDir.x << ", " << packet->worldDir.z << endl;
+			//cout << "----------------------" << endl;
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetPacketMove(packet);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisDirChange(true);
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(true);
@@ -893,7 +929,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		else
 		{
 
-			if (CheckObjType(id) == OBJECT_TYPE::MONSTER)
+			if (CheckObjType(id) == OBJECT_TYPE::MONSTER || CheckObjType(id) == OBJECT_TYPE::BOSS)
 			{
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetHP(packet->hp);
 			}
@@ -925,14 +961,15 @@ void CNetMgr::ProcessPacket(char* ptr)
 					switch ((Ani_TYPE)packet->anitype)
 					{
 					case Ani_TYPE::ATTACK:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->Attack_Default();
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::ATTACK);
 						g_SoundList.find(Sound_Type::HIT);
 						break;
 					case Ani_TYPE::DAMAGE:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::DAMAGE);
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::DAMAGE);
 						break;
 					case Ani_TYPE::PICK_UP:
-						g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::PICK_UP);
+						g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::PICK_UP);
 						g_SoundList.find(Sound_Type::GET_COIN);
 						break;
 					default:
@@ -941,7 +978,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 				}
 				else
 				{
-					g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
+					g_Object.find(id)->second->GetScript<CPlayerScript>()->SetAnimation(Ani_TYPE::IDLE);
 				}
 			}
 		}
@@ -958,6 +995,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 
 		
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAnimation(packet->aniType);
+
+			if (packet->id == BOSS_ID)
+				cout << "패킷에서 세팅: " << (UINT)packet->aniType << endl;
 
 		if (MONSTER_ANI_TYPE::IDLE != packet->aniType)
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetisMoving(false);
@@ -1004,8 +1044,6 @@ void CNetMgr::ProcessPacket(char* ptr)
 		}
 
 		// 플레이어에게 공격
-
-		
 
 		if (MONSTER_ANI_TYPE::DEAD == packet->aniType)
 		{
@@ -1084,7 +1122,18 @@ void CNetMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_BOSS_STATE:
 	{
 		sc_packet_boss_state* packet = reinterpret_cast<sc_packet_boss_state*>(ptr);//effect  생성 위치 
+		if (packet->aniState == MONSTER_STATE::FOLLOW)
+		{
+			if(!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsPunch() &&
+				!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsRoar())
+				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetBossState(packet->aniState);
+
+		}
+		else
+		{
+
 		g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetBossState(packet->aniState);
+		}
 		if (packet->attackstate != BOSS_ATTACK::END)
 		{
 			g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetAttackPattern(packet->attackstate);
@@ -1122,7 +1171,7 @@ void CNetMgr::Process_Data(char* net_buf, size_t& io_byte)
 			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
 			if (packet_buffer[1] == SC_PACKET_STOP)
 			{
-				cout << "Stop packet size : " << (int)packet_buffer[0] << endl;
+				//cout << "Stop packet size : " << (int)packet_buffer[0] << endl;
 			}
 			ProcessPacket(packet_buffer);
 			ptr += in_packet_size - saved_packet_size;

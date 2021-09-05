@@ -10,6 +10,7 @@
 CNpcScript::CNpcScript()
 	: CScript((UINT)COMPONENT_TYPE::SCRIPT) //CScript((UINT)SCRIPT_TYPE::MONSTERSCRIPT),
 	, m_eReqState{ REQUEST_STATE::NOT_RECIEVE }
+	, m_pPlayer{ nullptr }
 	, m_vPlayerQuest{}
 	, m_pStoreUi{ NULL }
 {
@@ -76,8 +77,10 @@ void CNpcScript::init(UI_TYPE _eType)
 	storeUi->AddComponent(new CTransform);
 	storeUi->AddComponent(new CMeshRender);
 	storeUi->AddComponent(new CStaticUI);
+	storeUi->AddComponent(new CCollider);
+	storeUi->Collider()->SetColliderType(COLLIDER_TYPE::RECT);
+	storeUi->StaticUI()->CreatePickingObj();
 	storeUi->StaticUI()->init(_eType);
-	//storeUi->StaticUI()->CreatePickingObj();
 	// 투영행렬 statiUI 컴포넌트에 등록 (ORTHOGRAPHIC 카메라 정보 필요)
 	m_pCam = FindCam(L"UiCam", L"Default");
 	storeUi->StaticUI()->SetCameraProj(m_pCam->Camera());
@@ -193,7 +196,10 @@ void CNpcScript::update()
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-
+		if (m_pPlayer != nullptr) {
+			if (m_pPlayer->GetID() != g_myid)
+				return;
+		}
 		POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
 
 		if (m_bIsTalk == true) { // 필요없을 것 같은데

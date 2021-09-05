@@ -54,6 +54,8 @@ private:
     bool                m_bIsRoar = false;
     bool                m_bIsAttakLeft = false;
     bool                m_bIsAttakRight = false;
+
+    bool                m_bBossStateFirst = true;
 public:
     void SetBossState(const MONSTER_STATE& state) { m_eMonsterState = state; }
     void SetAttackPattern(const BOSS_ATTACK& pattern) { m_eAttackPattern = pattern; }
@@ -95,6 +97,8 @@ public:
     bool GetIsDamage() { return m_bisDamaged; }
     void SetIsPunch(bool _isPunched) { m_bisPunch = _isPunched; }
     bool GetIsPunch() { return m_bisPunch; }
+    void SetIsRoar(bool _bIsRoar) { m_bIsRoar = _bIsRoar; }
+    bool GetIsRoar() { return m_bIsRoar; }
 
     // monster type
     void SetMonsterType(MONSTER_TYPE _eMonsterType) { m_eMonsterType = _eMonsterType; }// 둘 중에 하나 없애야 함 

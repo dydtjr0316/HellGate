@@ -19,17 +19,19 @@ void CSenserScript::update()
 
 void CSenserScript::OnCollisionEnter(CCollider* _pOther)
 {
-	if (GetObj()->GetParent()->GetScript<CMonsterScript>()->GetMonsterState() == MONSTER_STATE::FOLLOW) {
-		if (GetObj()->GetParent()->GetScript<CMonsterScript>()->GetPlayer() != _pOther->GetObj())
-			return;
-
-		GetObj()->GetParent()->GetScript<CMonsterScript>()->SetIsNearPlayer(true);
-		GetObj()->GetParent()->GetScript<CMonsterScript>()->SetPlayer(_pOther->GetObj());
-		cout << "°¡±î¿î senser ´êÀ½" << endl;
-		return;
-	}
-
-	cout << "senser ´êÀ½" << endl;
-	GetObj()->GetParent()->GetScript<CMonsterScript>()->SetIsFindPlayer(true);
-	GetObj()->GetParent()->GetScript<CMonsterScript>()->SetPlayer(_pOther->GetObj());
+    if (GetObj()->GetParent()->GetScript<CMonsterScript>()->GetMonsterState() == MONSTER_STATE::FOLLOW) {
+        if (GetObj()->GetParent()->GetScript<CMonsterScript>()->GetPlayer()->GetID() != _pOther->GetObj()->GetID()) {
+            cout << "senser¿¡ µé¾î¿Â ´Ù¸¥ player" << _pOther->GetObj()->GetID() << endl;
+            return;
+        }
+        GetObj()->GetParent()->GetScript<CMonsterScript>()->SetIsNearPlayer(true);
+        GetObj()->GetParent()->GetScript<CMonsterScript>()->SetPlayer(_pOther->GetObj());
+        cout << "Sensor Set Player : " << _pOther->GetObj()->GetID() << endl;
+        return;
+    }
+    else if (GetObj()->GetParent()->GetScript<CMonsterScript>()->GetMonsterState() == MONSTER_STATE::MOVE) {
+        cout << "senser ´êÀ½" << endl;
+        GetObj()->GetParent()->GetScript<CMonsterScript>()->SetIsFindPlayer(true);
+        GetObj()->GetParent()->GetScript<CMonsterScript>()->SetPlayer(_pOther->GetObj());
+    }
 }

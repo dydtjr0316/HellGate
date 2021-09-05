@@ -40,9 +40,9 @@ int CCore::init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 	CRenderMgr::GetInst()->init(_hWnd, _resolution, _bWindow);
 
 	// 상수 버퍼 만들기
-	CDevice::GetInst()->CreateConstBuffer(L"TRANSFORM_MATRIX", sizeof(tTransform), 1024, CONST_REGISTER::b0);
-	CDevice::GetInst()->CreateConstBuffer(L"MATERIAL_PARAM", sizeof(tMtrlParam), 1024, CONST_REGISTER::b1);
-	CDevice::GetInst()->CreateConstBuffer(L"ANIM2D", sizeof(tMtrlParam), 1024, CONST_REGISTER::b2);
+	CDevice::GetInst()->CreateConstBuffer(L"TRANSFORM_MATRIX", sizeof(tTransform), 2048, CONST_REGISTER::b0);
+	CDevice::GetInst()->CreateConstBuffer(L"MATERIAL_PARAM", sizeof(tMtrlParam), 2048, CONST_REGISTER::b1);
+	CDevice::GetInst()->CreateConstBuffer(L"ANIM2D", sizeof(tMtrlParam), 2048, CONST_REGISTER::b2);
 	// 전역 상수버퍼 변수(1프레임 동안 레지스터에서 지속되야함)
 	//CDevice::GetInst()->CreateConstBuffer(L"LIGHT2D", sizeof(tLightInfo), 1, CONST_REGISTER::b3, true);
 	CDevice::GetInst()->CreateConstBuffer(L"LIGHT3D", sizeof(tLightInfo), 1, CONST_REGISTER::b3, true);

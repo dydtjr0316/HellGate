@@ -178,7 +178,9 @@ void CPlayerScript::Init()
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, itemUI.GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
 	// AddGameObject
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+
+	if (GetObj()->GetID() == g_myid)
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
 	m_pItemUIObj = pObject;
 
 	//	Static Ui에 상속된 버튼들 Scene에 Obj로 추가
@@ -214,7 +216,8 @@ void CPlayerScript::Init()
 		pButtonObj->MeshRender()->SetMaterial(pMtrl->Clone());
 		pButtonObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pObject->StaticUI()->m_vecButton[i]->GetImage().GetPointer());
 		// AddGameObject
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pButtonObj);
+		if (GetObj()->GetID() == g_myid)
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pButtonObj);
 
 		pObject->StaticUI()->m_vecButton[i]->init();
 	}
@@ -234,7 +237,8 @@ void CPlayerScript::Init()
 	pWallet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pWallet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"WalletMtrl"));
 	pWallet->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"WALLET").GetPointer());
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pWallet);
+	if (GetObj()->GetID() == g_myid)
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pWallet);
 	pObject->StaticUI()->m_pWallet = pWallet;
 
 	CGameObject* pMoney;
@@ -250,7 +254,9 @@ void CPlayerScript::Init()
 		pMoney->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pMoney->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
 		pMoney->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"0").GetPointer());
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pMoney);
+		
+		if (GetObj()->GetID() == g_myid)
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pMoney);
 		pObject->StaticUI()->m_pMoneyUi.push_back(pMoney);
 	}
 }
@@ -266,9 +272,6 @@ void CPlayerScript::awake()
 
 void CPlayerScript::update()
 {	
-	MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
-	MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 1);
-
 	uShort id = GetObj()->GetID();
 	if (id >= MAX_USER)return;
 	CTerrain* pTerrain = GetTerrain();
@@ -281,6 +284,7 @@ void CPlayerScript::update()
 	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
+	cout << localPos.x << "\t" << localPos.z << endl;
 	if (g_myid != GetObj()->GetID())
 		op_Move();
 	else
@@ -310,7 +314,7 @@ void CPlayerScript::update()
 			g_netMgr.Send_Player_Animation_Packet(id, GetAttack(), Ani_TYPE::ATTACK);
 			anicnt++;
 		}
-
+		 
 		if (GetAttack() && GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) < Animator3D()->GetAnimClip(0).dTimeLength) {
 			SetCnt(GetCnt(PlAYER_ANICNT_TYPE::ATTACK_CNT) + DT, PlAYER_ANICNT_TYPE::ATTACK_CNT);
 			SetAnimation(Ani_TYPE::ATTACK);
@@ -390,7 +394,7 @@ void CPlayerScript::update()
 			localPos += worldDir * GetSpeed() * DT;
 			dir = MV_FRONT;
 			SetPlayerDir(worldDir * GetSpeed() * DT);
-			SetAnimation(Ani_TYPE::WALK_F);
+			SetAnimation(Ani_TYPE::RUN);
 			moveKeyInput = true;
 			//cout  << GetObj()->Transform()->GetLocalPos().x << " || " << GetObj()->Transform()->GetLocalPos().z << endl;
 			//cout << worldDir.z << endl;
@@ -404,7 +408,7 @@ void CPlayerScript::update()
 			localPos += worldDir * GetSpeed() * DT;
 
 			dir = MV_BACK;
-			SetAnimation(Ani_TYPE::WALK_D);
+			SetAnimation(Ani_TYPE::RUN);
 			moveKeyInput = true;
 		}
 		else if (KEY_HOLD(KEY_TYPE::KEY_A))
@@ -413,7 +417,7 @@ void CPlayerScript::update()
 			localPos += worldDir * GetSpeed() * DT;
 
 			dir = MV_LEFT;
-			SetAnimation(Ani_TYPE::WALK_F);
+			SetAnimation(Ani_TYPE::RUN);
 			moveKeyInput = true;
 		}
 
@@ -423,7 +427,7 @@ void CPlayerScript::update()
 			localPos += worldDir * GetSpeed() * DT;
 
 			dir = MV_RIGHT;
-			SetAnimation(Ani_TYPE::WALK_F);
+			SetAnimation(Ani_TYPE::RUN);
 			moveKeyInput = true;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
@@ -442,6 +446,21 @@ void CPlayerScript::update()
 			//cout << "\t\t\t" << vDrag.x << endl;
 			Transform()->SetLocalRot(vRot);
 		}
+		if (KEY_TAB(KEY_TYPE::KEY_Z))
+		{
+			// Boss Monster로 이동
+			Vector3 vPos = Vector3(68000.f, 0.f, 65000.f);
+			int z = (int)(vPos.z / xmf3Scale.z);
+
+			float fHeight = pTerrain->GetHeight(vPos.x, vPos.z, ((z % 2) != 0)) * 2.f;
+
+
+			if (vPos.y != fHeight)
+				vPos.y = fHeight;
+
+			playerTrans->SetLocalPos(vPos);
+		}
+
 		if (moveKeyInput)
 		{
 			int z = (int)(localPos.z / xmf3Scale.z);
@@ -495,15 +514,6 @@ void CPlayerScript::update()
 			SetTime_Zero();
 		}
 
-		if (KEY_HOLD(KEY_TYPE::KEY_Z))
-		{
-			MeshRender()->SetMaterial(m_pCloneMtrl);
-		}
-		else if (KEY_AWAY(KEY_TYPE::KEY_Z))
-		{
-			MeshRender()->SetMaterial(m_pOriginMtrl);
-		}
-
 		// quest::find item
 		if (GetObj()->Quest()->GetDoQuest(QUEST_TYPE::GET_ITEM) == false)
 			FindQuestItem();
@@ -532,6 +542,11 @@ void CPlayerScript::op_Move()
 
 	if (packetMoving)
 	{
+		/*cout << playerTrans->GetLocalPos().x << "\t" << playerTrans->GetLocalPos().z << endl;
+		cout << "PACKETPOS : " << packetLocalPos.x << ", " << packetLocalPos.z << endl;
+		cout << "DIRVEC : " << packetDirVec.x << ", " << packetDirVec.z << endl;
+		cout << DT << endl;
+		cout << "-------------------------" << endl;*/
 		if (FirstPacket)
 		{
 			temp = packetLocalPos + packetDirVec * packetspeed * (DT);
@@ -554,8 +569,8 @@ void CPlayerScript::op_Move()
 			//cout << "-----------------------------" << endl;
 
 	}
-	/*else {
-		if (m_isBezier&&m_fRTT>=0.f)
+	else {
+		/*if (m_isBezier&&m_fRTT>=0.f)
 		{
 			cout << "보간한다 ~~!!!" << endl;
 
@@ -577,8 +592,8 @@ void CPlayerScript::op_Move()
 			{
 				SetisBezeir(false);
 			}
-		}
-	}*/
+		}*/
+	}
 }
 
 void CPlayerScript::SetOtherMovePacket(sc_packet_move* p, const float& rtt)
@@ -651,7 +666,7 @@ Vector2 CPlayerScript::Search_Interpolation_Points(Vector2* points, float time)
 
 	result.x = (ax * time_Triple) + (bx * time_Double) + (cx * time) + points[0].x;
 	result.y = (ay * time_Triple) + (bx * time_Double) + (cy * time) + points[0].y;
-	cout << "Set Interpor Point : " << result.x << ", " << result.y << endl;
+	//cout << "Set Interpor Point : " << result.x << ", " << result.y << endl;
 
 	return result;
 }
@@ -724,7 +739,7 @@ void CPlayerScript::Attack_Default()
 
 	if (!vecObj.empty())
 	{
-		//cout << "총알 객체 생성 안됌" << endl;
+		cout << "총알 객체 생성 안됌" << endl;
 		return;
 	}
 	else
@@ -743,7 +758,8 @@ void CPlayerScript::Attack_Default()
 	CBulletScript* bulletScript = pBullet->GetScript<CBulletScript>();
 	bulletScript->SetPlayer(GetObj());
 
-	CreateObject(pBullet, L"Bullet");
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Bullet")->AddGameObject(pBullet);
+	//CreateObject(pBullet, L"Bullet");
 }
 
 void CPlayerScript::PickUp_Default()

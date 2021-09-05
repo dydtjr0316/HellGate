@@ -4,7 +4,7 @@
 // 섹터 디파인 값
 constexpr float MOVE_SPEED = 5.f; // 이동패킷 구조변경 성공시 삭제
 constexpr short CHILD_NODE_SIZE = 4;
-constexpr short MAX_PLAYER_IN_NODE = 4;
+constexpr short MAX_PLAYER_IN_NODE = 10;
 constexpr float SEARCH_SIZE = 3000.f;
 
 // 추후  수정
@@ -28,7 +28,7 @@ constexpr int START_MONSTER = MAX_USER;
 constexpr int MAX_MONSTER =100;
 constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
 constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
-constexpr int BOSS_ID = 3333;
+constexpr int BOSS_ID = 30000;
 
 constexpr int START_NPC = END_MONSTER;
 constexpr int MAX_NPC = 2000;
@@ -151,7 +151,7 @@ struct sc_packet_move {
 	char type;
 	uShort id;
 
-	//uShort move_time;
+	int move_time;
 	char dir;		// pragma pack 사용 안할거면 다시 char로 수정
 
 	Vector3 localVec;
@@ -163,7 +163,6 @@ struct sc_packet_move {
 	system_clock::time_point Start;
 
 	bool isMoving;
-
 };
 
 //가라

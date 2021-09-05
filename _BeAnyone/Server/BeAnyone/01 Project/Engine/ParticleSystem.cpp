@@ -137,7 +137,7 @@ int CParticleSystem::finiteParticle()
 		//m_fAccTime = m_fMaxLifeTime;
 		int a = 0;
 	}
-	cout << m_fAccTime << endl;
+	//cout << m_fAccTime << endl;
 	return iAdd;
 }
 
