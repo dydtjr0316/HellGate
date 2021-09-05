@@ -723,6 +723,7 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
 
     Vector3 angle = XMVector3AngleBetweenVectors(playerDir, monsterDir);
 
+
     if (c.x >= 0)
         angle.x = angle.x + XM_PI;
     else
@@ -731,11 +732,10 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
    // if (_eType == MOB_TYPE::YELLOW)
    // {
         //GetObj()->Transform()->SetLocalRot(Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
-    g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
-
-
-    // cout << "Boss가 보내는 패킷 : " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).x << ", " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).z << endl;
-    g_netMgr.Send_MonsterDir_Packet(GetID(), -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT));
+    if (m_pPlayer->GetID() == g_myid) {
+        g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
+        g_netMgr.Send_MonsterDir_Packet(GetID(), -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT));
+    }
 
     // }
     m_bisDirChange = true;

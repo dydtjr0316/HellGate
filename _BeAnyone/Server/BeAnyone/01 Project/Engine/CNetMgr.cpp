@@ -454,6 +454,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 					g_Object.find(id)->second->MeshRender()->SetDynamicShadow(true);
 					g_Object.find(id)->second->AddComponent(new CPlayerScript);
 					g_Object.find(id)->second->AddComponent(new CQuest);
+					g_Object.find(id)->second->Quest()->Init();
 					g_Object.find(id)->second->AddComponent(new CCollider);
 					g_Object.find(id)->second->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
 					g_Object.find(id)->second->Collider()->SetBoundingBox(BoundingBox(g_Object.find(id)->second->Transform()->GetLocalPos(), g_Object.find(id)->second->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
@@ -499,8 +500,8 @@ void CNetMgr::ProcessPacket(char* ptr)
 					pSword->SetName(L"sword");
 					pSword->FrustumCheck(false);
 					pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
-					pSword->AddComponent(new CCollider);
-					pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
+					//pSword->AddComponent(new CCollider);
+					//pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
 					// Script 설정
 					pSword->AddComponent(new CSwordScript);
 					CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
@@ -1122,8 +1123,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_boss_state* packet = reinterpret_cast<sc_packet_boss_state*>(ptr);//effect  생성 위치 
 		if (packet->aniState == MONSTER_STATE::FOLLOW)
 		{
-			if(!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsPunch() &&
-				!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsRoar())
+			if((!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsPunch() &&
+				!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsRoar()) ||
+				!g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->GetIsDamage())
 				g_Object.find(packet->id)->second->GetScript<CMonsterScript>()->SetBossState(packet->aniState);
 
 		}

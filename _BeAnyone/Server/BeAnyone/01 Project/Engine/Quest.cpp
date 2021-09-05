@@ -13,6 +13,16 @@
 CQuest::CQuest()
 	:CComponent(COMPONENT_TYPE::QUEST)
 {
+	
+}
+
+CQuest::~CQuest()
+{
+
+}
+
+void CQuest::Init()
+{
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	Vector3	QuestBoxScale = Vector3(300.f, 400.f, 1.f);
 	CGameObject* pObject = new CGameObject;
@@ -28,14 +38,15 @@ CQuest::CQuest()
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"UITexMtrl"));
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"QuestBase").GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &fUI);
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+	if (GetObj()->GetID() == g_myid)
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
 	pObject->SetUiRenderCheck(m_bBoxRender);
 	m_pQuestBoxBase = pObject;
 	for (int i = 0; i < (UINT)QUEST_TYPE::END; ++i) {
 		m_vQuestCheck.push_back(0);
 		m_bDoQuest[i] = false;
 	}
-	
+
 	Vector3 QuestBasePos = m_pQuestBoxBase->Transform()->GetLocalPos();
 	for (int i = 0; i < 2; ++i) {
 		QuestBoxScale = Vector3(280.f, 60.f, 1.f);
@@ -50,17 +61,14 @@ CQuest::CQuest()
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"QuestBoxMtrl"));
 		pObject->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"QuestBase_2").GetPointer());
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+		if (GetObj()->GetID() == g_myid)
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
 		pObject->SetUiRenderCheck(m_bBoxRender);
 		m_pQuestBox.push_back(pObject);
 		m_vExistQuestBox.push_back(QUESTBOX_TYPE::EMPTY);
 	}
 }
 
-CQuest::~CQuest()
-{
-	
-}
 
 void CQuest::update()
 {

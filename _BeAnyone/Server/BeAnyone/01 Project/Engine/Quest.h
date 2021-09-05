@@ -20,6 +20,7 @@ public:
 	vector<CGameObject*>	m_pQuestBox;
 	vector<QUESTBOX_TYPE>	m_vExistQuestBox;
 public:
+	void Init();
 	virtual void update();
 	virtual void lateupdate();
 	virtual void finalupdate();
