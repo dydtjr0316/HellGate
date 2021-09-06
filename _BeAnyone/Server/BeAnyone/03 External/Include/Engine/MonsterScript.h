@@ -8,7 +8,8 @@ private:
     MONSTER_TYPE m_eMonsterType;    // server에서 어떻게 쓰이고 있는지 모르겠음 없애도 되나
     MOB_TYPE     m_eMobType;
     float m_fSpeed = 2.0f;
-
+    Vector3 packetWorldDir;
+    bool isPacketWorldDir = false;
     // ui
     CGameObject* m_pUi;
     CGameObject* m_pUnderUi;
@@ -48,23 +49,24 @@ private:
     bool                m_bIsNearPlayer = false;
     float               m_fFollowTime = 0.f;
 
-<<<<<<< HEAD
-    bool                m_bIsRoar = false;
-    bool                m_bIsAttakLeft = false;
-    bool                m_bIsAttakRight = false;
-=======
     MONSTER_STATE       m_eMonsterState;
     BOSS_ATTACK         m_eAttackPattern;
     bool                m_bIsRoar = false;
     bool                m_bIsAttakLeft = false;
     bool                m_bIsAttakRight = false;
+
+    bool                m_bBossStateFirst = true;
 public:
     void SetBossState(const MONSTER_STATE& state) { m_eMonsterState = state; }
     void SetAttackPattern(const BOSS_ATTACK& pattern) { m_eAttackPattern = pattern; }
     
     BOSS_ATTACK GetAttackPattern() { return m_eAttackPattern; }
-    
->>>>>>> d43ad0cfe541e2e2b7801c52f24bdcffacf776e4
+
+public:
+    void SetPacketWorldDir(const Vector3& packetwdir) { packetWorldDir = packetwdir; }
+    void SetIsPacketWorldDir(const bool& is) { isPacketWorldDir = is; }
+    Vector3 GetPacketWorldDir() { return packetWorldDir; }
+    bool GetIsPacketWorldDir() { return isPacketWorldDir; }
   
 public:
     void Init();
@@ -95,6 +97,8 @@ public:
     bool GetIsDamage() { return m_bisDamaged; }
     void SetIsPunch(bool _isPunched) { m_bisPunch = _isPunched; }
     bool GetIsPunch() { return m_bisPunch; }
+    void SetIsRoar(bool _bIsRoar) { m_bIsRoar = _bIsRoar; }
+    bool GetIsRoar() { return m_bIsRoar; }
 
     // monster type
     void SetMonsterType(MONSTER_TYPE _eMonsterType) { m_eMonsterType = _eMonsterType; }// 둘 중에 하나 없애야 함 
@@ -127,6 +131,7 @@ public:
     void  SetPlayer(CGameObject* p) {
         m_pPlayer = p;
     };
+    CGameObject* GetPlayer() { return m_pPlayer; }
     void SetPacketDead(const bool& dead) { m_packetDead = dead; }
 
     // boss monster
@@ -134,10 +139,7 @@ public:
     void SetIsNearPlayer(bool _bool) { m_bIsNearPlayer = _bool; }
     void FollowToPlayer();
     void ChecktoAttack();   // 사정거리 안에 들어오는지 확인
-<<<<<<< HEAD
-=======
     void ChooseAttackPattern();    // 공격 패턴 고르기
->>>>>>> d43ad0cfe541e2e2b7801c52f24bdcffacf776e4
     MONSTER_STATE GetMonsterState() { return m_eMonsterState; }
 public:
     void Attack_Default();
