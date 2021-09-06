@@ -68,6 +68,7 @@ public:
 		m_bSp = _b;
 		m_bSp.Center.y += m_bSp.Radius;
 	}
+	void SetBoundCenter(Vector3 _center) { m_bSp.Center = _center; }
 
 public:
 	CLONE(CCollider);

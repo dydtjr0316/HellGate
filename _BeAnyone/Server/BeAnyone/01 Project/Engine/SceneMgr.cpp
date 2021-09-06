@@ -169,6 +169,7 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"APPLE", L"Texture\\ItemButton\\AppleTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_STAMINA", L"Texture\\ItemButton\\BottleStaminaTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_DASH", L"Texture\\ItemButton\\BottleDashTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_SHADOW", L"Texture\\ItemButton\\BottleShadowTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"STEAK", L"Texture\\ItemButton\\MeatTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"MONEYBAG", L"Texture\\ItemButton\\MoneyTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"CARROT", L"Texture\\ItemButton\\CarrotTex.png");
@@ -178,6 +179,7 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"WALLET", L"Texture\\ItemButton\\WalletTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EXIT", L"Texture\\ItemButton\\ExitStoreTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"Aa", L"Texture\\ItemButton\\AaTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"LACK_MONEY", L"Texture\\ItemButton\\LackMoneyTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_EMPTY", L"Texture\\ItemButton\\BottleEmptyTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_CARROT", L"Texture\\ItemButton\\BottleCarrotTex.png");
@@ -211,7 +213,8 @@ void CSceneMgr::LoadRes()
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainBranch", L"Texture\\ItemButton\\ExplainBranchTex.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainMeat", L"Texture\\ItemButton\\ExplainMeatTex.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainMoneyBag", L"Texture\\ItemButton\\ExplainMoneyBagTex.png");
-
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainTrash", L"Texture\\ItemButton\\ExplainTrashTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainBShadow", L"Texture\\ItemButton\\ExplainBShadowTex.png");
 }
 
 void CSceneMgr::CreateNpc(CTerrain* _terrain)
@@ -309,9 +312,9 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject = pMeshData->Instantiate();
 	pNpcObject->SetName(L"Npc_4");
 	pNpcObject->FrustumCheck(false);
-	pNpcObject->Transform()->SetLocalPos(Vector3(2300.f, _terrain->GetHeight(2300.f, 4200.f, true) * 2 /*240.f*/, 4200.f));
+	pNpcObject->Transform()->SetLocalPos(Vector3(2500.f, _terrain->GetHeight(2500.f, 6000.f, true) * 2 /*240.f*/, 6000.f));
 	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
-	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
+	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.0f, 0.f));
 	pNpcObject->AddComponent(new CCollider);
 	pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Npc_4");
 	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
@@ -385,6 +388,7 @@ void CSceneMgr::init()
 	Ptr<CTexture> pfFire01 = CResMgr::GetInst()->Load<CTexture>(L"Fire01", L"Texture\\Explosion\\fire01.dds");
 	Ptr<CTexture> pfNoise01 = CResMgr::GetInst()->Load<CTexture>(L"Noise01", L"Texture\\Explosion\\noise01.dds");
 	Ptr<CTexture> pfAlpha01 = CResMgr::GetInst()->Load<CTexture>(L"Alpha01", L"Texture\\Explosion\\alpha01.dds");
+	Ptr<CTexture> pfBlood01 = CResMgr::GetInst()->Load<CTexture>(L"Blood01", L"Texture\\Explosion\\Blood01.png");
 
 	//==========================
 	// UAV 용 Texture 생성
@@ -433,7 +437,7 @@ void CSceneMgr::init()
 	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pPlayerObj->AddComponent(new CCollider);
 	pPlayerObj->AddComponent(new CQuest);
-	pPlayerObj->Quest()->Init();
+	//pPlayerObj->Quest()->Init();
 	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
@@ -533,7 +537,7 @@ void CSceneMgr::init()
 	pMainCam->AddComponent(new CToolCamScript);
 
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-	pMainCam->Camera()->SetFar(30000.f);
+	pMainCam->Camera()->SetFar(100000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 	pMainCam->Camera()->SetLayerCheck(30, false);
 	//pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));
@@ -676,7 +680,8 @@ void CSceneMgr::init()
 	CreateNpc(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CreateNewMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CItemMgr::GetInst()->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
-
+		
+	//	비
 	pObject = new CGameObject;
 	pObject->SetName(L"Rain");
 	pObject->AddComponent(new CTransform);
@@ -688,7 +693,7 @@ void CSceneMgr::init()
 	//pObject->Particlesystem()->SetMaxParticle(512);
 	//pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
 
-	Vector3 particlePos = Vector3(3000.f, 0.f, 200.f);
+	Vector3 particlePos = Vector3(3000.f, 0.f, 2000.f);
 	{
 		int z = (int)(particlePos.z / pObject->Transform()->GetLocalScale().z);
 
@@ -746,6 +751,33 @@ void CSceneMgr::init()
 	//CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
 	//pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
 
+	//// Distortion Object 만들기
+	//// 텔포포탈
+	//pObject = new CGameObject;
+	//pObject->SetName(L"PostEffect");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//// Material 값 셋팅
+	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl");
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+	//pObject->MeshRender()->SetMaterial(pMtrl, 0);
+	//pObject->Transform()->SetLocalScale(Vector3(500.f, 500.f, 500.f));
+	//pObject->Transform()->SetLocalPos(Vector3(4000.f, 3000.f, 4000.f));
+	//m_pCurScene->AddGameObject(L"Default", pObject, false);
+
+	//// Distortion Object (텔포포탈)
+	//pObject = new CGameObject;
+	//pObject->SetName(L"PostEffect2");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//// Material 값 셋팅
+	//pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl");
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//pObject->MeshRender()->SetMaterial(pMtrl, 0);
+	//pObject->Transform()->SetLocalScale(Vector3(500.f, 500.f, 500.f));
+	//pObject->Transform()->SetLocalPos(Vector3(68000.f, pTerrainObject->Terrain()->GetHeight(68000.f, 71000.f, true), 71000.f));
+	//m_pCurScene->AddGameObject(L"Default", pObject, false);
+
 	// ====================
 	// Fire 오브젝트 생성
 	// ====================
@@ -755,9 +787,10 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	pObject->AddComponent(new CFireScript);
+	float mapY = pTerrainObject->Terrain()->GetHeight(80000.f, 90000.f, true);
 
-	pObject->Transform()->SetLocalPos(Vector3(5000.f, 3500.f, 5900.f));
-	pObject->Transform()->SetLocalScale(Vector3(1000.f, 1000.f, 1000.f));
+	pObject->Transform()->SetLocalPos(Vector3(68000.f, mapY + 6000.f, 75000.f));
+	pObject->Transform()->SetLocalScale(Vector3(10000.f, 10000.f, 1.f));
 	// MeshRender 설정
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FireMtrl"));
@@ -2344,11 +2377,11 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->FrustumCheck(false);
 
 
-			z = (int)(30.f / 60.f);
+			z = (int)((wallX * i) + wallX / 2 / 60.f);
 			bReverseQuad = ((z % 2) != 0);
-			mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
+			mapY = _terrain->GetHeight(76000.f, (wallX * i) + wallX / 2, true);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(76500.f, mapY * 2 - 1000.f, (wallX * i) + wallX / 2));
+			pMapObject->Transform()->SetLocalPos(Vector3(76000.f, mapY * 2 - 1000.f, (wallX * i) + wallX / 2));
 			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 			/*pMapObject->AddComponent(new CCollider);

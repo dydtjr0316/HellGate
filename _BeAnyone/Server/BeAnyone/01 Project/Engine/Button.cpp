@@ -212,9 +212,13 @@ void CButton::ChangeButtonTexture()
 
 	case ITEM_ID::TRASH:
 		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"TRASH");
-		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainCarrot").GetPointer());
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainTrash").GetPointer());
 		break;
 
+	case ITEM_ID::BOTTLE_SHADOW:
+		m_pItemImage = CResMgr::GetInst()->FindRes<CTexture>(L"BOTTLE_SHADOW");
+		m_pExplainBox->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ExplainBShadow").GetPointer());
+		break;
 
 	case ITEM_ID::END:
 		return;
