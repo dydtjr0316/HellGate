@@ -54,6 +54,9 @@ public:
 	void SetFrequency(float _fre) { m_fFrequency = _fre; }
 	void SetMinLife(float _min) { m_fMinLifeTime = _min; }
 	void SetMaxLife(float _max) { m_fMaxLifeTime = _max; }
+
+	void SetMesh(Ptr<CMesh> _m) { m_pMesh = _m; }
+	void SetMtrl(Ptr<CMaterial> _m) { m_pMtrl = _m; }
 	
 public:
 	void SetType(bool _b) { m_bType = _b; }

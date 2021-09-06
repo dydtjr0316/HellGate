@@ -17,12 +17,12 @@ CParticleSystem::CParticleSystem()
 	, m_fFrequency(0.002f)
 	, m_fAccTime(0.f)
 	, m_fMinLifeTime(0.5f)
-	, m_fMaxLifeTime(1.f)
+	, m_fMaxLifeTime(0.8f)
 	, m_fMinSpeed(100)
 	, m_fMaxSpeed(50.f)
-	, m_fStartScale(5.f)
+	, m_fStartScale(2.5f)
 	, m_fEndScale(10.f)
-	, m_vStartColor(Vector4(1.0f, 1.0f, 0.0f, 1.4f))
+	, m_vStartColor(Vector4(0.8f, 0.8f, 0.0f, 1.4f))
 	, m_vEndColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f))
 	, m_bType(true)
 {
@@ -38,7 +38,7 @@ CParticleSystem::CParticleSystem()
 
 	// Material
 	m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleMtrl");
-	Ptr<CTexture> pParticle = CResMgr::GetInst()->Load<CTexture>(L"Texture\\Particle\\CartoonSmoke.png", L"Texture\\Particle\\Sparks.png");
+	Ptr<CTexture> pParticle = CResMgr::GetInst()->Load<CTexture>(L"Texture\\Particle\\CartoonSmoke.png", L"Texture\\Particle\\particle_00.png");
 	m_pMtrl->SetData(SHADER_PARAM::TEX_0, pParticle.GetPointer());
 
 	// ParticleUpdate

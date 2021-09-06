@@ -21,8 +21,8 @@ void CFireScript::init()
 void CFireScript::update()
 {
 	//	빌보드
-	Vector3 PlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
-	Transform()->SetLocalRot(Vector3(PlayerRot + Vector3(0.f, XM_PI, 0.f)));
+	//Vector3 PlayerRot = g_Object.find(g_myid)->second->Transform()->GetLocalRot();
+	//Transform()->SetLocalRot(Vector3(PlayerRot + Vector3(0.f, XM_PI, 0.f)));
 
 	//	frametime ConstBuffer Parameter 최신화
 	m_NoiseBuffer.frameTime += DT;
