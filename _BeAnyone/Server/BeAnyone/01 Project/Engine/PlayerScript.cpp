@@ -62,7 +62,8 @@ CPlayerScript::CPlayerScript()
 		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
 		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
 		// AddGameObject
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+		if (GetObj()->GetID() == g_myid)
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
 
 		if (i == 0 || i == 1)
 			m_vUiBar.push_back(pObject);
@@ -99,7 +100,8 @@ CPlayerScript::CPlayerScript()
 		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
 		pObject->SetUiRenderCheck(false);
 		// AddGameObject
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+		if (GetObj()->GetID() == g_myid)
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
 
 		if (i == 0 || i == 1)
 			m_vUiBar.push_back(pObject);
@@ -128,7 +130,8 @@ CPlayerScript::CPlayerScript()
 		pObject->MeshRender()->SetMaterial(pMtrl->Clone());
 		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, UiTexture[i].GetPointer());
 		// AddGameObject
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
+		if (GetObj()->GetID() == g_myid)
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pObject);
 
 		m_vUiButton.push_back(pObject);
 	}
@@ -284,7 +287,7 @@ void CPlayerScript::update()
 	KEY_TYPE tempAnimation;
 	char dir = MV_IDLE;
 	bool moveKeyInput = false;
-	cout << localPos.x << "\t" << localPos.z << endl;
+	//cout << localPos.x << "\t" << localPos.z << endl;
 	if (g_myid != GetObj()->GetID())
 		op_Move();
 	else
@@ -885,6 +888,45 @@ void CPlayerScript::ReduceUiBar()
 	}
 }
 
+void CPlayerScript::IncreaseUiBar(float _stamina, float _dash, float _hug, float _temper)
+{
+	for (int i = 0; i < (UINT)UI_BAR::END; ++i) {
+		Vector3 scale = m_vUiBar[i]->Transform()->GetLocalScale();
+		Vector3 pos = m_vUiBar[i]->Transform()->GetLocalPos();
+		
+		switch (i) {
+		case 0:
+			if ((scale.x + _stamina) >= 350.f)
+				_stamina = 350.f - scale.x;
+			scale.x += _stamina;
+			pos.x += _stamina / 2.f;
+			break;
+		case 1:
+			if ((scale.x + _dash) >= 350.f)
+				_dash = 350.f - scale.x;
+			scale.x += _dash;
+			pos.x += _dash / 2.f;
+			break;
+		case 2:
+			if ((scale.x + _hug) >= 350.f)
+				_hug = 350.f - scale.x;
+			scale.x += _hug;
+			pos.x += _hug / 2.f;
+			break;
+		case 3:
+			if ((scale.x + _temper) >= 350.f)
+				_temper = 350.f - scale.x;
+			scale.x += _temper;
+			pos.x += _temper / 2.f;
+			break;
+		}
+		
+		m_vUiBar[i]->Transform()->SetLocalScale(scale);
+		m_vUiBar[i]->Transform()->SetLocalPos(pos);
+	}
+}
+
+
 void CPlayerScript::ReduceHpBar()
 {
 	float damage = 2.f;
@@ -898,6 +940,8 @@ void CPlayerScript::ReduceHpBar()
 	m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
 	m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->SetLocalPos(Vector3(pos.x, pos.y, pos.z));
 }
+
+
 
 void CPlayerScript::UseItem()
 {
@@ -916,20 +960,29 @@ void CPlayerScript::FindItemBeUsed(int _itemId)
 	case (UINT)ITEM_ID::STEAK:	// steak
 		cout << "steak 사용" << endl;
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::STEAK, false);
+		IncreaseUiBar(0.0f, 0.0f, 10.f, 5.f);
 		break;
 	case (UINT)ITEM_ID::BOTTLE_STAMINA:
 		cout << "stamina 사용" << endl;
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_STAMINA, false);
+		IncreaseUiBar(30.0f, 0.0f, 0.f, 0.f);
 		break;
 	case (UINT)ITEM_ID::BOTTLE_DASH:
 		cout << "dash 사용" << endl;
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_DASH, false);
+		IncreaseUiBar(0.0f, 20.0f, 0.f, 0.f);
 		break;
 	case (UINT)ITEM_ID::MONEYBAG:
 		break;
 	case (UINT)ITEM_ID::CARROT:
 		cout << "carrot 사용" << endl;
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::CARROT, false);
+		IncreaseUiBar(0.0f, 0.0f, 10.f, 5.f);
+		break;
+	case (UINT)ITEM_ID::APPLE:
+		cout << "apple 사용" << endl;
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::CARROT, false);
+		IncreaseUiBar(0.0f, 0.0f, 20.f, 10.f);
 		break;
 	case (UINT)ITEM_ID::BRANCH:
 		break;

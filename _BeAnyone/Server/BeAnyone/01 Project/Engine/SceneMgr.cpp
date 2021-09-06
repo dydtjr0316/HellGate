@@ -434,6 +434,7 @@ void CSceneMgr::init()
 	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pPlayerObj->AddComponent(new CCollider);
 	pPlayerObj->AddComponent(new CQuest);
+	pPlayerObj->Quest()->Init();
 	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
@@ -487,12 +488,11 @@ void CSceneMgr::init()
 	pSword->SetName(L"sword");
 	pSword->FrustumCheck(false);
 	pSword->Transform()->SetLocalScale(Vector3(1.f, 1.f, 1.f));//(1.0f, 1.0f, 1.0f));
-	//pSword->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
-	pSword->AddComponent(new CCollider);
-	pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
-	//pSword->Collider()->SetBoundingBox(BoundingBox(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
-	//pSword->Collider()->SetBoundingSphere(BoundingSphere(pSword->Transform()->GetLocalPos(), pSword->MeshRender()->GetMesh()->GetBoundingSphereRadius()));
-	pSword->MeshRender()->SetDynamicShadow(false);
+
+	//pSword->AddComponent(new CCollider);
+	//pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
+	pSword->MeshRender()->SetDynamicShadow(true);
+
 	// Script ¼³Á¤
 	pSword->AddComponent(new CSwordScript);
 	CSwordScript* SwordScript = pSword->GetScript<CSwordScript>();
