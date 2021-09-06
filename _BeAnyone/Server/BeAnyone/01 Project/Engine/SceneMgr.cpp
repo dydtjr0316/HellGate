@@ -385,6 +385,7 @@ void CSceneMgr::init()
 	Ptr<CTexture> pfFire01 = CResMgr::GetInst()->Load<CTexture>(L"Fire01", L"Texture\\Explosion\\fire01.dds");
 	Ptr<CTexture> pfNoise01 = CResMgr::GetInst()->Load<CTexture>(L"Noise01", L"Texture\\Explosion\\noise01.dds");
 	Ptr<CTexture> pfAlpha01 = CResMgr::GetInst()->Load<CTexture>(L"Alpha01", L"Texture\\Explosion\\alpha01.dds");
+	Ptr<CTexture> pfBlood01 = CResMgr::GetInst()->Load<CTexture>(L"Blood01", L"Texture\\Explosion\\Blood01.png");
 
 	//==========================
 	// UAV 용 Texture 생성
@@ -533,7 +534,7 @@ void CSceneMgr::init()
 	pMainCam->AddComponent(new CToolCamScript);
 
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-	pMainCam->Camera()->SetFar(30000.f);
+	pMainCam->Camera()->SetFar(100000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 	pMainCam->Camera()->SetLayerCheck(30, false);
 	//pMainCam->Transform()->SetLocalPos(Vector3(0.f, 600.f, -500.f));
@@ -676,7 +677,8 @@ void CSceneMgr::init()
 	CreateNpc(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CreateNewMap(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
 	CItemMgr::GetInst()->SetTerrain(pPlayerObj->GetScript<CPlayerScript>()->GetTerrain());
-
+		
+	//	비
 	pObject = new CGameObject;
 	pObject->SetName(L"Rain");
 	pObject->AddComponent(new CTransform);
@@ -688,7 +690,7 @@ void CSceneMgr::init()
 	//pObject->Particlesystem()->SetMaxParticle(512);
 	//pObject->GetScript<CParticleScript>()->SetLifeTime(pObject->Particlesystem()->GetMaxLifeTime());
 
-	Vector3 particlePos = Vector3(3000.f, 0.f, 200.f);
+	Vector3 particlePos = Vector3(3000.f, 0.f, 2000.f);
 	{
 		int z = (int)(particlePos.z / pObject->Transform()->GetLocalScale().z);
 
@@ -746,6 +748,33 @@ void CSceneMgr::init()
 	//CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
 	//pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
 
+	//// Distortion Object 만들기
+	//// 텔포포탈
+	//pObject = new CGameObject;
+	//pObject->SetName(L"PostEffect");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//// Material 값 셋팅
+	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl");
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+	//pObject->MeshRender()->SetMaterial(pMtrl, 0);
+	//pObject->Transform()->SetLocalScale(Vector3(500.f, 500.f, 500.f));
+	//pObject->Transform()->SetLocalPos(Vector3(4000.f, 3000.f, 4000.f));
+	//m_pCurScene->AddGameObject(L"Default", pObject, false);
+
+	//// Distortion Object (텔포포탈)
+	//pObject = new CGameObject;
+	//pObject->SetName(L"PostEffect2");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CMeshRender);
+	//// Material 값 셋팅
+	//pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl");
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//pObject->MeshRender()->SetMaterial(pMtrl, 0);
+	//pObject->Transform()->SetLocalScale(Vector3(500.f, 500.f, 500.f));
+	//pObject->Transform()->SetLocalPos(Vector3(68000.f, pTerrainObject->Terrain()->GetHeight(68000.f, 71000.f, true), 71000.f));
+	//m_pCurScene->AddGameObject(L"Default", pObject, false);
+
 	// ====================
 	// Fire 오브젝트 생성
 	// ====================
@@ -755,9 +784,10 @@ void CSceneMgr::init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	pObject->AddComponent(new CFireScript);
+	float mapY = pTerrainObject->Terrain()->GetHeight(80000.f, 90000.f, true);
 
-	pObject->Transform()->SetLocalPos(Vector3(5000.f, 3500.f, 5900.f));
-	pObject->Transform()->SetLocalScale(Vector3(1000.f, 1000.f, 1000.f));
+	pObject->Transform()->SetLocalPos(Vector3(68000.f, mapY + 6000.f, 75000.f));
+	pObject->Transform()->SetLocalScale(Vector3(10000.f, 10000.f, 1.f));
 	// MeshRender 설정
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FireMtrl"));
