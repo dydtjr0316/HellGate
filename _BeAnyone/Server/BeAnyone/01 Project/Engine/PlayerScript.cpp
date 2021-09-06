@@ -23,7 +23,6 @@ CPlayerScript::CPlayerScript()
 	, m_pCloneMtrl(nullptr)
 {
 	
-
 }
 
 CPlayerScript::~CPlayerScript()
@@ -149,8 +148,10 @@ void CPlayerScript::Init()
 	//	-----------------------
 	//	item UI, 상속되는 버튼들
 	//	-----------------------
+
 	pObject = new CGameObject;
 	vScale = Vector3(600.f, 800.f, 1.f);
+
 	pObject->SetName(L"Item UI Object");
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
@@ -171,6 +172,7 @@ void CPlayerScript::Init()
 	
 	
 	// Transform 설정
+
 	res = CRenderMgr::GetInst()->GetResolution();
 	pObject->Transform()->SetLocalPos(Vector3(300.f, 80.f, 1.f));
 	pObject->Transform()->SetLocalScale(vScale);

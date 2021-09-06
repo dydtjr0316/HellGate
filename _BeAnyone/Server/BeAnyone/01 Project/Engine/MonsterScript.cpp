@@ -238,6 +238,7 @@ void CMonsterScript::BossTurn()
 
             // 범위 줄이기
             m_pFindCollider->Collider()->SetBoundingSphere(BoundingSphere(GetObj()->Transform()->GetLocalPos(), 500.f));
+            cout << "스테이트 무브" << endl;
             TurnToPlayer(MOB_TYPE::BOSS);
             g_netMgr.Send_Boss_State_Packet(GetID(), MONSTER_STATE::FIND);
             m_bIsFindPlayer = false;
@@ -258,6 +259,7 @@ void CMonsterScript::BossTurn()
     case MONSTER_STATE::FOLLOW:
         FollowToPlayer();   // 따라가기
         if (m_fFollowTime > 2.f) {
+            cout << "스테이트 follow" << endl;
             TurnToPlayer(MOB_TYPE::BOSS);
             m_fFollowTime = 0.f;
         }
@@ -403,7 +405,7 @@ void CMonsterScript::Move()
 
             if (m_bisDirChange)
             {
-             
+                cout << "보내니?" << endl;
                 g_netMgr.Send_MonsterDir_Packet(m_sId, worldDir);
                 m_bisDirChange = false;
             }
@@ -679,6 +681,7 @@ void CMonsterScript::ChooseAttackPattern()
 void CMonsterScript::ChecktoAttack()
 {
     if (m_bIsNearPlayer) {
+        cout << "스테이트 체크어택" << endl;
         TurnToPlayer(MOB_TYPE::BOSS);
         m_eMonsterState = MONSTER_STATE::ATTACK;
         m_bIsNearPlayer = false;
@@ -694,8 +697,10 @@ void CMonsterScript::FollowToPlayer()
     Vector3 monsterPos = GetObj()->Transform()->GetLocalPos();
     CTransform* mosnterTrans = GetObj()->Transform();
 
-    monsterPos += packetWorldDir * DT * 100.f;
-    
+    monsterPos += packetWorldDir * DT * 50.f;
+    //cout << monsterPos.x << ", " << monsterPos.z << endl;
+
+
     {
         int z = (int)(monsterPos.z / GetObj()->Transform()->GetLocalScale().z);
         float fHeight = m_pTerrainObj->GetHeight(monsterPos.x, monsterPos.z, ((z % 2) != 0)) * 2.f;
@@ -740,11 +745,13 @@ void CMonsterScript::TurnToPlayer(MOB_TYPE _eType)
     if (m_pPlayer->GetID() == g_myid) {
         g_netMgr.Send_Boss_Turn(GetID(), Vector3(monsterRot.x, monsterRot.y + angle.x, monsterRot.z));
         g_netMgr.Send_MonsterDir_Packet(GetID(), -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT));
+        cout << GetObj()->Transform()->GetLocalPos().x << ", " << GetObj()->Transform()->GetLocalPos().z << endl;
+        //cout << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).x << ", " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).y + angle.x <<", " << -mosnterTrans->GetWorldDir(DIR_TYPE::FRONT).z << endl;
     }
 
     // }
-    m_bisDirChange = true;
-    m_fAngleY += angle.x;
+    //m_bisDirChange = true;
+    //m_fAngleY += angle.x;
 
 }
 

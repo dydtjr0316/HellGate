@@ -372,9 +372,20 @@ void CNetMgr::Process_Packet(const uShort& user_id, char* buf)
         cs_pcaket_MonsterDir* packet = reinterpret_cast<cs_pcaket_MonsterDir*>(buf);
         Vector3 temp = packet->dir;
         tempLock.lock();
+        //cout << "\t\t\t\t\t**********POS***********" << endl;
+        //cout << packet->pos.x << ",  " << packet->pos.z << endl;
+
+        //cout << m_pMediator->Find(packet->id)->GetLocalPosVector().x << ", " << m_pMediator->Find(packet->id)->GetLocalPosVector().z << endl;
+        //cout << "\t\t\t\t\t*********DIR*********" << endl;
+        //cout << packet->dir.x << ",  " << packet->dir.y << ",  " << packet->dir.z << endl;
+        //cout << m_pMediator->Find(packet->id)->GetDirVector().x << ",  " << m_pMediator->Find(packet->id)->GetDirVector().y << ", " << m_pMediator->Find(packet->id)->GetDirVector().z << endl;
+
+        //cout << "\t\t\t\t\t*-------------------" << endl;
+        //cout << "\t\t\t\t\t*-------------------" << endl;
         m_pMediator->Find(packet->id)->SetDirV(temp);
         if (!CAST_MONSTER(m_pMediator->Find(packet->id))->GetIsDir())
         {
+            cout << "패킷받고나서" << endl;
             CAST_MONSTER(m_pMediator->Find(packet->id))->SetIsDir(true);
         }
         tempLock.unlock();
@@ -601,6 +612,7 @@ void CNetMgr::Worker_Thread()
                         cout << "MonsterMove 실행" << endl;
                         char temp = (char)(rand() % 4);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetIsMoving(true);
+
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetDir((MONSTER_AUTOMOVE_DIR)temp);
                         CAST_MONSTER(m_pMediator->Find(user_id))->SetIsDir(true);
                         if(user_id!=BOSS_ID)
@@ -793,7 +805,7 @@ void CNetMgr::Processing_Thead()
                         old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                         g_QuadTree.Delete(m_pMediator->Find(monster));
                         monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
-                        if (monster == 1003)
+                        if (monster == BOSS_ID)
                         {
                             cout << "DT : " << DT << "    **    " << m_pMediator->Find(monster)->GetDirVector().x << ", " << m_pMediator->Find(monster)->GetDirVector().z << endl;
                             cout << monsterPos.x << ", " << monsterPos.z << endl;
@@ -834,6 +846,7 @@ void CNetMgr::Processing_Thead()
                     if (ismoving && CAST_MONSTER(m_pMediator->Find(monster))->GetIsDir())
                     {
 
+                        cout << "\t\t\t\t    Process packet////////////////////////" << endl;
                         for (auto& user : old_viewList) {
                             if (new_viewList.count(user) != 0)
                             {
@@ -872,6 +885,11 @@ void CNetMgr::Processing_Thead()
                         old_viewList = g_QuadTree.search(CBoundary(m_pMediator->Find(monster)));
                         if (m_pMediator->Find(monster) == nullptr)continue;
                         g_QuadTree.Delete(m_pMediator->Find(monster));
+                        if (monster == BOSS_ID)
+                        {
+                            cout << "DT : " << DT << "    **    " << m_pMediator->Find(monster)->GetDirVector().x << ", " << m_pMediator->Find(monster)->GetDirVector().z << endl;
+                            cout << monsterPos.x << ", " << monsterPos.z << endl;
+                        }
                         monsterPos += speed * DT * m_pMediator->Find(monster)->GetDirVector();
                         //cout << monsterPos.x << ", " << monsterPos.z << endl;
                         m_pMediator->Find(monster)->SetPosV(monsterPos);
