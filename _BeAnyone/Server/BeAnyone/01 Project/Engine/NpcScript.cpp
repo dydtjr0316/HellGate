@@ -160,7 +160,7 @@ void CNpcScript::init(UI_TYPE _eType)
 		storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_STAMINA);
 		storeUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_DASH);
 		storeUi->StaticUI()->SetButton(ITEM_ID::STEAK);
-
+		storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->SetUiRenderCheck(false);
 		for (int i = 0; i < storeUi->StaticUI()->m_vecButton.size(); ++i)
 			storeUi->StaticUI()->m_vecButton[i]->init();
 		break;
@@ -168,7 +168,7 @@ void CNpcScript::init(UI_TYPE _eType)
 	case UI_TYPE::ALCHEMY_SHOP_UI:
 		storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->SetLocalPos(Vector3(vObjectPos.x + 150.f, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
 		storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->Transform()->SetLocalPos(Vector3(vObjectPos.x - 150.f, vObjectPos.y - (vObjectScale.y / 2.f) + 50.f, 1.f));
-		storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"EXIT").GetPointer());
+		storeUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Aa").GetPointer());
 		break;
 	}
 
@@ -242,6 +242,7 @@ void CNpcScript::update()
 					m_pPlayerUi->StaticUI()->SetWalletMoney();
 				}
 				
+				m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::DO_ALCHEMY]->SetUiRenderCheck(false);
 				Vector3 pos = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalPos();
 				Vector3 scale = m_pStoreUi->StaticUI()->m_StoreButton[(UINT)STORE_BUTTON::EXIT]->Transform()->GetLocalScale();
 				if (ComputeMousePos(pos, scale)) {
@@ -358,6 +359,17 @@ void CNpcScript::CheckAlchemy(ITEM_ID _firstId, ITEM_ID _SecondId)
 	case ITEM_ID::EMPTY:
 		m_bCanAlchemy = false;
 		break;
+	case ITEM_ID::BOTTLE_STAMINA:
+		if(_SecondId == ITEM_ID::BOTTLE_DASH)
+			m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_SHADOW);
+		else
+			m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::TRASH);
+		break;
+	case ITEM_ID::BOTTLE_DASH:
+		if(_SecondId == ITEM_ID::BOTTLE_STAMINA)
+			m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::BOTTLE_SHADOW);
+		else
+			m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::TRASH);
 	default:
 		m_pPlayerUi->StaticUI()->SetButton(ITEM_ID::TRASH);
 	}
@@ -530,7 +542,7 @@ void CNpcScript::SetQuestBox(wstring wstr, QUESTBOX_TYPE _eType)
 	if (m_bQuestBox) {
 		for (int i = 0; i < 2; ++i) {
 			if (m_pPlayer->Quest()->m_vExistQuestBox[i] == QUESTBOX_TYPE::EMPTY || m_pPlayer->Quest()->m_vExistQuestBox[i] == _eType) {
-				m_pPlayer->Quest()->m_pQuestBox[i]->MeshRender()->GetCloneMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
+				m_pPlayer->Quest()->m_pQuestBox[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(wstr).GetPointer());
 				m_pPlayer->Quest()->m_vExistQuestBox[i] = _eType;
 				m_bQuestBox = false;
 				return;

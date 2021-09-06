@@ -169,6 +169,7 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"APPLE", L"Texture\\ItemButton\\AppleTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_STAMINA", L"Texture\\ItemButton\\BottleStaminaTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_DASH", L"Texture\\ItemButton\\BottleDashTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_SHADOW", L"Texture\\ItemButton\\BottleShadowTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"STEAK", L"Texture\\ItemButton\\MeatTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"MONEYBAG", L"Texture\\ItemButton\\MoneyTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"CARROT", L"Texture\\ItemButton\\CarrotTex.png");
@@ -178,6 +179,7 @@ void CSceneMgr::LoadRes()
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"AX", L"Texture\\ItemButton\\AxTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"WALLET", L"Texture\\ItemButton\\WalletTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"EXIT", L"Texture\\ItemButton\\ExitStoreTex.png");
+	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"Aa", L"Texture\\ItemButton\\AaTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"LACK_MONEY", L"Texture\\ItemButton\\LackMoneyTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_EMPTY", L"Texture\\ItemButton\\BottleEmptyTex.png");
 	pButtonTex = CResMgr::GetInst()->Load<CTexture>(L"BOTTLE_CARROT", L"Texture\\ItemButton\\BottleCarrotTex.png");
@@ -211,7 +213,8 @@ void CSceneMgr::LoadRes()
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainBranch", L"Texture\\ItemButton\\ExplainBranchTex.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainMeat", L"Texture\\ItemButton\\ExplainMeatTex.png");
 	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainMoneyBag", L"Texture\\ItemButton\\ExplainMoneyBagTex.png");
-
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainTrash", L"Texture\\ItemButton\\ExplainTrashTex.png");
+	pQuestBox = CResMgr::GetInst()->Load<CTexture>(L"ExplainBShadow", L"Texture\\ItemButton\\ExplainBShadowTex.png");
 }
 
 void CSceneMgr::CreateNpc(CTerrain* _terrain)
@@ -309,9 +312,9 @@ void CSceneMgr::CreateNpc(CTerrain* _terrain)
 	pNpcObject = pMeshData->Instantiate();
 	pNpcObject->SetName(L"Npc_4");
 	pNpcObject->FrustumCheck(false);
-	pNpcObject->Transform()->SetLocalPos(Vector3(2300.f, _terrain->GetHeight(2300.f, 4200.f, true) * 2 /*240.f*/, 4200.f));
+	pNpcObject->Transform()->SetLocalPos(Vector3(2500.f, _terrain->GetHeight(2500.f, 6000.f, true) * 2 /*240.f*/, 6000.f));
 	pNpcObject->Transform()->SetLocalScale(Vector3(1.5f, 1.5f, 1.5f));//(1.0f, 1.0f, 1.0f));
-	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, -XM_PI / 2, 0.f));
+	pNpcObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, 0.0f, 0.f));
 	pNpcObject->AddComponent(new CCollider);
 	pNpcObject->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"Npc_4");
 	pNpcObject->Collider()->SetBoundingBox(BoundingBox(pNpcObject->Transform()->GetLocalPos(), pNpcObject->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
@@ -433,7 +436,7 @@ void CSceneMgr::init()
 	pPlayerObj->Transform()->SetLocalRot(Vector3(0.f, XM_PI, 0.f));
 	pPlayerObj->AddComponent(new CCollider);
 	pPlayerObj->AddComponent(new CQuest);
-	pPlayerObj->Quest()->Init();
+	//pPlayerObj->Quest()->Init();
 	pPlayerObj->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale@nWalk_F");
 	pPlayerObj->Collider()->SetBoundingBox(BoundingBox(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingBoxExtents()));
 	pPlayerObj->Collider()->SetBoundingSphere(BoundingSphere(pPlayerObj->Transform()->GetLocalPos(), pPlayerObj->MeshRender()->GetMesh()->GetBoundingSphereRadius() / 2.f));
@@ -2344,11 +2347,11 @@ void CSceneMgr::CreateNewMap(CTerrain* _terrain)
 			pMapObject->FrustumCheck(false);
 
 
-			z = (int)(30.f / 60.f);
+			z = (int)((wallX * i) + wallX / 2 / 60.f);
 			bReverseQuad = ((z % 2) != 0);
-			mapY = _terrain->GetHeight(30.f, (wallX * i) + wallX / 2, true);
+			mapY = _terrain->GetHeight(76000.f, (wallX * i) + wallX / 2, true);
 
-			pMapObject->Transform()->SetLocalPos(Vector3(76500.f, mapY * 2 - 1000.f, (wallX * i) + wallX / 2));
+			pMapObject->Transform()->SetLocalPos(Vector3(76000.f, mapY * 2 - 1000.f, (wallX * i) + wallX / 2));
 			pMapObject->Transform()->SetLocalScale(Vector3(310.f, 200.f, 1000.f));//(1.0f, 1.0f, 1.0f));
 			pMapObject->Transform()->SetLocalRot(Vector3(-XM_PI / 2, XM_PI / 2, 0.f));
 			/*pMapObject->AddComponent(new CCollider);

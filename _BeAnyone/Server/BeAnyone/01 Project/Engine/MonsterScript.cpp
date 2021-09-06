@@ -480,6 +480,7 @@ void CMonsterScript::Attack()
                 if (g_myid == m_pPlayer->GetID()) {
                     g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::DAMAGE);
                     m_isfirst = false;
+                    // m_bisAniReset = false;
                 }
             }
 
@@ -519,6 +520,7 @@ void CMonsterScript::Attack()
             {
                 if (g_myid == m_pPlayer->GetID()) {
                     g_netMgr.Send_Monster_Animation_Packet(monsterid, MONSTER_ANI_TYPE::ATTACK);
+                    Attack_Default();
                     cout << "!!!!!!!!!! 보스 공격" << endl;
                     m_isfirst = false;
                 }
@@ -530,7 +532,7 @@ void CMonsterScript::Attack()
             //else
             //    TurnToPlayer(MOB_TYPE::YELLOW);
 
-            Attack_Default();
+           
 
             // packet
 
@@ -601,6 +603,7 @@ void CMonsterScript::Attack()
                 if (g_myid == m_pPlayer->GetID()) {
                     g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK_LEFT);
                     cout << "!!!!!!!!!!!!!보스 왼쪽 공격" << endl;
+                    Attack_Default();
                     m_isfirst = false;
                 }
             }
@@ -633,6 +636,7 @@ void CMonsterScript::Attack()
                 if (g_myid == m_pPlayer->GetID()) {
                     g_netMgr.Send_Monster_Animation_Packet(m_sId, MONSTER_ANI_TYPE::ATTACK_RIGHT);
                     cout << "!!!!!!!!!!!!!보스 오른쪽 공격" << endl;
+                    Attack_Default();
                     m_isfirst = false;
                 }
             }
@@ -752,22 +756,23 @@ void CMonsterScript::Attack_Default()
     vector<CGameObject*> vecObj;
     CSceneMgr::GetInst()->FindGameObjectByTag(L"M_Attack Object", vecObj);
 
-    //if (!vecObj.empty())
-    //{
-    //    cout << "몬스터 총알 객체 생성 안됌" << endl;
-    //    return;
-    //}
-    //else
-    //    cout << "몬스터 공격 객체 생성" << endl << endl;
+    if (!vecObj.empty())
+    {
+        cout << "몬스터 총알 객체 생성 안됌" << endl;
+        return;
+    }
+    else
+        cout << "몬스터 공격 객체 생성" << endl << endl;
 
     CGameObject* pBullet = new CGameObject;
     pBullet->SetName(L"M_Attack Object");
 
     if(GetObj()->GetName() == L"FireMonster")
         vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::UP) * monster->Collider()->GetBoundingSphere().Radius;
-    else// if (GetObj()->GetName() == L"GreenMonster")
+    else if (GetObj()->GetName() == L"GreenMonster")
         vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::FRONT) * monster->Collider()->GetBoundingSphere().Radius;
-
+    else
+        vPos += -monster->Transform()->GetWorldDir(DIR_TYPE::FRONT) * monster->Collider()->GetBoundingSphere().Radius * 4.f;
 
     pBullet->AddComponent(new CTransform());
     pBullet->Transform()->SetLocalPos(vPos);
@@ -779,6 +784,13 @@ void CMonsterScript::Attack_Default()
     CBulletScript* bulletScript = pBullet->GetScript<CBulletScript>();
     bulletScript->SetPlayer(GetObj());
     bulletScript->SetBulletType(BULLET_TYPE::MONSTER_ATTACK);
+
+    pBullet->AddComponent(new CMeshRender);
+    pBullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+    Ptr<CMaterial> pMtrla = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+    pBullet->MeshRender()->SetMaterial(pMtrla->Clone());
+    //
+    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pBullet);
 
     // 불릿 보이게
     //Ptr<CTexture> pColor = CResMgr::GetInst()->FindRes<CTexture>(L"Tile");

@@ -332,6 +332,9 @@ void CStaticUI::UseItem(ITEM_ID _eType)
 	case ITEM_ID::AX:
 		m_bUseItem[(UINT)ITEM_ID::AX] = true;
 		break;
+	case ITEM_ID::BOTTLE_SHADOW:
+		m_bUseItem[(UINT)ITEM_ID::BOTTLE_SHADOW] = true;
+		break;
 	}
 }
 

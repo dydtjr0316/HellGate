@@ -22,6 +22,16 @@ CPlayerScript::CPlayerScript()
 	, m_pOriginMtrl(nullptr)
 	, m_pCloneMtrl(nullptr)
 {
+	
+
+}
+
+CPlayerScript::~CPlayerScript()
+{
+}
+
+void CPlayerScript::Init()
+{
 	m_fSpeed = PLAYER_SPEED_IDLE;
 	m_eAniType = Ani_TYPE::IDLE;
 
@@ -46,7 +56,7 @@ CPlayerScript::CPlayerScript()
 			if (i == 1) {
 				vScale = Vector3(350.f, 20.f, 1.f);
 			}
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f 
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
 				, 1.f));
 		}
@@ -136,19 +146,11 @@ CPlayerScript::CPlayerScript()
 		m_vUiButton.push_back(pObject);
 	}
 
-}
-
-CPlayerScript::~CPlayerScript()
-{
-}
-
-void CPlayerScript::Init()
-{
 	//	-----------------------
 	//	item UI, 상속되는 버튼들
 	//	-----------------------
-	CGameObject* pObject = new CGameObject;
-	Vector3 vScale = Vector3(600.f, 800.f, 1.f);
+	pObject = new CGameObject;
+	vScale = Vector3(600.f, 800.f, 1.f);
 	pObject->SetName(L"Item UI Object");
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
@@ -169,7 +171,7 @@ void CPlayerScript::Init()
 	
 	
 	// Transform 설정
-	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	res = CRenderMgr::GetInst()->GetResolution();
 	pObject->Transform()->SetLocalPos(Vector3(300.f, 80.f, 1.f));
 	pObject->Transform()->SetLocalScale(vScale);
 	// MeshRender 설정	
@@ -503,28 +505,28 @@ void CPlayerScript::update()
 			SetTime_Zero();
 		}
 
-		if (KEY_HOLD(KEY_TYPE::KEY_X))
-		{
-			Skill_Hide();
-		}
+		//if (KEY_HOLD(KEY_TYPE::KEY_X))
+		//{
+		//	Skill_Hide();
+		//}
 
-		if (KEY_AWAY(KEY_TYPE::KEY_X))
-		{
-			auto vecChild = GetObj()->GetChild();
-			MeshRender()->SetMaterial(m_vecHideMtrl[0], 0);
-			MeshRender()->SetMaterial(m_vecHideMtrl[1], 1);
-			for (int i = 0; i < vecChild.size(); ++i)
-			{
-				if (vecChild[i]->GetName() == L"sword")
-				{
-					vecChild[i]->MeshRender()->SetMaterial(m_vecHideMtrl[2], 0);
-					//vecChild[i]->MeshRender()->SetDynamicShadow(true);
-					break;
-				}
-			}
-			MeshRender()->SetDynamicShadow(true);
-			m_bIsHide = false;
-		}
+		//if (KEY_AWAY(KEY_TYPE::KEY_X))
+		//{
+		//	auto vecChild = GetObj()->GetChild();
+		//	MeshRender()->SetMaterial(m_vecHideMtrl[0], 0);
+		//	MeshRender()->SetMaterial(m_vecHideMtrl[1], 1);
+		//	for (int i = 0; i < vecChild.size(); ++i)
+		//	{
+		//		if (vecChild[i]->GetName() == L"sword")
+		//		{
+		//			vecChild[i]->MeshRender()->SetMaterial(m_vecHideMtrl[2], 0);
+		//			//vecChild[i]->MeshRender()->SetDynamicShadow(true);
+		//			break;
+		//		}
+		//	}
+		//	MeshRender()->SetDynamicShadow(true);
+		//	m_bIsHide = false;
+		//}
 
 
 		if (m_ftimeCount >= m_fDelayTime)
@@ -548,6 +550,27 @@ void CPlayerScript::update()
 		ClickUiButton();
 		ReduceUiBar();
 		UseItem();
+
+		//hide
+		if(m_fHidetime <= 60.f && m_bIsHide)
+			Skill_Hide();
+		else if (m_fHidetime > 60.f && m_bIsHide) {
+			auto vecChild = GetObj()->GetChild();
+			MeshRender()->SetMaterial(m_vecHideMtrl[0], 0);
+			MeshRender()->SetMaterial(m_vecHideMtrl[1], 1);
+			for (int i = 0; i < vecChild.size(); ++i)
+			{
+				if (vecChild[i]->GetName() == L"sword")
+				{
+					vecChild[i]->MeshRender()->SetMaterial(m_vecHideMtrl[2], 0);
+					//vecChild[i]->MeshRender()->SetDynamicShadow(true);
+					break;
+				}
+			}
+			MeshRender()->SetDynamicShadow(true);
+			m_bIsHide = false;
+			m_fHidetime = 0.0f;
+		}
 	}
 }
 
@@ -833,6 +856,7 @@ void CPlayerScript::Skill_Hide()
 	}	
 	MeshRender()->SetDynamicShadow(false);
 	m_bIsHide = true;
+	m_fHidetime += DT;
 }
 
 void CPlayerScript::ClickUiButton()
@@ -929,7 +953,7 @@ void CPlayerScript::IncreaseUiBar(float _stamina, float _dash, float _hug, float
 
 void CPlayerScript::ReduceHpBar()
 {
-	float damage = 2.f;
+	float damage = 20.f;
 
 	Vector3 scale = m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->GetLocalScale();
 	Vector3 pos = m_vUiBar[(UINT)UI_BAR::STAMINA]->Transform()->GetLocalPos();
@@ -1002,6 +1026,10 @@ void CPlayerScript::FindItemBeUsed(int _itemId)
 	case (UINT)ITEM_ID::BASIC_SWORD:
 		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BASIC_SWORD, false);
 		ChangeWeapone(WEAPONE_TYPE::SWORD, ITEM_ID::BASIC_SWORD);
+		break;
+	case (UINT)ITEM_ID::BOTTLE_SHADOW:
+		m_pItemUIObj->StaticUI()->SetUseItemID((UINT)ITEM_ID::BOTTLE_SHADOW, false);
+		m_bIsHide = true;
 		break;
 	default:
 		break;

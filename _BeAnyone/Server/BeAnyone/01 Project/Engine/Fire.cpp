@@ -26,7 +26,7 @@ void CFireScript::update()
 
 	//	frametime ConstBuffer Parameter √÷Ω≈»≠
 	m_NoiseBuffer.frameTime += DT;
-	cout << m_NoiseBuffer.frameTime << endl;
+	//cout << m_NoiseBuffer.frameTime << endl;
 	if (m_NoiseBuffer.frameTime > 1000.f)
 		m_NoiseBuffer.frameTime = 0.f;
 	MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::FLOAT_0, &m_NoiseBuffer.frameTime);

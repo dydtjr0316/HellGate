@@ -29,9 +29,9 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 	else if (id == BOSS_ID)return OBJECT_TYPE::BOSS;
 }
 
-const char ip[] = "192.168.0.11";
+//const char ip[] = "192.168.0.11";
 
-//const char ip[] = "192.168.0.07";
+const char ip[] = "192.168.0.07";
 //const char ip[] = "192.168.0.13";
 //const char ip[] = "192.168.0.13";
 //const char ip[] = "221.151.160.142";
@@ -406,6 +406,7 @@ void CNetMgr::ProcessPacket(char* ptr)
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->initDeadReckoner();
 		
 		g_Object.find(g_myid)->second->GetScript<CPlayerScript>()->Init();
+		g_Object.find(g_myid)->second->Quest()->Init();
 		
 		// static ui cam ¼³Á¤
 		CGameObject* cam;
