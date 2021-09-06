@@ -52,6 +52,7 @@ private:
 	bool				m_bIsHide = false;
 
 
+
 private:
 	float			m_ftimeCount = 0.f;
 	float			m_fDelayTime = 2.f;

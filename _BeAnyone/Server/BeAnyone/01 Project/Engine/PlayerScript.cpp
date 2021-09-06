@@ -552,9 +552,9 @@ void CPlayerScript::update()
 		UseItem();
 
 		//hide
-		if(m_fHidetime <= 60.f && m_bIsHide)
+		if(m_fHidetime <= 30.f && m_bIsHide)
 			Skill_Hide();
-		else if (m_fHidetime > 60.f && m_bIsHide) {
+		else if (m_fHidetime > 30.f && m_bIsHide) {
 			auto vecChild = GetObj()->GetChild();
 			MeshRender()->SetMaterial(m_vecHideMtrl[0], 0);
 			MeshRender()->SetMaterial(m_vecHideMtrl[1], 1);

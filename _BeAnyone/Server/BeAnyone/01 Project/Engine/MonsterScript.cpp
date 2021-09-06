@@ -785,12 +785,12 @@ void CMonsterScript::Attack_Default()
     bulletScript->SetPlayer(GetObj());
     bulletScript->SetBulletType(BULLET_TYPE::MONSTER_ATTACK);
 
-    pBullet->AddComponent(new CMeshRender);
-    pBullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-    Ptr<CMaterial> pMtrla = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
-    pBullet->MeshRender()->SetMaterial(pMtrla->Clone());
-    //
-    CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pBullet);
+    //pBullet->AddComponent(new CMeshRender);
+    //pBullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+    //Ptr<CMaterial> pMtrla = CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl");
+    //pBullet->MeshRender()->SetMaterial(pMtrla->Clone());
+    ////
+    //CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pBullet);
 
     // ∫“∏¥ ∫∏¿Ã∞‘
     //Ptr<CTexture> pColor = CResMgr::GetInst()->FindRes<CTexture>(L"Tile");

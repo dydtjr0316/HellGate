@@ -63,6 +63,7 @@
     <ClInclude Include="PathMgr.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerScript.h" />
+    <ClInclude Include="PotalScript.h" />
     <ClInclude Include="Ptr.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="RenderMgr.h" />
@@ -135,6 +136,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PlayerScript.cpp" />
+    <ClCompile Include="PotalScript.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="RenderMgr.cpp" />
     <ClCompile Include="RenderMgrInit.cpp" />

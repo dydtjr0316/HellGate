@@ -43,6 +43,7 @@
 #include "TreeScript.h"
 #include "Fire.h"
 #include "FenceScript.h"
+#include "PotalScript.h"
 	// UI
 #include "StaticUI.h"
 
@@ -494,7 +495,7 @@ void CSceneMgr::init()
 
 	//pSword->AddComponent(new CCollider);
 	//pSword->Collider()->SetColliderType(COLLIDER_TYPE::MESH, L"PlayerMale_Weapon_Sword");
-	pSword->MeshRender()->SetDynamicShadow(true);
+	pSword->MeshRender()->SetDynamicShadow(false);
 
 	// Script 설정
 	pSword->AddComponent(new CSwordScript);
@@ -751,19 +752,25 @@ void CSceneMgr::init()
 	//CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
 	//pCSMtrl->Dispatch(1, 1024, 1); // --> 컴퓨트 쉐이더 수행	
 
-	//// Distortion Object 만들기
-	//// 텔포포탈
-	//pObject = new CGameObject;
-	//pObject->SetName(L"PostEffect");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CMeshRender);
-	//// Material 값 셋팅
-	//Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl");
-	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
-	//pObject->MeshRender()->SetMaterial(pMtrl, 0);
-	//pObject->Transform()->SetLocalScale(Vector3(500.f, 500.f, 500.f));
-	//pObject->Transform()->SetLocalPos(Vector3(4000.f, 3000.f, 4000.f));
-	//m_pCurScene->AddGameObject(L"Default", pObject, false);
+	// Distortion Object 만들기
+	// 텔포포탈
+	pObject = new CGameObject;
+	pObject->SetName(L"PostEffect");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CCollider);
+	pObject->AddComponent(new CPotalScript);
+	// Material 값 셋팅
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl");
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+	pObject->MeshRender()->SetMaterial(pMtrl, 0);
+	pObject->Transform()->SetLocalScale(Vector3(500.f, 500.f, 500.f));
+	pObject->Transform()->SetLocalRot(Vector3(0.0f, XM_PI, 0.0f));
+	pObject->Transform()->SetLocalPos(Vector3(3000.f, pTerrainObject->Terrain()->GetHeight(3000.f, 8800.f, true) * 2.f, 8800.f));
+	pObject->Collider()->SetColliderType(COLLIDER_TYPE::BOX);
+	pObject->Collider()->SetBoundingSphere(BoundingSphere(pObject->Transform()->GetLocalPos(), 200.f));
+	m_pCurScene->AddGameObject(L"Map", pObject, false);
+
 
 	//// Distortion Object (텔포포탈)
 	//pObject = new CGameObject;
