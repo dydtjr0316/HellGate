@@ -22,6 +22,15 @@ CPlayerScript::CPlayerScript()
 	, m_pOriginMtrl(nullptr)
 	, m_pCloneMtrl(nullptr)
 {
+	
+}
+
+CPlayerScript::~CPlayerScript()
+{
+}
+
+void CPlayerScript::Init()
+{
 	m_fSpeed = PLAYER_SPEED_IDLE;
 	m_eAniType = Ani_TYPE::IDLE;
 
@@ -46,7 +55,7 @@ CPlayerScript::CPlayerScript()
 			if (i == 1) {
 				vScale = Vector3(350.f, 20.f, 1.f);
 			}
-			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f 
+			pObject->Transform()->SetLocalPos(Vector3(-(res.fWidth / 2.f) + (vScale.x / 2.f) + 60.f
 				, (res.fHeight / 2.f) - (vScale.y / 2.f) - (10.f * (i + 1) + (10.f * i))
 				, 1.f));
 		}
@@ -136,19 +145,11 @@ CPlayerScript::CPlayerScript()
 		m_vUiButton.push_back(pObject);
 	}
 
-}
-
-CPlayerScript::~CPlayerScript()
-{
-}
-
-void CPlayerScript::Init()
-{
 	//	-----------------------
 	//	item UI, 상속되는 버튼들
 	//	-----------------------
-	CGameObject* pObject = new CGameObject;
-	Vector3 vScale = Vector3(600.f, 800.f, 1.f);
+	//CGameObject* pObject = new CGameObject;
+	//Vector3 vScale = Vector3(600.f, 800.f, 1.f);
 	pObject->SetName(L"Item UI Object");
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
@@ -169,7 +170,7 @@ void CPlayerScript::Init()
 	
 	
 	// Transform 설정
-	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	//tResolution res = CRenderMgr::GetInst()->GetResolution();
 	pObject->Transform()->SetLocalPos(Vector3(300.f, 80.f, 1.f));
 	pObject->Transform()->SetLocalScale(vScale);
 	// MeshRender 설정	

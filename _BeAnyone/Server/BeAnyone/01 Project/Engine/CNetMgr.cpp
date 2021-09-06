@@ -29,7 +29,7 @@ OBJECT_TYPE CheckObjType(const uShort& id)
 	else if (id == BOSS_ID)return OBJECT_TYPE::BOSS;
 }
 
-const char ip[] = "192.168.0.11";
+const char ip[] = "192.168.0.13";
 
 //const char ip[] = "192.168.0.07";
 //const char ip[] = "192.168.0.13";
@@ -318,6 +318,7 @@ void CNetMgr::Send_MonsterDir_Packet(const uShort& monser_id, const Vector3& dir
 	p.size = sizeof(p);
 	p.id = monser_id;
 	p.dir = dir;
+	p.pos = g_Object.find(monser_id)->second->Transform()->GetLocalPos();
 	Send_Packet(&p);
 }
 
@@ -1147,6 +1148,9 @@ void CNetMgr::ProcessPacket(char* ptr)
 		sc_packet_boss_turn* packet = reinterpret_cast<sc_packet_boss_turn*>(ptr);//effect  생성 위치 
 
 		g_Object.find(packet->id)->second->Transform()->SetLocalRot(packet->rotate);
+		cout << packet->rotate.x << ", " << packet->rotate.y  << ", " << packet->rotate.z << endl;
+		cout << "------------------" << endl;
+
 	}
 	break;
 

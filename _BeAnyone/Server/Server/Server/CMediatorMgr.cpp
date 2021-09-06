@@ -20,9 +20,11 @@ void CMediatorMgr::InitObject()
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(300, 700);
     MONSTER_AUTOMOVE_DIR dir = (MONSTER_AUTOMOVE_DIR)(dis(gen));
-    for (int i = START_MONSTER; i < END_MONSTER; ++i) {
+    for (int i = START_MONSTER; i < START_MONSTER+1; ++i) {
         pObj = new CMonster;
-        pObj->SetPosV(((float)(5000)+(i - 1000) * (dis(gen))), 2750.f, (float)(8000 + (i - 1000) * (dis(gen))));
+        //pObj->SetPosV(((float)(5000)+(i - 1000) * (dis(gen))), 2750.f, (float)(8000 + (i - 1000) * (dis(gen))));
+        pObj->SetPosV(Vector3(68000.f, 2200.f, 65000.f));
+
         pObj->SetID(i);
         dynamic_cast<CMonster*>(pObj)->SetHP(100);
         

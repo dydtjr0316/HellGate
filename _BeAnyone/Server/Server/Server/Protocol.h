@@ -1,16 +1,13 @@
-#pragma once
-#pragma once
-
 // 섹터 디파인 값
 constexpr float MOVE_SPEED = 5.f; // 이동패킷 구조변경 성공시 삭제
 constexpr short CHILD_NODE_SIZE = 4;
-constexpr short MAX_PLAYER_IN_NODE = 10;
-constexpr float SEARCH_SIZE = 3000.f;
+constexpr short MAX_PLAYER_IN_NODE = 4;
+constexpr float SEARCH_SIZE = 2000.f;
 
 // 추후  수정
 constexpr int NAME_LEN = 50;
 constexpr int PHONE_LEN = 60;
-  
+
 // constexpr
 constexpr auto MAX_PACKET_SIZE = 255;
 constexpr auto MAX_BUF_SIZE = 1024;
@@ -21,11 +18,11 @@ constexpr int MAX_ID_LEN = 10;
 constexpr int MAX_STR_LEN = 100;
 
 // 동접, 몬스터 ,  관리
-constexpr int MAX_USER = 1000;
+constexpr int MAX_USER = 25000;
 constexpr int END_USER = MAX_USER;
 
 constexpr int START_MONSTER = MAX_USER;
-constexpr int MAX_MONSTER =100;
+constexpr int MAX_MONSTER = 100;
 constexpr int END_MONSTER = START_MONSTER + MAX_MONSTER;
 constexpr int DIVIDE_MONNSTER = MAX_MONSTER / 4;
 constexpr int BOSS_ID = 30000;
@@ -39,7 +36,7 @@ constexpr int END_NPC = START_NPC + MAX_NPC;
 constexpr int WORLD_WIDTH = 76700;
 constexpr int WORLD_HEIGHT = 76700;
 
-constexpr int VIEW_LIMIT =  1280;				// 시야 반지름
+constexpr int VIEW_LIMIT = 1280;				// 시야 반지름
 
 // 화면 // 추후 수정 // float로 수정해야되는지 확인
 
@@ -442,6 +439,7 @@ struct cs_pcaket_MonsterDir{
 	char	type;
 	uShort  id;
 	Vector3 dir;
+	Vector3 pos;
 };
 
 
