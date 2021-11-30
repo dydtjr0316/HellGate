@@ -758,7 +758,7 @@ void CNetMgr::Processing_Thead()
 
 
                         // 동기화 패킷 일시정지 
-                        CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
+                      /*  CAST_CLIENT(obj)->CountRefreshPacketCnt(DeltaTime);
                         if (CAST_CLIENT(obj)->GetRefreshPacketCnt() > 5.f)
                         {
                             cout << "\t\t\t동기화 패킷" << endl;
@@ -768,7 +768,7 @@ void CNetMgr::Processing_Thead()
                                     m_pSendMgr->Send_Move_Packet(id, reckoner, CAST_CLIENT(obj)->GetDir());
                                 }
                             CAST_CLIENT(obj)->SetRefreshPacketCnt_Zero();
-                        }
+                        }*/
                     }
                 }
                 obj->GetLock().unlock();
